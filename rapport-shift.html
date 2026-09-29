@@ -206,7 +206,7 @@ textarea.input{resize:vertical;min-height:4.75rem;line-height:1.45}
 .wcard{display:flex;align-items:center;gap:.625rem;padding:.625rem .875rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff;box-shadow:var(--shadow);font-size:.875rem;min-width:0}
 .wcard--frigo{color:var(--muted);font-weight:600}
 .wcard--frigo .icon{color:var(--na-dot)}
-.wcard--frigo.is-alert{grid-column:span 2;background:var(--todo-dot);border-color:#B92419;color:#fff;font-weight:500}
+.wcard--frigo.is-alert{grid-column:1/-1;background:var(--todo-dot);border-color:#B92419;color:#fff;font-weight:500}
 .wcard--frigo.is-alert .icon{color:#fff}
 .wcard__title{font-weight:800;letter-spacing:.08em;font-size:.9375rem}
 .wcard__list{display:block;font-size:.875rem}
@@ -223,13 +223,14 @@ textarea.input{resize:vertical;min-height:4.75rem;line-height:1.45}
 .wcard--ht.tone-wip .wcard__where,.wcard--ht.tone-todo .wcard__where{color:inherit;opacity:.8}
 .wcard--ht.tone-wip{color:var(--wip-fg)}
 .wcard--ht.tone-todo{color:var(--todo-fg)}
-.wcard--none{grid-column:span 2;color:var(--muted);box-shadow:none;background:transparent;border-style:dashed}
+.wcard--none{grid-column:1/-1;color:var(--muted);box-shadow:none;background:transparent;border-style:dashed}
 
 /* ---------- Filtre de ligne (écrans moyens) ---------- */
 .linefilter{display:none;position:sticky;top:4rem;z-index:30;margin:-.25rem 0;padding:.5rem 0;background:linear-gradient(var(--bg) 80%,rgba(243,245,249,0))}
 .linefilter__in{display:flex;align-items:center;gap:.75rem}
 .linefilter .pills{flex:1;flex-wrap:nowrap}
 .linefilter .pill{background:#fff}
+.linefilter .pill__dot{display:none}
 
 /* ---------- Bandes et cartes ---------- */
 .band{display:flex;flex-direction:column;gap:.75rem}
@@ -326,6 +327,9 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 @keyframes toast-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 /* ---------- Responsive ---------- */
+@media (min-width:760px){
+  .wcard--frigo.is-alert,.wcard--none{grid-column:span 2}
+}
 @media (min-width:1200px){
   .band__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .annexes{grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,1.3fr)}
@@ -372,7 +376,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
   .panel__body{padding:.875rem}
   .toasts{left:.75rem;right:.75rem;bottom:.75rem;align-items:stretch;max-width:none}
   .linefilter__lbl{display:none}
-  .linefilter .pill{padding:.25rem .375rem;min-width:0}
+  .linefilter .pill{padding:.25rem .5rem;min-width:0}
+  .linefilter .pills,.meta__shift .pills{flex-wrap:wrap}
 }
 @media (max-width:479.98px){
   .brand{gap:.625rem}
