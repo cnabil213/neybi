@@ -85,7 +85,10 @@ button { cursor: pointer; }
 .aa-btn .aa-a { font-size: 1.05em; font-weight: 700; }
 .aa-btn .aa-b { font-size: .8em; font-weight: 700; margin-left: 1px; }
 .aa-menu-label { display: none; }
-.aa-btn[aria-pressed="true"] { background: var(--cold-bg); color: var(--nn-navy); border-color: #9DBDF0; }
+.app-header .btn-ghost { color: var(--nn-navy); }
+.app-header .btn-ghost:hover:not(:disabled) { background: var(--surface-2); }
+.hdr-sep { width: 1px; height: 28px; background: var(--border); margin: 0 .25rem; flex: none; }
+.app-header .aa-btn[aria-pressed="true"] { background: var(--cold-bg); color: var(--nn-navy); }
 
 /* =====================================================================
    Boutons
@@ -419,7 +422,10 @@ dialog.dlg::backdrop { background: rgba(11,21,53,.45); }
     border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 12px 32px rgba(11,21,53,.18); padding: .5rem; min-width: 15rem; z-index: 60; }
   .header-actions.open { display: flex; }
   .header-actions .btn { justify-content: flex-start; width: 100%; }
+  .header-actions .btn-secondary { border-color: transparent; }
+  .header-actions .btn-secondary:hover { background: var(--surface-2); }
   .aa-menu-label { display: inline; font-weight: 600; margin-left: .25rem; }
+  .hdr-sep { display: none; }
   .layout { padding: 1rem 1rem 2.5rem; gap: 1rem; }
   .storage-warning { padding: 0 1rem; }
   .form-col { gap: 1rem; }
@@ -467,11 +473,12 @@ dialog.dlg::backdrop { background: rgba(11,21,53,.45); }
   </a>
   <div class="header-right">
     <span class="save-state" id="save-state" role="status" aria-live="polite"><span class="tick" aria-hidden="true">✓</span><span class="save-label">Enregistré</span><span class="save-time"></span></span>
-    <button type="button" class="btn btn-secondary icon-btn menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="header-actions" aria-label="Menu"></button>
+    <button type="button" class="btn btn-ghost icon-btn menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="header-actions" aria-label="Menu"></button>
     <nav class="header-actions" id="header-actions" aria-label="Actions">
       <button type="button" class="btn btn-secondary" id="btn-new" title="Vider le lot, la date et les poches (le reste est conservé)"></button>
-      <button type="button" class="btn btn-secondary aa-btn" id="btn-aa" aria-pressed="false" aria-label="Texte plus grand" title="Taille du texte : normal / grand"><span aria-hidden="true"><span class="aa-a">A</span><span class="aa-b">a</span></span><span class="aa-menu-label" aria-hidden="true">Texte plus grand</span></button>
-      <a class="btn btn-secondary" id="link-rapport" href="rapport-shift.html">Rapport de shift <span class="ico" aria-hidden="true" data-icon="arrowRight"></span></a>
+      <span class="hdr-sep" aria-hidden="true"></span>
+      <button type="button" class="btn btn-ghost aa-btn" id="btn-aa" aria-pressed="false" aria-label="Texte plus grand" title="Taille du texte : normal / grand"><span aria-hidden="true"><span class="aa-a">A</span><span class="aa-b">a</span></span><span class="aa-menu-label" aria-hidden="true">Texte plus grand</span></button>
+      <a class="btn btn-ghost" id="link-rapport" href="rapport-shift.html">Rapport de shift <span class="ico" aria-hidden="true" data-icon="arrowRight"></span></a>
     </nav>
   </div>
 </header>
