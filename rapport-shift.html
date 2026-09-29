@@ -90,6 +90,8 @@ button,input,select,textarea{font:inherit;color:inherit}
 .save-state .ss-shared.is-ok .icon{color:var(--nn-blue)}
 .hdr-actions,.hdr-tools{display:flex;align-items:center;gap:.5rem}
 .hdr-sep{width:1px;height:1.75rem;background:var(--border)}
+.hdr-link .ico-wide{display:inline-flex}
+.hdr-link .ico-compact{display:none}
 .btn-aa{font-weight:700;font-size:1rem;letter-spacing:.02em}
 .btn-aa[aria-pressed="true"]{background:#E6ECF7;color:var(--nn-navy);box-shadow:inset 0 0 0 1px var(--nn-navy)}
 .menu-wrap{position:relative}
@@ -229,7 +231,7 @@ textarea.input{resize:vertical;min-height:4.75rem;line-height:1.45}
 .linefilter{display:none;position:sticky;top:4rem;z-index:30;margin:-.25rem 0;padding:.5rem 0;background:linear-gradient(var(--bg) 80%,rgba(243,245,249,0))}
 .linefilter__in{display:flex;align-items:center;gap:.75rem}
 .linefilter .pills{flex:1;flex-wrap:nowrap}
-.linefilter .pill{background:#fff}
+.linefilter .pill:not([aria-checked="true"]){background:#fff}
 .linefilter .pill__dot{display:none}
 
 /* ---------- Bandes et cartes ---------- */
@@ -255,7 +257,7 @@ textarea.input{resize:vertical;min-height:4.75rem;line-height:1.45}
 .band.is-collapsed .card__dots{display:inline-flex}
 .band.is-collapsed .card__body,.band.is-collapsed .card__foot{display:none}
 .band.is-collapsed .card__head{border-bottom:0}
-.card__body{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:1rem 1.25rem;padding:1rem 1.125rem 1.125rem;align-content:start}
+.card__body{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr));gap:1rem 1.25rem;padding:1rem 1.125rem 1.125rem;align-content:start}
 .card__foot{display:flex;justify-content:flex-end;padding:.375rem .625rem;border-top:1px solid var(--border);background:var(--surface-2);border-radius:0 0 var(--radius) var(--radius)}
 
 /* ---------- Blocs annexes ---------- */
@@ -358,7 +360,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 }
 @media (max-width:959.98px){
   #btn-pdf .lbl-long{display:none}
-  .hdr-link .lbl{display:none}
+  .hdr-link .lbl,.hdr-link .ico-wide{display:none}
+  .hdr-link .ico-compact{display:inline-flex}
   .hdr-link{width:2.5rem;padding:0}
 }
 @media (max-width:759.98px){
@@ -376,6 +379,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
   .panel__body{padding:.875rem}
   .toasts{left:.75rem;right:.75rem;bottom:.75rem;align-items:stretch;max-width:none}
   .linefilter__lbl{display:none}
+  .pills{gap:.25rem}
+  .pill{padding:.25rem .4rem;gap:.35rem;font-size:.75rem;letter-spacing:0}
   .linefilter .pill{padding:.25rem .5rem;min-width:0}
   .linefilter .pills,.meta__shift .pills{flex-wrap:wrap}
 }
@@ -420,12 +425,13 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .pv-cap .pv-lot{font-family:var(--mono);font-weight:700;font-size:7.6pt;letter-spacing:.03em}
 .pv-cap .pv-prod{margin-left:auto;font-weight:700;font-size:7.2pt}
 .pv-cap .pv-empty{opacity:.55;font-weight:400}
-.pv-kv{display:grid;grid-template-columns:23fr 24fr 23fr 24fr;gap:.25mm;background:var(--border);border-bottom:.25mm solid var(--border)}
+.pv-kv{display:grid;grid-template-columns:21fr 24.5fr 21fr 24.5fr;gap:.25mm;background:var(--border);border-bottom:.25mm solid var(--border)}
 .pv-kv>div{background:#fff;padding:.45mm 1.1mm;min-height:4.1mm;display:flex;align-items:center;min-width:0;overflow-wrap:break-word}
-.pv-kv>.pv-l{background:var(--surface-2);color:var(--muted);font-weight:600;font-size:6.4pt;line-height:1.1}
+.pv-kv>.pv-l{background:var(--surface-2);color:var(--muted);font-weight:600;font-size:6.3pt;line-height:1.1;letter-spacing:-.015em}
 .pv-kv>.pv-l.is-fill{background:#fff}
 .pv-kv>.pv-v{font-weight:600}
 .pv-kv>.pv-st{font-size:7pt;letter-spacing:.01em}
+.pv-kv>.pv-st.pv-long{font-size:6.5pt;letter-spacing:0}
 .pv-kv>.pv-v.t-ok{background:var(--ok-bg);color:var(--ok-fg);font-weight:700}
 .pv-kv>.pv-v.t-wip{background:var(--wip-bg);color:var(--wip-fg);font-weight:700}
 .pv-kv>.pv-v.t-todo{background:var(--todo-bg);color:var(--todo-fg);font-weight:700}
@@ -478,7 +484,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <span class="brand__sep" aria-hidden="true"></span>
       <div class="brand__text">
         <h1 class="brand__title">Rapport de shift</h1>
-        <p class="brand__sub">Formulation · passation entre équipes</p>
+        <p class="brand__sub">Équipe formulation</p>
       </div>
     </div>
     <div class="save-state" id="save-state" role="status" aria-live="polite"></div>
@@ -494,7 +500,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
         <div class="menu" id="main-menu" role="menu" aria-label="Actions" hidden></div>
       </div>
       <button type="button" class="btn btn-quiet btn-icon btn-aa" id="btn-aa" aria-pressed="false" title="Agrandir le texte" aria-label="Agrandir le texte">Aa</button>
-      <a class="btn btn-quiet hdr-link" href="etiquettes.html" title="Ouvrir l'outil Étiquettes" aria-label="Étiquettes"><span class="lbl">Étiquettes</span><span data-icon="arrow"></span></a>
+      <a class="btn btn-quiet hdr-link" href="etiquettes.html" title="Ouvrir l'outil Étiquettes" aria-label="Étiquettes"><span class="ico-compact"><span data-icon="tag"></span></span><span class="lbl">Étiquettes</span><span class="ico-wide"><span data-icon="arrow"></span></span></a>
     </div>
   </div>
 </header>
@@ -520,7 +526,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
     </div>
     <div class="meta__item meta__author">
       <label class="field__label" for="author">Rédigé par</label>
-      <input class="input" id="author" type="text" autocomplete="name" maxlength="60" placeholder="Votre nom (mémorisé sur ce poste)">
+      <input class="input" id="author" type="text" autocomplete="name" maxlength="60" placeholder="Votre nom" title="Mémorisé sur ce poste">
     </div>
   </section>
 
@@ -754,7 +760,7 @@ const SCHEMA = {
       F.st('cuveStockage', 'Cuve stockage', 'CUVE_STOCKAGE'),
       F.dt('debutHT72', 'Début HT (72 h)', { print: 'Début HT 72 h', limit: { label: 'Limite HT 72 h', hours: () => 72 } }),
       F.st('local', 'Local', 'LOCAL_PREP_GRON'),
-      F.dt('debutHTFormu24', 'Début HT formu. (24 h)', { print: 'Début HT formu.', limit: { label: 'Limite HT formu. 24 h', hours: () => 24 } }),
+      F.dt('debutHTFormu24', 'Début HT formu. (24 h)', { print: 'Déb. HT formu.', limit: { label: 'Limite HT formu. 24 h', hours: () => 24 } }),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.notes(),
@@ -912,7 +918,7 @@ function limitOf(f, c, now) {
   const remaining = due - now;
   return {
     label: f.limit.label + (f.limit.variable ? ` (${hours} h)` : ''),
-    printLabel: `Limite HT ${hours} h`,
+    printLabel: `Lim. HT ${hours} h`,
     hours, due, remaining,
     tone: remaining < 0 ? 'todo' : remaining < 4 * 3600e3 ? 'wip' : 'neutral',
     rest: remaining < 0 ? `dépassé de ${fmtDur(remaining)}` : `reste ${fmtDur(remaining)}`,
@@ -1805,16 +1811,16 @@ function printCard(b, l, c, at) {
     const v = c[f.key];
     if (f.type === 'datetime' && f.limit) {
       // Date de début et sa limite HT côte à côte, regroupées en fin de carte
-      if (na) { timed.push({ label, value: '—', cls: 'is-off' }, { label: `Limite HT ${f.limit.hours(c)} h`, value: '—', cls: 'is-off' }); continue; }
+      if (na) { timed.push({ label, value: '—', cls: 'is-off' }, { label: `Lim. HT ${f.limit.hours(c)} h`, value: '—', cls: 'is-off' }); continue; }
       const d = parseLocal(v);
       const lim = limitOf(f, c, at);
       timed.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' },
         lim ? { label: lim.printLabel, value: fmtDM(lim.due), sub: lim.rest, cls: `pv-lim${lim.tone !== 'neutral' ? ` t-${lim.tone}` : ''}` }
-            : { label: `Limite HT ${f.limit.hours(c)} h`, value: '', cls: 'is-empty' });
+            : { label: `Lim. HT ${f.limit.hours(c)} h`, value: '', cls: 'is-empty' });
       continue;
     }
     if (na) cells.push({ label, value: '—', cls: 'is-off' });
-    else if (f.type === 'status') cells.push({ label, value: v, cls: `pv-st t-${toneOf(f.list, v)}`, cold: v === 'AU FRIGO' });
+    else if (f.type === 'status') cells.push({ label, value: v, cls: `pv-st t-${toneOf(f.list, v)}${/\S{12,}/.test(v) ? ' pv-long' : ''}`, cold: v === 'AU FRIGO' });
     else if (f.type === 'datetime') { const d = parseLocal(v); cells.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' }); }
     else cells.push({ label, value: (v || '').trim(), cls: v ? '' : 'is-empty' });
   }
