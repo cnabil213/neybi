@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test enregistrement disque N:</title>
+<style>
+  :root {
+    --nn-navy: #001965; --nn-blue: #005AD2; --bg: #F3F5F9; --surface: #FFFFFF;
+    --border: #D8DEE9; --text: #0B1535; --muted: #5A6480;
+    --ok-bg: #DDF3E4; --ok-fg: #0E6128; --wip-bg: #FFF0C2; --wip-fg: #6E4A00;
+    --todo-bg: #FDE1DF; --todo-fg: #9E140E; --na-bg: #EDF0F5; --na-fg: #5A6480;
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { color: var(--nn-navy); font-size: 1.6rem; margin: 0 0 4px; }
+  h2 { color: var(--nn-navy); font-size: 1.15rem; margin: 0 0 12px; }
+  p { margin: 0 0 12px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px; margin-top: 16px; }
+  .verdict { font-size: 1.1rem; font-weight: 600; border-radius: 10px; padding: 16px 20px; margin-top: 16px; }
+  .ok { background: var(--ok-bg); color: var(--ok-fg); }
+  .wip { background: var(--wip-bg); color: var(--wip-fg); }
+  .todo { background: var(--todo-bg); color: var(--todo-fg); }
+  .na { background: var(--na-bg); color: var(--na-fg); }
+  ol { margin: 0; padding-left: 1.4em; }
+  ol li { margin-bottom: 6px; }
+  ul.checks { list-style: none; margin: 0; padding: 0; }
+  ul.checks li { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0;
+    border-top: 1px solid var(--border); }
+  ul.checks li:first-child { border-top: 0; }
+  .badge { flex: 0 0 auto; min-width: 92px; text-align: center; font-size: .8rem; font-weight: 700;
+    border-radius: 999px; padding: 3px 10px; }
+  .label { font-weight: 600; }
+  .detail { color: var(--muted); font-size: .92rem; word-break: break-word; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  button { font: inherit; font-weight: 600; border-radius: 8px; padding: 12px 20px; min-height: 48px;
+    cursor: pointer; border: 1px solid var(--nn-navy); }
+  button.primary { background: var(--nn-navy); color: #fff; }
+  button.primary:hover { background: #0B2A7A; }
+  button.secondary { background: #fff; color: var(--nn-navy); }
+  button:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(0,90,210,.35); }
+  button[hidden] { display: none; }
+  #message { margin-top: 12px; font-weight: 600; }
+  noscript div { background: var(--todo-bg); color: var(--todo-fg); padding: 16px; border-radius: 10px; margin-top: 16px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Test : enregistrement sur le disque N:</h1>
+  <p>Ce test vérifie, sur ce PC, que l'Outil Formulation pourra enregistrer le rapport de shift sur le disque partagé. Il ne modifie rien d'autre.</p>
+
+  <noscript><div><strong>JavaScript est bloqué sur ce PC.</strong> L'outil ne pourra pas fonctionner : il faudra en parler à l'IT.</div></noscript>
+
+  <div id="verdict" class="verdict na" role="status">Test en cours…</div>
+
+  <section class="card">
+    <h2>Comment faire le test (5 minutes)</h2>
+    <ol>
+      <li>Copiez ce fichier dans le dossier de l'outil, par exemple <strong>N:\MFG\Formulation\Outil formulation</strong>.</li>
+      <li>Double-cliquez dessus pour l'ouvrir dans <strong>Microsoft Edge</strong>.</li>
+      <li>Cliquez sur <strong>« Tester l'enregistrement »</strong>, choisissez <strong>ce même dossier</strong>, puis acceptez les autorisations d'Edge. Si Edge propose <strong>« Autoriser à chaque visite »</strong>, choisissez-le.</li>
+      <li><strong>Fermez complètement Edge</strong> (toutes les fenêtres), puis rouvrez ce fichier.</li>
+      <li>Cliquez sur <strong>« Copier le résultat »</strong> et envoyez-le à Claude.</li>
+    </ol>
+    <p class="detail" style="margin-top:12px">Si vous vous connectez chacun avec votre propre compte Windows, refaites le test avec le compte d'un collègue.</p>
+  </section>
+
+  <section class="card">
+    <h2>Actions</h2>
+    <div class="buttons">
+      <button type="button" class="primary" id="btn-test">Tester l'enregistrement</button>
+      <button type="button" class="primary" id="btn-regrant" hidden>Redonner l'autorisation</button>
+      <button type="button" class="secondary" id="btn-copy">Copier le résultat</button>
+    </div>
+    <div id="message" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h2>Résultats</h2>
+    <ul class="checks" id="checks"></ul>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var DATA_FILE = 'test-disque-N-donnees.js';
+  var LS_KEY = 'nn-formu-test-disque-n';
+  var DB_NAME = 'nn-formu-test-disque-n';
+
+  // Les résultats : clé → { label, status: 'ok'|'wip'|'todo'|'na', text, detail }
+  var results = {};
+  var ORDER = ['navigateur', 'emplacement', 'memoire', 'memoireDurable', 'indexeddb',
+    'api', 'lecture', 'ecriture', 'autorisation'];
+  var LABELS = {
+    navigateur: 'Navigateur',
+    emplacement: 'Emplacement du fichier',
+    memoire: 'Mémoire du PC',
+    memoireDurable: 'Mémoire conservée après fermeture d\'Edge',
+    indexeddb: 'Mémorisation de l\'autorisation',
+    api: 'Fonction d\'enregistrement dans un dossier',
+    lecture: 'Lecture automatique du fichier de données',
+    ecriture: 'Écriture sur le disque',
+    autorisation: 'Autorisation retenue par Edge'
+  };
+  var BADGE = { ok: 'OK', wip: 'À surveiller', todo: 'Bloqué', na: 'À tester' };
+
+  function set(key, status, text, detail) {
+    results[key] = { status: status, text: text, detail: detail || '' };
+    render();
+  }
+
+  function render() {
+    var ul = document.getElementById('checks');
+    ul.textContent = '';
+    ORDER.forEach(function (key) {
+      var r = results[key] || { status: 'na', text: 'En attente', detail: '' };
+      var li = document.createElement('li');
+      var badge = document.createElement('span');
+      badge.className = 'badge ' + r.status;
+      badge.textContent = BADGE[r.status];
+      var body = document.createElement('div');
+      var label = document.createElement('div');
+      label.className = 'label';
+      label.textContent = LABELS[key] + ' : ' + r.text;
+      body.appendChild(label);
+      if (r.detail) {
+        var d = document.createElement('div');
+        d.className = 'detail';
+        d.textContent = r.detail;
+        body.appendChild(d);
+      }
+      li.appendChild(badge);
+      li.appendChild(body);
+      ul.appendChild(li);
+    });
+    renderVerdict();
+  }
+
+  function renderVerdict() {
+    var v = document.getElementById('verdict');
+    var s = function (k) { return results[k] ? results[k].status : 'na'; };
+    var cls, text;
+    if (s('api') === 'todo' || s('ecriture') === 'todo' || s('autorisation') === 'todo') {
+      cls = 'todo';
+      text = 'L\'enregistrement sur N: est bloqué sur ce PC. L\'outil marchera, mais le rapport ne sera pas partagé automatiquement : il faudra en parler à l\'IT.';
+    } else if (s('ecriture') === 'ok' && s('autorisation') === 'ok' && s('memoireDurable') === 'ok') {
+      cls = 'ok';
+      text = 'Tout est bon : l\'enregistrement automatique sur N: fonctionnera sans rien demander aux utilisateurs.';
+    } else if (s('autorisation') === 'wip') {
+      cls = 'wip';
+      text = 'Ça fonctionne, mais Edge redemandera l\'autorisation à chaque ouverture (un clic sur un bouton jaune).';
+    } else if (s('memoireDurable') === 'todo' && s('ecriture') === 'ok') {
+      cls = 'wip';
+      text = 'L\'écriture sur N: fonctionne, mais Edge efface sa mémoire : il faudra reconnecter le dossier à chaque ouverture.';
+    } else if (s('ecriture') === 'ok') {
+      cls = 'wip';
+      text = 'L\'écriture sur N: fonctionne. Dernière étape : fermez complètement Edge, rouvrez ce fichier et regardez le résultat.';
+    } else {
+      cls = 'na';
+      text = 'Cliquez sur « Tester l\'enregistrement » et choisissez le dossier de l\'outil sur N:.';
+    }
+    v.className = 'verdict ' + cls;
+    v.textContent = text;
+  }
+
+  function message(text) {
+    document.getElementById('message').textContent = text;
+  }
+
+  // --- Vérifications automatiques ---
+
+  function checkNavigateur() {
+    var ua = navigator.userAgent;
+    var m;
+    if ((m = ua.match(/Edg\/(\d+)/))) {
+      set('navigateur', 'ok', 'Microsoft Edge ' + m[1]);
+    } else if ((m = ua.match(/Chrome\/(\d+)/))) {
+      set('navigateur', 'ok', 'Google Chrome ' + m[1]);
+    } else if ((m = ua.match(/Firefox\/(\d+)/))) {
+      set('navigateur', 'todo', 'Firefox ' + m[1], 'Firefox ne permet pas d\'enregistrer dans un dossier. Ouvrez ce fichier avec Microsoft Edge (clic droit → Ouvrir avec → Microsoft Edge).');
+    } else {
+      set('navigateur', 'wip', 'Navigateur non reconnu', ua);
+    }
+  }
+
+  function checkEmplacement() {
+    var path = decodeURIComponent(location.pathname || '');
+    if (location.protocol !== 'file:') {
+      set('emplacement', 'wip', 'Pas ouvert depuis un disque', location.href);
+    } else if (/^\/[A-Za-z]:\//.test(path)) {
+      var drive = path.charAt(1).toUpperCase();
+      set('emplacement', drive === 'N' ? 'ok' : 'wip',
+        drive === 'N' ? 'Ouvert depuis le disque N:' : 'Ouvert depuis le disque ' + drive + ': (pas N:)',
+        path.slice(1).replace(/\//g, '\\'));
+    } else if (/^\/\//.test(path) || location.host) {
+      set('emplacement', 'ok', 'Ouvert depuis un partage réseau', '\\\\' + location.host + path.replace(/\//g, '\\'));
+    } else {
+      set('emplacement', 'wip', 'Ouvert depuis ce PC', path);
+    }
+  }
+
+  function checkMemoire() {
+    try {
+      var previous = localStorage.getItem(LS_KEY);
+      var now = new Date().toLocaleString('fr-FR');
+      if (previous) {
+        set('memoire', 'ok', 'fonctionne');
+        set('memoireDurable', 'ok', 'oui', 'Premier test sur ce PC : ' + previous + '.');
+      } else {
+        localStorage.setItem(LS_KEY, now);
+        set('memoire', localStorage.getItem(LS_KEY) === now ? 'ok' : 'todo',
+          localStorage.getItem(LS_KEY) === now ? 'fonctionne' : 'ne fonctionne pas');
+        set('memoireDurable', 'na', 'à vérifier', 'Fermez complètement Edge puis rouvrez ce fichier. Si cette ligne reste « à vérifier », Edge efface sa mémoire à la fermeture.');
+      }
+    } catch (e) {
+      set('memoire', 'todo', 'bloquée', e.name + ' : ' + e.message);
+      set('memoireDurable', 'todo', 'non', 'La mémoire du navigateur est bloquée sur ce PC.');
+    }
+  }
+
+  function checkApi() {
+    if (!window.isSecureContext) {
+      set('api', 'todo', 'indisponible', 'Contexte non sécurisé.');
+    } else if (!('showDirectoryPicker' in window)) {
+      set('api', 'todo', 'indisponible dans ce navigateur', 'Utilisez Microsoft Edge ou Google Chrome.');
+    } else {
+      set('api', 'ok', 'disponible');
+    }
+  }
+
+  function checkLecture() {
+    var script = document.createElement('script');
+    script.src = DATA_FILE + '?t=' + Date.now();
+    script.onload = function () {
+      var d = window.__NN_TEST_DISQUE_N__;
+      if (d && d.date) {
+        set('lecture', 'ok', 'fonctionne', 'Dernière écriture lue : ' + d.date + (d.poste ? ' (' + d.poste + ')' : '') + '.');
+      } else {
+        set('lecture', 'wip', 'fichier trouvé mais vide');
+      }
+    };
+    script.onerror = function () {
+      set('lecture', 'na', 'pas encore de fichier de test', 'Normal au premier lancement : il sera créé par « Tester l\'enregistrement ».');
+    };
+    document.head.appendChild(script);
+  }
+
+  // --- IndexedDB : on y garde le dossier choisi pour tester la mémorisation de l'autorisation ---
+
+  function openDb() {
+    return new Promise(function (resolve, reject) {
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore('handles'); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+  }
+  function dbGet(key) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction('handles', 'readonly');
+        var r = tx.objectStore('handles').get(key);
+        r.onsuccess = function () { resolve(r.result); };
+        r.onerror = function () { reject(r.error); };
+      });
+    });
+  }
+  function dbPut(key, value) {
+    return openDb().then(function (db) {
+      return new Promise(function (resolve, reject) {
+        var tx = db.transaction('handles', 'readwrite');
+        tx.objectStore('handles').put(value, key);
+        tx.oncomplete = function () { resolve(); };
+        tx.onerror = function () { reject(tx.error); };
+      });
+    });
+  }
+
+  var storedDir = null;
+
+  function checkAutorisationMemorisee() {
+    if (!window.indexedDB) {
+      set('indexeddb', 'todo', 'indisponible');
+      return Promise.resolve();
+    }
+    return dbGet('dossier').then(function (dir) {
+      set('indexeddb', 'ok', 'fonctionne');
+      if (!dir || typeof dir.queryPermission !== 'function') return;
+      storedDir = dir;
+      return dir.queryPermission({ mode: 'readwrite' }).then(function (state) {
+        if (state === 'granted') {
+          set('autorisation', 'ok', 'oui, pour le dossier « ' + dir.name + ' »', 'Edge n\'a rien redemandé à la réouverture.');
+          // Écriture silencieuse : c'est exactement ce que fera l'outil à chaque modification.
+          return writeAndVerify(dir).then(function (payload) {
+            set('ecriture', 'ok', 'fonctionne sans rien demander', 'Fichier ' + DATA_FILE + ' réécrit automatiquement le ' + payload.date + '.');
+          }, function (e) {
+            set('ecriture', 'todo', 'échec à la réouverture', friendlyError(e));
+          });
+        } else {
+          set('autorisation', 'wip', 'Edge redemandera l\'autorisation', 'Cliquez sur « Redonner l\'autorisation » : si Edge propose « Autoriser à chaque visite », choisissez-le puis refaites l\'étape 4.');
+          document.getElementById('btn-regrant').hidden = false;
+        }
+      });
+    }).catch(function (e) {
+      set('indexeddb', 'todo', 'bloquée', e && e.name ? e.name : String(e));
+    });
+  }
+
+  // --- Test d'écriture ---
+
+  function friendlyError(e) {
+    var name = e && e.name ? e.name : '';
+    if (name === 'AbortError') return 'Vous avez fermé la fenêtre sans choisir de dossier.';
+    if (name === 'NotAllowedError') return 'Edge a refusé l\'autorisation (refus de l\'utilisateur ou règle de sécurité de l\'entreprise).';
+    if (name === 'SecurityError') return 'Bloqué par une règle de sécurité.';
+    if (name === 'NoModificationAllowedError') return 'Vous n\'avez pas le droit d\'écrire dans ce dossier.';
+    if (name === 'TypeError') return 'Fonction indisponible dans ce navigateur.';
+    return (name ? name + ' : ' : '') + (e && e.message ? e.message : String(e));
+  }
+
+  function writeAndVerify(dir) {
+    var poste = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+    var payload = { date: new Date().toLocaleString('fr-FR'), poste: poste };
+    var content = 'window.__NN_TEST_DISQUE_N__ = ' + JSON.stringify(payload) + ';\n';
+    return dir.getFileHandle(DATA_FILE, { create: true })
+      .then(function (fh) {
+        return fh.createWritable().then(function (w) {
+          return w.write(content).then(function () { return w.close(); });
+        }).then(function () { return fh.getFile(); });
+      })
+      .then(function (file) { return file.text(); })
+      .then(function (text) {
+        if (text !== content) throw new Error('Le contenu relu ne correspond pas.');
+        return payload;
+      });
+  }
+
+  function hasToolFile(dir) {
+    if (!dir.values) return Promise.resolve(null);
+    var names = [];
+    var it = dir.values();
+    function next() {
+      return it.next().then(function (step) {
+        if (step.done) return names;
+        names.push(step.value.name);
+        return next();
+      });
+    }
+    return next().then(function (list) {
+      return list.some(function (n) { return /^outil formulation\.html$/i.test(n); });
+    }).catch(function () { return null; });
+  }
+
+  function runWriteTest(dir) {
+    message('Écriture du fichier de test…');
+    return writeAndVerify(dir).then(function (payload) {
+      set('ecriture', 'ok', 'fonctionne dans « ' + dir.name + ' »', 'Fichier ' + DATA_FILE + ' écrit puis relu le ' + payload.date + '.');
+      set('lecture', 'wip', 'à vérifier après réouverture', 'Au prochain lancement, cette ligne doit afficher « OK ».');
+      set('autorisation', 'na', 'à vérifier', 'Fermez complètement Edge puis rouvrez ce fichier.');
+      document.getElementById('btn-regrant').hidden = true;
+      return dbPut('dossier', dir).catch(function (e) {
+        set('indexeddb', 'todo', 'impossible de mémoriser le dossier', friendlyError(e));
+      }).then(function () {
+        return hasToolFile(dir);
+      }).then(function (found) {
+        if (found === false) {
+          message('Écriture réussie. Remarque : ce dossier ne contient pas « Outil Formulation.html » ; pour le vrai outil, choisissez le dossier où il se trouve.');
+        } else {
+          message('Écriture réussie. Fermez maintenant complètement Edge, puis rouvrez ce fichier (étape 4).');
+        }
+      });
+    });
+  }
+
+  document.getElementById('btn-test').addEventListener('click', function () {
+    if (!('showDirectoryPicker' in window)) {
+      set('ecriture', 'todo', 'impossible', 'Ce navigateur ne permet pas d\'enregistrer dans un dossier. Utilisez Microsoft Edge.');
+      return;
+    }
+    message('Choisissez le dossier de l\'outil sur N:…');
+    window.showDirectoryPicker({ id: 'outil-formulation', mode: 'readwrite' })
+      .then(function (dir) {
+        return dir.requestPermission({ mode: 'readwrite' }).then(function (state) {
+          if (state !== 'granted') {
+            var err = new Error('Autorisation refusée');
+            err.name = 'NotAllowedError';
+            throw err;
+          }
+          return runWriteTest(dir);
+        });
+      })
+      .catch(function (e) {
+        if (e && e.name === 'AbortError') {
+          message(friendlyError(e));
+          return;
+        }
+        set('ecriture', 'todo', 'échec', friendlyError(e));
+        message('');
+      });
+  });
+
+  document.getElementById('btn-regrant').addEventListener('click', function () {
+    if (!storedDir) return;
+    storedDir.requestPermission({ mode: 'readwrite' }).then(function (state) {
+      if (state !== 'granted') {
+        set('autorisation', 'todo', 'refusée', 'Edge n\'a pas donné l\'autorisation.');
+        return;
+      }
+      return runWriteTest(storedDir);
+    }).catch(function (e) {
+      set('autorisation', 'todo', 'échec', friendlyError(e));
+    });
+  });
+
+  document.getElementById('btn-copy').addEventListener('click', function () {
+    var lines = ['Test disque N: — ' + new Date().toLocaleString('fr-FR'),
+      document.getElementById('verdict').textContent, ''];
+    ORDER.forEach(function (key) {
+      var r = results[key] || { status: 'na', text: 'En attente', detail: '' };
+      lines.push('[' + BADGE[r.status] + '] ' + LABELS[key] + ' : ' + r.text + (r.detail ? ' — ' + r.detail : ''));
+    });
+    lines.push('', navigator.userAgent);
+    var text = lines.join('\n');
+    var done = function () { message('Résultat copié. Collez-le dans votre message à Claude (Ctrl+V).'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text); done(); });
+    } else {
+      fallbackCopy(text);
+      done();
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* rien à faire */ }
+    document.body.removeChild(ta);
+  }
+
+  render();
+  checkNavigateur();
+  checkEmplacement();
+  checkMemoire();
+  checkApi();
+  checkLecture();
+  checkAutorisationMemorisee();
+})();
+</script>
+</body>
+</html>

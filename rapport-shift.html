@@ -43,7 +43,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html{font-size:100%;-webkit-text-size-adjust:100%}
 html.text-lg{font-size:112.5%}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:1rem;line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:1rem;line-height:1.45;-webkit-font-smoothing:antialiased}
 h1,h2,h3,p{margin:0}
 button,input,select,textarea{font:inherit;color:inherit}
 [hidden]{display:none !important}
@@ -387,37 +387,40 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
    Vue d'impression (rendu dédié, généré depuis l'état)
    ========================================================================= */
 #print-root{display:none}
-.pv{font-family:var(--font);color:var(--text);font-size:7.6pt;line-height:1.28;display:flex;flex-direction:column;gap:2.2mm;background:#fff}
+.pv{font-family:var(--font);color:var(--text);font-size:7.4pt;line-height:1.2;display:flex;flex-direction:column;gap:1.7mm;background:#fff}
 .pv *{box-sizing:border-box}
 .pv .icon{width:3.6mm;height:3.6mm;stroke-width:2.2}
-.pv-head{display:flex;align-items:center;gap:4mm;padding-bottom:2mm;border-bottom:.5mm solid var(--nn-navy)}
+.pv-head{display:flex;align-items:center;gap:4mm;padding-bottom:1.6mm;border-bottom:.5mm solid var(--nn-navy)}
 .pv-logo{height:9mm;width:auto;display:block}
 .pv-titles{min-width:0}
 .pv-title{font-size:13pt;font-weight:800;letter-spacing:.07em;color:var(--nn-navy);line-height:1.1}
-.pv-meta{display:flex;flex-wrap:wrap;gap:.6mm 4.5mm;margin-top:.9mm;font-size:8pt;color:var(--muted)}
+.pv-meta{display:flex;flex-wrap:wrap;gap:.6mm 4.5mm;margin-top:.8mm;font-size:8pt;color:var(--muted)}
 .pv-meta b{color:var(--text);font-weight:700}
-.pv-frigo{margin-left:auto;display:flex;align-items:center;gap:2mm;padding:1.6mm 3mm;border-radius:1.5mm;background:var(--na-bg);color:var(--na-fg);font-size:8pt;max-width:110mm}
+.pv-frigo{margin-left:auto;display:flex;align-items:center;gap:2mm;padding:1.5mm 3mm;border-radius:1.5mm;background:var(--na-bg);color:var(--na-fg);font-size:8pt;max-width:110mm;line-height:1.25}
 .pv-frigo b{font-weight:800;letter-spacing:.08em}
 .pv-frigo.is-alert{background:var(--todo-dot);color:#fff}
 .pv-frigo small{display:block;font-size:7pt;opacity:.95}
-.pv-watch{display:flex;flex-wrap:wrap;align-items:center;gap:1mm 1.6mm;font-size:7pt}
-.pv-watch__t{font-weight:800;color:var(--nn-navy);letter-spacing:.06em;text-transform:uppercase;font-size:6.8pt}
-.pv-watch__i{padding:.5mm 1.8mm;border-radius:1mm;border:.2mm solid var(--border);background:var(--surface-2)}
-.pv-watch__i.t-wip{background:var(--wip-bg);border-color:#EACB7A;color:var(--wip-fg)}
+.pv-watch{display:flex;flex-wrap:wrap;align-items:center;gap:1mm 1.6mm;font-size:6.9pt}
+.pv-watch__t{font-weight:800;color:var(--nn-navy);letter-spacing:.06em;text-transform:uppercase;font-size:6.6pt}
+.pv-watch__i{padding:.4mm 1.6mm;border-radius:1mm;border:.2mm solid var(--border);background:var(--surface-2)}
+.pv-watch__i.t-wip{background:var(--wip-bg);border-color:#EACB7A;color:var(--wip-fg);font-weight:600}
 .pv-watch__i.t-todo{background:var(--todo-bg);border-color:#F0AFA9;color:var(--todo-fg);font-weight:700}
-.pv-band__title{display:flex;align-items:center;gap:2mm;margin-bottom:1mm;font-size:7.2pt;font-weight:800;letter-spacing:.1em;color:var(--nn-navy);text-transform:uppercase}
+.pv-band{break-inside:avoid;page-break-inside:avoid}
+.pv-band__title{display:flex;align-items:center;gap:2mm;margin-bottom:.8mm;font-size:7pt;font-weight:800;letter-spacing:.1em;color:var(--nn-navy);text-transform:uppercase;line-height:1.1}
 .pv-band__title::after{content:"";flex:1;height:.3mm;background:var(--border-strong)}
-.pv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.4mm}
-.pv-card{display:flex;flex-direction:column;border:.25mm solid var(--border-strong);border-radius:1.4mm;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid}
-.pv-cap{display:flex;align-items:baseline;gap:2.2mm;padding:1mm 1.8mm;background:var(--nn-navy);color:#fff;white-space:nowrap}
-.pv-cap b{font-size:7.8pt;letter-spacing:.08em}
-.pv-cap .pv-lot{font-family:var(--mono);font-weight:700;font-size:7.8pt;letter-spacing:.03em}
-.pv-cap .pv-prod{margin-left:auto;font-weight:600;font-size:7.4pt;opacity:.92}
+.pv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2.2mm}
+.pv-card{display:flex;flex-direction:column;border:.25mm solid var(--border-strong);border-radius:1.3mm;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid}
+.pv-cap{display:flex;align-items:baseline;gap:2.2mm;padding:.75mm 1.8mm;background:var(--nn-navy);color:#fff;white-space:nowrap;line-height:1.2}
+.pv-cap b{font-size:7.6pt;letter-spacing:.08em}
+.pv-cap .pv-lot{font-family:var(--mono);font-weight:700;font-size:7.6pt;letter-spacing:.03em}
+.pv-cap .pv-prod{margin-left:auto;font-weight:700;font-size:7.2pt}
 .pv-cap .pv-empty{opacity:.55;font-weight:400}
-.pv-kv{display:grid;grid-template-columns:21fr 27fr 21fr 27fr;gap:.25mm;background:var(--border)}
-.pv-kv>div{background:#fff;padding:.55mm 1.3mm;min-height:4.3mm;display:flex;align-items:center;overflow-wrap:anywhere;min-width:0}
-.pv-kv>.pv-l{background:var(--surface-2);color:var(--muted);font-weight:600;font-size:6.6pt;line-height:1.12}
+.pv-kv{display:grid;grid-template-columns:21fr 25fr 21fr 25fr;gap:.25mm;background:var(--border);border-bottom:.25mm solid var(--border)}
+.pv-kv>div{background:#fff;padding:.45mm 1.1mm;min-height:3.9mm;display:flex;align-items:center;min-width:0;overflow-wrap:break-word}
+.pv-kv>.pv-l{background:var(--surface-2);color:var(--muted);font-weight:600;font-size:6.2pt;line-height:1.1}
+.pv-kv>.pv-l.is-fill{background:#fff}
 .pv-kv>.pv-v{font-weight:600}
+.pv-kv>.pv-st{font-size:6.9pt;letter-spacing:.01em}
 .pv-kv>.pv-v.t-ok{background:var(--ok-bg);color:var(--ok-fg);font-weight:700}
 .pv-kv>.pv-v.t-wip{background:var(--wip-bg);color:var(--wip-fg);font-weight:700}
 .pv-kv>.pv-v.t-todo{background:var(--todo-bg);color:var(--todo-fg);font-weight:700}
@@ -426,27 +429,28 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .pv-kv>.pv-v.is-off{color:#A9B0C0;font-weight:400;background:#FAFBFD}
 .pv-kv>.pv-v.is-empty{color:#A9B0C0;font-weight:400}
 .pv-kv>.pv-v.pv-lim{flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.1}
-.pv-lim small{font-size:6.4pt;font-weight:600;opacity:.9}
+.pv-lim small{font-size:6.1pt;font-weight:600;opacity:.9}
+.pv-kv>.pv-note{grid-column:span 3;font-weight:400;white-space:pre-wrap;line-height:1.25;overflow-wrap:anywhere}
 .pv-v .pv-snow{width:2.8mm;height:2.8mm;margin-right:.8mm}
-.pv-notes{flex:1;padding:.9mm 1.8mm;border-top:.25mm solid var(--border);white-space:pre-wrap;overflow-wrap:anywhere;min-height:5mm}
-.pv-notes__l{font-weight:700;color:var(--muted);font-size:6.4pt;text-transform:uppercase;letter-spacing:.05em;margin-right:1.4mm}
-.pv-notes.is-empty{color:#A9B0C0}
-.pv-annex{display:grid;grid-template-columns:1.25fr .95fr 1fr;gap:2.4mm;align-items:stretch}
-.pv-box{border:.25mm solid var(--border-strong);border-radius:1.4mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid;background:#fff}
-.pv-box h3{padding:.8mm 1.8mm;background:var(--surface-2);border-bottom:.25mm solid var(--border);color:var(--nn-navy);font-size:7pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.pv-annex{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:2.2mm;align-items:stretch;break-inside:avoid;page-break-inside:avoid}
+.pv-box{border:.25mm solid var(--border-strong);border-radius:1.3mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid;background:#fff}
+.pv-box h3,.pv-points h3{padding:.7mm 1.8mm;background:var(--surface-2);border-bottom:.25mm solid var(--border);color:var(--nn-navy);font-size:6.8pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
 .pv-table{width:100%;border-collapse:collapse;table-layout:fixed}
-.pv-table th{padding:.5mm 1.4mm;border-bottom:.2mm solid var(--border);color:var(--muted);font-size:6.4pt;font-weight:600;text-align:left}
-.pv-table td{padding:.55mm 1.4mm;border-bottom:.2mm solid var(--border);overflow-wrap:anywhere;vertical-align:middle}
+.pv-table th{padding:.4mm 1.4mm;border-bottom:.2mm solid var(--border);color:var(--muted);font-size:6.2pt;font-weight:600;text-align:left}
+.pv-table td{padding:.45mm 1.4mm;border-bottom:.2mm solid var(--border);overflow-wrap:break-word;vertical-align:middle;font-weight:600}
 .pv-table tr:last-child td{border-bottom:0}
 .pv-table td.t-ok{background:var(--ok-bg);color:var(--ok-fg);font-weight:700}
 .pv-table td.t-todo{background:var(--todo-bg);color:var(--todo-fg);font-weight:700}
-.pv-table td.t-na{color:#8A93A8}
-.pv-table .mono{font-family:var(--mono);font-weight:600}
-.pv-none{padding:1.2mm 1.8mm;color:#A9B0C0}
-.pv-points{border:.25mm solid var(--border-strong);border-radius:1.4mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
-.pv-points h3{padding:.8mm 1.8mm;background:var(--surface-2);border-bottom:.25mm solid var(--border);color:var(--nn-navy);font-size:7pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-.pv-points p{padding:1.2mm 1.8mm;white-space:pre-wrap;overflow-wrap:anywhere;font-size:7.8pt;line-height:1.35}
-.pv-foot{margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:1mm;border-top:.2mm solid var(--border);color:var(--muted);font-size:6.6pt}
+.pv-table td.t-na{color:#8A93A8;font-weight:500}
+.pv-table .mono{font-family:var(--mono)}
+.pv-5s th,.pv-5s td{border-left:.2mm solid var(--border)}
+.pv-5s th:first-child,.pv-5s td:first-child{border-left:0}
+.pv-5s th{font-weight:800;color:var(--nn-navy)}
+.pv-5s__note{font-weight:400 !important;font-size:6.6pt}
+.pv-none{padding:1mm 1.8mm;color:#A9B0C0}
+.pv-points{border:.25mm solid var(--border-strong);border-radius:1.3mm;overflow:hidden;break-inside:avoid;page-break-inside:avoid}
+.pv-points p{padding:1mm 1.8mm;white-space:pre-wrap;overflow-wrap:anywhere;font-size:7.6pt;line-height:1.3}
+.pv-foot{margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:.8mm;border-top:.2mm solid var(--border);color:var(--muted);font-size:6.4pt}
 
 @page{size:A4 landscape;margin:8mm}
 @media print{
@@ -696,7 +700,7 @@ const SCHEMA = {
     groninger: [
       F.lot(), F.prod(),
       F.st('statutLocal', 'Statut local', 'LOCAL_STATUT'),
-      F.dt('debutFiltration', 'Début filtration', { limit: { label: 'Limite HT (150 h)', print: 'Limite HT (150 h)', hours: () => 150 } }),
+      F.dt('debutFiltration', 'Début filtration', { print: 'Début filtr.', limit: { label: 'Limite HT (150 h)', hours: () => 150 } }),
       F.st('connexion', 'Connexion', 'ETAT4'),
       F.st('vdl', 'VDL', 'ETAT4'),
       F.tx('w3', 'W3', { placeholder: 'Texte libre' }),
@@ -714,8 +718,8 @@ const SCHEMA = {
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.dt('debutFormulation', 'Début formulation', {
-        when: notForMFT,
-        limit: { label: 'Limite HT pour début filtration', print: 'Lim. HT début filtr.', variable: true,
+        when: notForMFT, print: 'Début formu.',
+        limit: { label: 'Limite HT pour début filtration', variable: true,
           hours: c => (/^CT-P17/.test(c.produit) ? 20 : c.produit === 'SWFI' ? 34 : 24) },
       }),
       F.notes(),
@@ -729,8 +733,8 @@ const SCHEMA = {
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.dt('dateFormulation', c => (['TAKEDA', 'SWFI'].includes(c.produit) ? 'Début de formulation' : 'Fin de formulation'), {
-        when: notForMFT,
-        limit: { label: 'Limite HT pour fin de remplissage', print: 'Lim. HT fin rempl.', variable: true,
+        when: notForMFT, print: c => (['TAKEDA', 'SWFI'].includes(c.produit) ? 'Début formu.' : 'Fin formu.'),
+        limit: { label: 'Limite HT pour fin de remplissage', variable: true,
           hours: c => ({ SWFI: 34, EPPI: 32, TAKEDA: 144 })[c.produit] || 24 },
       }),
       F.notes(),
@@ -743,9 +747,9 @@ const SCHEMA = {
       F.st('pesee', 'Pesée', 'ETAT4'),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
       F.st('cuveStockage', 'Cuve stockage', 'CUVE_STOCKAGE'),
-      F.dt('debutHT72', 'Début HT (72 h)', { limit: { label: 'Limite HT 72 h', print: 'Limite HT 72 h', hours: () => 72 } }),
+      F.dt('debutHT72', 'Début HT (72 h)', { print: 'Début HT 72 h', limit: { label: 'Limite HT 72 h', hours: () => 72 } }),
       F.st('local', 'Local', 'LOCAL_PREP_GRON'),
-      F.dt('debutHTFormu24', 'Début HT formu. (24 h)', { limit: { label: 'Limite HT formu. 24 h', print: 'Lim. HT formu. 24 h', hours: () => 24 } }),
+      F.dt('debutHTFormu24', 'Début HT formu. (24 h)', { print: 'Début HT formu.', limit: { label: 'Limite HT formu. 24 h', hours: () => 24 } }),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.notes(),
@@ -892,6 +896,7 @@ function normalizeData(raw) {
    4. Calculs : applicabilité, limites de holding time, alertes
    ========================================================================= */
 const labelOf = (f, c) => (typeof f.label === 'function' ? f.label(c) : f.label);
+const printLabelOf = (f, c) => (typeof f.print === 'function' ? f.print(c) : f.print || labelOf(f, c));
 const naReason = (f, c) => (f.when ? f.when(c) : null);
 function limitOf(f, c, now) {
   if (!f.limit || naReason(f, c)) return null;
@@ -902,7 +907,7 @@ function limitOf(f, c, now) {
   const remaining = due - now;
   return {
     label: f.limit.label + (f.limit.variable ? ` (${hours} h)` : ''),
-    printLabel: f.limit.print + (f.limit.variable ? ` (${hours} h)` : ''),
+    printLabel: `Limite HT ${hours} h`,
     hours, due, remaining,
     tone: remaining < 0 ? 'todo' : remaining < 4 * 3600e3 ? 'wip' : 'neutral',
     rest: remaining < 0 ? `dépassé de ${fmtDur(remaining)}` : `reste ${fmtDur(remaining)}`,
@@ -1785,44 +1790,44 @@ function renderWatch() {
 let printTimer = 0, printingSnapshot = false;
 const LOGO_SRC = () => $('#brand-logo').getAttribute('src');
 function printCard(b, l, c, at) {
-  const cells = [];
+  const cells = [], timed = [];
   let notes = '';
   for (const f of SCHEMA[b.kind][l.id]) {
     if (f.type === 'lot' || f.type === 'product') continue;
     if (f.type === 'textarea') { notes = (c[f.key] || '').trim(); continue; }
-    const label = labelOf(f, c);
+    const label = printLabelOf(f, c);
     const na = naReason(f, c);
-    if (na) {
-      cells.push({ label, value: '—', cls: 'is-off' });
-      if (f.limit) cells.push({ label: f.limit.print, value: '—', cls: 'is-off' });
+    const v = c[f.key];
+    if (f.type === 'datetime' && f.limit) {
+      // Date de début et sa limite HT côte à côte, regroupées en fin de carte
+      if (na) { timed.push({ label, value: '—', cls: 'is-off' }, { label: `Limite HT ${f.limit.hours(c)} h`, value: '—', cls: 'is-off' }); continue; }
+      const d = parseLocal(v);
+      const lim = limitOf(f, c, at);
+      timed.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' },
+        lim ? { label: lim.printLabel, value: fmtDM(lim.due), sub: lim.rest, cls: `pv-lim${lim.tone !== 'neutral' ? ` t-${lim.tone}` : ''}` }
+            : { label: `Limite HT ${f.limit.hours(c)} h`, value: '', cls: 'is-empty' });
       continue;
     }
-    const v = c[f.key];
-    if (f.type === 'status') cells.push({ label, value: v, cls: `t-${toneOf(f.list, v)}`, cold: v === 'AU FRIGO' });
-    else if (f.type === 'datetime') {
-      const d = parseLocal(v);
-      cells.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' });
-      if (f.limit) {
-        const lim = limitOf(f, c, at);
-        cells.push(lim
-          ? { label: lim.printLabel, value: fmtDM(lim.due), sub: lim.rest, cls: `pv-lim${lim.tone !== 'neutral' ? ` t-${lim.tone}` : ''}` }
-          : { label: f.limit.print + (f.limit.variable ? ` (${f.limit.hours(c)} h)` : ''), value: '', cls: 'is-empty' });
-      }
-    } else cells.push({ label, value: (v || '').trim(), cls: v ? '' : 'is-empty' });
+    if (na) cells.push({ label, value: '—', cls: 'is-off' });
+    else if (f.type === 'status') cells.push({ label, value: v, cls: `pv-st t-${toneOf(f.list, v)}`, cold: v === 'AU FRIGO' });
+    else if (f.type === 'datetime') { const d = parseLocal(v); cells.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' }); }
+    else cells.push({ label, value: (v || '').trim(), cls: v ? '' : 'is-empty' });
   }
+  const filler = { label: '', value: '', cls: 'is-fill' };
+  if (cells.length % 2) cells.push(filler);
+  const all = cells.concat(timed);
   const kv = h('div', { class: 'pv-kv' });
-  for (const cell of cells) {
-    kv.append(h('div', { class: 'pv-l', text: cell.label }),
+  for (const cell of all) {
+    kv.append(h('div', { class: `pv-l${cell.cls === 'is-fill' ? ' is-fill' : ''}`, text: cell.label }),
       h('div', { class: `pv-v ${cell.cls || ''}` }, cell.cold ? icon('snow', 'icon pv-snow') : null,
         cell.sub ? [h('span', { text: cell.value }), h('small', { text: cell.sub })] : cell.value));
   }
-  if (cells.length % 2) kv.append(h('div', { class: 'pv-l' }), h('div', { class: 'pv-v' }));
+  if (notes) kv.append(h('div', { class: 'pv-l', text: 'Remarques' }), h('div', { class: 'pv-v pv-note', text: notes }));
   return h('div', { class: 'pv-card' },
     h('div', { class: 'pv-cap' }, h('b', { text: l.name.toUpperCase() }),
       h('span', { class: `pv-lot${c.lot ? '' : ' pv-empty'}`, text: c.lot || 'Lot —' }),
       h('span', { class: `pv-prod${c.produit ? '' : ' pv-empty'}`, text: c.produit || '—' })),
-    kv,
-    h('div', { class: `pv-notes${notes ? '' : ' is-empty'}` }, h('span', { class: 'pv-notes__l', text: 'Remarques' }), notes || '—'));
+    kv);
 }
 function buildSheet(report, { at, author }) {
   const { frigo, limits } = computeAlerts(report, at);
@@ -1856,9 +1861,11 @@ function buildSheet(report, { at, author }) {
             h('tbody', {}, fb.map(x => h('tr', {}, FB_FIELDS.map(fd => h('td', { class: fd.lot ? 'mono' : null, text: x[fd.key] || '—' }))))))
         : h('div', { class: 'pv-none', text: 'Aucun arrêt signalé' })),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Vérification 5S' }),
-        h('table', { class: 'pv-table' }, h('tbody', {}, S5.map(k => h('tr', {},
-          h('th', { style: 'width:9mm', text: k }), h('td', { class: tone(report.verif5S[k].statut), style: 'width:17mm', text: report.verif5S[k].statut }),
-          h('td', { text: report.verif5S[k].note || '' })))))),
+        h('table', { class: 'pv-table pv-5s' },
+          h('thead', {}, h('tr', {}, S5.map(k => h('th', { text: k })))),
+          h('tbody', {},
+            h('tr', {}, S5.map(k => h('td', { class: tone(report.verif5S[k].statut), text: report.verif5S[k].statut }))),
+            S5.some(k => report.verif5S[k].note) ? h('tr', {}, S5.map(k => h('td', { class: 'pv-5s__note', text: report.verif5S[k].note || '' }))) : null))),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Suivi dossier' }), sd.length
         ? h('table', { class: 'pv-table' }, h('thead', {}, h('tr', {}, h('th', { text: 'Lot' }), h('th', { text: 'Scan + transfert' }), h('th', { text: 'Check' }))),
             h('tbody', {}, sd.map(x => h('tr', {}, h('td', { class: 'mono', text: x.lot || '—' }), h('td', { class: tone(x.scan), text: x.scan }), h('td', { class: tone(x.check), text: x.check })))))

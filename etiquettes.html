@@ -73,7 +73,7 @@ button { cursor: pointer; }
 .brand-sep { width: 1px; height: 32px; background: var(--border); flex: none; }
 .brand-text { min-width: 0; }
 .app-title { font-size: 1.25rem; font-weight: 700; color: var(--nn-navy); line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
-.app-sub { font-size: .8125rem; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.app-sub { display: block; font-size: .8125rem; color: var(--muted); line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .header-right { margin-left: auto; display: flex; align-items: center; gap: .5rem; position: relative; }
 .header-actions { display: flex; align-items: center; gap: .5rem; }
 .save-state { display: inline-flex; align-items: center; gap: .25rem; font-size: .8125rem; color: var(--muted); white-space: nowrap; padding: .25rem .625rem; border-radius: 999px; }
@@ -148,7 +148,8 @@ button { cursor: pointer; }
 /* Champs */
 .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1rem; }
 .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.span-2 { grid-column: 1 / -1; }
+.grid-6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; }
+.grid-6 > .field { grid-column: span var(--span, 3); }
 .field { display: flex; flex-direction: column; gap: .375rem; min-width: 0; }
 .field-label { font-size: .8125rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .02em; line-height: 1.3; }
 .field-label .opt { text-transform: none; font-weight: 400; letter-spacing: 0; }
@@ -192,6 +193,8 @@ input[type="date"].input { min-width: 0; }
 .stepper .step-btn:disabled { color: #AEB6C8; cursor: default; }
 .stepper .unit { align-self: center; color: var(--muted); font-size: .875rem; padding-right: .5rem; white-space: nowrap; }
 .stepper.wide { width: 100%; }
+.stepper.unit-only .input { text-align: left; padding-left: .75rem; }
+.input.num { font-variant-numeric: tabular-nums; }
 .stepper.wide .input { width: auto; }
 
 /* Contrôle segmenté (pastilles radio) */
@@ -423,6 +426,7 @@ dialog.dlg::backdrop { background: rgba(11,21,53,.45); }
   .card-head { padding: .75rem 1rem; }
   .card-body { padding: 1rem; }
   .grid-2, .grid-3 { grid-template-columns: minmax(0, 1fr); }
+  .grid-6 > .field { grid-column: 1 / -1; }
   .seg-xl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .print-actions { grid-template-columns: minmax(0, 1fr); }
   .pv-scroll { padding: .75rem; }
@@ -458,7 +462,7 @@ dialog.dlg::backdrop { background: rgba(11,21,53,.45); }
     <span class="brand-sep" aria-hidden="true"></span>
     <span class="brand-text">
       <span class="app-title" role="heading" aria-level="1">Étiquettes<span class="t-long"> d'échantillons</span></span>
-      <span class="app-sub" style="display:block">Formulation · planches SB4 · SB5 · SB5B · SB16</span>
+      <span class="app-sub">Équipe formulation · planches SB</span>
     </span>
   </a>
   <div class="header-right">
@@ -580,16 +584,16 @@ const ADV_FIELDS = [
 ];
 /* Champs de l'étape 1 (rendu générique). */
 const PARAM_FIELDS = [
-  { key: 'produit', label: 'Produit', type: 'segmented', size: 'xl', span: 2, options: () => PRODUCTS.map(p => ({ value: p, label: p })), rerender: true },
-  { key: 'lot', label: 'Lot', type: 'text', upper: true, big: true, span: 2, maxLength: 40, placeholder: 'ex. FA123',
+  { key: 'produit', label: 'Produit', type: 'segmented', size: 'xl', span: 6, options: () => PRODUCTS.map(p => ({ value: p, label: p })), rerender: true },
+  { key: 'lot', label: 'Lot', type: 'text', upper: true, big: true, span: 6, maxLength: 40, placeholder: 'ex. FA123',
     hint: () => state.lot.trim() ? null : ['Le lot apparaît en 1ʳᵉ ligne de chaque étiquette (en majuscules).'] },
-  { key: 'dateFormulation', label: 'Date de formulation', optional: true, type: 'date',
+  { key: 'dateFormulation', label: 'Date de formulation', optional: true, type: 'date', span: 4,
     hint: () => { const d = formatDateLabel(state.dateFormulation); return d ? ['Sur l\'étiquette : ', h('span', { class: 'mono' }, d)] : ['Vide : un blanc est laissé pour l\'écrire à la main.']; } },
-  { key: 'visa', label: 'Visa', optional: true, type: 'text', upper: true, maxLength: 12, placeholder: 'ex. NB',
-    hint: () => { const v = state.visa.trim().toUpperCase(); return v ? ['Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)] : ['Vide : un blanc est laissé pour signer à la main.']; } },
+  { key: 'visa', label: 'Visa', optional: true, type: 'text', upper: true, maxLength: 12, placeholder: 'ex. NB', span: 2,
+    hint: () => { const v = state.visa.trim().toUpperCase(); return v ? ['Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)] : ['Vide : blanc pour signer à la main.']; } },
   { heading: 'Noms des échantillons de poche', hint: 'Ex. « SB4-Poche 1-Ech ID1 » : le nom est suivi du numéro de poche.' },
-  { key: 'nom1mL', label: 'Nom échantillon 1 mL', type: 'text', maxLength: 40, defaultName: true },
-  { key: 'nom2mL', label: 'Nom échantillon 2 mL', type: 'text', maxLength: 40, defaultName: true },
+  { key: 'nom1mL', label: 'Nom échantillon 1 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
+  { key: 'nom2mL', label: 'Nom échantillon 2 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
 ];
 const MAX_POCHES_ROW = 999;
 const POCHE_FIELDS = [
@@ -1084,7 +1088,7 @@ function Field({ id, label, optional, hint, control, span, labelFor = true, cls 
   const labelEl = labelFor && id
     ? h('label', { class: 'field-label', for: id, id: id + '-label' }, label, optional ? h('span', { class: 'opt' }, ' (facultatif)') : null)
     : h('div', { class: 'field-label', id: id ? id + '-label' : null }, label, optional ? h('span', { class: 'opt' }, ' (facultatif)') : null);
-  const wrap = h('div', { class: 'field' + (span === 2 ? ' span-2' : '') + (cls ? ' ' + cls : '') }, labelEl, control, hintEl);
+  const wrap = h('div', { class: 'field' + (cls ? ' ' + cls : ''), style: span ? `--span:${span}` : null }, labelEl, control, hintEl);
   const setHint = v => { hintEl.replaceChildren(); if (v == null || v === '') { hintEl.hidden = true; return; } hintEl.hidden = false; hintEl.append(...[].concat(v)); };
   if (typeof hint === 'function') onDerived(() => setHint(hint()));
   else setHint(hint);
@@ -1130,7 +1134,7 @@ function NumberInput({ id, get, set, min = -Infinity, max = Infinity, step = 1, 
   show();
   if (!stepper) {
     if (!unit) return input;
-    return h('div', { class: 'stepper' + (wide ? ' wide' : '') }, input, h('span', { class: 'unit' }, unit));
+    return h('div', { class: 'stepper unit-only' + (wide ? ' wide' : '') }, input, h('span', { class: 'unit' }, unit));
   }
   const lbl = ariaLabel || '';
   minus = h('button', { type: 'button', class: 'step-btn', 'aria-label': `Diminuer ${lbl}`.trim(), tabindex: '-1', onclick: () => bump(-1) }, icon('minus'));
@@ -1213,8 +1217,7 @@ function ListEditor({ cls, fields, rows, idPrefix, rowLabel, onSet, onRemove, ex
   const wrap = h('div', { class: 'list ' + cls, role: 'group', 'aria-label': ariaLabel });
   if (!rows.length) { wrap.append(h('div', { class: 'list-empty' }, emptyText)); return wrap; }
   wrap.append(h('div', { class: 'lrow lhead', 'aria-hidden': 'true' },
-    fields.map(f => h('div', { class: 'lcell c-' + f.key }, def(f))), extraHead ? h('div', { class: 'lcell c-range' }, extraHead) : null, h('div')));
-  function def(f) { return f.type === 'check' ? '' : f.label; }
+    fields.map(f => h('div', { class: 'lcell c-' + f.key }, f.type === 'check' ? '' : f.label)), extraHead ? h('div', { class: 'lcell c-range' }, extraHead) : null, h('div')));
   rows.forEach((row, i) => {
     const label = rowLabel(row, i);
     const r = h('div', { class: 'lrow', dataset: { id: row.id } });
@@ -1249,7 +1252,7 @@ function renderStep1() {
       body.push(h('div', { class: 'subsection', style: 'padding-top:1rem;gap:.25rem' }, h('h3', { class: 'subhead' }, def.heading), h('div', { class: 'hint' }, def.hint)));
       continue;
     }
-    if (!grid) grid = h('div', { class: 'grid-2' });
+    if (!grid) grid = h('div', { class: 'grid-6' });
     const bind = paramBinding(def);
     let fdef = def;
     if (def.defaultName) {
@@ -1296,8 +1299,8 @@ function renderStep2() {
   const total = h('div', { class: 'total', id: 'poches-total', 'aria-live': 'polite' });
   onDerived(() => {
     const d = derived.poches;
-    total.replaceChildren(h('strong', null, plural(d.total, 'poche')), ` · ${plural(d.pages.length, 'page')}`,
-      state.plage.mode === 'range' && !d.error && d.total ? ` (${plural(d.count, 'poche')} à imprimer)` : '');
+    const partial = state.plage.mode === 'range' && d.total > 0;
+    total.replaceChildren(h('strong', null, plural(d.total, 'poche')), partial ? ` · ${d.count} à imprimer` : '', ` · ${plural(d.pages.length, 'page')}`);
   });
   const add = h('button', { type: 'button', class: 'btn btn-secondary', id: 'btn-add-poche', onclick: () => {
     const row = newPocheRow(); state.poches.push(row); commit({ rerender: true, tab: 'poches', focus: `p-${row.id}-lotPoche` });
@@ -1504,7 +1507,8 @@ function updateSummaries() {
   const P = state.produit, lot = state.lot.trim().toUpperCase();
   $('#sum-1').replaceChildren(h('span', { class: 'chip navy' }, P), lot ? h('span', { class: 'chip ok' }, lot) : h('span', { class: 'chip todo' }, 'Lot à saisir'));
   const p = derived.poches;
-  $('#sum-2').replaceChildren(h('span', { class: 'chip ' + (p.total ? 'plain' : 'todo') }, `${plural(p.total, 'poche')} · ${plural(p.pages.length, 'page')}`));
+  const partial = state.plage.mode === 'range' && p.total > 0 ? `${p.count} / ` : '';
+  $('#sum-2').replaceChildren(h('span', { class: 'chip ' + (p.count ? 'plain' : 'todo') }, `${partial}${plural(p.total, 'poche')} · ${plural(p.pages.length, 'page')}`));
   const a = derived.autres;
   $('#sum-3').replaceChildren(h('span', { class: 'chip plain' }, `${plural(a.count, 'étiquette')} · ${plural(a.pages.length, 'page')}`));
   const g = geo(), r = state.reglages;
@@ -1712,7 +1716,13 @@ function cleanupPrint() {
   document.title = titleBeforePrint;
   printPrepared = false;
 }
-window.addEventListener('beforeprint', () => { if (!printPrepared) preparePrint(state.ui.apercu); });
+/* Ctrl+P direct : on imprime l'onglet affiché (ou l'autre s'il est vide). */
+window.addEventListener('beforeprint', () => {
+  if (printPrepared) return;
+  computeDerived();
+  const cur = state.ui.apercu, other = cur === 'poches' ? 'autres' : 'poches';
+  preparePrint(derived[cur].pages.length || !derived[other].pages.length ? cur : other);
+});
 window.addEventListener('afterprint', cleanupPrint);
 
 async function showPrintHelp(beforePrint) {
