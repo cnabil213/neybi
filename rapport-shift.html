@@ -52,7 +52,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 .icon--lg{width:1.625rem;height:1.625rem}
 .mono{font-family:var(--mono)}
 .muted{color:var(--muted)}
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .skip{position:absolute;left:1rem;top:-3rem;z-index:100;background:var(--nn-navy);color:#fff;padding:.5rem 1rem;border-radius:var(--radius-sm);text-decoration:none}
 .skip:focus{top:.5rem}
 :focus-visible{outline:none;box-shadow:var(--focus)}
@@ -76,13 +75,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 /* ---------- En-tête ---------- */
 .app-header{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid var(--border)}
 .app-header__in{max-width:1760px;margin:0 auto;min-height:4rem;padding:.375rem 1.25rem;display:flex;align-items:center;gap:.625rem}
-.brand{display:flex;align-items:center;gap:.875rem;min-width:0;flex:0 1 auto;margin-right:auto}
+.brand{display:flex;align-items:center;gap:.875rem;min-width:0;flex:0 0 auto;margin-right:auto}
 .brand__logo{height:2.5rem;width:auto;display:block;flex:none}
-.brand__sep{width:1px;height:2.25rem;background:var(--border);flex:none}
-.brand__text{min-width:0}
-.brand__title{font-size:1.25rem;font-weight:700;color:var(--nn-navy);line-height:1.2;white-space:nowrap}
+.brand__sep{width:1px;height:2rem;background:var(--border);flex:none}
+.brand__text{min-width:0;overflow:hidden}
+.brand__title{font-size:1.25rem;font-weight:700;color:var(--nn-navy);line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand__sub{font-size:.8125rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.save-state{display:inline-flex;align-items:center;gap:.375rem;padding:0 .5rem;min-height:2rem;font-size:.8125rem;font-weight:600;color:var(--muted);white-space:nowrap;border-radius:999px}
+.save-state{flex:none;display:inline-flex;align-items:center;gap:.375rem;padding:0 .625rem;min-height:2rem;font-size:.8125rem;color:var(--muted);white-space:nowrap;border-radius:999px}
 .save-state.is-ok .ss-main .icon{color:var(--ok-dot)}
 .save-state.is-error{color:var(--todo-fg);background:var(--todo-bg)}
 .save-state .ss-shared{display:inline-flex;align-items:center;gap:.25rem;margin-left:.25rem;padding-left:.5rem;border-left:1px solid var(--border)}
@@ -92,8 +91,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .hdr-sep{width:1px;height:1.75rem;background:var(--border)}
 .hdr-link .ico-wide{display:inline-flex}
 .hdr-link .ico-compact{display:none}
-.btn-aa{font-weight:700;font-size:1rem;letter-spacing:.02em}
-.btn-aa[aria-pressed="true"]{background:#E6ECF7;color:var(--nn-navy);box-shadow:inset 0 0 0 1px var(--nn-navy)}
+.btn-aa{font-weight:700;font-size:1rem}
+.btn-aa .aa-a{font-size:1.05em}
+.btn-aa .aa-b{font-size:.8em;margin-left:1px}
+.btn-aa[aria-pressed="true"],.btn-aa[aria-pressed="true"]:not(:disabled):hover{background:var(--cold-bg);color:var(--nn-navy)}
 .menu-wrap{position:relative}
 .menu{position:absolute;right:0;top:calc(100% + .375rem);min-width:17rem;max-width:calc(100vw - 1rem);padding:.375rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 10px 30px rgba(11,21,53,.16);z-index:60}
 .menu__item{display:flex;align-items:center;gap:.75rem;width:100%;min-height:2.625rem;padding:0 .75rem;border:0;border-radius:var(--radius-sm);background:none;color:var(--text);font-size:.9375rem;font-weight:500;text-align:left;text-decoration:none;cursor:pointer}
@@ -244,7 +245,6 @@ textarea.input{resize:vertical;min-height:4.75rem;line-height:1.45}
 .band--suivant .band__num{background:#fff;color:var(--nn-navy);box-shadow:inset 0 0 0 2px var(--nn-navy)}
 .band__chev{transition:transform .15s}
 .band.is-collapsed .band__chev{transform:rotate(-90deg)}
-.band__count{font-size:.8125rem;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--muted)}
 .band__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
 .card{display:flex;flex-direction:column;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .band--enCours .card{border-top:3px solid var(--nn-navy)}
@@ -387,11 +387,37 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 }
 @media (max-width:479.98px){
   .brand{gap:.625rem}
-  .brand__sep{display:none}
+  .brand__sep{height:1.75rem}
   .brand__logo{height:2.125rem}
-  .brand__title{font-size:1.0625rem}
-  .save-state .ss-word,.save-state .ss-shared span{display:none}
+  .brand__title{font-size:1rem}
+  .app-header__in{gap:.375rem}
+  .brand{flex:0 1 auto}
+  .save-state{padding:0 .25rem}
+  .save-state .ss-word,.save-state .ss-time,.save-state .ss-shared span{display:none}
   .clock__time{font-size:1.25rem}
+}
+
+/* Texte agrandi : l'en-tête grossit, ses seuils de compactage sont donc décalés (~ ×1,125) */
+@media (max-width:1439.98px){ html.text-lg .save-state.has-time .ss-word{display:none} }
+@media (max-width:1329.98px){
+  html.text-lg #btn-undo .lbl,html.text-lg #btn-mail .lbl{display:none}
+  html.text-lg #btn-undo,html.text-lg #btn-mail{width:2.5rem;padding:0}
+}
+@media (max-width:1079.98px){
+  html.text-lg #btn-pdf .lbl-long,html.text-lg .hdr-link .lbl,html.text-lg .hdr-link .ico-wide,html.text-lg .brand__sub{display:none}
+  html.text-lg .hdr-link .ico-compact{display:inline-flex}
+  html.text-lg .hdr-link{width:2.5rem;padding:0}
+}
+@media (max-width:854.98px){
+  html.text-lg .hdr-actions,html.text-lg .hdr-sep,html.text-lg .hdr-tools>:not(.menu-wrap){display:none}
+  html.text-lg .menu [data-narrow]{display:flex}
+  html.text-lg .menu .menu__sep[data-narrow]{display:block}
+}
+@media (max-width:539.98px){
+  html.text-lg .brand{flex:0 1 auto}
+  html.text-lg .brand__sep,html.text-lg .save-state .ss-word,html.text-lg .save-state .ss-time,html.text-lg .save-state .ss-shared span{display:none}
+  html.text-lg .brand__logo{height:2.125rem}
+  html.text-lg .brand__title{font-size:1rem}
 }
 
 /* =========================================================================
@@ -481,14 +507,14 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 <header class="app-header">
   <div class="app-header__in">
     <div class="brand">
-      <img class="brand__logo" id="brand-logo" src="data:image/png;base64,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" alt="Novo Nordisk" width="56" height="40">
+      <img class="brand__logo" id="brand-logo" src="data:image/png;base64,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" alt="Novo Nordisk" width="56" height="40">
       <span class="brand__sep" aria-hidden="true"></span>
       <div class="brand__text">
         <h1 class="brand__title">Rapport de shift</h1>
         <p class="brand__sub">Équipe formulation</p>
       </div>
     </div>
-    <div class="save-state" id="save-state" role="status" aria-live="polite"></div>
+    <div class="save-state" id="save-state"></div>
     <div class="hdr-actions">
       <button type="button" class="btn btn-quiet" id="btn-undo" title="Annuler la dernière modification (Ctrl+Z)" aria-label="Annuler la dernière modification"><span data-icon="undo"></span><span class="lbl">Annuler</span></button>
       <button type="button" class="btn btn-secondary" id="btn-mail" title="Préparer le mail au groupe formulation" aria-label="Préparer le mail"><span data-icon="mail"></span><span class="lbl">Préparer le mail</span></button>
@@ -500,7 +526,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
         <button type="button" class="btn btn-quiet btn-icon" id="btn-menu" aria-haspopup="menu" aria-expanded="false" aria-controls="main-menu" aria-label="Plus d'actions" title="Plus d'actions"><span data-icon="more"></span></button>
         <div class="menu" id="main-menu" role="menu" aria-label="Actions" hidden></div>
       </div>
-      <button type="button" class="btn btn-quiet btn-icon btn-aa" id="btn-aa" aria-pressed="false" title="Agrandir le texte" aria-label="Agrandir le texte">Aa</button>
+      <button type="button" class="btn btn-quiet btn-icon btn-aa" id="btn-aa" aria-pressed="false" title="Taille du texte : normal / grand" aria-label="Texte plus grand"><span aria-hidden="true"><span class="aa-a">A</span><span class="aa-b">a</span></span></button>
       <a class="btn btn-quiet hdr-link" href="etiquettes.html" title="Ouvrir l'outil Étiquettes" aria-label="Étiquettes"><span class="ico-compact"><span data-icon="tag"></span></span><span class="lbl">Étiquettes</span><span class="ico-wide"><span data-icon="arrow"></span></span></a>
     </div>
   </div>
@@ -563,7 +589,7 @@ const pad2 = n => String(n).padStart(2, '0');
 const clone = o => JSON.parse(JSON.stringify(o));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 const str = (v, max = 200) => (typeof v === 'string' ? v : typeof v === 'number' ? String(v) : '').slice(0, max);
-const canon = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
+const canon = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
 const plural = (n, word) => `${n} ${word}${n > 1 ? 's' : ''}`;
 
 /** Création d'élément : les chaînes deviennent des nœuds texte (jamais de HTML). */
@@ -888,6 +914,12 @@ function normalizeHistory(list) {
     report: normalizeReport(e.report),
   })).sort((a, b) => b.at.localeCompare(a.at)).slice(0, HISTORY_MAX);
 }
+/** Fusionne deux historiques (union par id, plus récents d'abord, 60 max). */
+function mergeHistory(a, b) {
+  const seen = new Set();
+  return [...a, ...b].filter(e => (seen.has(e.id) ? false : seen.add(e.id)))
+    .sort((x, y) => y.at.localeCompare(x.at)).slice(0, HISTORY_MAX);
+}
 const normalizeSettings = s => ({ mailTo: str(s?.mailTo, 1000).trim(), mailCc: str(s?.mailCc, 1000).trim() });
 /** Valide et complète un objet de sauvegarde. Lève une erreur si ce n'est pas une sauvegarde du rapport. */
 function normalizeData(raw) {
@@ -1149,7 +1181,7 @@ function applyLoadedData(d) {
   pushUndo();
   undoMeta = { key: null, t: 0 };
   state.report = d.report;
-  state.history = d.history;
+  state.history = mergeHistory(d.history, state.history);
   if (d.settings.mailTo || d.settings.mailCc) state.settings = d.settings;
   setKnownSavedAt(d.savedAt);
   setSharedDirty(false);
@@ -1182,7 +1214,11 @@ async function onRemoteNewer(d) {
   }).result;
   shared.conflictOpen = false;
   if (choice === 'theirs') { applyLoadedData(d); toast('Version partagée chargée', { action: 'Annuler', onAction: undo }); }
-  else if (choice === 'mine') { await saveShared({ force: true }); toast('Fichier partagé mis à jour avec votre version'); }
+  else if (choice === 'mine') {
+    state.history = mergeHistory(state.history, d.history);
+    await saveShared({ force: true });
+    toast('Fichier partagé mis à jour avec votre version');
+  }
   sharedChanged();
 }
 async function pullShared() {
@@ -1203,10 +1239,10 @@ async function pullShared() {
 function checkSharedSoon() {
   if (Date.now() - shared.lastCheck > 3000) pullShared();
 }
-async function adoptHandle(handle) {
+async function adoptHandle(handle, perm = 'granted') {
   shared.handle = handle;
   shared.name = handle.name || SHARED_FILENAME;
-  shared.perm = 'granted';
+  shared.perm = perm;
   shared.error = '';
   try { await idbSet('sharedHandle', handle); } catch { /* handle non mémorisable : il faudra relier au prochain lancement */ }
 }
@@ -1219,44 +1255,55 @@ async function linkNewShared() {
   await saveShared({ force: true });
   toast(shared.error ? `Fichier lié, mais ${shared.error.toLowerCase()}` : 'Fichier partagé créé et lié', { tone: shared.error ? 'warn' : null });
 }
+async function askWrite(handle) {
+  try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; }
+  catch { return 'prompt'; } // p. ex. geste utilisateur expiré : on proposera « Reconnecter »
+}
 async function linkExistingShared() {
   let handle;
   try { [handle] = await window.showOpenFilePicker({ types: JSON_TYPES, multiple: false }); }
   catch (e) { if (e && e.name !== 'AbortError') toast('Impossible d’ouvrir le fichier', { tone: 'warn' }); return; }
-  try {
-    if ((await handle.requestPermission({ mode: 'readwrite' })) !== 'granted') { toast('Permission d’écriture refusée', { tone: 'warn' }); return; }
-  } catch { toast('Permission d’écriture refusée', { tone: 'warn' }); return; }
+  const perm = await askWrite(handle);
+  // Lecture du contenu avant de lier quoi que ce soit (la lecture est permise par le sélecteur)
   const prev = { handle: shared.handle, name: shared.name, perm: shared.perm };
   shared.handle = handle;
   let res;
   try { res = await readShared(); } catch { res = { kind: 'invalid' }; }
+  Object.assign(shared, prev);
   if (res.kind === 'invalid') {
-    Object.assign(shared, prev);
     await messageDialog('Fichier non reconnu', 'Ce fichier n’est pas une sauvegarde du Rapport de formulation. Aucune donnée n’a été modifiée.');
     return;
   }
-  await adoptHandle(handle);
-  if (res.kind === 'empty') {
-    await saveShared({ force: true });
-    toast('Fichier partagé lié');
-    return;
+  let choice = 'mine';
+  if (res.kind === 'data') {
+    const d = res.data;
+    choice = await openDialog({
+      title: 'Lier ce fichier partagé',
+      body: [
+        h('p', {}, 'Ce fichier contient un rapport enregistré',
+          d.savedBy ? [' par ', h('b', { text: d.savedBy })] : '',
+          d.savedAt ? ` le ${fmtDM(new Date(d.savedAt))}` : '', '.'),
+        h('p', { class: 'muted', text: 'En général, on charge le fichier pour reprendre là où l’équipe précédente s’est arrêtée.' }),
+      ],
+      actions: [
+        { label: 'Garder mon rapport et écraser le fichier', value: 'mine', cls: 'btn-secondary' },
+        { label: 'Charger ce rapport', value: 'theirs', cls: 'btn-primary', autofocus: true },
+      ],
+    }).result;
+    if (!choice) { toast('Liaison annulée'); return; }
   }
-  const d = res.data;
-  const choice = await openDialog({
-    title: 'Fichier partagé lié',
-    body: [
-      h('p', {}, 'Ce fichier contient un rapport enregistré',
-        d.savedBy ? [' par ', h('b', { text: d.savedBy })] : '',
-        d.savedAt ? ` le ${fmtDM(new Date(d.savedAt))}` : '', '.'),
-      h('p', { class: 'muted', text: 'En général, on charge le fichier pour reprendre là où l’équipe précédente s’est arrêtée.' }),
-    ],
-    actions: [
-      { label: 'Garder mon rapport et écraser le fichier', value: 'mine', cls: 'btn-secondary' },
-      { label: 'Charger ce rapport', value: 'theirs', cls: 'btn-primary', autofocus: true },
-    ],
-  }).result;
-  if (choice === 'mine') { await saveShared({ force: true }); toast('Fichier partagé mis à jour'); }
-  else { applyLoadedData(d); toast('Rapport partagé chargé', { action: 'Annuler', onAction: undo }); }
+  await adoptHandle(handle, perm);
+  if (choice === 'theirs') {
+    applyLoadedData(res.data);
+    toast('Rapport partagé chargé', { action: 'Annuler', onAction: undo });
+  } else {
+    setSharedDirty(true);
+    if (shared.perm !== 'granted') shared.perm = await askWrite(handle);
+    if (shared.perm === 'granted') {
+      await saveShared({ force: true });
+      toast(res.kind === 'empty' ? 'Fichier partagé lié' : 'Fichier partagé mis à jour avec votre rapport');
+    } else toast('Fichier lié. Cliquez sur « Reconnecter » pour autoriser l’écriture.', { tone: 'warn', timeout: 8000 });
+  }
   sharedChanged();
 }
 async function reconnectShared() {
@@ -1736,10 +1783,10 @@ function renderSaveState() {
   if (!persist.ok || persist.state === 'error') { ic = 'alert'; word = 'Non enregistré'; cls = 'is-error'; }
   else if (persist.state === 'saving') { ic = 'clock'; word = 'Enregistrement…'; cls = 'is-saving'; }
   else if (persist.at) { ic = 'check'; word = 'Enregistré'; time = fmtTime(persist.at); cls = 'is-ok'; }
-  else { ic = 'check'; word = 'Enregistrement automatique'; cls = 'is-idle'; }
+  else { ic = 'check'; word = 'Enregistrement auto.'; cls = 'is-idle'; }
   el.className = `save-state ${cls}${time ? ' has-time' : ''}`;
   el.title = cls === 'is-error' ? 'Le stockage local est indisponible : exportez une sauvegarde (menu ⋯ › Sauvegarde & partage).' : 'Chaque modification est enregistrée automatiquement sur ce poste.';
-  const main = h('span', { class: 'ss-main' }, icon(ic), ' ', h('span', { class: 'ss-word', text: word }), time ? ` ${time}` : '');
+  const main = h('span', { class: 'ss-main' }, icon(ic), h('span', { class: 'ss-word', text: word }), time ? h('span', { class: 'ss-time', text: time }) : null);
   main.style.display = 'inline-flex';
   main.style.alignItems = 'center';
   main.style.gap = '.3rem';
@@ -2106,8 +2153,7 @@ async function importJsonFile(file) {
   const ok = await confirmDialog({ title: 'Importer cette sauvegarde ?', confirmLabel: 'Importer',
     message: `Le rapport actuel sera remplacé par la sauvegarde${from ? ` ${from}` : ''}. L’historique est fusionné. Vous pourrez annuler.` });
   if (!ok) return;
-  const ids = new Set(state.history.map(e => e.id));
-  state.history = [...state.history, ...d.history.filter(e => !ids.has(e.id))].sort((a, b) => b.at.localeCompare(a.at)).slice(0, HISTORY_MAX);
+  state.history = mergeHistory(state.history, d.history);
   if (!state.settings.mailTo && !state.settings.mailCc) state.settings = d.settings;
   replaceReport(d.report);
   toast('Sauvegarde importée', { action: 'Annuler', onAction: undo });
@@ -2203,14 +2249,14 @@ function buildMenu() {
   const ITEMS = [
     { label: 'Exporter en PDF', icon: 'pdf', run: exportPdf, narrow: true },
     { label: 'Préparer le mail', icon: 'mail', run: prepareMail, narrow: true },
-    { id: 'mi-undo', label: 'Annuler la dernière modification', icon: 'undo', run: undo, narrow: true },
+    { id: 'mi-undo', label: 'Annuler la dernière action', icon: 'undo', run: undo, narrow: true },
     { sep: true, narrow: true },
     { label: 'Aperçu impression', icon: 'eye', run: () => openPreview() },
     { label: 'Historique', icon: 'history', run: openHistory },
     { label: 'Sauvegarde & partage', icon: 'cloud', run: openShare },
     { label: 'Paramètres', icon: 'sliders', run: openSettings },
     { sep: true, narrow: true },
-    { id: 'mi-aa', label: 'Texte agrandi', icon: 'text', run: toggleTextSize, narrow: true, check: true },
+    { id: 'mi-aa', label: 'Texte plus grand', icon: 'text', run: toggleTextSize, narrow: true, check: true },
     { label: 'Étiquettes', icon: 'tag', href: 'etiquettes.html', narrow: true },
     { sep: true },
     { label: 'Réinitialiser le rapport…', icon: 'reset', run: confirmReset, danger: true },
