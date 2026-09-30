@@ -4521,7 +4521,7 @@ function addTestMarks(sheet, g) {
   const r = state.reglages;
   sheet.append(h('div', { class: 'test-info test-info--main', style: `top:${y1}mm` }, 'Posez cette feuille sur une planche d\'étiquettes à contre-jour pour vérifier l\'alignement'),
     h('div', { class: 'test-info', style: `top:${round(y2, 2)}mm` },
-      `PAGE DE TEST · ${PRESETS[state.gabarit.preset].short} · ${g.cols} × ${g.rows} étiquettes ${fmtNum(g.labelW, 1)} × ${fmtNum(g.labelH, 1)} mm · décalage X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm · échelle ${fmtNum(r.echelle, 1)} %`));
+      `PAGE DE TEST · ${PRESETS[state.gabarit.preset].short} · ${g.cols} × ${g.rows} étiquettes ${fmtNum(g.labelW, 1)} × ${fmtNum(g.labelH, 1)} mm · marges ${fmtNum(g.marginTop, 2)} / ${fmtNum(g.marginLeft, 2)} mm · pas ${fmtNum(g.pitchX, 2)} × ${fmtNum(g.pitchY, 2)} mm · décalage X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm · échelle ${fmtNum(r.echelle, 1)} % · gabarit v${GABARIT_VERSION}`));
 }
 
 /* =====================================================================
