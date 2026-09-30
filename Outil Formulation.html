@@ -3935,6 +3935,9 @@ const defaultPreset = () => (PRESETS[etp().preset] ? etp().preset : 'FIDUCIAL');
 /* Version du gabarit : une donnée d'une version précédente (dont « Identique à l'Excel ») bascule une fois sur le gabarit
    par défaut, calibration remise à zéro (l'ancien décalage compensait un mauvais gabarit). */
 const GABARIT_VERSION = 4;
+/* STANDARD USINE (validé sur la planche Fiducial 115294 et le copieur de l'atelier) : valeurs rétablies par
+   « Réinitialiser les paramètres ». Pour changer le standard, modifier uniquement cet objet. */
+const STANDARD_ETIQ = { preset: 'FIDUCIAL', decalX: 0, decalY: 0, echelle: 100, policePt: 8, margeInt: 2, texteEnHaut: false };
 const GEO_FIELDS = [
   { key: 'pageW', label: 'Largeur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
   { key: 'pageH', label: 'Hauteur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
@@ -4064,7 +4067,7 @@ function defaultState() {
     autresPremiereLigne: 1,
     gabaritVersion: GABARIT_VERSION,
     gabarit: { preset: DEFAULT_PRESET, geo: clone(PRESETS[DEFAULT_PRESET].geo) },
-    reglages: { decalX: 0, decalY: 0, echelle: 100, cadres: false, ...PRESETS[DEFAULT_PRESET].text, autresParRangee: 4 },
+    reglages: { cadres: false, ...PRESETS[DEFAULT_PRESET].text, autresParRangee: 4, decalX: STANDARD_ETIQ.decalX, decalY: STANDARD_ETIQ.decalY, echelle: STANDARD_ETIQ.echelle },
     ui: { apercu: 'poches', zoom: 'fit', masquerAideImpression: false, migrationV3: false },
   };
 }
@@ -4955,7 +4958,17 @@ function sheetThumb(g, framed) {
   }
   return svg;
 }
-const calibIsDefault = () => !state.reglages.decalX && !state.reglages.decalY && state.reglages.echelle === 100;
+const calibIsDefault = () => state.reglages.decalX === STANDARD_ETIQ.decalX && state.reglages.decalY === STANDARD_ETIQ.decalY && state.reglages.echelle === STANDARD_ETIQ.echelle;
+const isStandard = () => calibIsDefault() && state.gabarit.preset === STANDARD_ETIQ.preset
+  && state.reglages.policePt === STANDARD_ETIQ.policePt && state.reglages.margeInt === STANDARD_ETIQ.margeInt && state.reglages.texteEnHaut === STANDARD_ETIQ.texteEnHaut;
+function resetStandard() {
+  withUndo('Paramètres d\'impression réinitialisés (standard Fiducial)', () => {
+    state.gabarit.preset = STANDARD_ETIQ.preset;
+    state.gabarit.geo = clone(PRESETS[STANDARD_ETIQ.preset].geo);
+    Object.assign(state.reglages, { decalX: STANDARD_ETIQ.decalX, decalY: STANDARD_ETIQ.decalY, echelle: STANDARD_ETIQ.echelle,
+      policePt: STANDARD_ETIQ.policePt, margeInt: STANDARD_ETIQ.margeInt, texteEnHaut: STANDARD_ETIQ.texteEnHaut });
+  });
+}
 function calibText() {
   const r = state.reglages, parts = [];
   if (r.decalX || r.decalY) parts.push(`X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm`);
@@ -4992,8 +5005,17 @@ function renderStep4() {
       }))));
   }
   const resetCalib = h('button', { type: 'button', class: 'link-btn', id: 'btn-calib-reset', onclick: () => {
-    withUndo('Calibration remise à zéro', () => { Object.assign(state.reglages, { decalX: 0, decalY: 0, echelle: 100 }); });
-  } }, 'Remettre à zéro');
+    withUndo('Calibration remise au standard', () => { Object.assign(state.reglages, { decalX: STANDARD_ETIQ.decalX, decalY: STANDARD_ETIQ.decalY, echelle: STANDARD_ETIQ.echelle }); });
+  } }, 'Remettre la calibration au standard');
+  const resetStd = h('button', { type: 'button', class: 'btn btn-primary', id: 'btn-reset-standard', onclick: resetStandard },
+    icon('reset'), 'Réinitialiser les paramètres');
+  const stdNote = h('p', { class: 'hint', id: 'std-note' });
+  onDerived(() => {
+    const ok = isStandard();
+    resetStd.disabled = ok;
+    stdNote.textContent = (ok ? '✓ Paramètres standard en place' : 'Paramètres modifiés')
+      + ` — standard : Fiducial 115294 · décalage X ${fmtSig(STANDARD_ETIQ.decalX)} / Y ${fmtSig(STANDARD_ETIQ.decalY)} mm · échelle ${fmtNum(STANDARD_ETIQ.echelle, 1)} % · police ${fmtNum(STANDARD_ETIQ.policePt, 1)} pt.`;
+  });
   onDerived(() => { resetCalib.hidden = calibIsDefault(); });
   const calib = h('div', { class: 'subsection calib' },
     h('div', { class: 'subhead-row' }, h('h3', { class: 'subhead' }, icon('target'), 'Calibration de l\'imprimante'), h('span', { class: 'chip plain', title: 'Réglages propres à ce PC et à son imprimante' }, 'mémorisée sur ce PC')),
@@ -5004,7 +5026,8 @@ function renderStep4() {
     h('div', { class: 'calib-actions' },
       h('button', { type: 'button', class: 'btn btn-secondary', id: 'btn-print-test', onclick: () => requestPrint('test') }, icon('grid'), 'Imprimer une page de test'),
       h('button', { type: 'button', class: 'link-btn', id: 'btn-decale', onclick: showCalibHelp }, 'Mes étiquettes sont décalées ?'),
-      resetCalib));
+      resetCalib),
+    h('div', { class: 'calib-actions' }, resetStd), stdNote);
   const adv = h('details', { class: 'adv', id: 'adv' },
     h('summary', null, icon('sliders'), 'Réglages avancés', icon('chevron', 'chev')),
     h('div', { class: 'adv-body' },
