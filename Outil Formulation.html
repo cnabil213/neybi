@@ -142,7 +142,8 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 
 /* Compactage progressif de l'en-tête (classes posées par le script tant que la ligne déborde).
    Niveaux communs aux trois vues — le logo et les onglets ne bougent pas d'un module à l'autre :
-     c1 sous-titre masqué · c2 onglets courts (« Rapport ») · c3 titre texte masqué (le logo reste, les onglets nomment les modules).
+     c1 sous-titre masqué · c2 onglets courts (« Rapport ») · c3 titre texte masqué (le logo reste, les onglets nomment les modules)
+     · c4 onglet « Paramètres » réduit à l'engrenage.
    Puis niveaux propres au module affiché — les libellés d'action ne disparaissent qu'en dernier :
      a1 mot « Enregistré » · a2 « Annuler » · a3 « Préparer le mail » · a4 « Exporter en » et « Nouveau lot ».
    Enfin « nar » (petit écran) : onglets sur une 2ᵉ ligne, actions dans le menu « ⋯ ». */
@@ -153,6 +154,9 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .app-header.c2 .app-header__in{gap:.5rem}
 .app-header.c2 .tabs{margin-left:.25rem}
 .app-header.c3 .brand__sep,.app-header.c3 .brand__text{display:none}
+/* c4 : onglet « Paramètres » réduit à son engrenage (info-bulle et nom accessible conservés), sauf quand il est ouvert */
+.app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]) .tab__long,.app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]) .tab__short{display:none}
+.app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]){padding:0 .625rem}
 .app-header.a1 .save-state:not(.is-error) .ss-word,.app-header.a1 .save-state.is-idle{display:none}
 .app-header.a2 #btn-undo .lbl-opt,.app-header.a3 #btn-mail .lbl-opt,.app-header.a4 .hdr-actions .lbl-opt{display:none}
 .app-header.a2 #btn-undo,.app-header.a3 #btn-mail,.app-header.a4 #btn-new{width:2.5rem;padding:0}
@@ -178,7 +182,7 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .app-header.n1 .brand__title{font-size:.9375rem}
 .app-header.n2 .save-state .ss-time{display:none}
 .app-header.n3 .brand__text{display:none}
-.app-header.tabs-stack .tab{flex-direction:column;gap:.125rem;min-height:3.25rem;padding:.25rem .125rem;font-size:.8125rem;line-height:1.1}
+.app-header.tabs-stack .tab{flex-direction:column;gap:.125rem;min-height:3.25rem;padding:.25rem .125rem;font-size:clamp(.6875rem,3.4vw,.8125rem);line-height:1.1;letter-spacing:-.005em}
 .app-header.tabs-stack .tab .icon{width:1.125rem;height:1.125rem}
 
 /* Menu « ⋯ » */
@@ -588,7 +592,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .pv *{box-sizing:border-box}
 .mod-rapport .pv .icon{width:3.6mm;height:3.6mm;stroke-width:2.2}
 .mod-rapport .pv-head{display:flex;align-items:center;gap:4mm;padding-bottom:1.2mm;border-bottom:.5mm solid var(--nn-navy)}
-.mod-rapport .pv-logo{height:8.6mm;width:auto;display:block}
+.mod-rapport .pv-logo{height:9mm;width:auto;display:block}
 .mod-rapport .pv-titles{min-width:0}
 .mod-rapport .pv-title{font-size:13pt;font-weight:800;letter-spacing:.07em;color:var(--nn-navy);line-height:1.1}
 .mod-rapport .pv-meta{display:flex;flex-wrap:wrap;gap:.6mm 4.5mm;margin-top:.8mm;font-size:8pt;color:var(--muted)}
@@ -675,7 +679,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .pv-box h3,.mod-rapport .pv-points h3{background:#E4E9F3;border-bottom-color:#B8C1D3}
 .mod-rapport .pv-points{box-shadow:inset 1mm 0 0 var(--nn-navy)}
 .mod-rapport .pv-points h3,.mod-rapport .pv-points p{padding-left:2.8mm}
-.mod-rapport .pv-foot{margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:.8mm;border-top:.2mm solid #B8C1D3;color:var(--muted);font-size:6.4pt}
+.mod-rapport .pv-foot{break-before:avoid;page-break-before:avoid;margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:.8mm;border-top:.2mm solid #B8C1D3;color:var(--muted);font-size:6.4pt}
 /* =========================================================================
    3 bis. Onglet « Paramètres » (préfixe .mod-params)
    ========================================================================= */
@@ -719,7 +723,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .pm-sec__title{font-size:1.0625rem;font-weight:700;color:var(--nn-navy);line-height:1.3}
 .mod-params .pm-sec__sub{font-size:.8125rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mod-params .pm-sec__sw{display:flex;gap:.25rem;flex:none}
-.mod-params .pm-sec__sw .pm-dot{width:1rem;height:1rem}
+.mod-params .pm-sec__sw .pm-dot{width:1rem;height:1rem;background:var(--line);box-shadow:inset 0 0 0 2px var(--line-strong)}
 .mod-params .pm-sec__chev{flex:none;color:var(--muted);transition:transform .15s}
 .mod-params .pm-sec[open] .pm-sec__chev{transform:rotate(180deg)}
 .mod-params .pm-sec__body{display:flex;flex-direction:column;gap:1.125rem;padding:1.125rem 1.25rem 1.375rem}
@@ -743,7 +747,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .pm-err{padding:.5rem .75rem;border-radius:var(--radius-sm);background:var(--todo-bg);color:var(--todo-fg);font-weight:600;font-size:.875rem}
 .mod-params .pm-check{display:inline-flex;align-items:center;gap:.5rem;min-height:2.5rem;font-size:.875rem;color:var(--text);cursor:pointer;white-space:nowrap}
 .mod-params .pm-check__box{width:1.125rem;height:1.125rem;margin:0;accent-color:var(--nn-navy);flex:none}
-.mod-params .pm-dot{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 2px var(--line-strong);flex:none}
+.mod-params .pm-dot{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;background:var(--line-strong);flex:none}
 .mod-params .pm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr));gap:.875rem}
 .mod-params .pm-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .mod-params .pm-grid--ht{grid-template-columns:repeat(auto-fill,minmax(min(100%,30rem),1fr));align-items:start}
@@ -1293,7 +1297,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <a class="tab" href="#accueil" data-route="accueil"><span data-icon="home"></span><span class="tab__long">Accueil</span><span class="tab__short">Accueil</span></a>
       <a class="tab" href="#rapport" data-route="rapport"><span data-icon="clipboard"></span><span class="tab__long">Rapport de shift</span><span class="tab__short">Rapport</span></a>
       <a class="tab" href="#etiquettes" data-route="etiquettes"><span data-icon="tag"></span><span class="tab__long">Étiquettes</span><span class="tab__short">Étiquettes</span></a>
-      <a class="tab" href="#parametres" data-route="parametres"><span data-icon="gear"></span><span class="tab__long">Paramètres</span><span class="tab__short">Paramètres</span></a>
+      <a class="tab" href="#parametres" data-route="parametres" aria-label="Paramètres" title="Paramètres de l'outil (holding times, produits, couleurs, étiquettes)"><span data-icon="gear"></span><span class="tab__long">Paramètres</span><span class="tab__short">Paramètres</span></a>
     </nav>
     <div class="hdr-right">
       <div class="save-state" id="save-state" data-for="rapport" hidden></div>
@@ -1355,7 +1359,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <span><kbd>Ctrl</kbd>+<kbd>P</kbd> imprimer / exporter le PDF</span>
       <span>PDF du rapport : bouton « Exporter en PDF » en haut à droite (menu ⋯ sur petit écran)</span>
       <span><kbd>Aa</kbd> agrandir le texte</span>
-      <span><span data-icon="gear"></span><a class="home__link" href="#parametres">Paramètres</a> : holding times, produits, couleurs, étiquettes</span>
+      <span><span data-icon="gear"></span><span><a class="home__link" href="#parametres">Paramètres</a> : holding times, produits, couleurs, étiquettes</span></span>
     </p>
   </div>
 </main>
@@ -1957,11 +1961,24 @@ const Params = (() => {
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   }
   /** Teintes dérivées d'une couleur de ligne : fond doux, liseré (plus soutenu, même teinte), encre sombre. */
+  function rgb2hsl([r, g, b]) {
+    r /= 255; g /= 255; b /= 255;
+    const mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, d = mx - mn;
+    if (!d) return [0, 0, l];
+    const s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+    const hh = mx === r ? (g - b) / d + (g < b ? 6 : 0) : mx === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return [hh * 60, s, l];
+  }
+  function hsl2rgb([hh, s, l]) {
+    const k = n => (n + hh / 30) % 12, a = s * Math.min(l, 1 - l);
+    return [0, 8, 4].map(n => 255 * (l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1))));
+  }
+  /** Teintes dérivées d'une couleur de ligne : fond doux, fond très léger, liseré (même teinte, plus soutenue), encre sombre. */
   function shades(hx) {
     const c = hex2rgb(hx), white = [255, 255, 255], navy = [0, 25, 101];
-    /* liseré : on assombrit jusqu'à un contraste visible sur blanc */
-    let strong = c, k = 0;
-    while (lum(rgb2hex(strong)) > 0.36 && k < 20) { k += 1; strong = mix(c, [c[0] * 0.35, c[1] * 0.35, c[2] * 0.4], k / 20); }
+    const [hh, s] = rgb2hsl(c);
+    /* liseré : même teinte, saturée et assombrie (gris-bleu si la couleur est presque neutre) */
+    const strong = hsl2rgb([hh, s < 0.12 ? Math.max(s, 0.1) : Math.max(0.4, Math.min(0.5, s)), 0.47]);
     return { base: hx, soft: rgb2hex(mix(c, white, 0.55)), faint: rgb2hex(mix(c, white, 0.78)), strong: rgb2hex(strong), ink: rgb2hex(mix(strong, navy, 0.55)) };
   }
   function applyColors() {
@@ -6346,7 +6363,10 @@ const Shell = (() => {
      les onglets ne bougent pas d'un module à l'autre. Niveaux d'action (a1…a4) : calculés pour la vue affichée seulement,
      une fois les niveaux communs épuisés — les libellés d'action restent visibles partout où ils tiennent. */
   let fitRaf = 0;
-  const COMMON_MAX = 3, ACTION_MAX = 4;
+  const COMMON_MAX = 4, ACTION_MAX = 4;
+  /* ordre de compactage (niveau commun, niveau d'action) : le mot « Enregistré » (a1) disparaît avant que l'onglet
+     « Paramètres » ne soit réduit à son engrenage (c4) */
+  const STEPS = [[1, 0], [2, 0], [3, 0], [3, 1], [4, 1], [4, 2], [4, 3], [4, 4]];
   const setClasses = (hdr, prefix, n, max) => { for (let k = 1; k <= max; k++) hdr.classList.toggle(`${prefix}${k}`, k <= n); };
   function fitHeader() {
     const hdr = $('#app-header'), inner = $('#app-header-in');
@@ -6369,11 +6389,11 @@ const Shell = (() => {
       /* niveau minimal de chaque vue (communs puis actions), le plus contraignant fixe les niveaux communs */
       for (const id of views) {
         showRoute(id, false);
-        let lvl = 0;
+        let k = 0;
         setLevels(0, 0);
-        while (over() && lvl < COMMON_MAX + ACTION_MAX) { lvl += 1; setLevels(Math.min(lvl, COMMON_MAX), Math.max(0, lvl - COMMON_MAX)); }
+        while (over() && k < STEPS.length) { const [sc, sa] = STEPS[k]; k += 1; setLevels(sc, sa); }
         if (over()) { narrow = true; break; }
-        c = Math.max(c, Math.min(lvl, COMMON_MAX));
+        c = Math.max(c, k ? STEPS[k - 1][0] : 0);
       }
     }
     if (!narrow) {
