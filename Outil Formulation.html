@@ -270,6 +270,12 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .hpill--navy{background:var(--nn-navy);color:#fff} .hpill--navy::before{display:none}
 .tile__lots{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,8.25rem),1fr));gap:.5rem;margin:0}   /* 3 cases, 2 si la tuile est étroite (texte agrandi) */
 .tile__lots>div{min-width:0;padding:.5rem .625rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2)}
+/* couleur de la ligne (Groninger, Inova 5, Inova 4 — réglable dans l'onglet Paramètres) */
+.line-dot{display:inline-block;width:.625rem;height:.625rem;border-radius:50%;background:var(--line-strong);flex:none}
+.tile__lots>div[data-line]{background:var(--line-faint);border-color:var(--line);box-shadow:inset 3px 0 0 var(--line-strong)}
+.tile__lots>div[data-line] dt{display:flex;align-items:center;gap:.375rem;color:var(--line-ink)}
+.home__link{color:var(--nn-blue);font-weight:600;text-underline-offset:2px}
+.home__link:hover{color:var(--nn-navy)}
 .tile__lots dt{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tile__lots dd{margin:0;overflow:hidden;font-family:var(--mono);font-size:.875rem;font-weight:600;letter-spacing:.03em;text-overflow:ellipsis;white-space:nowrap}
 .tile__lots dd.is-empty{color:#6B7489;font-family:var(--font);font-weight:500;letter-spacing:0}
@@ -469,6 +475,18 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .band__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:1rem}
 .mod-rapport .card{display:flex;flex-direction:column;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
 .mod-rapport .band--enCours .card{border-top:3px solid var(--nn-navy)}
+/* couleur de la ligne : en-tête teinté, fond de carte très léger, liseré de la même teinte */
+.mod-rapport .card[data-line]{background:var(--line-faint);border-top:3px solid var(--line-strong)}
+.mod-rapport .band--enCours .card[data-line]{border-top-width:4px}
+.mod-rapport .card[data-line] .card__head{background:var(--line);border-bottom-color:var(--line-soft);border-radius:calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0 0}
+.mod-rapport .band.is-collapsed .card[data-line] .card__head{border-radius:calc(var(--radius) - 2px)}
+.mod-rapport .card[data-line] .chip--lot{background:#fff;border-color:var(--line-strong)}
+.mod-rapport .card[data-line] .chip--prod{background:rgba(255,255,255,.8);color:var(--nn-navy)}
+.mod-rapport .card[data-line] .card__foot{background:var(--line-soft);border-top-color:var(--line)}
+.mod-rapport .wcard--ht[data-line]{border-left:4px solid var(--line-strong)}
+.mod-rapport .wcard__where{display:flex;align-items:center;gap:.375rem}
+.mod-rapport .linefilter .pill[data-line] .pill__dot{display:inline-block;width:.625rem;height:.625rem;background:var(--line);box-shadow:inset 0 0 0 2px var(--line-strong)}
+.mod-rapport .linefilter .pill[data-line][aria-checked="true"] .pill__dot{box-shadow:inset 0 0 0 2px var(--line-strong),0 0 0 1.5px #fff}
 .mod-rapport .card__head{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.75rem 1.125rem;border-bottom:1px solid var(--border);min-height:3.25rem}
 .mod-rapport .card__title{font-size:.9375rem;font-weight:800;color:var(--nn-navy);letter-spacing:.08em;text-transform:uppercase;margin-right:.25rem}
 .mod-rapport .chip{display:inline-flex;align-items:center;min-height:1.625rem;padding:0 .5rem;border-radius:999px;font-size:.8125rem;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -566,11 +584,11 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 /* =========================================================================
    Vue d'impression (rendu dédié, généré depuis l'état)
    ========================================================================= */
-.mod-rapport .pv{font-family:var(--font);color:var(--text);font-size:7.6pt;line-height:1.2;display:flex;flex-direction:column;gap:1.7mm;background:#fff}
+.mod-rapport .pv{font-family:var(--font);color:var(--text);font-size:7.6pt;line-height:1.2;display:flex;flex-direction:column;gap:1.35mm;background:#fff}
 .mod-rapport .pv *{box-sizing:border-box}
 .mod-rapport .pv .icon{width:3.6mm;height:3.6mm;stroke-width:2.2}
-.mod-rapport .pv-head{display:flex;align-items:center;gap:4mm;padding-bottom:1.6mm;border-bottom:.5mm solid var(--nn-navy)}
-.mod-rapport .pv-logo{height:9mm;width:auto;display:block}
+.mod-rapport .pv-head{display:flex;align-items:center;gap:4mm;padding-bottom:1.2mm;border-bottom:.5mm solid var(--nn-navy)}
+.mod-rapport .pv-logo{height:8.6mm;width:auto;display:block}
 .mod-rapport .pv-titles{min-width:0}
 .mod-rapport .pv-title{font-size:13pt;font-weight:800;letter-spacing:.07em;color:var(--nn-navy);line-height:1.1}
 .mod-rapport .pv-meta{display:flex;flex-wrap:wrap;gap:.6mm 4.5mm;margin-top:.8mm;font-size:8pt;color:var(--muted)}
@@ -597,7 +615,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .pv-cap .pv-prod{flex:none;margin-left:auto;font-weight:700;font-size:7.2pt}
 .mod-rapport .pv-cap .pv-empty{opacity:.55;font-weight:400}
 .mod-rapport .pv-kv{display:grid;grid-template-columns:21fr 24.5fr 21fr 24.5fr;gap:.25mm;background:var(--border);border-bottom:.25mm solid var(--border)}
-.mod-rapport .pv-kv>div{background:#fff;padding:.45mm 1.1mm;min-height:4.1mm;display:flex;align-items:center;min-width:0;overflow-wrap:break-word}
+.mod-rapport .pv-kv>div{background:#fff;padding:.35mm 1.1mm;min-height:3.7mm;display:flex;align-items:center;min-width:0;overflow-wrap:break-word}
 .mod-rapport .pv-kv>.pv-l{background:var(--surface-2);color:var(--muted);font-weight:600;font-size:6.3pt;line-height:1.1;letter-spacing:-.015em}
 .mod-rapport .pv-kv>.pv-l.is-fill{background:#fff}
 .mod-rapport .pv-kv>.pv-v{font-weight:600}
@@ -635,7 +653,241 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .pv-points h3{break-after:avoid;page-break-after:avoid}
 .mod-rapport .pv-points p{padding:1mm 1.8mm;white-space:pre-wrap;overflow-wrap:anywhere;font-size:7.6pt;line-height:1.3;orphans:3;widows:3}
 .mod-rapport .pv-kv>.pv-note{orphans:3;widows:3}
-.mod-rapport .pv-foot{margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:.8mm;border-top:.2mm solid var(--border);color:var(--muted);font-size:6.4pt}
+/* ---------- PDF : couleurs des lignes, bandeaux de section (lisible aussi en noir et blanc) ---------- */
+.mod-rapport .pv-head{border-bottom:.6mm solid var(--nn-navy)}
+.mod-rapport .pv-band__title{display:flex;align-items:center;gap:2mm;margin-bottom:.9mm;padding:.35mm 2mm .35mm .6mm;border-radius:1mm;background:#E4E9F3;color:var(--nn-navy);font-size:7pt;letter-spacing:.1em}
+.mod-rapport .pv-band__title::after{display:none}
+.mod-rapport .pv-band__n{display:inline-grid;place-items:center;width:3.4mm;height:3.4mm;border-radius:50%;background:#fff;color:var(--nn-navy);font-size:6.6pt;letter-spacing:0;box-shadow:inset 0 0 0 .3mm var(--nn-navy)}
+.mod-rapport .pv-band--enCours .pv-band__title{background:var(--nn-navy);color:#fff}
+.mod-rapport .pv-band--enCours .pv-band__n{box-shadow:none}
+.mod-rapport .pv-band--suivant2 .pv-band__title{background:#F0F3F8}
+.mod-rapport .pv-card[data-line]{border-color:var(--line-strong);background:var(--line-faint)}
+.mod-rapport .pv-band--enCours .pv-card[data-line]{border-width:.35mm}
+.mod-rapport .pv-card[data-line] .pv-cap{background:var(--line);color:var(--nn-navy);border-bottom:.25mm solid var(--line-strong);box-shadow:inset 1.2mm 0 0 var(--line-strong);padding-left:2.8mm}
+.mod-rapport .pv-card[data-line] .pv-cap .pv-lot{padding:0 1.2mm;border-radius:.8mm;background:rgba(255,255,255,.75)}
+.mod-rapport .pv-card[data-line] .pv-cap .pv-empty{opacity:.6}
+.mod-rapport .pv-card[data-line] .pv-kv{background:var(--line)}
+.mod-rapport .pv-card[data-line] .pv-kv>.pv-l{background:var(--line-soft);color:var(--line-ink)}
+.mod-rapport .pv-card[data-line] .pv-kv>.pv-l.is-fill,.mod-rapport .pv-card[data-line] .pv-kv>.pv-v.is-fill{background:var(--line-faint)}
+.mod-rapport .pv-card[data-line] .pv-kv>.pv-v.is-off{background:var(--line-faint)}
+.mod-rapport .pv-watch__i[data-line]{border-left:1mm solid var(--line-strong)}
+.mod-rapport .pv-box,.mod-rapport .pv-points{border-color:#9FAAC2}
+.mod-rapport .pv-box h3,.mod-rapport .pv-points h3{background:#E4E9F3;border-bottom-color:#B8C1D3}
+.mod-rapport .pv-points{box-shadow:inset 1mm 0 0 var(--nn-navy)}
+.mod-rapport .pv-points h3,.mod-rapport .pv-points p{padding-left:2.8mm}
+.mod-rapport .pv-foot{margin-top:auto;display:flex;justify-content:space-between;gap:4mm;padding-top:.8mm;border-top:.2mm solid #B8C1D3;color:var(--muted);font-size:6.4pt}
+/* =========================================================================
+   3 bis. Onglet « Paramètres » (préfixe .mod-params)
+   ========================================================================= */
+/* Couleurs des lignes (réglables) : variables posées sur :root par le script ; [data-line] les expose en --line / --line-* */
+[data-line="groninger"]{--line:var(--line-groninger,#D6EAF8);--line-soft:var(--line-groninger-soft,#EBF4FC);--line-faint:var(--line-groninger-faint,#F5FAFD);--line-strong:var(--line-groninger-strong,#4F7FA3);--line-ink:var(--line-groninger-ink,#23427A)}
+[data-line="inova5"]{--line:var(--line-inova5,#E8DAEF);--line-soft:var(--line-inova5-soft,#F3ECF7);--line-faint:var(--line-inova5-faint,#F9F5FB);--line-strong:var(--line-inova5-strong,#86679A);--line-ink:var(--line-inova5-ink,#4A3A7E)}
+[data-line="inova4"]{--line:var(--line-inova4,#E3E7EC);--line-soft:var(--line-inova4-soft,#F0F2F5);--line-faint:var(--line-inova4-faint,#F8F9FA);--line-strong:var(--line-inova4-strong,#6E7887);--line-ink:var(--line-inova4-ink,#35437A)}
+.mod-params h1,.mod-params h2,.mod-params h3,.mod-params h4,.mod-params p{margin:0}
+.mod-params .pm-page{max-width:1180px;margin:0 auto;padding:1.5rem var(--gutter) 5rem;display:flex;flex-direction:column;gap:1rem}
+.mod-params .pm-head{display:flex;align-items:center;gap:1rem;padding:.25rem 0 .25rem}
+.mod-params .pm-head__ico{display:grid;place-items:center;width:3rem;height:3rem;flex:none;border-radius:var(--radius);background:var(--nn-navy);color:#fff}
+.mod-params .pm-head__ico .icon{width:1.5rem;height:1.5rem}
+.mod-params .pm-head__title{font-size:1.5rem;font-weight:700;color:var(--nn-navy);line-height:1.2}
+.mod-params .pm-head__sub{color:var(--muted);font-size:.9375rem;margin-top:.125rem}
+/* origine des paramètres + partage */
+.mod-params .pm-source{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.875rem 1.25rem;padding:1rem 1.25rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.mod-params .pm-src__state{display:flex;align-items:flex-start;gap:.75rem;min-width:0;flex:1 1 20rem}
+.mod-params .pm-src__ico{display:grid;place-items:center;width:2.5rem;height:2.5rem;flex:none;border-radius:50%;background:var(--t-bg);color:var(--t-fg)}
+.mod-params .tone-ok{--t-bg:var(--ok-bg);--t-fg:var(--ok-fg);--t-dot:var(--ok-dot)}
+.mod-params .tone-wip{--t-bg:var(--wip-bg);--t-fg:var(--wip-fg);--t-dot:var(--wip-dot)}
+.mod-params .tone-na{--t-bg:var(--na-bg);--t-fg:var(--na-fg);--t-dot:var(--na-dot)}
+.mod-params .pm-src__txt{display:flex;flex-direction:column;align-items:flex-start;gap:.25rem;min-width:0;padding-top:.3rem}
+.mod-params .pm-src__title{font-size:1rem;color:var(--muted)}
+.mod-params .pm-src__title b{color:var(--nn-navy);font-weight:700}
+.mod-params .pm-src__txt .btn-link{min-height:1.75rem;padding:0;font-size:.9375rem}
+.mod-params .pm-src__note{display:flex;align-items:flex-start;gap:.375rem;font-size:.8125rem;color:var(--ok-fg)}
+.mod-params .pm-src__note .icon{width:1rem;height:1rem;margin-top:.1rem}
+.mod-params .pm-src__note.is-warn{color:var(--wip-fg);font-weight:600}
+.mod-params .pm-src__actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.mod-params .pm-src__actions .btn{white-space:normal;text-align:left;max-width:100%}
+/* sections repliables */
+.mod-params .pm-sections{display:flex;flex-direction:column;gap:.75rem}
+.mod-params .pm-sec{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0}
+.mod-params .pm-sec__sum{display:flex;align-items:center;gap:.875rem;min-height:4rem;padding:.75rem 1.25rem;cursor:pointer;list-style:none;border-radius:var(--radius)}
+.mod-params .pm-sec__sum::-webkit-details-marker{display:none}
+.mod-params .pm-sec__sum:hover{background:var(--surface-2)}
+.mod-params .pm-sec__sum:focus-visible{box-shadow:var(--focus)}
+.mod-params .pm-sec[open]>.pm-sec__sum{border-bottom:1px solid var(--border);border-radius:var(--radius) var(--radius) 0 0}
+.mod-params .pm-sec__ico{display:grid;place-items:center;width:2.25rem;height:2.25rem;flex:none;border-radius:var(--radius-sm);background:var(--tint);color:var(--nn-navy)}
+.mod-params .pm-sec__txt{display:flex;flex-direction:column;min-width:0;flex:1}
+.mod-params .pm-sec__title{font-size:1.0625rem;font-weight:700;color:var(--nn-navy);line-height:1.3}
+.mod-params .pm-sec__sub{font-size:.8125rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-params .pm-sec__sw{display:flex;gap:.25rem;flex:none}
+.mod-params .pm-sec__sw .pm-dot{width:1rem;height:1rem}
+.mod-params .pm-sec__chev{flex:none;color:var(--muted);transition:transform .15s}
+.mod-params .pm-sec[open] .pm-sec__chev{transform:rotate(180deg)}
+.mod-params .pm-sec__body{display:flex;flex-direction:column;gap:1.125rem;padding:1.125rem 1.25rem 1.375rem}
+/* champs */
+.mod-params .field{display:flex;flex-direction:column;gap:.375rem;min-width:0}
+.mod-params .field__label{font-size:.8125rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;line-height:1.25}
+.mod-params .input,.mod-params .select{display:block;width:100%;min-height:2.5rem;padding:.4375rem .75rem;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:#fff;color:var(--text);font-size:1rem;line-height:1.4;min-width:0;transition:border-color .12s,box-shadow .12s}
+.mod-params .input:hover,.mod-params .select:hover{border-color:#98A3BA}
+.mod-params .input:focus,.mod-params .select:focus{outline:none;border-color:var(--nn-blue);box-shadow:var(--focus)}
+.mod-params .input:disabled,.mod-params .select:disabled{background:var(--surface-2);color:#8A93A8;cursor:not-allowed}
+.mod-params .input[aria-invalid="true"]{border-color:var(--todo-dot);box-shadow:0 0 0 3px rgba(217,48,37,.2)}
+.mod-params .input::placeholder{color:#6B7489;opacity:1}
+.mod-params .input--mono{font-family:var(--mono);letter-spacing:.03em}
+.mod-params .select{-webkit-appearance:none;appearance:none;padding-right:2.25rem;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235A6480' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .625rem center;background-size:1rem}
+.mod-params .unit-input{position:relative;display:inline-flex;align-items:center;width:6.5rem;flex:none}
+.mod-params .unit-input .input{padding-right:1.75rem;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.mod-params .unit-input__u{position:absolute;right:.75rem;color:var(--muted);font-weight:600;pointer-events:none}
+.mod-params .pm-hint{font-size:.8125rem;color:var(--muted);line-height:1.45}
+.mod-params .pm-lead{font-size:.875rem;max-width:60rem}
+.mod-params .pm-empty{font-size:.875rem;color:var(--muted);padding:.5rem 0}
+.mod-params .pm-err{padding:.5rem .75rem;border-radius:var(--radius-sm);background:var(--todo-bg);color:var(--todo-fg);font-weight:600;font-size:.875rem}
+.mod-params .pm-check{display:inline-flex;align-items:center;gap:.5rem;min-height:2.5rem;font-size:.875rem;color:var(--text);cursor:pointer;white-space:nowrap}
+.mod-params .pm-check__box{width:1.125rem;height:1.125rem;margin:0;accent-color:var(--nn-navy);flex:none}
+.mod-params .pm-dot{display:inline-block;width:.75rem;height:.75rem;border-radius:50%;background:var(--line);box-shadow:inset 0 0 0 2px var(--line-strong);flex:none}
+.mod-params .pm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr));gap:.875rem}
+.mod-params .pm-grid--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mod-params .pm-grid--ht{grid-template-columns:repeat(auto-fill,minmax(min(100%,30rem),1fr));align-items:start}
+.mod-params .pm-stack{display:flex;flex-direction:column;gap:.875rem}
+.mod-params .pm-stack .pm-card__head{flex-direction:row;align-items:baseline;gap:.75rem}
+.mod-params .pm-grid--2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.mod-params .pm-inline{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;padding:.75rem 1rem;border-radius:var(--radius-sm);background:var(--surface-2);border:1px solid var(--border)}
+.mod-params .pm-inline__l{font-weight:600;color:var(--text);font-size:.9375rem}
+/* cartes (tableau de holding time, liste de produits) aux couleurs de la ligne */
+.mod-params .pm-card{display:flex;flex-direction:column;min-width:0;border:1px solid var(--border);border-top:3px solid var(--line-strong);border-radius:var(--radius);background:#fff;overflow:hidden}
+.mod-params .pm-card__head{display:flex;flex-direction:column;gap:.125rem;padding:.625rem .875rem;background:var(--line-soft);border-bottom:1px solid var(--border)}
+.mod-params .pm-card__eyebrow{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;font-weight:700;color:var(--line-ink);text-transform:uppercase;letter-spacing:.05em}
+.mod-params .pm-card__eyebrow .pm-dot{width:.625rem;height:.625rem}
+.mod-params .pm-card__title{display:flex;align-items:center;gap:.5rem;font-size:.9375rem;font-weight:700;color:var(--nn-navy);line-height:1.3}
+.mod-params .pm-card__sub{font-size:.8125rem;color:var(--muted)}
+.mod-params .pm-card__foot{margin-top:auto;padding:.5rem .875rem .75rem}
+.mod-params .pm-card__foot.pm-add{max-width:32rem}
+.mod-params .pm-rows{display:flex;flex-direction:column}
+.mod-params .pm-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto 2.5rem;align-items:center;gap:.5rem .625rem;padding:.4375rem .875rem;border-bottom:1px solid #EEF1F6}
+.mod-params .pm-row__name{display:flex;flex-direction:column;min-width:0;font-weight:600;font-size:.9375rem;line-height:1.25}
+.mod-params .pm-row__name small{font-weight:400;font-size:.75rem;color:var(--muted)}
+.mod-params .pm-row--def{background:var(--line-faint)}
+.mod-params .pm-row .pm-check{font-size:.8125rem;color:var(--muted)}
+.mod-params .pm-row__act{display:flex;justify-content:flex-end}
+.mod-params .pm-del{color:var(--muted)}
+.mod-params .pm-del:not(:disabled):hover{color:#B3261E;background:#FBE9E7}
+/* holding times personnalisés */
+.mod-params .pm-sub{display:flex;flex-direction:column;gap:.25rem;padding-top:.375rem;border-top:1px solid var(--border)}
+.mod-params .pm-sub__t{font-size:.9375rem;font-weight:700;color:var(--nn-navy);padding-top:.75rem}
+.mod-params .pm-custom{display:flex;flex-direction:column;align-items:flex-start;gap:.75rem}
+.mod-params .pm-custom>.pm-sub{align-self:stretch}
+.mod-params .pm-cu-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.5rem;align-self:stretch}
+.mod-params .pm-cu{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;padding:.625rem .875rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2)}
+.mod-params .pm-cu__dots{display:flex;gap:.25rem}
+.mod-params .pm-cu__main{display:flex;flex-wrap:wrap;align-items:baseline;gap:.125rem .625rem;flex:1 1 16rem;min-width:0}
+.mod-params .pm-cu__main b{color:var(--nn-navy)}
+.mod-params .pm-cu__h{padding:.0625rem .5rem;border-radius:999px;background:#fff;border:1px solid var(--border);font-size:.8125rem;font-weight:700;font-variant-numeric:tabular-nums}
+.mod-params .pm-cu__main small{flex-basis:100%;font-size:.8125rem;color:var(--muted)}
+.mod-params .pm-cu__act{display:flex;gap:.25rem;align-items:center}
+/* produits */
+.mod-params .pm-prods,.mod-params .pm-etps,.mod-params .pm-lis{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.mod-params .pm-prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,26rem),1fr));column-gap:1.5rem;padding:0 .25rem}
+.mod-params .pm-prod{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.375rem;padding:.375rem .625rem .375rem .875rem;border-bottom:1px solid #EEF1F6}
+.mod-params .pm-prod .input{font-weight:600;min-height:2.25rem;padding-block:.25rem}
+.mod-params .pm-prod__like{display:flex;align-items:center;gap:.375rem}
+.mod-params .pm-prod__lbl{font-size:.75rem;color:var(--muted)}
+.mod-params .select--sm{min-height:2.25rem;padding:.25rem 1.75rem .25rem .5rem;font-size:.875rem;width:8rem;background-position:right .375rem center}
+.mod-params .pm-prod__act{display:flex;align-items:center}
+.mod-params .pm-prod__act .btn-icon{width:2.25rem;min-height:2.25rem}
+.mod-params .pm-add{display:flex;gap:.5rem;align-items:center}
+.mod-params .pm-add .input{flex:1;min-width:0}
+.mod-params .pm-add--inline{max-width:40rem}
+/* règles d'applicabilité */
+.mod-params .pm-rules{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.mod-params .pm-rule{display:grid;grid-template-columns:minmax(14rem,19rem) minmax(0,1fr);gap:.625rem 1.25rem;align-items:center;padding:.75rem 1rem;border-bottom:1px solid var(--border);border-left:4px solid var(--line-strong)}
+.mod-params .pm-rule:last-child{border-bottom:0}
+.mod-params .pm-rule:nth-child(even){background:var(--surface-2)}
+.mod-params .pm-rule__what{display:flex;flex-direction:column;gap:.125rem;min-width:0}
+.mod-params .pm-rule__field{color:var(--text);font-size:.9375rem;line-height:1.3}
+.mod-params .pm-rule__kind{font-size:.8125rem;color:var(--muted)}
+.mod-params .pm-chips{display:flex;flex-wrap:wrap;gap:.375rem}
+.mod-params .pm-chip{position:relative;display:inline-flex;align-items:center;gap:.375rem;min-height:2.25rem;padding:.25rem .75rem .25rem .5rem;border:1px solid var(--border-strong);border-radius:999px;background:#fff;color:var(--muted);font-size:.875rem;font-weight:600;cursor:pointer;user-select:none;transition:background-color .12s,border-color .12s}
+.mod-params .pm-chip:hover{border-color:var(--nn-navy);color:var(--text)}
+.mod-params .pm-chip__box{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.mod-params .pm-chip__tick{display:grid;place-items:center;width:1.125rem;height:1.125rem;border-radius:50%;border:1.5px solid var(--border-strong);background:#fff;color:transparent}
+.mod-params .pm-chip__tick .icon{width:.75rem;height:.75rem;stroke-width:3}
+.mod-params .pm-chip:has(.pm-chip__box:checked){background:var(--tint);border-color:var(--nn-navy);color:var(--nn-navy)}
+.mod-params .pm-chip:has(.pm-chip__box:checked) .pm-chip__tick{background:var(--nn-navy);border-color:var(--nn-navy);color:#fff}
+.mod-params .pm-chip:has(.pm-chip__box:focus-visible){box-shadow:var(--focus)}
+/* pastilles de choix (radio) */
+.mod-params .pm-seg{display:inline-flex;flex-wrap:wrap;gap:.25rem;padding:.25rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);align-self:flex-start;max-width:100%}
+.mod-params .pm-seg__opt{position:relative;display:inline-flex;align-items:center;min-height:2.25rem;padding:0 .875rem;border-radius:4px;color:var(--muted);font-weight:600;font-size:.9375rem;cursor:pointer;white-space:nowrap}
+.mod-params .pm-seg__opt:hover{color:var(--text);background:#fff}
+.mod-params .pm-seg__in{position:absolute;opacity:0;width:1px;height:1px;margin:0}
+.mod-params .pm-seg__opt:has(.pm-seg__in:checked){background:var(--nn-navy);color:#fff}
+.mod-params .pm-seg__opt:has(.pm-seg__in:focus-visible){box-shadow:var(--focus)}
+/* couleurs */
+.mod-params .pm-color{display:flex;flex-direction:column;gap:.75rem;padding:.875rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff;min-width:0}
+.mod-params .pm-color__preview{display:flex;flex-direction:column;border:1px solid var(--border);border-top:3px solid var(--line-strong);border-radius:var(--radius-sm);overflow:hidden;font-size:.8125rem}
+.mod-params .pm-color__cap{display:flex;align-items:center;gap:.5rem;padding:.4375rem .625rem;background:var(--line);color:var(--nn-navy)}
+.mod-params .pm-color__cap b{letter-spacing:.08em}
+.mod-params .pm-color__lot{font-family:var(--mono);font-size:.75rem;padding:0 .375rem;border-radius:999px;background:rgba(255,255,255,.7)}
+.mod-params .pm-color__body{display:grid;grid-template-columns:1fr 1fr;background:var(--line-faint)}
+.mod-params .pm-color__l{padding:.375rem .625rem;color:var(--muted);font-weight:600;background:var(--line-soft)}
+.mod-params .pm-color__v{padding:.375rem .625rem;font-weight:700;background:var(--t-bg);color:var(--t-fg)}
+.mod-params .pm-color__v.tone-ok{--t-bg:var(--ok-bg);--t-fg:var(--ok-fg)}
+.mod-params .pm-color__row{display:flex;align-items:center;gap:.5rem}
+.mod-params .pm-color__pick{width:2.75rem;height:2.5rem;padding:.1875rem;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:#fff;cursor:pointer;flex:none}
+.mod-params .pm-color__pick:focus-visible{outline:none;box-shadow:var(--focus)}
+.mod-params .pm-color__hex{width:7.5rem;flex:none}
+.mod-params .pm-color__row .btn-link{min-height:2.5rem}
+.mod-params .pm-warn-txt{display:flex;gap:.375rem;align-items:flex-start;font-size:.8125rem;color:var(--wip-fg);font-weight:600}
+.mod-params .pm-warn-txt .icon{width:1rem;height:1rem;margin-top:.1rem}
+/* étiquettes */
+.mod-params .pm-etp-head,.mod-params .pm-etp{display:grid;grid-template-columns:6.5rem minmax(0,1fr) minmax(0,1fr) auto auto;gap:.5rem .625rem;align-items:center}
+.mod-params .pm-etp-head{padding:0 .625rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.mod-params .pm-etp{padding:.375rem .625rem;border-bottom:1px solid #EEF1F6}
+.mod-params .pm-etp .input{min-height:2.25rem;padding-block:.25rem}
+.mod-params .pm-etp__name{font-weight:700}
+.mod-params .pm-li{display:grid;grid-template-columns:1.75rem minmax(0,1fr) 7.5rem auto;gap:.5rem;align-items:center;padding:.25rem 0;border-bottom:1px solid #EEF1F6}
+.mod-params .pm-li .input{min-height:2.25rem;padding-block:.25rem}
+.mod-params .pm-li__n{font-size:.8125rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.mod-params .pm-li__q{max-width:7.5rem}
+.mod-params .pm-add .pm-li__q{flex:0 0 7.5rem}
+.mod-params .pm-lis{max-width:48rem}
+.mod-params .pm-note{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;padding:.75rem 1rem;border-radius:var(--radius-sm);background:#EEF3FC;color:var(--nn-navy);font-size:.875rem}
+.mod-params .pm-note>span{flex:1 1 20rem}
+.mod-params .pm-note .btn-link{min-height:2rem}
+/* dialogue « pour toute l'équipe », holding time personnalisé */
+.mod-params .pm-form{display:flex;flex-direction:column;gap:1rem}
+.mod-params .pm-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.875rem}
+.mod-params .pm-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.75rem;align-items:start}
+.mod-params .pm-step__n{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;background:var(--nn-navy);color:#fff;font-weight:700}
+.mod-params .pm-step b{color:var(--nn-navy)}
+.mod-params .field--hours .unit-input{width:8rem}
+@media (max-width:1023.98px){
+  .mod-params .pm-grid--3{grid-template-columns:minmax(0,1fr)}
+  .mod-params .pm-rule{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:759.98px){
+  .mod-params .pm-page{padding:1rem .75rem 4rem}
+  .mod-params .pm-grid--2{grid-template-columns:minmax(0,1fr)}
+  .mod-params .pm-sec__sum{padding:.75rem .875rem;gap:.625rem}
+  .mod-params .pm-sec__body{padding:.875rem}
+  .mod-params .pm-sec__sw{display:none}
+  .mod-params .pm-row{grid-template-columns:minmax(0,1fr) auto 2.5rem;padding-inline:.625rem}
+  .mod-params .pm-row .pm-check{grid-column:1/-1;grid-row:2;min-height:1.75rem}
+  .mod-params .pm-prod{grid-template-columns:minmax(0,1fr) auto;padding-inline:.5rem}
+  .mod-params .pm-prod>.input{grid-column:1/-1}
+  .mod-params .pm-etp-head{display:none}
+  .mod-params .pm-etp{grid-template-columns:minmax(0,1fr) auto;padding-inline:0}
+  .mod-params .pm-etp>.input,.mod-params .pm-etp>.pm-check{grid-column:1/-1}
+  .mod-params .pm-etp>.pm-etp__name{grid-column:1;grid-row:1}
+  .mod-params .pm-etp>.pm-prod__act{grid-column:2;grid-row:1}
+  .mod-params .pm-li{grid-template-columns:1.25rem minmax(0,1fr) auto}
+  .mod-params .pm-li>.pm-li__q{grid-column:2;grid-row:2;max-width:none}
+  .mod-params .pm-li>.pm-prod__act{grid-row:1/3;grid-column:3}
+  .mod-params .pm-add{flex-wrap:wrap}
+  .mod-params .pm-add .pm-li__q{flex:1 1 6rem}
+  .mod-params .pm-src__actions .btn{flex:1 1 auto}
+  .mod-params .pm-src__actions .btn-primary{flex-basis:100%}
+  .mod-params .pm-head__ico{width:2.5rem;height:2.5rem}
+  .mod-params .pm-head__title{font-size:1.3125rem}
+}
 /* =========================================================================
    4. Module « Étiquettes » (préfixe .mod-etiquettes)
    ========================================================================= */
@@ -900,10 +1152,14 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
   -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 .mod-etiquettes .sheet .cell{ position: absolute; }
-.mod-etiquettes .sheet .lbl{ padding: var(--pad); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+.mod-etiquettes .sheet .lbl{ padding: var(--pady) var(--pad); display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
 .mod-etiquettes .sheet.v-top .lbl{ justify-content: flex-start; }
 .mod-etiquettes .sheet .ln{ flex: 0 0 var(--lnh); height: var(--lnh); line-height: var(--lnh); font-size: var(--fs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 .mod-etiquettes .sheet .ln.sm{ font-size: var(--fs2); }
+/* Épaisseur du texte : noir pur ; « Renforcé » = contour fin sous le remplissage (nettement plus noir, pas du gras) */
+.mod-etiquettes .sheet .lbl{ color: #000; }
+.mod-etiquettes .sheet.w-renforce .lbl{ -webkit-text-stroke: .2pt #000; paint-order: stroke fill; }
+.mod-etiquettes .sheet.w-gras .lbl, .mod-etiquettes .measure-box.w-gras{ font-weight: 700; }
 .mod-etiquettes .sheet .blank, .mod-etiquettes .measure-box .blank{ display: inline-block; height: 1px; vertical-align: baseline; }
 .mod-etiquettes .sheet.frames .lbl, .mod-etiquettes .sheet .cell.test{ outline: .2mm solid #000; outline-offset: -.2mm; }
 .mod-etiquettes .sheet .cell.test{ display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .6mm; text-align: center; }
@@ -919,6 +1175,27 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 }
 .mod-etiquettes .measure-box{ position: absolute; left: -10000px; top: 0; visibility: hidden; pointer-events: none; font-family: var(--label-font); font-weight: 400; line-height: 1; contain: layout style; }
 .mod-etiquettes .measure-box .m-ln{ display: block; width: max-content; white-space: nowrap; }
+/* Choix de la planche (cartes avec vignette) */
+.mod-etiquettes .presets{ display: grid; grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+.mod-etiquettes .preset{ position: relative; display: flex; align-items: center; gap: .875rem; padding: .625rem .875rem; border: 1px solid var(--border-strong); border-radius: var(--radius); background: #fff; cursor: pointer; min-width: 0; transition: border-color .12s, box-shadow .12s, background-color .12s; }
+.mod-etiquettes .preset:hover{ border-color: var(--nn-navy); background: var(--surface-2); }
+.mod-etiquettes .preset.is-on{ border-color: var(--nn-navy); box-shadow: inset 0 0 0 1px var(--nn-navy); background: var(--tint); }
+.mod-etiquettes .preset__input{ position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.mod-etiquettes .preset:has(.preset__input:focus-visible){ box-shadow: inset 0 0 0 1px var(--nn-navy), var(--focus); }
+.mod-etiquettes .preset__thumb{ flex: none; width: 2.5rem; }
+.mod-etiquettes .preset::after{ content: ""; flex: none; width: 1.125rem; height: 1.125rem; margin-left: auto; border-radius: 50%; border: 2px solid var(--border-strong); background: #fff; }
+.mod-etiquettes .preset.is-on::after{ border: 5px solid var(--nn-navy); }
+.mod-etiquettes .thumb{ display: block; width: 100%; height: auto; }
+.mod-etiquettes .thumb__page{ fill: #fff; stroke: #98A3BA; stroke-width: 1.5; }
+.mod-etiquettes .thumb__lbl{ fill: #E3E8F1; stroke: #8A96AE; stroke-width: .8; }
+.mod-etiquettes .thumb__cut{ fill: none; stroke: #8A96AE; stroke-width: .8; stroke-dasharray: 3 2; }
+.mod-etiquettes .preset.is-on .thumb__lbl{ fill: #D5DEF0; stroke: var(--nn-navy); }
+.mod-etiquettes .preset.is-on .thumb__page{ stroke: var(--nn-navy); }
+.mod-etiquettes .preset__txt{ display: flex; flex-direction: column; gap: .125rem; min-width: 0; }
+.mod-etiquettes .preset__name{ display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .5rem; font-weight: 700; color: var(--nn-navy); line-height: 1.25; font-size: 1.0625rem; }
+.mod-etiquettes .preset__def{ font-size: .6875rem; min-height: 1.25rem; }
+.mod-etiquettes .preset__sub{ font-size: .875rem; color: var(--text); line-height: 1.3; }
+.mod-etiquettes .preset__ref{ font-size: .75rem; color: var(--muted); line-height: 1.3; }
 .mod-etiquettes .dlg-check{ display: flex; align-items: center; gap: .625rem; min-height: 2.5rem; font-size: .9375rem; cursor: pointer; }
 .mod-etiquettes .help-list{ list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .5rem; }
 .mod-etiquettes .help-body{ display: flex; flex-direction: column; gap: .875rem; }
@@ -1016,6 +1293,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <a class="tab" href="#accueil" data-route="accueil"><span data-icon="home"></span><span class="tab__long">Accueil</span><span class="tab__short">Accueil</span></a>
       <a class="tab" href="#rapport" data-route="rapport"><span data-icon="clipboard"></span><span class="tab__long">Rapport de shift</span><span class="tab__short">Rapport</span></a>
       <a class="tab" href="#etiquettes" data-route="etiquettes"><span data-icon="tag"></span><span class="tab__long">Étiquettes</span><span class="tab__short">Étiquettes</span></a>
+      <a class="tab" href="#parametres" data-route="parametres"><span data-icon="gear"></span><span class="tab__long">Paramètres</span><span class="tab__short">Paramètres</span></a>
     </nav>
     <div class="hdr-right">
       <div class="save-state" id="save-state" data-for="rapport" hidden></div>
@@ -1077,6 +1355,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <span><kbd>Ctrl</kbd>+<kbd>P</kbd> imprimer / exporter le PDF</span>
       <span>PDF du rapport : bouton « Exporter en PDF » en haut à droite (menu ⋯ sur petit écran)</span>
       <span><kbd>Aa</kbd> agrandir le texte</span>
+      <span><span data-icon="gear"></span><a class="home__link" href="#parametres">Paramètres</a> : holding times, produits, couleurs, étiquettes</span>
     </p>
   </div>
 </main>
@@ -1163,6 +1442,22 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
   </div>
 </main>
 
+<!-- ===================== Paramètres de l'outil ===================== -->
+<main class="view mod-params" id="view-parametres" tabindex="-1" aria-labelledby="pm-h1" hidden>
+  <div class="pm-page">
+    <header class="pm-head">
+      <span class="pm-head__ico" aria-hidden="true"><span data-icon="gear"></span></span>
+      <div>
+        <h1 class="pm-head__title" id="pm-h1">Paramètres</h1>
+        <p class="pm-head__sub">Règles du rapport de shift et des étiquettes, modifiables sans toucher au code. Chaque modification s'applique immédiatement.</p>
+      </div>
+    </header>
+    <section class="pm-source" id="pm-source" aria-label="Origine des paramètres"></section>
+    <div class="pm-sections" id="pm-sections"></div>
+  </div>
+  <input type="file" id="pm-file" accept=".json,.js,application/json,text/javascript" hidden>
+</main>
+
 <!-- Zone de mesure du texte des étiquettes (hors vue masquée, jamais affichée) -->
 <div class="mod-etiquettes measure-host" aria-hidden="true"><div class="measure-box" id="measure-box"></div></div>
 
@@ -1173,6 +1468,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 
 <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
+<!-- Paramètres de l'équipe : fichier « parametres-outil.js » posé à côté de l'outil (facultatif ; absent = valeurs d'origine) -->
+<script src="parametres-outil.js"></script>
 <script>
 (() => {
 'use strict';
@@ -1255,6 +1552,13 @@ const Core = (() => {
     layers: '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>',
     target: '<circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/>',
     help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17.3v.01"/>',
+    gear: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><path d="M15.5 4.8a3.3 3.3 0 0 1 0 6.4M18 14.8c2 .7 3.2 2.5 3.5 5.2"/>',
+    pc: '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/>',
+    up: '<path d="m6 15 6-6 6 6"/>',
+    down: '<path d="m6 9 6 6 6-6"/>',
+    list: '<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/>',
+    palette: '<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.7 1.7-1.7H16a5 5 0 0 0 5-5C21 6.4 17 3 12 3z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10" cy="7" r="1.2" fill="currentColor"/><circle cx="14.5" cy="7" r="1.2" fill="currentColor"/>',
   };
   /** Icône SVG (classe « icon » par défaut ; cls = '' pour une icône sans classe). */
   function icon(name, cls = 'icon') {
@@ -1421,6 +1725,356 @@ const Core = (() => {
 })();
 
 /* #########################################################################
+   PARAMÈTRES DE L'OUTIL — règles modifiables sans toucher au code
+   (holding times, produits, applicabilité, couleurs des lignes, étiquettes).
+   Priorité : paramètres modifiés sur ce PC > fichier d'équipe « parametres-outil.js » posé
+   à côté de l'outil > valeurs d'origine. Les modules lisent toujours Params.get().
+   ######################################################################### */
+const Params = (() => {
+  const { ls } = Core;
+  const LOCAL_KEY = 'nn-formu-parametres-v1';
+  const APP = 'outil-formulation-parametres';
+  const SCHEMA = 1;
+  const FILE_NAME = 'parametres-outil.js';
+  const GLOBAL = '__NN_OUTIL_PARAMS__';
+  const HOURS_MAX = 1000;
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
+  const str = (v, max = 80) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, max) : '');
+  const canon = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
+  const pad2 = Core.pad2;
+
+  /* ---------- Description des réglages (libellés de l'onglet Paramètres) ---------- */
+  const LINES = [{ id: 'groninger', name: 'Groninger' }, { id: 'inova5', name: 'Inova 5' }, { id: 'inova4', name: 'Inova 4' }];
+  const BANDS = [{ id: 'enCours', name: 'Lot en cours' }, { id: 'suivant1', name: 'Lot suivant' }, { id: 'suivant2', name: 'Lot suivant +1' }];
+  /** Tableaux de holding times intégrés au rapport (une durée par défaut + des exceptions par produit). */
+  const HT_TABLES = [
+    { id: 'gronEnCours', line: 'groninger', band: 'Lot en cours', title: 'Limite HT depuis le début de filtration', field: 'Début filtration' },
+    { id: 'inova5EnCours', line: 'inova5', band: 'Lot en cours', title: 'Limite HT pour début filtration', field: 'Début formulation' },
+    { id: 'inova4EnCours', line: 'inova4', band: 'Lot en cours', title: 'Limite HT pour fin de remplissage', field: 'Début / fin de formulation' },
+    { id: 'gronHT72', line: 'groninger', band: 'Lot suivant et suivant +1', title: 'Début HT', field: 'Début HT' },
+    { id: 'gronHTFormu', line: 'groninger', band: 'Lot suivant et suivant +1', title: 'Début HT formu.', field: 'Début HT formu.' },
+  ];
+  /** Règles d'applicabilité : « only » = applicable seulement pour les produits cochés ; « not » = non applicable pour eux ;
+      « label » = choix du libellé. */
+  const RULES = [
+    { id: 'monitoring', line: 'inova5', band: 'Lot en cours', field: 'Monitoring', kind: 'only' },
+    { id: 'checkShift', line: 'inova4', band: 'Lot en cours', field: 'Check shift', kind: 'only' },
+    { id: 'htNaInova5', line: 'inova5', band: 'Lot en cours', field: 'Début formulation et sa limite HT', kind: 'not' },
+    { id: 'htNaInova4', line: 'inova4', band: 'Lot en cours', field: 'Date de formulation et sa limite HT', kind: 'not' },
+    { id: 'debutInova4', line: 'inova4', band: 'Lot en cours', field: 'Libellé « Début de formulation » (sinon « Fin de formulation »)', kind: 'label' },
+    { id: 'peseeInova5', line: 'inova5', band: 'Lot suivant et suivant +1', field: 'Pesée', kind: 'only' },
+    { id: 'tampon', line: 'inova5', band: 'Lot suivant et suivant +1', field: 'Tampon', kind: 'only' },
+    { id: 'peseeInova4', line: 'inova4', band: 'Lot suivant et suivant +1', field: 'Pesée', kind: 'only' },
+  ];
+  const seq6 = (name, qty) => [1, 2, 3, 4, 5, 6].map(i => [`${name} (${i}/6)`, qty]);
+  const prods = (...names) => names.map(n => (Array.isArray(n) ? { name: n[0], like: n[1] } : { name: n, like: '' }));
+  const DEFAULTS = {
+    rapport: {
+      soonHours: 4,
+      ht: {
+        gronEnCours: { def: 150, defNone: false, rows: [] },
+        inova5EnCours: { def: 24, defNone: false, rows: [{ p: 'CT-P17', h: 20, none: false }, { p: 'SWFI', h: 34, none: false }, { p: 'MFT', h: 24, none: true }] },
+        inova4EnCours: { def: 24, defNone: false, rows: [{ p: 'SWFI', h: 34, none: false }, { p: 'EPPI', h: 32, none: false }, { p: 'TAKEDA', h: 144, none: false }, { p: 'MFT', h: 24, none: true }] },
+        gronHT72: { def: 72, defNone: false, rows: [] },
+        gronHTFormu: { def: 24, defNone: false, rows: [] },
+      },
+      custom: [],
+      products: {
+        groninger: prods('SEMA K 0.5', 'SEMA K 0.75', 'SEMA K 1.0', 'SEMA K 2.0', 'SEMA K 2.27', 'SEMA K 3.2', 'MFT'),
+        inova5: prods('SB4', 'SB5B', 'SB16', 'CT-P17', 'SWFI', 'MFT', ['SB4 SCALE UP', 'SB4'], ['CT-P17 SCALE UP', 'CT-P17']),
+        inova4: prods('SWFI', 'EPPI', 'TAKEDA', 'NACL', 'MFT'),
+      },
+      rules: {
+        monitoring: ['SB16', 'CT-P17', 'SB5B'], checkShift: ['TAKEDA'], htNaInova5: ['MFT'], htNaInova4: ['MFT'], debutInova4: ['TAKEDA', 'SWFI'],
+        peseeInova5: ['MFT', 'SB16'], tampon: ['SB16'], peseeInova4: ['MFT', 'TAKEDA'],
+      },
+      /* couleurs des lignes (celles de l'Excel ; Inova 4 un peu plus marqué que le gris d'origine, trop proche du blanc) */
+      colors: { groninger: '#D6EAF8', inova5: '#E8DAEF', inova4: '#E3E7EC' },
+      mail: { to: '', cc: '' },
+    },
+    etiquettes: {
+      preset: 'FIDUCIAL',
+      epaisseur: 'renforce',
+      produits: [
+        { name: 'SB4', nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false },
+        { name: 'SB5', nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag', blanche: true },
+        { name: 'SB5B', nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag', blanche: false },
+        { name: 'SB16', nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false },
+      ],
+      /* listes d'origine des « autres échantillons » (quantités SB16 corrigées par rapport à l'Excel) */
+      listes: {
+        SB4: [['Ech Pré - BB - Avant 1S', '100mL'], ['SB4 - pH/osmo', '50mL'], ['SB4 - Conc Aft Mix A', '1mL'], ['SB4 - Conc Aft Mix B', '1mL'], ['SB4 - Endo', '5mL']],
+        SB5: [['BB-1S', '100mL'], ['SB5_UV 1/2', '1mL'], ['SB5_UV 2/2', '1mL'], ['SB5_UV_Reserve 1/2', '1mL'], ['SB5_UV_Reserve 2/2', '1mL'], ['SB5 - pH_Osmo', '40mL'], ['SB5 - Endo', '5mL']],
+        SB5B: [['Mix_Osmo_pH', '40mL'], ['SB5B - Mix_VPE 1/2', '1mL'], ['SB5B - Mix_VPE 2/2', '1mL'], ['SB5B - Mix_Endo', '3mL']],
+        SB16: [
+          ['Step2_pH_Osmo', '50mL'], ['Step2_SoloVPE_B (1/3)', '2mL'], ['Step2_SoloVPE_B (2/3)', '2mL'], ['Step2_SoloVPE_B (3/3)', '2mL'],
+          ['Step2_BB', '100mL'], ['Step2_Endo', '3mL'], ...seq6('Step2_BB_Val', '250mL'), ['Step2_Endo_Val', '3mL'],
+          ['Step5_pH_Osmo', '50mL'], ['Step8_pH_Osmo', '50mL'], ['Step8_SoloVPE', '2mL'], ['Step8_BB', '100mL'], ['Step8_Endo', '3mL'],
+          ...seq6('Step8_BB_Val', '250mL'), ['Step8_Endo_Val', '3mL'],
+        ],
+      },
+    },
+  };
+  const ET_PRESETS = ['FIDUCIAL', 'PAPIER'];
+  const EPAISSEURS = ['normal', 'renforce', 'gras'];
+
+  /* ---------- Normalisation (toute donnée lue est vérifiée ; valeurs invalides → valeur d'origine) ---------- */
+  const hoursOk = v => typeof v === 'number' && Number.isFinite(v) && v > 0 && v <= HOURS_MAX;
+  const roundH = v => Math.round(v * 100) / 100;
+  const hexOk = v => typeof v === 'string' && /^#[0-9a-f]{6}$/i.test(v.trim());
+  function normProducts(list, def) {
+    if (!Array.isArray(list)) return clone(def);
+    const out = [], seen = new Set();
+    for (const x of list) {
+      const name = str(isObj(x) ? x.name : x, 40);
+      if (!name || seen.has(canon(name))) continue;
+      seen.add(canon(name));
+      out.push({ name, like: str(isObj(x) ? x.like : '', 40) });
+    }
+    /* « se comporte comme » : seulement un autre produit de la même ligne qui n'hérite pas lui-même */
+    const base = new Map(out.map(p => [canon(p.name), p]));
+    for (const p of out) {
+      const t = p.like && base.get(canon(p.like));
+      p.like = t && t !== p && !t.like ? t.name : '';
+    }
+    return out.length ? out : clone(def);
+  }
+  function normNames(list, allowed) {
+    if (!Array.isArray(list)) return null;
+    const out = [];
+    for (const x of list) { const m = allowed.find(n => canon(n) === canon(x)); if (m && !out.includes(m)) out.push(m); }
+    return out;
+  }
+  function normTable(t, def, names) {
+    const o = { def: def.def, defNone: false, rows: [] };
+    if (!isObj(t)) return clone(def);
+    o.def = hoursOk(t.def) ? roundH(t.def) : def.def;
+    o.defNone = t.defNone === true;
+    const seen = new Set();
+    for (const r of Array.isArray(t.rows) ? t.rows : []) {
+      if (!isObj(r)) continue;
+      const p = names.find(n => canon(n) === canon(r.p));
+      if (!p || seen.has(p)) continue;
+      seen.add(p);
+      o.rows.push({ p, h: hoursOk(r.h) ? roundH(r.h) : o.def, none: r.none === true });
+    }
+    return o;
+  }
+  function normalize(raw) {
+    const d = clone(DEFAULTS);
+    if (!isObj(raw)) return d;
+    const R = isObj(raw.rapport) ? raw.rapport : {};
+    if (hoursOk(R.soonHours) && R.soonHours <= 72) d.rapport.soonHours = roundH(R.soonHours);
+    if (isObj(R.products)) for (const l of LINES) d.rapport.products[l.id] = normProducts(R.products[l.id], DEFAULTS.rapport.products[l.id]);
+    const names = id => d.rapport.products[id].map(p => p.name);
+    if (isObj(R.ht)) for (const t of HT_TABLES) d.rapport.ht[t.id] = normTable(R.ht[t.id], DEFAULTS.rapport.ht[t.id], names(t.line));
+    else for (const t of HT_TABLES) d.rapport.ht[t.id] = normTable(DEFAULTS.rapport.ht[t.id], DEFAULTS.rapport.ht[t.id], names(t.line));
+    if (isObj(R.rules)) for (const r of RULES) { const v = normNames(R.rules[r.id], names(r.line)); if (v) d.rapport.rules[r.id] = v; }
+    else for (const r of RULES) d.rapport.rules[r.id] = normNames(DEFAULTS.rapport.rules[r.id], names(r.line));
+    if (Array.isArray(R.custom)) {
+      const ids = new Set(), noms = new Set();
+      for (const c of R.custom.slice(0, 30)) {
+        if (!isObj(c)) continue;
+        const nom = str(c.nom, 40);
+        const lines = LINES.map(l => l.id).filter(id => Array.isArray(c.lines) && c.lines.includes(id));
+        const bands = BANDS.map(b => b.id).filter(id => Array.isArray(c.bands) && c.bands.includes(id));
+        if (!nom || noms.has(canon(nom)) || !lines.length || !bands.length || !hoursOk(c.h)) continue;
+        let id = typeof c.id === 'string' && /^[a-z0-9]{1,16}$/i.test(c.id) ? c.id : Core.uid().slice(-8);
+        while (ids.has(id)) id = Core.uid().slice(-8);
+        ids.add(id); noms.add(canon(nom));
+        const allNames = [...new Set(lines.flatMap(names))];
+        d.rapport.custom.push({ id, nom, lines, bands, produits: normNames(c.produits, allNames) || [], h: roundH(c.h) });
+      }
+    }
+    if (isObj(R.colors)) for (const l of LINES) if (hexOk(R.colors[l.id])) d.rapport.colors[l.id] = R.colors[l.id].trim().toUpperCase();
+    if (isObj(R.mail)) d.rapport.mail = { to: str(R.mail.to, 1000), cc: str(R.mail.cc, 1000) };
+    const E = isObj(raw.etiquettes) ? raw.etiquettes : {};
+    if (ET_PRESETS.includes(E.preset)) d.etiquettes.preset = E.preset;
+    if (EPAISSEURS.includes(E.epaisseur)) d.etiquettes.epaisseur = E.epaisseur;
+    if (Array.isArray(E.produits)) {
+      const out = [], seen = new Set();
+      for (const p of E.produits) {
+        if (!isObj(p)) continue;
+        const name = str(p.name, 12).toUpperCase();
+        if (!name || seen.has(name)) continue;
+        seen.add(name);
+        out.push({ name, nom1mL: str(p.nom1mL, 40) || 'Ech ID', nom2mL: str(p.nom2mL, 40) || 'Ech REF', blanche: p.blanche === true });
+      }
+      if (out.length) d.etiquettes.produits = out.slice(0, 12);
+    }
+    const listes = {};
+    for (const p of d.etiquettes.produits) {
+      const src = isObj(E.listes) && Array.isArray(E.listes[p.name]) ? E.listes[p.name] : DEFAULTS.etiquettes.listes[p.name] || [];
+      listes[p.name] = src.filter(x => Array.isArray(x) && str(x[0], 60)).slice(0, 300).map(x => [str(x[0], 60), str(x[1], 20)]);
+    }
+    d.etiquettes.listes = listes;
+    return d;
+  }
+
+  /* ---------- Sources : fichier d'équipe (balise <script> voisine), paramètres de ce PC ---------- */
+  let team = null;   /* { params, savedAt, savedBy } */
+  let local = null;  /* { params, modifiedAt, exportedAt } */
+  let cur = null;
+  function readTeam() {
+    let raw = null;
+    try { raw = window[GLOBAL]; } catch { raw = null; }
+    if (!isObj(raw)) return null;
+    const p = isObj(raw.params) ? raw.params : raw;
+    if (!isObj(p.rapport) && !isObj(p.etiquettes)) return null;
+    const at = typeof raw.savedAt === 'string' && !isNaN(Date.parse(raw.savedAt)) ? raw.savedAt : null;
+    return { params: normalize(p), savedAt: at, savedBy: str(raw.savedBy, 60) };
+  }
+  function readLocal() {
+    const v = ls.json(LOCAL_KEY);
+    if (!isObj(v) || !isObj(v.params)) return null;
+    const iso = x => (typeof x === 'string' && !isNaN(Date.parse(x)) ? x : null);
+    return { params: normalize(v.params), modifiedAt: iso(v.modifiedAt), exportedAt: iso(v.exportedAt) };
+  }
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  function writeLocal() {
+    if (!local) return ls.remove(LOCAL_KEY);
+    return ls.set(LOCAL_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...local }));
+  }
+  function recompute() { cur = local ? local.params : team ? team.params : clone(DEFAULTS); }
+  function init() {
+    team = readTeam();
+    local = readLocal();
+    /* les paramètres de ce PC sont identiques au fichier d'équipe (ex. fichier enregistré depuis ce PC puis posé sur N:) :
+       on repasse sur le fichier d'équipe, pour suivre ses prochaines mises à jour */
+    if (local && team && same(local.params, team.params)) { local = null; writeLocal(); }
+    recompute();
+    applyColors();
+  }
+
+  /* ---------- Couleurs des lignes → variables CSS (écran et PDF) ---------- */
+  const hex2rgb = hx => [1, 3, 5].map(i => parseInt(hx.slice(i, i + 2), 16));
+  const rgb2hex = c => '#' + c.map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('').toUpperCase();
+  const mix = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+  function lum(hx) {
+    const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+    const [r, g, b] = hex2rgb(hx).map(f);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  }
+  /** Teintes dérivées d'une couleur de ligne : fond doux, liseré (plus soutenu, même teinte), encre sombre. */
+  function shades(hx) {
+    const c = hex2rgb(hx), white = [255, 255, 255], navy = [0, 25, 101];
+    /* liseré : on assombrit jusqu'à un contraste visible sur blanc */
+    let strong = c, k = 0;
+    while (lum(rgb2hex(strong)) > 0.36 && k < 20) { k += 1; strong = mix(c, [c[0] * 0.35, c[1] * 0.35, c[2] * 0.4], k / 20); }
+    return { base: hx, soft: rgb2hex(mix(c, white, 0.55)), faint: rgb2hex(mix(c, white, 0.78)), strong: rgb2hex(strong), ink: rgb2hex(mix(strong, navy, 0.55)) };
+  }
+  function applyColors() {
+    const st = document.documentElement.style;
+    for (const l of LINES) {
+      const s = shades(cur.rapport.colors[l.id]);
+      st.setProperty(`--line-${l.id}`, s.base);
+      st.setProperty(`--line-${l.id}-soft`, s.soft);
+      st.setProperty(`--line-${l.id}-faint`, s.faint);
+      st.setProperty(`--line-${l.id}-strong`, s.strong);
+      st.setProperty(`--line-${l.id}-ink`, s.ink);
+    }
+  }
+
+  /* ---------- Modification (toujours sur une copie, appliquée en direct) ---------- */
+  let lastRenames = [];
+  function commit(next, detail) {
+    detail = detail || {};
+    const n = normalize(next);
+    local = { params: n, modifiedAt: new Date().toISOString(), exportedAt: null };
+    const ok = writeLocal();
+    recompute();
+    applyColors();
+    lastRenames = detail.renames || [];
+    Core.emit('params', { renames: lastRenames, ...detail });
+    return ok;
+  }
+  /** Applique une modification : mutate(copie) ; renvoie false si le stockage local est indisponible. */
+  function update(mutate, detail) {
+    detail = detail || {};
+    const next = clone(cur);
+    mutate(next);
+    return commit(next, detail);
+  }
+  function revertToTeam() { local = null; writeLocal(); recompute(); applyColors(); Core.emit('params', {}); }
+  function resetDefaults() {
+    if (team) return commit(clone(DEFAULTS));
+    local = null; writeLocal(); recompute(); applyColors(); Core.emit('params', {});
+    return true;
+  }
+  function restore(snapshot) {
+    local = snapshot.local ? clone(snapshot.local) : null;
+    writeLocal(); recompute(); applyColors(); Core.emit('params', {});
+  }
+  const snapshot = () => ({ local: local ? clone(local) : null });
+  function source() {
+    const kind = local ? 'local' : team ? 'team' : 'default';
+    const teamNewer = !!(local && team && team.savedAt && local.modifiedAt && Date.parse(team.savedAt) > Date.parse(local.modifiedAt));
+    return { kind, team: team ? { savedAt: team.savedAt, savedBy: team.savedBy } : null, local: local ? { modifiedAt: local.modifiedAt, exportedAt: local.exportedAt } : null, teamNewer, isDefault: same(cur, DEFAULTS) };
+  }
+
+  /* ---------- Fichier d'équipe, export / import ---------- */
+  function payload(savedBy, mail) {
+    const params = clone(cur);
+    if (mail) params.rapport.mail = { to: str(mail.to, 1000), cc: str(mail.cc, 1000) };
+    return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(savedBy, 60), params };
+  }
+  function teamFileText(savedBy, mail) {
+    const p = payload(savedBy, mail);
+    return `/* Paramètres de l'Outil Formulation — enregistrés le ${fmtStamp(new Date(p.savedAt))}${p.savedBy ? ` par ${p.savedBy}` : ''}.\n` +
+      `   Placez ce fichier à côté de « Outil Formulation.html » (même dossier) : l'outil le charge automatiquement.\n` +
+      `   Ne pas modifier à la main : utilisez l'onglet Paramètres de l'outil. */\n` +
+      `window.${GLOBAL} = ${JSON.stringify(p, null, 2)};\n`;
+  }
+  const jsonText = (savedBy, mail) => JSON.stringify(payload(savedBy, mail), null, 2);
+  function markExported() { if (local) { local.exportedAt = new Date().toISOString(); writeLocal(); } }
+  /** Lit un fichier de paramètres (.json exporté ou parametres-outil.js) sans jamais l'exécuter. */
+  function parseText(text) {
+    let t = String(text || '').replace(/^﻿/, '').trim();
+    t = t.replace(/^\/\*[\s\S]*?\*\/\s*/, '');
+    const m = /^window\.__NN_OUTIL_PARAMS__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
+    if (m) t = m[1];
+    let raw;
+    try { raw = JSON.parse(t); } catch { throw new Error('illisible'); }
+    if (!isObj(raw)) throw new Error('illisible');
+    if (raw.app != null && raw.app !== APP) throw new Error('app');
+    const p = isObj(raw.params) ? raw.params : raw;
+    if (!isObj(p.rapport) && !isObj(p.etiquettes)) throw new Error('app');
+    return { params: normalize(p), mail: isObj(p.rapport) && isObj(p.rapport.mail) ? p.rapport.mail : null };
+  }
+  function importText(text) {
+    const r = parseText(text);
+    commit(r.params, { imported: true });
+    return r;
+  }
+  const fmtStamp = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} à ${Core.fmtTime(d)}`;
+
+  /* ---------- Lectures utilitaires pour les modules ---------- */
+  const get = () => cur;
+  const products = lineId => cur.rapport.products[lineId];
+  const productNames = lineId => cur.rapport.products[lineId].map(p => p.name);
+  /** Produit de référence : « se comporte comme » (SB4 SCALE UP → SB4) ; les règles du produit de base s'appliquent. */
+  function baseOf(lineId, p) {
+    const x = cur.rapport.products[lineId].find(q => q.name === p);
+    return x && x.like ? x.like : p || '';
+  }
+  const ruleHas = (ruleId, lineId, p) => { const l = cur.rapport.rules[ruleId] || []; return l.includes(p) || l.includes(baseOf(lineId, p)); };
+  /** Durée (h) d'un tableau de holding time pour un produit ; null = aucune limite. */
+  function htHours(tableId, lineId, p) {
+    const t = cur.rapport.ht[tableId];
+    const row = t.rows.find(r => r.p === p) || t.rows.find(r => r.p === baseOf(lineId, p));
+    if (row) return row.none ? null : row.h;
+    return t.defNone ? null : t.def;
+  }
+  const fmtHours = v => String(v).replace('.', ',');
+
+  init();
+  return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, teamFileText, jsonText, markExported, importText, parseText,
+    products, productNames, baseOf, ruleHas, htHours, fmtHours, shades, lum, normalize, canon,
+    DEFAULTS, LINES, BANDS, HT_TABLES, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, FILE_NAME, fmtStamp };
+})();
+
+/* #########################################################################
    MODULE « RAPPORT DE SHIFT »
    Espace propre ; expose init(), show(), hide(), beforePrint()… à l'en-tête commun.
    ######################################################################### */
@@ -1512,11 +2166,8 @@ const LISTS = Object.fromEntries(Object.entries({
 const SEQUENCES = new Set(['CUVE_FORMU', 'CUVE_STOCKAGE']);
 const toneOf = (list, v) => (LISTS[list].find(o => o.value === v) || LISTS[list][0]).tone;
 
-const PRODUCTS = {
-  groninger: ['SEMA K 0.5', 'SEMA K 0.75', 'SEMA K 1.0', 'SEMA K 2.0', 'SEMA K 2.27', 'SEMA K 3.2', 'MFT'],
-  inova5: ['SB4', 'SB5B', 'SB16', 'CT-P17', 'SWFI', 'MFT', 'SB4 SCALE UP', 'CT-P17 SCALE UP'],
-  inova4: ['SWFI', 'EPPI', 'TAKEDA', 'NACL', 'MFT'],
-};
+/* Produits par ligne : onglet Paramètres (Params.productNames) */
+const PRODUCTS = new Proxy({}, { get: (_, lineId) => Params.productNames(String(lineId)) });
 const LINES = [
   { id: 'groninger', name: 'Groninger' },
   { id: 'inova5', name: 'Inova 5' },
@@ -1528,13 +2179,17 @@ const BANDS = [
   { id: 'suivant2', kind: 'suivant', title: 'Lot suivant +1', short: 'lot suivant +1' },
 ];
 
-/* Règles d'applicabilité : renvoient null (applicable) ou la mention à afficher */
-/** Produit de référence : les « SCALE UP » suivent les règles du produit de base (SB4 SCALE UP ≡ SB4…). */
-const baseProduct = p => String(p || '').replace(/\s+SCALE UP$/, '');
-const onlyForProducts = (...ps) => c => (ps.includes(baseProduct(c.produit)) ? null : c.produit ? `Non applicable (${c.produit})` : 'Selon le produit');
-const notForMFT = c => (baseProduct(c.produit) === 'MFT' ? 'Non applicable (MFT)' : null);
+/* Règles d'applicabilité (onglet Paramètres) : renvoient null (applicable) ou la mention à afficher.
+   Les produits qui « se comportent comme » un autre (SB4 SCALE UP → SB4) suivent ses règles. */
+const onlyForRule = (ruleId, lineId) => c => (Params.ruleHas(ruleId, lineId, c.produit) ? null : c.produit ? `Non applicable (${c.produit})` : 'Selon le produit');
+const notForRule = (ruleId, lineId) => c => (c.produit && Params.ruleHas(ruleId, lineId, c.produit) ? `Non applicable (${c.produit})` : null);
 const sortieFrigoRule = c => (['ÉQUILIBRAGE', 'À TEMPÉRATURE'].includes(c.statutDS) ? null
   : c.statutDS === 'N/A' ? 'Selon le statut D.S.' : `Non applicable (${c.statutDS})`);
+/* Holding times (onglet Paramètres) : durée selon le produit de la carte, null = aucune limite */
+const htOf = (tableId, lineId) => c => Params.htHours(tableId, lineId, c.produit);
+const fmtH = v => Params.fmtHours(v);
+const hoursTxt = v => (v == null ? 'sans limite' : `${fmtH(v)} h`);
+const debutInova4 = c => Params.ruleHas('debutInova4', 'inova4', c.produit);
 
 const F = {
   lot: () => ({ key: 'lot', label: 'Lot', type: 'lot' }),
@@ -1549,7 +2204,7 @@ const SCHEMA = {
     groninger: [
       F.lot(), F.prod(),
       F.st('statutLocal', 'Statut local', 'LOCAL_STATUT'),
-      F.dt('debutFiltration', 'Début filtration', { print: 'Début filtr.', limit: { label: 'Limite HT (150 h)', hours: () => 150 } }),
+      F.dt('debutFiltration', 'Début filtration', { print: 'Début filtr.', limit: { label: 'Limite HT', variable: true, table: 'gronEnCours', hours: htOf('gronEnCours', 'groninger') } }),
       F.st('connexion', 'Connexion', 'ETAT4'),
       F.st('vdl', 'VDL', 'ETAT4'),
       F.tx('w3', 'W3', { placeholder: 'Texte libre' }),
@@ -1560,31 +2215,29 @@ const SCHEMA = {
     inova5: [
       F.lot(), F.prod(),
       F.st('statutLocal', 'Statut local', 'LOCAL_STATUT'),
-      F.st('monitoring', 'Monitoring', 'MONITORING', { when: onlyForProducts('SB16', 'CT-P17', 'SB5B') }),
+      F.st('monitoring', 'Monitoring', 'MONITORING', { when: onlyForRule('monitoring', 'inova5') }),
       F.st('connexion', 'Connexion', 'ETAT4'),
       F.tx('poidsFormule', 'Poids formulé', { placeholder: 'ex. 12,45 kg' }),
       F.st('vdl', 'VDL', 'ETAT4'),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.dt('debutFormulation', 'Début formulation', {
-        when: notForMFT, print: 'Début formu.',
-        limit: { label: 'Limite HT pour début filtration', variable: true,
-          hours: c => ({ 'CT-P17': 20, SWFI: 34 })[baseProduct(c.produit)] || 24 },
+        when: notForRule('htNaInova5', 'inova5'), print: 'Début formu.',
+        limit: { label: 'Limite HT pour début filtration', variable: true, table: 'inova5EnCours', hours: htOf('inova5EnCours', 'inova5') },
       }),
       F.notes(),
     ],
     inova4: [
       F.lot(), F.prod(),
       F.st('statutLocal', 'Statut local', 'LOCAL_STATUT'),
-      F.st('checkShift', 'Check shift', 'CHECK_SHIFT', { when: onlyForProducts('TAKEDA') }),
+      F.st('checkShift', 'Check shift', 'CHECK_SHIFT', { when: onlyForRule('checkShift', 'inova4') }),
       F.st('connexion', 'Connexion', 'ETAT4'),
       F.st('vdl', 'VDL', 'ETAT4'),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
-      F.dt('dateFormulation', c => (['TAKEDA', 'SWFI'].includes(c.produit) ? 'Début de formulation' : 'Fin de formulation'), {
-        when: notForMFT, print: c => (['TAKEDA', 'SWFI'].includes(c.produit) ? 'Début formu.' : 'Fin formu.'),
-        limit: { label: 'Limite HT pour fin de remplissage', variable: true,
-          hours: c => ({ SWFI: 34, EPPI: 32, TAKEDA: 144 })[baseProduct(c.produit)] || 24 },
+      F.dt('dateFormulation', c => (debutInova4(c) ? 'Début de formulation' : 'Fin de formulation'), {
+        when: notForRule('htNaInova4', 'inova4'), print: c => (debutInova4(c) ? 'Début formu.' : 'Fin formu.'),
+        limit: { label: 'Limite HT pour fin de remplissage', variable: true, table: 'inova4EnCours', hours: htOf('inova4EnCours', 'inova4') },
       }),
       F.notes(),
     ],
@@ -1596,9 +2249,9 @@ const SCHEMA = {
       F.st('pesee', 'Pesée', 'ETAT4'),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
       F.st('cuveStockage', 'Cuve stockage', 'CUVE_STOCKAGE'),
-      F.dt('debutHT72', 'Début HT (72 h)', { print: 'Début HT 72 h', limit: { label: 'Limite HT 72 h', hours: () => 72 } }),
+      F.dt('debutHT72', c => `Début HT (${hoursTxt(htOf('gronHT72', 'groninger')(c))})`, { print: c => `Début HT ${hoursTxt(htOf('gronHT72', 'groninger')(c))}`, limit: { label: c => `Limite HT ${hoursTxt(htOf('gronHT72', 'groninger')(c))}`, table: 'gronHT72', hours: htOf('gronHT72', 'groninger') } }),
       F.st('local', 'Local', 'LOCAL_PREP_GRON'),
-      F.dt('debutHTFormu24', 'Début HT formu. (24 h)', { print: 'Déb. HT formu.', limit: { label: 'Limite HT formu. 24 h', hours: () => 24 } }),
+      F.dt('debutHTFormu24', c => `Début HT formu. (${hoursTxt(htOf('gronHTFormu', 'groninger')(c))})`, { print: 'Déb. HT formu.', limit: { label: c => `Limite HT formu. ${hoursTxt(htOf('gronHTFormu', 'groninger')(c))}`, table: 'gronHTFormu', hours: htOf('gronHTFormu', 'groninger') } }),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.notes(),
@@ -1606,20 +2259,20 @@ const SCHEMA = {
     inova5: [
       F.lot(), F.prod(),
       F.st('dossier', 'Dossier', 'DOSSIER'),
-      F.st('pesee', 'Pesée', 'ETAT4', { when: onlyForProducts('MFT', 'SB16') }),
+      F.st('pesee', 'Pesée', 'ETAT4', { when: onlyForRule('peseeInova5', 'inova5') }),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
       F.st('statutDS', 'Statut D.S.', 'STATUT_DS'),
       F.dt('sortieFrigo', 'Sortie frigo', { when: sortieFrigoRule }),
       F.st('local', 'Local', 'LOCAL_PREP'),
       F.st('filtres', 'Filtres', 'ETAT4'),
-      F.st('tampon', 'Tampon', 'TAMPON', { when: onlyForProducts('SB16') }),
+      F.st('tampon', 'Tampon', 'TAMPON', { when: onlyForRule('tampon', 'inova5') }),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.notes(),
     ],
     inova4: [
       F.lot(), F.prod(),
       F.st('dossier', 'Dossier', 'DOSSIER'),
-      F.st('pesee', 'Pesée', 'ETAT4', { when: onlyForProducts('MFT', 'TAKEDA') }),
+      F.st('pesee', 'Pesée', 'ETAT4', { when: onlyForRule('peseeInova4', 'inova4') }),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
       F.st('local', 'Local', 'LOCAL_PREP'),
       F.st('filtres', 'Filtres', 'ETAT4'),
@@ -1628,6 +2281,24 @@ const SCHEMA = {
     ],
   },
 };
+/** Champs d'une carte : schéma + holding times personnalisés (onglet Paramètres) de cette ligne et de cette bande,
+    placés avant « Remarques ». */
+function customField(x, lineId) {
+  const applies = c => x.produits.includes(c.produit) || x.produits.includes(Params.baseOf(lineId, c.produit));
+  return {
+    key: `ht_${x.id}`, label: `${x.nom} (${hoursTxt(x.h)})`, type: 'datetime', custom: true, print: x.nom,
+    when: x.produits.length ? c => (applies(c) ? null : c.produit ? `Non applicable (${c.produit})` : 'Selon le produit') : null,
+    limit: { label: `Limite ${x.nom}`, variable: true, hours: () => x.h },
+  };
+}
+function fieldsFor(b, lineId) {
+  const base = SCHEMA[b.kind][lineId];
+  const custom = Params.get().rapport.custom.filter(x => x.lines.includes(lineId) && x.bands.includes(b.id));
+  if (!custom.length) return base;
+  const i = base.findIndex(f => f.type === 'textarea');
+  return [...base.slice(0, i), ...custom.map(x => customField(x, lineId)), ...base.slice(i)];
+}
+const bandById = id => BANDS.find(b => b.id === id);
 const S5 = ['S1', 'S2', 'S3', 'S4'];
 /* Nombre maximal de lignes des listes (mêmes limites à la saisie et au rechargement : rien n'est tronqué en silence) */
 const FB_MAX = 30, SD_MAX = 50;
@@ -1641,9 +2312,9 @@ const FB_FIELDS = [
 /* =========================================================================
    3. Modèle : valeurs par défaut, normalisation, migration
    ========================================================================= */
-function defaultCard(kind, lineId) {
+function defaultCard(band, lineId) {
   const c = {};
-  for (const f of SCHEMA[kind][lineId]) c[f.key] = f.type === 'status' ? 'N/A' : '';
+  for (const f of fieldsFor(band, lineId)) c[f.key] = f.type === 'status' ? 'N/A' : '';
   return c;
 }
 const newFB = () => ({ id: uid(), lotConcerne: '', poids: '', lotSuivant: '', holdingTime: '' });
@@ -1652,7 +2323,7 @@ function defaultReport() {
   const bands = {};
   for (const b of BANDS) {
     bands[b.id] = {};
-    for (const l of LINES) bands[b.id][l.id] = defaultCard(b.kind, l.id);
+    for (const l of LINES) bands[b.id][l.id] = defaultCard(b, l.id);
   }
   return {
     meta: { shift: '' },
@@ -1673,7 +2344,8 @@ const normStatus = (list, v) => matchOption(LISTS[list].map(o => o.value), v) ??
 function normField(f, lineId, v) {
   switch (f.type) {
     case 'status': return normStatus(f.list, v);
-    case 'product': return matchOption(PRODUCTS[lineId], v) ?? '';
+    /* produit retiré de la liste (onglet Paramètres) : conservé tel quel, signalé « hors liste » */
+    case 'product': return matchOption(PRODUCTS[lineId], v) ?? str(v, 60).trim();
     case 'datetime': return normDateTime(v);
     case 'lot': return str(v, 40).toUpperCase().trim();
     case 'textarea': return str(v, 5000);
@@ -1688,7 +2360,9 @@ function normalizeReport(r) {
   for (const b of BANDS) for (const l of LINES) {
     const src = r.bands?.[b.id]?.[l.id];
     if (!isObj(src)) continue;
-    for (const f of SCHEMA[b.kind][l.id]) d.bands[b.id][l.id][f.key] = normField(f, l.id, src[f.key]);
+    for (const f of fieldsFor(b, l.id)) d.bands[b.id][l.id][f.key] = normField(f, l.id, src[f.key]);
+    /* holding times personnalisés retirés (ou pas encore chargés) : leurs dates sont conservées */
+    for (const k of Object.keys(src)) if (/^ht_[a-z0-9]{1,16}$/i.test(k) && !(k in d.bands[b.id][l.id])) { const v = normDateTime(src[k]); if (v) d.bands[b.id][l.id][k] = v; }
   }
   const seen = new Set();
   const rowId = x => { let id = str(x.id, 40); if (!id || seen.has(id)) id = uid(); seen.add(id); return id; };
@@ -1760,13 +2434,15 @@ function limitOf(f, c, now) {
   const start = parseLocal(c[f.key]);
   if (!start) return null;
   const hours = f.limit.hours(c);
+  if (hours == null) return null; /* « aucune limite » pour ce produit (onglet Paramètres) */
   const due = new Date(start.getTime() + hours * 3600e3);
   const remaining = due - now;
+  const base = typeof f.limit.label === 'function' ? f.limit.label(c) : f.limit.label;
   return {
-    label: f.limit.label + (f.limit.variable ? ` (${hours} h)` : ''),
-    printLabel: `Lim. HT ${hours} h`,
+    label: base + (f.limit.variable ? ` (${fmtH(hours)} h)` : ''),
+    printLabel: f.custom ? `Lim. ${fmtH(hours)} h` : `Lim. HT ${fmtH(hours)} h`,
     hours, due, remaining,
-    tone: remaining < 0 ? 'todo' : remaining < 4 * 3600e3 ? 'wip' : 'neutral',
+    tone: remaining < 0 ? 'todo' : remaining < Params.get().rapport.soonHours * 3600e3 ? 'wip' : 'neutral',
     rest: remaining < 0 ? `dépassé de ${fmtDur(remaining)}` : `reste ${fmtDur(remaining)}`,
   };
 }
@@ -1774,7 +2450,7 @@ function computeAlerts(report, now) {
   const frigo = [], limits = [];
   for (const b of BANDS) for (const l of LINES) {
     const c = report.bands[b.id][l.id];
-    for (const f of SCHEMA[b.kind][l.id]) {
+    for (const f of fieldsFor(b, l.id)) {
       if (f.key === 'echantillon' && c.echantillon === 'AU FRIGO' && !naReason(f, c)) frigo.push({ band: b, line: l, lot: c.lot });
       const lim = limitOf(f, c, now);
       if (lim) limits.push({ ...lim, band: b, line: l, lot: c.lot });
@@ -2166,7 +2842,7 @@ async function initShared() {
 function pillGroup({ id, options, labelledby, label, get, set }) {
   const group = h('div', { class: 'pills', role: 'radiogroup', id, 'aria-labelledby': labelledby, 'aria-label': labelledby ? null : label });
   const btns = options.map((o, i) => h('button', {
-    type: 'button', class: `pill tone-${o.tone}`, role: 'radio', 'aria-checked': 'false', tabindex: '-1',
+    type: 'button', class: `pill tone-${o.tone}`, role: 'radio', 'aria-checked': 'false', tabindex: '-1', 'data-line': o.line || null,
     onclick: () => choose(i, false),
   }, o.tone === 'cold' ? icon('snow', 'icon icon--sm') : h('span', { class: 'pill__dot', 'aria-hidden': 'true' }), h('span', { text: o.label || o.value })));
   group.append(...btns);
@@ -2225,7 +2901,17 @@ function toneSelect({ id, list, steps, get, set }) {
 function selectCtl({ id, options, placeholder, get, set }) {
   const sel = h('select', { class: 'select', id }, h('option', { value: '', text: placeholder }), options.map(o => h('option', { value: o, text: o })));
   sel.addEventListener('change', () => set(sel.value));
-  return { el: sel, sync() { const v = get() || ''; if (sel.value !== v) sel.value = v; sel.classList.toggle('is-empty', !v); } };
+  /* valeur absente de la liste (produit retiré dans l'onglet Paramètres) : affichée « hors liste », jamais perdue */
+  let extra = null;
+  return { el: sel, sync() {
+    const v = get() || '';
+    if (v && !options.includes(v)) {
+      if (!extra) { extra = h('option', { value: v }); sel.append(extra); }
+      extra.value = v; extra.textContent = `${v} (hors liste)`;
+    } else if (extra) { extra.remove(); extra = null; }
+    if (sel.value !== v) sel.value = v;
+    sel.classList.toggle('is-empty', !v);
+  } };
 }
 function textCtl({ id, get, set, upper = false, mono = false, placeholder, maxlength = 200, ariaLabel }) {
   const input = h('input', { type: 'text', class: `input${mono ? ' input--mono' : ''}`, id, placeholder, maxlength, autocomplete: 'off', spellcheck: mono ? 'false' : null, 'aria-label': ariaLabel });
@@ -2347,7 +3033,7 @@ function buildCardField(f, line, get, set, id) {
 function buildCard(b, l) {
   const get = () => state.report.bands[b.id][l.id];
   const set = (key, v, typing = false) => change(r => { r.bands[b.id][l.id][key] = v; }, typing ? `${b.id}.${l.id}.${key}` : null);
-  const fields = SCHEMA[b.kind][l.id];
+  const fields = fieldsFor(b, l.id);
   const fviews = fields.map(f => buildCardField(f, l, get, set, `f-${b.id}-${l.id}-${f.key}`));
   const titleId = `card-${b.id}-${l.id}`;
   const lotChip = h('span', { class: 'chip chip--lot', hidden: true });
@@ -2372,7 +3058,7 @@ function buildCard(b, l) {
       dots.replaceChildren(...st.map(f => h('span', { class: `card__dot tone-${toneOf(f.list, c[f.key])}`, title: `${labelOf(f, c)} : ${c[f.key]}` })));
     }
   }
-  return { el, sync };
+  return { el, sync, card: true };
 }
 
 function buildBands() {
@@ -2401,7 +3087,7 @@ function buildLineFilter() {
   const apply = () => { $('#bands').dataset.line = prefs.lineFilter; };
   const pg = pillGroup({
     id: 'line-filter', label: 'Ligne affichée',
-    options: [{ value: 'all', label: 'Toutes', tone: 'sel' }, ...LINES.map(l => ({ value: l.id, label: l.name, tone: 'sel' }))],
+    options: [{ value: 'all', label: 'Toutes', tone: 'sel' }, ...LINES.map(l => ({ value: l.id, label: l.name, tone: 'sel', line: l.id }))],
     get: () => prefs.lineFilter,
     set: v => { prefs.lineFilter = v; savePrefs(); apply(); },
   });
@@ -2624,8 +3310,8 @@ function renderWatch() {
         h('div', {}, h('div', { class: 'wcard__title', text: 'FRIGO' }),
           h('span', { class: 'wcard__list', text: `${plural(frigo.length, 'échantillon')} au frigo : ${frigo.map(x => `${whereOf(x)} (${x.band.short})`).join(' · ')}` })))
     : h('div', { class: 'wcard wcard--frigo' }, icon('snow'), h('span', { text: 'Frigo : rien en attente' }));
-  const items = limits.map(l => h('div', { class: `wcard wcard--ht tone-${l.tone}` },
-    h('div', { class: 'wcard__where', text: `${whereOf(l)} · ${l.band.short}` }),
+  const items = limits.map(l => h('div', { class: `wcard wcard--ht tone-${l.tone}`, 'data-line': l.line.id },
+    h('div', { class: 'wcard__where' }, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), h('span', { text: `${whereOf(l)} · ${l.band.short}` })),
     h('div', { class: 'wcard__what', text: l.label }),
     h('div', { class: 'wcard__when' }, h('b', { text: fmtDM(l.due) }), h('span', { class: 'wcard__rest' }, icon(l.tone === 'todo' ? 'alert' : 'clock'), l.rest))));
   $('#watch').replaceChildren(
@@ -2643,7 +3329,7 @@ const PV_FLOW_CHARS = 1800; /* au-delà, les remarques d'une carte ne tiennent p
 function printCard(b, l, c, at) {
   const cells = [], timed = [];
   let notes = '';
-  for (const f of SCHEMA[b.kind][l.id]) {
+  for (const f of fieldsFor(b, l.id)) {
     if (f.type === 'lot' || f.type === 'product') continue;
     if (f.type === 'textarea') { notes = (c[f.key] || '').trim(); continue; }
     const label = printLabelOf(f, c);
@@ -2651,12 +3337,14 @@ function printCard(b, l, c, at) {
     const v = c[f.key];
     if (f.type === 'datetime' && f.limit) {
       // Date de début et sa limite HT côte à côte, regroupées en fin de carte
-      if (na) { timed.push({ label, value: '—', cls: 'is-off' }, { label: `Lim. HT ${f.limit.hours(c)} h`, value: '—', cls: 'is-off' }); continue; }
+      const hrs = f.limit.hours(c);
+      const limLabel = hrs == null ? (f.custom ? 'Limite' : 'Lim. HT') : f.custom ? `Lim. ${fmtH(hrs)} h` : `Lim. HT ${fmtH(hrs)} h`;
+      if (na) { timed.push({ label, value: '—', cls: 'is-off' }, { label: limLabel, value: '—', cls: 'is-off' }); continue; }
       const d = parseLocal(v);
       const lim = limitOf(f, c, at);
       timed.push({ label, value: d ? fmtDM(d) : '', cls: d ? '' : 'is-empty' },
         lim ? { label: lim.printLabel, value: fmtDM(lim.due), sub: lim.rest, cls: `pv-lim${lim.tone !== 'neutral' ? ` t-${lim.tone}` : ''}` }
-            : { label: `Lim. HT ${f.limit.hours(c)} h`, value: '', cls: 'is-empty' });
+            : { label: limLabel, value: hrs == null ? 'Aucune' : '', cls: 'is-empty' });
       continue;
     }
     if (na) cells.push({ label, value: '—', cls: 'is-off' });
@@ -2674,7 +3362,7 @@ function printCard(b, l, c, at) {
         cell.sub ? [h('span', { text: cell.value }), h('small', { text: cell.sub })] : cell.value));
   }
   if (notes) kv.append(h('div', { class: 'pv-l', text: 'Remarques' }), h('div', { class: 'pv-v pv-note', text: notes }));
-  return h('div', { class: `pv-card${notes.length > PV_FLOW_CHARS ? ' pv-flow' : ''}` },
+  return h('div', { class: `pv-card${notes.length > PV_FLOW_CHARS ? ' pv-flow' : ''}`, 'data-line': l.id },
     h('div', { class: 'pv-cap' }, h('b', { text: l.name.toUpperCase() }),
       h('span', { class: `pv-lot${c.lot ? '' : ' pv-empty'}`, text: c.lot || 'Lot —', title: c.lot || null }),
       h('span', { class: `pv-prod${c.produit ? '' : ' pv-empty'}`, text: c.produit || '—' })),
@@ -2702,9 +3390,9 @@ function buildSheet(report, { at, author }) {
           h('span', {}, 'Rédigé par : ', h('b', { text: author || '—' })))),
       frigoEl),
     alerts.length ? h('div', { class: 'pv-watch' }, h('span', { class: 'pv-watch__t', text: 'Holding times' }),
-      alerts.map(l => h('span', { class: `pv-watch__i t-${l.tone}`, text: `${whereOf(l)} — ${l.label} : ${fmtDM(l.due)} (${l.rest})` }))) : null,
-    BANDS.map(b => h('section', { class: 'pv-band' },
-      h('h2', { class: 'pv-band__title', text: b.title }),
+      alerts.map(l => h('span', { class: `pv-watch__i t-${l.tone}`, 'data-line': l.line.id, text: `${whereOf(l)} — ${l.label} : ${fmtDM(l.due)} (${l.rest})` }))) : null,
+    BANDS.map((b, i) => h('section', { class: `pv-band pv-band--${b.id}` },
+      h('h2', { class: 'pv-band__title' }, h('span', { class: 'pv-band__n', text: String(i + 1) }), h('span', { text: b.title })),
       h('div', { class: 'pv-grid' }, LINES.map(l => printCard(b, l, report.bands[b.id][l.id], at))))),
     h('div', { class: 'pv-annex' },
       h('div', { class: 'pv-box' }, h('h3', { text: 'Filling breakdown' }), fb.length
@@ -2840,8 +3528,9 @@ function buildMail(report, author, now) {
     ];
     return lines.join('\r\n');
   };
-  const to = encAddr(state.settings.mailTo);
-  const cc = encAddr(state.settings.mailCc);
+  const ms = mailSettings();
+  const to = encAddr(ms.mailTo);
+  const cc = encAddr(ms.mailCc);
   const urlFor = body => `mailto:${to}?${cc ? `cc=${cc}&` : ''}subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   let pointsMax = 700, maxAlerts = 6;
   let body = compose(pointsMax, maxAlerts);
@@ -2850,7 +3539,7 @@ function buildMail(report, author, now) {
     else maxAlerts -= 1;
     body = compose(pointsMax, maxAlerts);
   }
-  return { subject, body, url: urlFor(body), hasRecipients: !!(state.settings.mailTo || state.settings.mailCc) };
+  return { subject, body, url: urlFor(body), hasRecipients: !!(ms.mailTo || ms.mailCc) };
 }
 function prepareMail() {
   const m = buildMail(state.report, state.author, new Date());
@@ -2878,13 +3567,13 @@ async function confirmAdvance(l) {
   if (!ok) return;
   change(rep => {
     const s1 = rep.bands.suivant1[l.id], s2 = rep.bands.suivant2[l.id];
-    const nc = defaultCard('enCours', l.id);
+    const nc = defaultCard(bandById('enCours'), l.id);
     nc.lot = s1.lot;
     nc.produit = PRODUCTS[l.id].includes(s1.produit) ? s1.produit : '';
     nc.remarques = s1.remarques;
     rep.bands.enCours[l.id] = nc;
     rep.bands.suivant1[l.id] = clone(s2);
-    rep.bands.suivant2[l.id] = defaultCard('suivant', l.id);
+    rep.bands.suivant2[l.id] = defaultCard(bandById('suivant2'), l.id);
   });
   toast(`Lot avancé — ${l.name}`, { action: 'Annuler', onAction: undo });
 }
@@ -2995,25 +3684,31 @@ function openShare() {
   dref.result.then(() => { if (shared.onchange === render) shared.onchange = null; });
 }
 function openSettings() {
-  const to = h('input', { class: 'input', id: 'set-to', type: 'text', value: state.settings.mailTo, placeholder: 'ex. formulation@exemple.com', autocomplete: 'off', spellcheck: 'false' });
-  const cc = h('input', { class: 'input', id: 'set-cc', type: 'text', value: state.settings.mailCc, placeholder: 'facultatif', autocomplete: 'off', spellcheck: 'false' });
-  openDialog({
+  let dref = null;
+  const ms = mailSettings();
+  const to = h('input', { class: 'input', id: 'set-to', type: 'text', value: ms.mailTo, placeholder: 'ex. formulation@exemple.com', autocomplete: 'off', spellcheck: 'false' });
+  const cc = h('input', { class: 'input', id: 'set-cc', type: 'text', value: ms.mailCc, placeholder: 'facultatif', autocomplete: 'off', spellcheck: 'false' });
+  const d0 = openDialog({
     title: 'Paramètres', icon: 'sliders',
     body: h('div', { class: 'form-grid' },
       h('p', { class: 'muted', text: 'Destinataires utilisés par « Préparer le mail ». Séparez plusieurs adresses par des points-virgules.' }),
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'set-to', text: 'Destinataires (À)' }), to),
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'set-cc', text: 'Copie (Cc)' }), cc),
-      h('p', { class: 'hint', text: 'Ces paramètres sont enregistrés avec le rapport (et donc partagés avec l’équipe si un fichier partagé est lié).' })),
+      h('p', { class: 'hint', text: 'Ces paramètres sont enregistrés avec le rapport (et donc partagés avec l’équipe si un fichier partagé est lié).' }),
+      h('p', { class: 'hint' }, 'Holding times, produits, couleurs des lignes… : ',
+        h('a', { href: '#parametres', class: 'btn-link', onclick: () => { if (dref) dref.close(false); } }, 'onglet Paramètres'), '.')),
     actions: [
       { label: 'Annuler', value: false },
       { label: 'Enregistrer', value: true, cls: 'btn-primary', run: () => {
         state.settings = normalizeSettings({ mailTo: to.value, mailCc: cc.value });
         schedulePersist();
         toast('Paramètres enregistrés');
+        Core.emit('params-mail');
       } },
     ],
     onOpen: () => to.focus(),
   });
+  dref = d0;
 }
 async function confirmReset() {
   const ok = await confirmDialog({
@@ -3131,8 +3826,38 @@ function summary(now = new Date()) {
   return {
     updatedAt: r.updatedAt ? new Date(r.updatedAt) : null, updatedBy: r.updatedBy, shift: r.meta.shift,
     frigo: frigo.length, overdue: limits.filter(l => l.tone === 'todo').length, soon: limits.filter(l => l.tone === 'wip').length,
-    lots: LINES.map(l => ({ line: l.name, lot: r.bands.enCours[l.id].lot, produit: r.bands.enCours[l.id].produit })),
+    lots: LINES.map(l => ({ id: l.id, line: l.name, lot: r.bands.enCours[l.id].lot, produit: r.bands.enCours[l.id].produit })),
+    soonHours: Params.get().rapport.soonHours,
   };
+}
+/* Paramètres modifiés (onglet Paramètres, fichier d'équipe…) : cartes reconstruites, calculs et PDF à jour */
+function onParams(detail = {}) {
+  for (const r of detail.renames || []) {
+    for (const b of BANDS) { const c = state.report.bands[b.id][r.line]; if (c && c.produit === r.from) c.produit = r.to; }
+  }
+  if ((detail.renames || []).length) schedulePersist();
+  for (let i = views.length - 1; i >= 0; i--) if (views[i].card) views.splice(i, 1);
+  for (const b of BANDS) for (const l of LINES) {
+    const c = state.report.bands[b.id][l.id];
+    for (const f of fieldsFor(b, l.id)) if (!(f.key in c)) c[f.key] = f.type === 'status' ? 'N/A' : '';
+  }
+  $('#bands').replaceChildren();
+  buildBands();
+  watchSig = '';
+  refresh();
+  schedulePrint();
+  requestAnimationFrame(() => autogrowIn(document));
+}
+Core.on('params', onParams);
+/* Destinataires du mail : ceux du rapport (ce PC ou fichier partagé), sinon ceux du fichier de paramètres de l'équipe */
+function mailSettings() {
+  if (state.settings.mailTo || state.settings.mailCc) return state.settings;
+  const m = Params.get().rapport.mail;
+  return { mailTo: m.to, mailCc: m.cc };
+}
+function setMailSettings(to, cc) {
+  state.settings = normalizeSettings({ mailTo: to, mailCc: cc });
+  schedulePersist();
 }
 function tick() {
   renderMeta();
@@ -3157,7 +3882,7 @@ function init() {
   initShared();
   if (problem) toast('Les données enregistrées étaient illisibles : rapport vierge.', { tone: 'warn', timeout: 8000 });
 }
-return { init, show, hide, onKey, print: exportPdf, beforePrint, afterPrint, menuItems, summary, updateUndoUI };
+return { init, show, hide, onKey, print: exportPdf, beforePrint, afterPrint, menuItems, summary, updateUndoUI, mailSettings, setMailSettings, get author() { return state.author; } };
 })();
 
 /* #########################################################################
@@ -3170,62 +3895,28 @@ const Etiquettes = (() => {
    ===================================================================== */
 const STORAGE_KEY = 'nn-formu-etiquettes-v1';
 const SCHEMA_VERSION = 1;
-const PRODUCTS = ['SB4', 'SB5', 'SB5B', 'SB16'];
+/* Produits, noms 1 mL / 2 mL par défaut et listes d'origine des « autres échantillons » : onglet Paramètres */
+const etp = () => Params.get().etiquettes;
+const PRODUCTS = new Proxy([], { get: (_, k) => { const a = etp().produits.map(p => p.name); const v = a[k]; return typeof v === 'function' ? v.bind(a) : v; } });
+const productDef = P => etp().produits.find(p => p.name === P) || etp().produits[0];
+const DEFAULT_NAMES = new Proxy({}, { get: (_, P) => { const d = productDef(String(P)); return { nom1mL: d.nom1mL, nom2mL: d.nom2mL }; } });
+const ORIGIN_LISTS = new Proxy({}, { get: (_, P) => etp().listes[String(P)] || [] });
 /* Abréviations normalisées françaises sans accent (identiques à l'Excel). */
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'];
-const DEFAULT_NAMES = {
-  SB4:  { nom1mL: 'Ech ID', nom2mL: 'Ech REF' },
-  SB16: { nom1mL: 'Ech ID', nom2mL: 'Ech REF' },
-  SB5:  { nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag' },
-  SB5B: { nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag' },
-};
-const seq6 = (name, qty) => [1, 2, 3, 4, 5, 6].map(i => [`${name} (${i}/6)`, qty]);
-/* Listes d'origine des « autres échantillons » (quantités SB16 corrigées). */
-const ORIGIN_LISTS = {
-  SB4: [['Ech Pré - BB - Avant 1S', '100mL'], ['SB4 - pH/osmo', '50mL'], ['SB4 - Conc Aft Mix A', '1mL'], ['SB4 - Conc Aft Mix B', '1mL'], ['SB4 - Endo', '5mL']],
-  SB5: [['BB-1S', '100mL'], ['SB5_UV 1/2', '1mL'], ['SB5_UV 2/2', '1mL'], ['SB5_UV_Reserve 1/2', '1mL'], ['SB5_UV_Reserve 2/2', '1mL'], ['SB5 - pH_Osmo', '40mL'], ['SB5 - Endo', '5mL']],
-  SB5B: [['Mix_Osmo_pH', '40mL'], ['SB5B - Mix_VPE 1/2', '1mL'], ['SB5B - Mix_VPE 2/2', '1mL'], ['SB5B - Mix_Endo', '3mL']],
-  SB16: [
-    ['Step2_pH_Osmo', '50mL'], ['Step2_SoloVPE_B (1/3)', '2mL'], ['Step2_SoloVPE_B (2/3)', '2mL'], ['Step2_SoloVPE_B (3/3)', '2mL'],
-    ['Step2_BB', '100mL'], ['Step2_Endo', '3mL'], ...seq6('Step2_BB_Val', '250mL'), ['Step2_Endo_Val', '3mL'],
-    ['Step5_pH_Osmo', '50mL'], ['Step8_pH_Osmo', '50mL'], ['Step8_SoloVPE', '2mL'], ['Step8_BB', '100mL'], ['Step8_Endo', '3mL'],
-    ...seq6('Step8_BB_Val', '250mL'), ['Step8_Endo_Val', '3mL'],
-  ],
-};
-/* Gabarits de planche.
-   « Identique à l'Excel » (défaut) : positions EXPLICITES de chaque colonne (x ; largeur) et de chaque rangée
-   (y ; hauteur), en mm depuis le coin haut-gauche de la feuille, telles que l'Excel les imprime sur une page A4
-   (réduction de 96 % déjà appliquée). Les étiquettes poches et les autres étiquettes ont leur propre géométrie. */
-const EXCEL_GEO = {
-  pageW: 210, pageH: 297, cols: 5, rows: 13,
-  /* grille régulière équivalente (point de départ de « Personnalisé ») */
-  labelW: 34.54, labelH: 20.9, marginTop: 12, marginLeft: 9, pitchX: 36.83, pitchY: 21.27,
-  explicit: {
-    poches: {
-      cols: [[9.00, 32.77], [43.54, 32.77], [78.60, 33.27], [115.17, 34.54], [152.00, 34.54]],
-      rows: [[12.00, 21.40], [33.40, 21.59], [54.99, 21.59], [76.58, 21.08], [97.67, 20.57], [118.24, 20.57], [138.81, 21.34],
-        [160.15, 22.10], [182.25, 21.59], [203.84, 21.59], [225.43, 20.90], [246.32, 20.90], [267.22, 20.90]],
-    },
-    autres: {
-      cols: [[9.00, 34.54], [45.83, 34.54], [82.66, 34.54], [119.49, 34.54], [156.32, 34.54]],
-      rows: [[12.00, 21.40], [33.40, 21.59], [54.99, 21.59], [76.58, 21.08], [97.67, 20.57], [118.24, 20.57], [138.81, 20.57],
-        [159.39, 20.90], [180.28, 21.59], [201.87, 21.59], [223.46, 20.90], [244.36, 20.90], [265.26, 20.90]],
-    },
-  },
-};
-const L7651_GEO = { pageW: 210, pageH: 297, cols: 5, rows: 13, labelW: 38.1, labelH: 21.2, marginTop: 10.7, marginLeft: 4.7, pitchX: 40.6, pitchY: 21.2 };
-/* Réglages de texte propres à chaque gabarit (appliqués quand on choisit le gabarit). */
-const TEXT_EXCEL = { policePt: 7.7, margeInt: 0.5, texteEnHaut: true };      /* Arial 7,7 pt, ligne 4 : 6,7 pt, texte en haut à gauche */
-const TEXT_GRID = { policePt: 8, margeInt: 1.5, texteEnHaut: false };
+/* Gabarits de planche : les planches réellement utilisées à l'usine (A4, coins arrondis).
+   Fiducial 115294 (équivalent Avery L7651) : 5 × 13 = 65 étiquettes de 38,1 × 21,2 mm. */
+const FIDUCIAL_GEO = { pageW: 210, pageH: 297, cols: 5, rows: 13, labelW: 38.1, labelH: 21.2, marginTop: 10.7, marginLeft: 4.7, pitchX: 40.6, pitchY: 21.2 };
+/* Réglages de texte : Arial 8 pt (ligne « Date » 7 pt), marge intérieure 2 mm à gauche et à droite, bloc de 5 lignes centré */
+const TEXT_GRID = { policePt: 8, margeInt: 2, texteEnHaut: false };
 const PRESETS = {
-  EXCEL: { label: 'Identique à l\'Excel', short: 'Identique à l\'Excel', geo: EXCEL_GEO, cadres: false, text: TEXT_EXCEL },
-  L7651: { label: 'A4 · 65 étiquettes 38,1 × 21,2 mm (L7651)', short: 'A4 · 65 étiquettes (L7651)', geo: L7651_GEO, cadres: false, text: TEXT_GRID },
-  PAPIER: { label: 'Papier normal A4 — traits de coupe', short: 'Papier normal A4', geo: L7651_GEO, cadres: true, text: TEXT_GRID },
-  PERSO: { label: 'Personnalisé', short: 'Personnalisé', geo: null },
+  FIDUCIAL: { label: 'Fiducial 115294', sub: '65 étiquettes 38,1 × 21,2 mm', ref: 'Réf. imprimée sur la boîte · équivalent Avery L7651', short: 'Fiducial 115294', geo: FIDUCIAL_GEO, cadres: false, text: TEXT_GRID },
+  PAPIER: { label: 'Papier normal — traits de coupe', sub: 'Même grille, cadres imprimés', ref: 'Feuille A4 ordinaire, à découper', short: 'Papier normal A4', geo: FIDUCIAL_GEO, cadres: true, text: TEXT_GRID },
+  PERSO: { label: 'Personnalisé', sub: 'Toutes les dimensions modifiables', ref: 'Autre planche', short: 'Personnalisé', geo: null },
 };
-const DEFAULT_PRESET = 'EXCEL';
-/* Version du gabarit par défaut : un gabarit enregistré par une version précédente bascule une fois sur « Identique à l'Excel ». */
-const GABARIT_VERSION = 2;
+const defaultPreset = () => (PRESETS[etp().preset] ? etp().preset : 'FIDUCIAL');
+/* Version du gabarit : une donnée d'une version précédente (dont « Identique à l'Excel ») bascule une fois sur le gabarit
+   par défaut, calibration remise à zéro (l'ancien décalage compensait un mauvais gabarit). */
+const GABARIT_VERSION = 3;
 const GEO_FIELDS = [
   { key: 'pageW', label: 'Largeur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
   { key: 'pageH', label: 'Hauteur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
@@ -3246,18 +3937,26 @@ const CALIB_FIELDS = [
 ];
 const ADV_FIELDS = [
   { key: 'policePt', label: 'Taille de police de base', unit: 'pt', min: 6, max: 12, step: 0.5, decimals: 1, hint: 'Ligne « Date » : 1 pt de moins (comme dans l\'Excel).' },
-  { key: 'margeInt', label: 'Marge intérieure', unit: 'mm', min: 0, max: 5, step: 0.1, decimals: 1, hint: 'Espace entre le bord de l\'étiquette et le texte.' },
+  { key: 'margeInt', label: 'Marge intérieure', unit: 'mm', min: 0, max: 5, step: 0.1, decimals: 1, hint: 'Espace à gauche et à droite du texte (coins arrondis).' },
 ];
+/* Épaisseur du texte (réglage commun, onglet Paramètres) : « Renforcé » = nettement plus noir que le normal, sans être du gras */
+const EPAISSEURS = [{ value: 'normal', label: 'Normal' }, { value: 'renforce', label: 'Renforcé' }, { value: 'gras', label: 'Gras' }];
 /* Champs de l'étape 1 (rendu générique). */
-const VISA_MAX = 5;          /* initiales : au-delà, plus de place pour écrire l'heure */
+const VISA_MAX = 6;          /* titulaires : 3 lettres ; intérimaires : 6 lettres */
 const PARAM_FIELDS = [
   { key: 'produit', label: 'Produit', type: 'segmented', size: 'xl', span: 6, options: () => PRODUCTS.map(p => ({ value: p, label: p })), rerender: true },
   { key: 'lot', label: 'Lot', type: 'text', upper: true, big: true, span: 6, maxLength: 40, placeholder: 'ex. FA123',
     hint: () => state.lot.trim() ? null : ['Le lot apparaît en 1ʳᵉ ligne de chaque étiquette (en majuscules).'] },
   { key: 'dateFormulation', label: 'Date de formulation', optional: true, type: 'date', span: 4,
     hint: () => { const d = formatDateLabel(state.dateFormulation); return d ? ['Sur l\'étiquette : ', h('span', { class: 'mono' }, d)] : ['Vide : un blanc est laissé pour l\'écrire à la main.']; } },
-  { key: 'visa', label: 'Visa', optional: true, type: 'text', upper: true, maxLength: VISA_MAX, placeholder: 'ex. NB', span: 2,
-    hint: () => { const v = state.visa.trim().toUpperCase(); return v ? ['Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)] : ['Vide : blanc pour signer à la main.']; } },
+  { key: 'visa', label: 'Visa', optional: true, type: 'text', upper: true, maxLength: VISA_MAX, placeholder: 'ex. NBO', span: 2,
+    hint: () => {
+      const v = state.visa.trim().toUpperCase();
+      if (!v) return ['Vide : blanc pour signer à la main.'];
+      /* avertissement doux, non bloquant : un visa fait 3 lettres (titulaires) ou 6 (intérimaires) */
+      if (v.length < 3) return [h('span', { class: 'hint-warn' }, 'Un visa fait 3 ou 6 lettres. '), 'Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)];
+      return ['Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)];
+    } },
   { heading: 'Noms des échantillons de poche', hint: 'Ex. « SB4-Poche 1-Ech ID1 » : le nom est suivi du numéro de poche.' },
   { key: 'nom1mL', label: 'Nom échantillon 1 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
   { key: 'nom2mL', label: 'Nom échantillon 2 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
@@ -3275,9 +3974,9 @@ const AUTRE_FIELDS = [
   { key: 'nom', label: 'Échantillon', type: 'text', maxLength: 60, placeholder: 'Nom de l\'échantillon' },
   { key: 'quantite', label: 'Quantité', type: 'text', maxLength: 20, placeholder: 'ex. 50mL' },
 ];
-const BLANK_DATE_MM = 15;   /* blanc laissé pour écrire la date à la main */
-const BLANK_VISA_MM = 10;   /* blanc laissé pour signer (visa) à la main */
-const BLANK_HEURE_MM = 8;   /* blanc toujours réservé après « Heure: » pour écrire l'heure */
+const BLANK_DATE_MM = 15;   /* blanc laissé pour écrire la date à la main (suit la taille du texte) */
+const BLANK_VISA_MM = 10;   /* blanc FIXE laissé pour signer (visa vide) : jamais réduit */
+const BLANK_HEURE_MM = 8;   /* blanc FIXE toujours réservé après « Heure: » pour écrire l'heure : jamais réduit */
 const MIN_PT = 5.5;
 const PREVIEW_MAX_PAGES = 40;
 const BIG_BATCH = 200;
@@ -3334,9 +4033,10 @@ function hydrateIcons(root = document) {
 const newPocheRow = () => ({ id: uid(), lotPoche: '', nbPoches: 0, premierNumero: null });
 const listFromPairs = pairs => pairs.map(([nom, quantite]) => ({ id: uid(), imprimer: true, nom, quantite }));
 function defaultState() {
+  const DEFAULT_PRESET = defaultPreset();
   return {
     v: SCHEMA_VERSION,
-    produit: 'SB4', lot: '', dateFormulation: '', visa: '',
+    produit: PRODUCTS.includes('SB4') ? 'SB4' : PRODUCTS[0], lot: '', dateFormulation: '', visa: '',
     noms: { nom1mL: null, nom2mL: null },               /* null = suit le produit */
     poches: [newPocheRow()],
     plage: { mode: 'all', de: null, a: null, aAuto: false },  /* aAuto : « à » suit le nombre de poches */
@@ -3347,10 +4047,10 @@ function defaultState() {
     gabaritVersion: GABARIT_VERSION,
     gabarit: { preset: DEFAULT_PRESET, geo: clone(PRESETS[DEFAULT_PRESET].geo) },
     reglages: { decalX: 0, decalY: 0, echelle: 100, cadres: false, ...PRESETS[DEFAULT_PRESET].text, autresParRangee: 4 },
-    ui: { apercu: 'poches', zoom: 'fit', masquerAideImpression: false, calibMigree: false },
+    ui: { apercu: 'poches', zoom: 'fit', masquerAideImpression: false, migrationV3: false },
   };
 }
-/* Grille régulière équivalente d'un gabarit (sans positions explicites) : point de départ de « Personnalisé ». */
+/* Grille régulière d'un gabarit : point de départ de « Personnalisé ». */
 function toGrid(g) {
   const out = {};
   for (const f of GEO_FIELDS) out[f.key] = g[f.key];
@@ -3365,6 +4065,7 @@ function normalizeState(raw) {
   const int = (v, min, max, def) => (Number.isInteger(v) ? clamp(v, min, max) : def);
   const bool = (v, def) => (typeof v === 'boolean' ? v : def);
   if (PRODUCTS.includes(raw.produit)) s.produit = raw.produit;
+  else if (!PRODUCTS.includes(s.produit)) s.produit = PRODUCTS[0];
   s.lot = str(raw.lot, 40);
   s.visa = str(raw.visa, VISA_MAX);
   s.dateFormulation = typeof raw.dateFormulation === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.dateFormulation) ? raw.dateFormulation : '';
@@ -3388,24 +4089,25 @@ function normalizeState(raw) {
     const l = raw.autres && normList(raw.autres[p]); if (l) s.autres[p] = l;
     const d = raw.listesPerso && normList(raw.listesPerso[p]); if (d) s.listesPerso[p] = d.map(({ imprimer, nom, quantite }) => ({ imprimer, nom, quantite }));
   }
-  /* Gabarit : une donnée d'une version précédente (sans gabaritVersion) bascule une fois sur le nouveau défaut. */
+  /* Gabarit : une donnée d'une version précédente (dont « Identique à l'Excel ») bascule une fois sur le gabarit par défaut
+     (Fiducial 115294), avec décalage X/Y = 0 et échelle 100 % : l'ancien décalage compensait un mauvais gabarit. */
   const sameVersion = raw.gabaritVersion === GABARIT_VERSION;
   if (sameVersion && raw.gabarit && typeof raw.gabarit === 'object') {
-    s.gabarit.preset = PRESETS[raw.gabarit.preset] ? raw.gabarit.preset : DEFAULT_PRESET;
+    s.gabarit.preset = PRESETS[raw.gabarit.preset] ? raw.gabarit.preset : defaultPreset();
     if (s.gabarit.preset === 'PERSO') {
       const src = raw.gabarit.geo && typeof raw.gabarit.geo === 'object' ? raw.gabarit.geo : {};
       s.gabarit.geo = {};
-      for (const f of GEO_FIELDS) s.gabarit.geo[f.key] = num(src[f.key], f.min, f.max, L7651_GEO[f.key]);
+      for (const f of GEO_FIELDS) s.gabarit.geo[f.key] = num(src[f.key], f.min, f.max, FIDUCIAL_GEO[f.key]);
       s.gabarit.geo.cols = Math.round(s.gabarit.geo.cols); s.gabarit.geo.rows = Math.round(s.gabarit.geo.rows);
     } else s.gabarit.geo = clone(PRESETS[s.gabarit.preset].geo);
   }
   const r = raw.reglages || {};
-  /* calibration de l'imprimante de ce PC : toujours conservée */
-  s.reglages.decalX = round(num(r.decalX, -10, 10, 0), 1);
-  s.reglages.decalY = round(num(r.decalY, -10, 10, 0), 1);
-  s.reglages.echelle = round(num(r.echelle, 90, 105, 100), 1);
   s.reglages.autresParRangee = r.autresParRangee === 5 ? 5 : 4;
   if (sameVersion) {
+    /* calibration de l'imprimante de ce PC : conservée */
+    s.reglages.decalX = round(num(r.decalX, -10, 10, 0), 1);
+    s.reglages.decalY = round(num(r.decalY, -10, 10, 0), 1);
+    s.reglages.echelle = round(num(r.echelle, 90, 105, 100), 1);
     const t = PRESETS[s.gabarit.preset].text || TEXT_GRID;
     s.reglages.cadres = bool(r.cadres, PRESETS[s.gabarit.preset].cadres || false);
     s.reglages.policePt = num(r.policePt, 6, 12, t.policePt);
@@ -3417,11 +4119,10 @@ function normalizeState(raw) {
   const u = raw.ui || {};
   s.ui.apercu = u.apercu === 'autres' ? 'autres' : 'poches';
   s.ui.zoom = typeof u.zoom === 'number' && u.zoom >= 0.2 && u.zoom <= 3 ? u.zoom : 'fit';
-  /* l'aide « Avant d'imprimer » a changé (réglages par défaut) : elle est remontrée une fois après la bascule */
+  /* l'aide « Avant d'imprimer » est remontrée une fois après la bascule */
   s.ui.masquerAideImpression = sameVersion && bool(u.masquerAideImpression, false);
-  /* décalage X/Y réglé pour l'ancien gabarit : conservé, mais signalé (étape 4) jusqu'à ce que l'utilisateur le vérifie */
-  const oldGabarit = !sameVersion && raw.gabarit && typeof raw.gabarit === 'object';
-  s.ui.calibMigree = (oldGabarit && (s.reglages.decalX !== 0 || s.reglages.decalY !== 0)) || (sameVersion && bool(u.calibMigree, false));
+  /* message « nouveau gabarit » affiché une fois (à l'ouverture des étiquettes) après la bascule d'une donnée existante */
+  s.ui.migrationV3 = sameVersion ? bool(u.migrationV3, false) : !!(raw.gabarit && typeof raw.gabarit === 'object');
   return s;
 }
 let state = defaultState();
@@ -3456,6 +4157,7 @@ function labelContext() {
 /* Une ligne = segments de texte {t} ou de blanc à remplir à la main {b: largeur mm}. */
 const T = t => ({ t: String(t) });
 const B = mm => ({ b: mm });
+const BF = mm => ({ b: mm, fixed: true });   /* blanc de largeur fixe (mm) : ne rétrécit pas avec le texte */
 const line = (segs, sm = false) => ({ segs, sm });
 
 /* Numérotation globale des poches, rang dans le lot, N° client. */
@@ -3496,9 +4198,10 @@ function pocheLabels(p, ctx) {
   const name2 = line([T(`${P}-Poche ${p.n}-${n2}${p.n}`)]);
   const lotL = vol => line([T(`lot: ${p.lp} ${vol}`)]);
   const date = line([T('Date: '), D ? T(D) : B(BLANK_DATE_MM), T(` N° Poche: ${p.c}`)], true);
-  const visa = line([T('VISA: '), V ? T(V) : B(BLANK_VISA_MM), T(' Heure: '), B(BLANK_HEURE_MM)]);
+  const visa = line([T('VISA: '), V ? T(V) : BF(BLANK_VISA_MM), T(' Heure: '), BF(BLANK_HEURE_MM)]);
   const mk = (l2, l3) => ({ lines: [head, l2, l3, date, visa] });
-  if (P === 'SB5') return [mk(name1, lotL('1mL')), null, mk(name2, lotL('1mL (1/2)')), mk(name2, lotL('1mL (2/2)'))];
+  /* règle SB5 (ou produit réglé « comme SB5 » dans l'onglet Paramètres) : 1 mL unique, étiquette blanche en 2ᵉ position */
+  if (productDef(P).blanche) return [mk(name1, lotL('1mL')), null, mk(name2, lotL('1mL (1/2)')), mk(name2, lotL('1mL (2/2)'))];
   return [mk(name1, lotL('1mL (1/2)')), mk(name1, lotL('1mL (2/2)')), mk(name2, lotL('2mL (1/2)')), mk(name2, lotL('2mL (2/2)'))];
 }
 /* Étiquette « autre échantillon » : P LOT / nom / quantité / Date / VISA. */
@@ -3507,19 +4210,17 @@ function autreLabel(item, ctx) {
   return { lines: [
     line([T(`${P} ${LOT}`)]), line([T(item.nom.trim())]), line([T(item.quantite.trim())]),
     line([T('Date: '), D ? T(D) : B(BLANK_DATE_MM)], true),
-    line([T('VISA: '), V ? T(V) : B(BLANK_VISA_MM), T(' Heure: '), B(BLANK_HEURE_MM)]),
+    line([T('VISA: '), V ? T(V) : BF(BLANK_VISA_MM), T(' Heure: '), BF(BLANK_HEURE_MM)]),
   ] };
 }
 /* Case (r, c) d'un type d'étiquettes, en mm AVANT calibration : { x, y, w, h }. */
 function cellBox(g, kind, r, c) {
-  const ex = g.explicit && g.explicit[kind === 'autres' ? 'autres' : 'poches'];
-  if (ex) return { x: ex.cols[c][0], w: ex.cols[c][1], y: ex.rows[r][0], h: ex.rows[r][1] };
   return { x: g.marginLeft + c * g.pitchX, y: g.marginTop + r * g.pitchY, w: g.labelW, h: g.labelH };
 }
-/* Toutes les cases d'un gabarit (tous types), pour les contrôles et les tailles mini. */
+/* Toutes les cases d'un gabarit, pour les contrôles et les tailles mini. */
 function allBoxes(g) {
   const out = [];
-  for (const kind of g.explicit ? ['poches', 'autres'] : ['poches']) for (let r = 0; r < g.rows; r++) for (let c = 0; c < g.cols; c++) out.push(cellBox(g, kind, r, c));
+  for (let r = 0; r < g.rows; r++) for (let c = 0; c < g.cols; c++) out.push(cellBox(g, 'poches', r, c));
   return out;
 }
 /* Géométrie effective (mm / pt) : gabarit + réglages + calibration (décalage X/Y, échelle depuis le coin haut-gauche). */
@@ -3527,14 +4228,17 @@ function computeGeo() {
   const g = geo(), r = state.reglages;
   const boxes = allBoxes(g);
   const minW = Math.min(...boxes.map(b => b.w)), minH = Math.min(...boxes.map(b => b.h));
-  const pad = clamp(r.margeInt, 0, Math.min(minW, minH) / 4);
-  const usableH = Math.max(1, minH - 2 * pad);
+  /* marge intérieure à gauche et à droite (coins arrondis) ; en haut et en bas, le bloc de 5 lignes est centré
+     avec au moins 1,2 mm de garde (imprécision d'impression) */
+  const pad = clamp(r.margeInt, 0, minW / 4);
+  const padY = round(Math.min(1.2, minH / 8), 3);
+  const usableH = Math.max(1, minH - 2 * padY);
   const maxByHeight = (usableH / 5) / (PT_MM * 1.08);
   const base = round(Math.max(MIN_PT, Math.min(r.policePt, maxByHeight)), 2);
   const small = round(Math.max(MIN_PT, base - 1), 2);
-  const lnh = round(Math.min(usableH / 5, base * PT_MM * 1.22), 3);
+  const lnh = round(Math.min(usableH / 5, base * PT_MM * 1.16), 3);
   const scale = clamp(r.echelle || 100, 90, 105) / 100;
-  return { ...g, pad, usableH, base, small, lnh, offX: r.decalX, offY: r.decalY, scale, top: !!r.texteEnHaut };
+  return { ...g, pad, padY, usableH, base, small, lnh, offX: r.decalX, offY: r.decalY, scale, top: !!r.texteEnHaut, weight: etp().epaisseur };
 }
 /* Position imprimée d'une case (mm) : échelle appliquée depuis le coin haut-gauche, puis décalage X/Y. */
 function placed(g, b) {
@@ -3548,7 +4252,6 @@ function problemsOfGeo(g) {
   const bottom = Math.max(...boxes.map(b => b.y + b.h));
   if (right > g.pageW + 0.05) out.push(`Le gabarit dépasse la largeur de la page (${fmtNum(right, 1)} mm pour ${fmtNum(g.pageW, 1)} mm).`);
   if (bottom > g.pageH + 0.05) out.push(`Le gabarit dépasse la hauteur de la page (${fmtNum(bottom, 1)} mm pour ${fmtNum(g.pageH, 1)} mm).`);
-  if (g.explicit) return out;
   if (g.cols > 1 && g.pitchX < g.labelW - 0.01) out.push('Pas horizontal plus petit que la largeur d\'étiquette : les étiquettes se chevauchent.');
   if (g.rows > 1 && g.pitchY < g.labelH - 0.01) out.push('Pas vertical plus petit que la hauteur d\'étiquette : les étiquettes se chevauchent.');
   return out;
@@ -3622,19 +4325,21 @@ function buildDoc(kind) {
    5. Ajustement du texte (mesure réelle dans un bac à sable non transformé)
    ===================================================================== */
 const fitCache = new Map();
-const segKey = segs => segs.map(s => (s.b != null ? '\u0001' + s.b : s.t)).join('\u0002');
-function appendSegs(el, ln, basePt) {
+const segKey = segs => segs.map(s => (s.b != null ? (s.fixed ? '\u0003' : '\u0001') + s.b : s.t)).join('\u0002');
+function appendSegs(el, ln, basePt, scale = 1) {
   for (const s of ln.segs) {
     if (s.b != null) {
       const b = document.createElement('span');
       b.className = 'blank';
-      b.style.width = (s.b / (basePt * PT_MM)).toFixed(3) + 'em'; /* en em → suit la réduction de police */
+      /* blanc fixe (visa, heure) en mm ; sinon en em → suit la réduction de police */
+      b.style.width = s.fixed ? round(s.b * scale, 3) + 'mm' : (s.b / (basePt * PT_MM)).toFixed(3) + 'em';
       el.append(b);
     } else if (s.t) el.append(s.t);
   }
 }
 function measureWidths(items) {
   const box = $('#measure-box');
+  box.className = `measure-box w-${etp().epaisseur}`; /* le gras élargit le texte : mesure à la même graisse */
   const spans = items.map(it => {
     const s = document.createElement('span');
     s.className = 'm-ln';
@@ -3662,7 +4367,7 @@ function fitDoc(doc) {
       cell.fit = new Array(cell.label.lines.length);
       cell.label.lines.forEach((ln, i) => {
         const base = ln.sm ? g.small : g.base;
-        const key = `${base}|${avail}|${segKey(ln.segs)}`;
+        const key = `${g.weight}|${base}|${avail}|${segKey(ln.segs)}`;
         const hit = fitCache.get(key);
         if (hit) { cell.fit[i] = hit; if (hit.trunc) truncKeys.add(key); return; }
         let job = jobs.get(key);
@@ -3711,10 +4416,10 @@ function renderSheets(doc, { screen, maxPages = Infinity }) {
   const pages = doc.pages.slice(0, maxPages);
   pages.forEach((page, pi) => {
     const sheet = document.createElement('div');
-    sheet.className = 'sheet' + (doc.frames ? ' frames' : '') + (g.top ? ' v-top' : '');
+    sheet.className = 'sheet' + (doc.frames ? ' frames' : '') + (g.top ? ' v-top' : '') + ` w-${g.weight}`;
     sheet.dataset.kind = doc.kind;
     sheet.dataset.page = String(pi + 1);
-    sheet.style.cssText = `width:${g.pageW}mm;height:${g.pageH}mm;--pad:${round(g.pad * sc, 3)}mm;--lnh:${round(g.lnh * sc, 3)}mm;--fs:${round(g.base * sc, 3)}pt;--fs2:${round(g.small * sc, 3)}pt`;
+    sheet.style.cssText = `width:${g.pageW}mm;height:${g.pageH}mm;--pad:${round(g.pad * sc, 3)}mm;--pady:${round(g.padY * sc, 3)}mm;--lnh:${round(g.lnh * sc, 3)}mm;--fs:${round(g.base * sc, 3)}pt;--fs2:${round(g.small * sc, 3)}pt`;
     for (let r = 0; r < g.rows; r++) {
       for (let c = 0; c < g.cols; c++) {
         const idx = r * g.cols + c;
@@ -3735,7 +4440,7 @@ function renderSheets(doc, { screen, maxPages = Infinity }) {
             const d = document.createElement('div');
             d.className = ln.sm ? 'ln sm' : 'ln';
             if (fit && fit.pt < base - 1e-6) d.style.fontSize = round(fit.pt * sc, 3) + 'pt';
-            appendSegs(d, ln, base);
+            appendSegs(d, ln, base, sc);
             el.append(d);
           });
         } else if (cell && cell.test) {
@@ -3790,12 +4495,15 @@ function addTestMarks(sheet, g) {
   sheet.append(svg);
   /* texte : dans la marge du haut s'il y a la place, sinon dans celle du bas */
   const gridTop = tl.y, gridBottom = br.y + br.h;
-  const atTop = gridTop >= 10.3 || H - gridBottom < 7;
-  const y1 = atTop ? 5.6 : Math.min(H - 6, gridBottom + 1.2);
+  /* consigne sous la règle du haut ; détails du gabarit en haut s'il reste de la place, sinon dans la marge du bas
+     (Fiducial : 10,7 mm en haut et en bas) — jamais sur les cadres */
+  const atTop = gridTop >= 9.3 || H - gridBottom < 7;
+  const y1 = atTop ? 5.4 : Math.min(H - 6, gridBottom + 1.2);
+  const y2 = atTop && gridTop >= 12.8 ? y1 + 2.9 : !atTop ? y1 + 2.9 : H - gridBottom >= 5.5 ? gridBottom + 1.6 : y1 + 2.9;
   const r = state.reglages;
   sheet.append(h('div', { class: 'test-info test-info--main', style: `top:${y1}mm` }, 'Posez cette feuille sur une planche d\'étiquettes à contre-jour pour vérifier l\'alignement'),
-    h('div', { class: 'test-info', style: `top:${round(y1 + 2.9, 2)}mm` },
-      `PAGE DE TEST · ${PRESETS[state.gabarit.preset].short}${g.explicit ? ' (cases des étiquettes poches)' : ''} · décalage X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm · échelle ${fmtNum(r.echelle, 1)} %`));
+    h('div', { class: 'test-info', style: `top:${round(y2, 2)}mm` },
+      `PAGE DE TEST · ${PRESETS[state.gabarit.preset].short} · ${g.cols} × ${g.rows} étiquettes ${fmtNum(g.labelW, 1)} × ${fmtNum(g.labelH, 1)} mm · décalage X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm · échelle ${fmtNum(r.echelle, 1)} %`));
 }
 
 /* =====================================================================
@@ -4057,8 +4765,8 @@ function renderStep2() {
     const row = newPocheRow(); state.poches.push(row); commit({ rerender: true, tab: 'poches', focus: `p-${row.id}-lotPoche` });
   } }, icon('plus'), 'Ajouter un lot de poches');
 
-  const layoutHelp = state.produit === 'SB5'
-    ? 'En SB5, une poche = une rangée de 4 cases : 1 mL, case vide, 1 mL (1/2), 1 mL (2/2).'
+  const layoutHelp = productDef(state.produit).blanche
+    ? `En ${state.produit}, une poche = une rangée de 4 cases : 1 mL, case vide, 1 mL (1/2), 1 mL (2/2).`
     : `En ${state.produit}, une poche = une rangée de 4 étiquettes : 2 × 1 mL, 2 × 2 mL.`;
   return [
     h('p', { class: 'hint step-intro', id: 'poches-layout-hint' }, layoutHelp, ' Les poches sont numérotées à la suite, dans l\'ordre des lignes.'),
@@ -4208,36 +4916,26 @@ function applyPreset(k) {
   } else state.gabarit.geo = toGrid(state.gabarit.geo);
   clampFirstLines();
 }
-/* Écart maximal (mm) entre les étiquettes poches (colonnes 1 à 4) du gabarit à positions explicites et sa grille régulière. */
-function gridShiftMax(g) {
-  const ex = g.explicit && g.explicit.poches;
-  if (!ex) return 0;
-  let m = 0;
-  ex.cols.slice(0, 4).forEach(([x], c) => { m = Math.max(m, Math.abs(g.marginLeft + c * g.pitchX - x)); });
-  ex.rows.forEach(([y], r) => { m = Math.max(m, Math.abs(g.marginTop + r * g.pitchY - y)); });
-  return m;
-}
-/* « Personnalisé » est une grille régulière : en partant de l'Excel (colonnes irrégulières), les étiquettes bougent.
-   On le dit avant, et on oriente vers la calibration pour un simple décalage. */
-async function confirmRegularGrid() {
-  const shift = gridShiftMax(geo());
-  if (shift < 0.3) return true;
-  const res = await openDialog({ title: 'Gabarit personnalisé : grille régulière', icon: 'grid', tone: 'warn',
-    body: h('div', { class: 'help-body' },
-      h('p', null, 'La grille personnalisée est ', h('b', null, 'régulière'), ` (toutes les étiquettes au même pas) : par rapport à l'Excel, les étiquettes poches des colonnes 2 à 4 se déplacent jusqu'à ${fmtNum(shift, 1)} mm.`),
-      h('p', null, h('b', null, 'Pour corriger un simple décalage'), ', gardez « Identique à l\'Excel » et utilisez plutôt la calibration X / Y / échelle (étape 4).')),
-    actions: [{ label: 'Utiliser la calibration', value: 'calib' }, { label: 'Créer la grille personnalisée', value: 'ok', primary: true }] });
-  if (res.value === 'calib') focusField('#f-decalX');
-  return res.value === 'ok';
-}
 function presetHint() {
   const x = geo();
-  if (x.explicit) {
-    const bs = allBoxes(x), ws = bs.map(b => b.w), hs = bs.map(b => b.h);
-    return `Reproduit la planche de l'Excel : ${x.cols} × ${x.rows} cases de ${fmtNum(Math.min(...ws), 1)} à ${fmtNum(Math.max(...ws), 1)} × ${fmtNum(Math.min(...hs), 1)} à ${fmtNum(Math.max(...hs), 1)} mm · 1ʳᵉ case à ${fmtNum(x.explicit.poches.cols[0][0], 1)} mm du bord gauche et ${fmtNum(x.explicit.poches.rows[0][0], 1)} mm du haut · page ${fmtNum(x.pageW, 1)} × ${fmtNum(x.pageH, 1)} mm`;
+  const grid = `${x.cols} × ${x.rows} étiquettes de ${fmtNum(x.labelW, 2)} × ${fmtNum(x.labelH, 2)} mm · marges ${fmtNum(x.marginTop, 2)} (haut) / ${fmtNum(x.marginLeft, 2)} mm (gauche) · pas ${fmtNum(x.pitchX, 2)} × ${fmtNum(x.pitchY, 2)} mm`;
+  return state.gabarit.preset === 'PERSO' ? `Grille personnalisée : ${grid}. Pour un simple décalage à l'impression, préférez la calibration X / Y / échelle.` : grid;
+}
+/* Vignette dessinée d'une planche (A4, étiquettes à coins arrondis) pour reconnaître la boîte d'un coup d'œil. */
+function sheetThumb(g, framed) {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${g.pageW} ${g.pageH}`);
+  svg.setAttribute('class', 'thumb');
+  svg.setAttribute('aria-hidden', 'true');
+  const rect = (x, y, w, hh, cls, rx) => { const r = document.createElementNS(NS, 'rect'); for (const [k, v] of Object.entries({ x, y, width: w, height: hh, rx })) r.setAttribute(k, String(round(v, 2))); r.setAttribute('class', cls); svg.append(r); };
+  rect(0.75, 0.75, g.pageW - 1.5, g.pageH - 1.5, 'thumb__page', 4);
+  const rows = Math.min(g.rows, 60), cols = Math.min(g.cols, 20);
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const b = cellBox(g, 'poches', r, c);
+    rect(b.x, b.y, b.w, b.h, framed ? 'thumb__cut' : 'thumb__lbl', framed ? 0 : Math.min(2.5, b.h / 6));
   }
-  const grid = `${x.cols} × ${x.rows} étiquettes de ${fmtNum(x.labelW, 2)} × ${fmtNum(x.labelH, 2)} mm · marges ${fmtNum(x.marginTop, 2)} (haut) / ${fmtNum(x.marginLeft, 2)} mm (gauche) · page ${fmtNum(x.pageW, 1)} × ${fmtNum(x.pageH, 1)} mm`;
-  return state.gabarit.preset === 'PERSO' ? `Grille régulière : ${grid}. Pour un simple décalage à l'impression, préférez la calibration X / Y / échelle.` : grid;
+  return svg;
 }
 const calibIsDefault = () => !state.reglages.decalX && !state.reglages.decalY && state.reglages.echelle === 100;
 function calibText() {
@@ -4246,15 +4944,27 @@ function calibText() {
   if (r.echelle !== 100) parts.push(`échelle ${fmtNum(r.echelle, 1)} %`);
   return parts.join(' · ');
 }
+/* Choix de la planche : cartes avec vignette (boutons radio natifs → flèches du clavier) */
+function PresetPicker() {
+  const group = h('div', { class: 'presets', role: 'radiogroup', 'aria-labelledby': 'f-preset-label' });
+  for (const [k, p] of Object.entries(PRESETS)) {
+    const input = h('input', { type: 'radio', name: 'f-preset', value: k, id: `f-preset-${k}`, class: 'preset__input' });
+    input.checked = k === state.gabarit.preset;
+    const g = p.geo || (k === state.gabarit.preset ? geo() : toGrid(geo()));
+    const card = h('label', { class: 'preset' + (input.checked ? ' is-on' : ''), for: input.id },
+      input,
+      h('span', { class: 'preset__thumb' }, sheetThumb(g, k === 'PAPIER')),
+      h('span', { class: 'preset__txt' },
+        h('span', { class: 'preset__name' }, p.label, k === defaultPreset() ? h('span', { class: 'chip plain preset__def' }, 'par défaut') : null),
+        h('span', { class: 'preset__sub' }, p.sub),
+        h('span', { class: 'preset__ref' }, p.ref)));
+    input.addEventListener('change', () => { if (!input.checked) return; applyPreset(k); commit({ rerender: true, focus: input.id }); });
+    group.append(card);
+  }
+  return group;
+}
 function renderStep4() {
-  const presetSel = h('select', { id: 'f-preset', class: 'select' },
-    Object.entries(PRESETS).map(([k, p]) => { const o = h('option', { value: k }, p.label); o.selected = k === state.gabarit.preset; return o; }));
-  presetSel.addEventListener('change', async () => {
-    const k = presetSel.value;
-    if (k === 'PERSO' && !(await confirmRegularGrid())) { presetSel.value = state.gabarit.preset; return; }
-    applyPreset(k); commit({ rerender: true, focus: 'f-preset' });
-  });
-  const presetField = Field({ id: 'f-preset', label: 'Modèle de planche', control: presetSel, hint: presetHint });
+  const presetField = Field({ id: 'f-preset', label: 'Modèle de planche', labelFor: false, control: PresetPicker(), hint: presetHint });
   const parts = [presetField];
   if (state.gabarit.preset === 'PERSO') {
     parts.push(h('div', { class: 'grid-2', role: 'group', 'aria-label': 'Gabarit personnalisé' },
@@ -4262,21 +4972,16 @@ function renderStep4() {
         id: 'g-' + f.key, get: () => geo()[f.key],
         set: v => { geo()[f.key] = f.decimals ? v : Math.round(v); if (f.key === 'rows') clampFirstLines(); commit({ rerender: f.key === 'rows' }); },
       }))));
-  } else {
-    parts.push(h('div', null, h('button', { type: 'button', class: 'link-btn', id: 'btn-perso', onclick: async () => {
-      if (!(await confirmRegularGrid())) return;
-      applyPreset('PERSO'); commit({ rerender: true, focus: 'g-pageW' });
-    } }, geo().explicit ? 'Créer un gabarit personnalisé (grille régulière)…' : 'Personnaliser ce gabarit…')));
   }
   const resetCalib = h('button', { type: 'button', class: 'link-btn', id: 'btn-calib-reset', onclick: () => {
-    withUndo('Calibration remise à zéro', () => { Object.assign(state.reglages, { decalX: 0, decalY: 0, echelle: 100 }); state.ui.calibMigree = false; });
+    withUndo('Calibration remise à zéro', () => { Object.assign(state.reglages, { decalX: 0, decalY: 0, echelle: 100 }); });
   } }, 'Remettre à zéro');
   onDerived(() => { resetCalib.hidden = calibIsDefault(); });
   const calib = h('div', { class: 'subsection calib' },
     h('div', { class: 'subhead-row' }, h('h3', { class: 'subhead' }, icon('target'), 'Calibration de l\'imprimante'), h('span', { class: 'chip plain', title: 'Réglages propres à ce PC et à son imprimante' }, 'mémorisée sur ce PC')),
     h('p', { class: 'calib-help' }, 'Étiquettes décalées à l\'impression ? Imprimez la page de test sur papier normal, posez-la sur une planche à contre-jour, puis corrigez ici.'),
     h('div', { class: 'grid-3 calib-grid' }, CALIB_FIELDS.map(f => renderSchemaField({ ...f, type: 'number', stepper: true }, {
-      id: 'f-' + f.key, get: () => state.reglages[f.key], set: v => { state.reglages[f.key] = v; state.ui.calibMigree = false; commit(); },
+      id: 'f-' + f.key, get: () => state.reglages[f.key], set: v => { state.reglages[f.key] = v; commit(); },
     }))),
     h('div', { class: 'calib-actions' },
       h('button', { type: 'button', class: 'btn btn-secondary', id: 'btn-print-test', onclick: () => requestPrint('test') }, icon('grid'), 'Imprimer une page de test'),
@@ -4286,7 +4991,10 @@ function renderStep4() {
     h('summary', null, icon('sliders'), 'Réglages avancés', icon('chevron', 'chev')),
     h('div', { class: 'adv-body' },
       Switch({ id: 'f-cadres', checked: state.reglages.cadres, label: 'Imprimer le cadre de chaque étiquette', onChange: v => { state.reglages.cadres = v; commit(); } }),
-      Switch({ id: 'f-haut', checked: state.reglages.texteEnHaut, label: 'Texte aligné en haut de l\'étiquette (comme l\'Excel)', onChange: v => { state.reglages.texteEnHaut = v; commit(); } }),
+      Field({ id: 'f-epaisseur', label: 'Épaisseur du texte', labelFor: false,
+        hint: 'Renforcé : texte nettement plus noir, sans être du gras. Réglage commun à l\'équipe (onglet Paramètres).',
+        control: Segmented({ name: 'f-epaisseur', labelledBy: 'f-epaisseur-label', value: etp().epaisseur, options: EPAISSEURS, onChange: v => { Params.update(p => { p.etiquettes.epaisseur = v; }); } }) }),
+      Switch({ id: 'f-haut', checked: state.reglages.texteEnHaut, label: 'Texte aligné en haut de l\'étiquette (par défaut : centré)', onChange: v => { state.reglages.texteEnHaut = v; commit(); } }),
       h('div', { class: 'grid-2' }, ADV_FIELDS.map(f => renderSchemaField({ ...f, type: 'number', stepper: true }, {
         id: 'f-' + f.key, get: () => state.reglages[f.key], set: v => { state.reglages[f.key] = v; commit(); },
       }))),
@@ -4339,16 +5047,6 @@ function computeWarnings() {
   }
   if (p.count > BIG_BATCH) w.push({ msg: `${p.count} poches (plus de ${BIG_BATCH}) à imprimer : une confirmation sera demandée avant l'impression.` });
   for (const k of ['nom1mL', 'nom2mL']) if (emptyName(k)) w.push({ msg: `Nom échantillon ${k === 'nom1mL' ? '1' : '2'} mL vide : « ${DEFAULT_NAMES[state.produit][k]} » sera imprimé.`, focus: `#f-${k}` });
-  if (state.ui.calibMigree && (state.reglages.decalX || state.reglages.decalY)) {
-    /* bascule sur « Identique à l'Excel » : le décalage réglé pour l'ancien gabarit est peut-être devenu faux */
-    const r = state.reglages;
-    w.push({ msg: `Nouveau gabarit « Identique à l'Excel » : votre ancien décalage (X ${fmtSig(r.decalX)} / Y ${fmtSig(r.decalY)} mm) a été conservé. Il compensait peut-être l'ancien gabarit : vérifiez-le avec la page de test.`,
-      actions: [
-        { label: 'Remettre à zéro', run: () => { state.ui.calibMigree = false; withUndo('Calibration remise à zéro', () => { Object.assign(state.reglages, { decalX: 0, decalY: 0 }); }); } },
-        { label: 'Imprimer la page de test', run: () => requestPrint('test') },
-        { label: 'Garder ce décalage', run: () => { state.ui.calibMigree = false; commit(); } },
-      ] });
-  }
   if (geo().cols < 4) w.push({ msg: `Gabarit à ${geo().cols} colonne(s) : chaque poche occupera ${Math.ceil(4 / geo().cols)} rangées.` });
   const geoProblems = problemsOfGeo(geo());
   for (const m of geoProblems) w.push({ msg: m, focus: '#f-preset' });
@@ -4371,7 +5069,7 @@ function printedExtents() {
       let x0 = b.x, x1 = b.x + b.w, y0 = b.y, y1 = b.y + b.h;
       if (!frames) {
         x0 += g.pad; x1 -= g.pad;
-        if (g.top) { y0 += g.pad; y1 = y0 + 5 * g.lnh; } else { const mid = b.y + b.h / 2; y0 = mid - 2.5 * g.lnh; y1 = mid + 2.5 * g.lnh; }
+        if (g.top) { y0 += g.padY; y1 = y0 + 5 * g.lnh; } else { const mid = b.y + b.h / 2; y0 = mid - 2.5 * g.lnh; y1 = mid + 2.5 * g.lnh; }
       }
       const X0 = x0 * s + g.offX, X1 = x1 * s + g.offX, Y0 = y0 * s + g.offY, Y1 = y1 * s + g.offY;
       if (X0 < ext.left.v) ext.left = { v: X0, r, c };
@@ -4833,14 +5531,15 @@ function print() {
   computeDerived();
   requestPrint(derived.poches.pages.length || !derived.autres.pages.length ? 'poches' : 'autres');
 }
-let migrationToastShown = false;
 function show() {
   renderSaveState();
   requestAnimationFrame(() => { applyZoom(); });
-  if (state.ui.calibMigree && !migrationToastShown && (state.reglages.decalX || state.reglages.decalY)) {
-    migrationToastShown = true;
-    toast('Nouveau gabarit « Identique à l\'Excel » : votre ancien décalage X/Y a été conservé. Vérifiez-le avec la page de test (étape 4).',
-      { tone: 'warn', action: 'Vérifier', onAction: () => focusField('#warnings'), timeout: 15000 });
+  if (state.ui.migrationV3) {
+    /* donnée d'une version précédente : bascule faite une fois (gabarit Fiducial, calibration remise à zéro) — on le dit une fois */
+    state.ui.migrationV3 = false;
+    scheduleSave();
+    toast(`Nouveau gabarit : ${PRESETS[state.gabarit.preset].short} (la planche de l'usine). Le texte est maintenant centré dans chaque étiquette et la calibration a été remise à zéro. En cas de doute, imprimez une page de test.`,
+      { tone: 'warn', icon: 'info', action: 'Page de test', onAction: () => requestPrint('test'), timeout: 20000 });
   }
 }
 /* Entrées du menu « ⋯ » (les entrées « narrow » ne s'affichent que sur petit écran) */
@@ -4865,8 +5564,612 @@ function summary() {
   };
 }
 function hide() { if (saveDebounced.pending()) saveDebounced.flush(); }
+/* Paramètres modifiés (onglet Paramètres, fichier d'équipe) : produits, noms, listes d'origine, épaisseur → tout est recalculé */
+function onParams() {
+  if (!PRODUCTS.includes(state.produit)) state.produit = PRODUCTS[0];
+  fitCache.clear();
+  renderForm();
+  renderPreview();
+  Core.emit('data', 'etiquettes');
+}
+Core.on('params', onParams);
 
 return { init, show, hide, onKey, print, beforePrint, afterPrint, menuItems, summary };
+})();
+
+/* #########################################################################
+   ONGLET « PARAMÈTRES » — édition des règles (holding times, produits, applicabilité, couleurs,
+   mail, étiquettes), partage avec l'équipe par un fichier « parametres-outil.js » posé à côté de l'outil.
+   Toute modification passe par Params.update() : elle s'applique en direct aux modules.
+   ######################################################################### */
+const ParamsView = (() => {
+  const { $, h, icon } = Core;
+  const canon = Params.canon;
+  const P = () => Params.get();
+  const LINE = Object.fromEntries(Params.LINES.map(l => [l.id, l]));
+  const open = new Set(['pm-ht']);          /* sections dépliées (mémorisées pendant la session) */
+  let visible = false, dirty = true, focusAfter = null, rendering = false;
+  const toast = (msg, o = {}) => Core.toast(msg, { icon: 'check', ...o });
+  const warn = msg => Core.toast(msg, { tone: 'warn' });
+  const openDialog = o => Core.openDialog({ ...o, className: `mod-params ${o.className || ''}`.trim() });
+  const fmtH = v => Params.fmtHours(v);
+  const idOf = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'x';
+  const plural = (n, one, many) => `${n} ${n > 1 ? (many || one + 's') : one}`;
+
+  /* ---------- Saisie et validation ---------- */
+  function parseHours(v) {
+    const t = String(v ?? '').trim().replace(/\s+/g, '').replace(',', '.').replace(/h$/i, '');
+    if (!/^\d+(\.\d+)?$/.test(t)) return { error: 'Saisissez une durée en heures (ex. 24 ou 1,5).' };
+    const n = Number(t);
+    if (!(n > 0)) return { error: 'La durée doit être supérieure à 0 h.' };
+    if (n > Params.HOURS_MAX) return { error: `La durée ne peut pas dépasser ${Params.HOURS_MAX} h.` };
+    return { value: Math.round(n * 100) / 100 };
+  }
+  /** Champ texte validé à la sortie (Entrée ou Tab) : valeur refusée → message, valeur précédente rétablie. */
+  function textInput({ id, value, label, onCommit, placeholder, maxLength = 40, cls = '', upper = false, mono = false }) {
+    const el = h('input', { type: 'text', class: `input${mono ? ' input--mono' : ''} ${cls}`.trim(), id, value, placeholder, maxlength: maxLength, autocomplete: 'off', spellcheck: 'false', 'aria-label': label });
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.dispatchEvent(new Event('change')); } });
+    let committed = value;
+    el.addEventListener('change', () => {
+      if (rendering || !el.isConnected) return;
+      let v = el.value.replace(/\s+/g, ' ').trim();
+      if (upper) v = v.toUpperCase();
+      if (v === committed) { el.value = committed; return; }
+      committed = v;
+      const err = onCommit(v);
+      if (err) { committed = value; warn(err); el.value = value; el.setAttribute('aria-invalid', 'true'); setTimeout(() => el.removeAttribute('aria-invalid'), 2500); }
+    });
+    return el;
+  }
+  function hoursInput({ id, value, label, onCommit, disabled }) {
+    const el = textInput({ id, value: fmtH(value), label, cls: 'input--num', maxLength: 7, onCommit: v => { const r = parseHours(v); if (r.error) return r.error; onCommit(r.value); return null; } });
+    el.setAttribute('inputmode', 'decimal');
+    if (disabled) el.disabled = true;
+    return h('span', { class: 'unit-input' }, el, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h'));
+  }
+  function check({ id, checked, label, onChange, cls = '' }) {
+    const c = h('input', { type: 'checkbox', id, class: 'pm-check__box' });
+    c.checked = !!checked;
+    c.addEventListener('change', () => onChange(c.checked));
+    return h('label', { class: `pm-check ${cls}`.trim(), for: id }, c, h('span', {}, label));
+  }
+  /** Pastilles à cocher (produits, lignes, bandes). */
+  function chips({ id, items, selected, onToggle, label }) {
+    return h('div', { class: 'pm-chips', role: 'group', 'aria-label': label }, items.map(it => {
+      const cid = `${id}-${idOf(it.value)}`;
+      const c = h('input', { type: 'checkbox', id: cid, class: 'pm-chip__box' });
+      c.checked = selected.includes(it.value);
+      c.addEventListener('change', () => onToggle(it.value, c.checked, cid));
+      return h('label', { class: 'pm-chip', for: cid }, c, h('span', { class: 'pm-chip__tick', 'aria-hidden': 'true' }, icon('check')), h('span', {}, it.label));
+    }));
+  }
+  function seg({ name, value, options, onChange, label }) {
+    const g = h('div', { class: 'pm-seg', role: 'radiogroup', 'aria-label': label });
+    for (const o of options) {
+      const id = `${name}-${idOf(o.value)}`;
+      const r = h('input', { type: 'radio', name, id, value: o.value, class: 'pm-seg__in' });
+      r.checked = o.value === value;
+      r.addEventListener('change', () => { if (r.checked) { focusAfter = id; onChange(o.value); } });
+      g.append(h('label', { class: 'pm-seg__opt', for: id }, r, h('span', {}, o.label)));
+    }
+    return g;
+  }
+  const iconBtn = (ic, label, onClick, { id, disabled, danger } = {}) => h('button', { type: 'button', class: `btn btn-quiet btn-icon${danger ? ' pm-del' : ''}`, id, 'aria-label': label, title: label, disabled, onclick: onClick }, icon(ic));
+  const lineDot = id => h('span', { class: 'pm-dot', 'data-line': id, 'aria-hidden': 'true' });
+  /** Modification avec « Annuler » (suppressions). */
+  function withUndo(message, mutate, detail) {
+    const snap = Params.snapshot();
+    Params.update(mutate, detail);
+    toast(message, { action: 'Annuler', onAction: () => { Params.restore(snap); toast('Modification annulée', { icon: 'reset' }); } });
+  }
+  function update(mutate, detail, focusId) { if (focusId) focusAfter = focusId; if (!Params.update(mutate, detail)) warn('Mémoire locale indisponible : la modification s’applique, mais ne sera pas conservée à la fermeture.'); }
+
+  /* ---------- Produits : renommage propagé partout (règles, holding times, cartes du rapport) ---------- */
+  function renameProduct(p, lineId, from, to) {
+    for (const x of p.rapport.products[lineId]) { if (x.name === from) x.name = to; if (x.like === from) x.like = to; }
+    for (const r of Params.RULES) if (r.line === lineId) p.rapport.rules[r.id] = p.rapport.rules[r.id].map(n => (n === from ? to : n));
+    for (const t of Params.HT_TABLES) if (t.line === lineId) for (const row of p.rapport.ht[t.id].rows) if (row.p === from) row.p = to;
+    for (const c of p.rapport.custom) if (c.lines.includes(lineId)) c.produits = c.produits.map(n => (n === from ? to : n));
+  }
+  const usedBy = (lineId, name) => {
+    const p = P(), out = [];
+    for (const r of Params.RULES) if (r.line === lineId && p.rapport.rules[r.id].includes(name)) out.push(r.field);
+    for (const t of Params.HT_TABLES) if (t.line === lineId && p.rapport.ht[t.id].rows.some(x => x.p === name)) out.push(t.title);
+    return out;
+  };
+
+  /* ---------- Section : Holding times ---------- */
+  function htTable(t) {
+    const tb = P().rapport.ht[t.id], names = Params.productNames(t.line);
+    const pre = `pm-ht-${t.id}`;
+    const free = names.filter(n => !tb.rows.some(r => r.p === n));
+    const rows = h('div', { class: 'pm-rows' },
+      h('div', { class: 'pm-row pm-row--def' },
+        h('span', { class: 'pm-row__name' }, 'Tous les autres produits', h('small', {}, 'valeur par défaut')),
+        hoursInput({ id: `${pre}-def`, value: tb.def, label: `${t.title} — durée par défaut`, disabled: tb.defNone, onCommit: v => update(p => { p.rapport.ht[t.id].def = v; }, null, `${pre}-def`) }),
+        check({ id: `${pre}-defnone`, checked: tb.defNone, label: 'aucune limite', onChange: v => update(p => { p.rapport.ht[t.id].defNone = v; }, null, `${pre}-defnone`) }),
+        h('span', { class: 'pm-row__act' })),
+      tb.rows.map((r, i) => {
+        const rid = `${pre}-r${i}`;
+        const sel = h('select', { class: 'select', id: `${rid}-p`, 'aria-label': `${t.title} — produit ${i + 1}` },
+          names.filter(n => n === r.p || !tb.rows.some(x => x.p === n)).map(n => { const o = h('option', { value: n, text: n }); o.selected = n === r.p; return o; }));
+        sel.addEventListener('change', () => update(p => { p.rapport.ht[t.id].rows[i].p = sel.value; }, null, `${rid}-p`));
+        return h('div', { class: 'pm-row' },
+          h('span', { class: 'pm-row__name' }, sel),
+          hoursInput({ id: `${rid}-h`, value: r.h, label: `${t.title} — durée pour ${r.p}`, disabled: r.none, onCommit: v => update(p => { p.rapport.ht[t.id].rows[i].h = v; }, null, `${rid}-h`) }),
+          check({ id: `${rid}-none`, checked: r.none, label: 'aucune limite', onChange: v => update(p => { p.rapport.ht[t.id].rows[i].none = v; }, null, `${rid}-none`) }),
+          h('span', { class: 'pm-row__act' }, iconBtn('trash', `Supprimer la règle ${r.p}`, () => withUndo(`Règle « ${r.p} » supprimée (${t.title})`, p => { p.rapport.ht[t.id].rows.splice(i, 1); }), { id: `${rid}-del`, danger: true })));
+      }));
+    const add = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, disabled: !free.length, title: free.length ? null : 'Tous les produits de la ligne ont déjà une règle' },
+      icon('plus'), 'Ajouter un produit');
+    add.addEventListener('click', () => update(p => { p.rapport.ht[t.id].rows.push({ p: free[0], h: tb.def, none: false }); }, null, `${pre}-r${tb.rows.length}-p`));
+    return h('article', { class: 'pm-card', 'data-line': t.line, id: pre },
+      h('header', { class: 'pm-card__head' },
+        h('span', { class: 'pm-card__eyebrow' }, lineDot(t.line), `${LINE[t.line].name} · ${t.band}`),
+        h('h4', { class: 'pm-card__title', text: t.title }),
+        h('span', { class: 'pm-card__sub', text: `À partir du champ « ${t.field} »` })),
+      rows, h('div', { class: 'pm-card__foot' }, add));
+  }
+  function customDialog(existing) {
+    const p = P();
+    const x = existing ? JSON.parse(JSON.stringify(existing)) : { nom: '', lines: [], bands: ['enCours'], produits: [], h: 24 };
+    const nom = h('input', { type: 'text', class: 'input', id: 'pm-cu-nom', value: x.nom, maxlength: 40, placeholder: 'ex. HT décongélation', autocomplete: 'off' });
+    const hrs = h('input', { type: 'text', class: 'input input--num', id: 'pm-cu-h', value: fmtH(x.h), inputmode: 'decimal', maxlength: 7 });
+    const err = h('p', { class: 'pm-err', role: 'alert', hidden: true });
+    const prodBox = h('div');
+    const renderProds = () => {
+      const names = [...new Set(x.lines.flatMap(l => Params.productNames(l)))];
+      x.produits = x.produits.filter(n => names.includes(n));
+      prodBox.replaceChildren(names.length
+        ? chips({ id: 'pm-cu-p', label: 'Produits concernés', items: names.map(n => ({ value: n, label: n })), selected: x.produits, onToggle: (v, on) => { x.produits = on ? [...x.produits, v] : x.produits.filter(n => n !== v); } })
+        : h('p', { class: 'pm-hint', text: 'Choisissez d’abord la ou les lignes.' }));
+    };
+    renderProds();
+    const body = h('div', { class: 'pm-form' },
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-cu-nom', text: 'Nom de l’échéance' }), nom,
+        h('p', { class: 'pm-hint', text: 'Un champ « date et heure » portant ce nom est ajouté dans les cartes choisies ; l’échéance (date + durée) apparaît dans la vigilance, le PDF, l’accueil et le mail.' })),
+      h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Ligne(s)' }),
+        chips({ id: 'pm-cu-l', label: 'Lignes', items: Params.LINES.map(l => ({ value: l.id, label: l.name })), selected: x.lines, onToggle: (v, on) => { x.lines = on ? [...x.lines, v] : x.lines.filter(n => n !== v); renderProds(); } })),
+      h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Bande(s)' }),
+        chips({ id: 'pm-cu-b', label: 'Bandes', items: Params.BANDS.map(b => ({ value: b.id, label: b.name })), selected: x.bands, onToggle: (v, on) => { x.bands = on ? [...x.bands, v] : x.bands.filter(n => n !== v); } })),
+      h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Produit(s) concernés' }), prodBox,
+        h('p', { class: 'pm-hint', text: 'Aucun produit coché : l’échéance vaut pour tous les produits.' })),
+      h('div', { class: 'field field--hours' }, h('label', { class: 'field__label', for: 'pm-cu-h', text: 'Durée' }), h('span', { class: 'unit-input' }, hrs, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h'))),
+      err);
+    const d = openDialog({
+      title: existing ? 'Modifier le holding time' : 'Ajouter un holding time', icon: 'clock', body,
+      actions: [{ label: 'Annuler', value: false }, { label: existing ? 'Enregistrer' : 'Ajouter', value: true, cls: 'btn-primary', run: () => {
+        const n = nom.value.replace(/\s+/g, ' ').trim();
+        const r = parseHours(hrs.value);
+        const others = p.rapport.custom.filter(c => !existing || c.id !== existing.id);
+        const builtin = ['Début filtration', 'Début formulation', 'Début HT', 'Début HT formu.', 'Sortie frigo'].map(canon);
+        const msg = !n ? 'Donnez un nom à l’échéance.'
+          : others.some(c => canon(c.nom) === canon(n)) || builtin.includes(canon(n)) ? `Le nom « ${n} » est déjà utilisé.`
+          : !x.lines.length ? 'Choisissez au moins une ligne.'
+          : !x.bands.length ? 'Choisissez au moins une bande.'
+          : r.error || null;
+        if (msg) { err.textContent = Core.typo(msg); err.hidden = false; return false; }
+        const item = { id: existing ? existing.id : Core.uid().slice(-8).replace(/[^a-z0-9]/gi, 'x'), nom: n, lines: x.lines, bands: x.bands, produits: x.produits, h: r.value };
+        update(pp => {
+          if (existing) pp.rapport.custom = pp.rapport.custom.map(c => (c.id === existing.id ? item : c));
+          else pp.rapport.custom.push(item);
+        }, null, `pm-cu-${item.id}-edit`);
+        toast(existing ? `Holding time « ${n} » modifié` : `Holding time « ${n} » ajouté : champ « ${n} » dans ${x.lines.map(l => LINE[l].name).join(', ')}`);
+        return true;
+      } }],
+      onOpen: () => nom.focus(),
+    });
+    return d;
+  }
+  function customList() {
+    const list = P().rapport.custom;
+    const bandName = id => Params.BANDS.find(b => b.id === id).name.toLowerCase();
+    return h('div', { class: 'pm-custom' },
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Holding times personnalisés' }),
+        h('p', { class: 'pm-hint', text: 'Une échéance de plus (nom, lignes, bandes, produits, durée) : un champ date et heure est ajouté dans la carte, l’échéance suit partout.' })),
+      list.length ? h('ul', { class: 'pm-cu-list' }, list.map(c => h('li', { class: 'pm-cu', id: `pm-cu-${c.id}` },
+        h('span', { class: 'pm-cu__dots', 'aria-hidden': 'true' }, c.lines.map(lineDot)),
+        h('span', { class: 'pm-cu__main' },
+          h('b', { text: c.nom }), h('span', { class: 'pm-cu__h', text: `${fmtH(c.h)} h` }),
+          h('small', { text: `${c.lines.map(l => LINE[l].name).join(', ')} · ${c.bands.map(bandName).join(', ')} · ${c.produits.length ? c.produits.join(', ') : 'tous les produits'}` })),
+        h('span', { class: 'pm-cu__act' },
+          h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `pm-cu-${c.id}-edit`, onclick: () => customDialog(c) }, 'Modifier'),
+          iconBtn('trash', `Supprimer le holding time ${c.nom}`, () => withUndo(`Holding time « ${c.nom} » supprimé`, p => { p.rapport.custom = p.rapport.custom.filter(x => x.id !== c.id); }), { id: `pm-cu-${c.id}-del`, danger: true })))))
+        : h('p', { class: 'pm-empty', text: 'Aucun holding time personnalisé.' }),
+      h('button', { type: 'button', class: 'btn btn-primary', id: 'pm-cu-add', onclick: () => customDialog(null) }, icon('plus'), 'Ajouter un holding time'));
+  }
+  function secHT() {
+    const soon = P().rapport.soonHours;
+    return [
+      h('div', { class: 'pm-inline' },
+        h('label', { class: 'pm-inline__l', for: 'pm-soon' }, 'Alerte « bientôt » (jaune) quand il reste moins de'),
+        hoursInput({ id: 'pm-soon', value: soon, label: 'Seuil d’alerte bientôt', onCommit: v => { if (v > 72) return warn('Le seuil d’alerte ne peut pas dépasser 72 h.'); update(p => { p.rapport.soonHours = v; }, null, 'pm-soon'); } })),
+      h('div', { class: 'pm-grid pm-grid--ht' }, Params.HT_TABLES.map(htTable)),
+      customList(),
+    ];
+  }
+
+  /* ---------- Section : Produits du rapport ---------- */
+  function productCol(lineId) {
+    const list = Params.products(lineId);
+    const pre = `pm-pr-${lineId}`;
+    const bases = list.filter(x => !x.like).map(x => x.name);
+    const rows = list.map((x, i) => {
+      const rid = `${pre}-${i}`;
+      const name = textInput({ id: `${rid}-n`, value: x.name, label: `Nom du produit ${i + 1} (${LINE[lineId].name})`, upper: true, onCommit: v => {
+        if (!v) return 'Le nom du produit ne peut pas être vide.';
+        if (list.some((y, j) => j !== i && canon(y.name) === canon(v))) return `Le produit « ${v} » existe déjà sur ${LINE[lineId].name}.`;
+        update(p => renameProduct(p, lineId, x.name, v), { renames: [{ line: lineId, from: x.name, to: v }] }, `${rid}-n`);
+        toast(`Produit renommé : ${x.name} → ${v}`);
+        return null;
+      } });
+      const like = h('select', { class: 'select select--sm', id: `${rid}-like`, 'aria-label': `${x.name} se comporte comme`, disabled: list.some(y => y.like === x.name) ? true : null },
+        h('option', { value: '', text: '—' }), bases.filter(n => n !== x.name).map(n => { const o = h('option', { value: n, text: n }); o.selected = n === x.like; return o; }));
+      like.addEventListener('change', () => update(p => { p.rapport.products[lineId][i].like = like.value; }, null, `${rid}-like`));
+      return h('li', { class: 'pm-prod' },
+        name,
+        h('span', { class: 'pm-prod__like' }, h('span', { class: 'pm-prod__lbl', text: 'comme' }), like),
+        h('span', { class: 'pm-prod__act' },
+          iconBtn('up', `Monter ${x.name}`, () => update(p => { const a = p.rapport.products[lineId]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, i - 1 > 0 ? `${pre}-${i - 1}-up` : `${pre}-${i - 1}-down`), { id: `${rid}-up`, disabled: i === 0 }),
+          iconBtn('down', `Descendre ${x.name}`, () => update(p => { const a = p.rapport.products[lineId]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, i + 1 < list.length - 1 ? `${pre}-${i + 1}-down` : `${pre}-${i + 1}-up`), { id: `${rid}-down`, disabled: i === list.length - 1 }),
+          iconBtn('trash', `Supprimer ${x.name}`, () => {
+            if (list.length <= 1) return warn('Chaque ligne garde au moins un produit.');
+            const used = usedBy(lineId, x.name);
+            withUndo(`Produit « ${x.name} » supprimé de ${LINE[lineId].name}${used.length ? ` (retiré aussi de : ${used.join(', ')})` : ''}`, p => {
+              p.rapport.products[lineId].splice(i, 1);
+              for (const y of p.rapport.products[lineId]) if (y.like === x.name) y.like = '';
+            });
+            focusAfter = `${pre}-add-n`;
+          }, { id: `${rid}-del`, danger: true })));
+    });
+    const newName = h('input', { type: 'text', class: 'input', id: `${pre}-add-n`, maxlength: 40, placeholder: 'Nouveau produit', autocomplete: 'off', spellcheck: 'false', 'aria-label': `Nouveau produit (${LINE[lineId].name})` });
+    const add = () => {
+      const v = newName.value.replace(/\s+/g, ' ').trim().toUpperCase();
+      if (!v) { warn('Saisissez le nom du produit à ajouter.'); newName.focus(); return; }
+      if (list.some(y => canon(y.name) === canon(v))) { warn(`Le produit « ${v} » existe déjà sur ${LINE[lineId].name}.`); newName.focus(); return; }
+      update(p => { p.rapport.products[lineId].push({ name: v, like: '' }); }, null, `${pre}-add-n`);
+      toast(`Produit « ${v} » ajouté à ${LINE[lineId].name}`);
+    };
+    newName.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); add(); } });
+    return h('article', { class: 'pm-card', 'data-line': lineId, id: pre },
+      h('header', { class: 'pm-card__head' }, h('h4', { class: 'pm-card__title' }, lineDot(lineId), LINE[lineId].name), h('span', { class: 'pm-card__sub', text: plural(list.length, 'produit') })),
+      h('ol', { class: 'pm-prods' }, rows),
+      h('div', { class: 'pm-card__foot pm-add' }, newName, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, onclick: add }, icon('plus'), 'Ajouter')));
+  }
+  function secProducts() {
+    return [
+      h('p', { class: 'pm-hint pm-lead' }, '« Comme » : le produit suit les règles d’un autre (ex. ', h('b', {}, 'SB4 SCALE UP'), ' se comporte comme ', h('b', {}, 'SB4'), ' : mêmes holding times et mêmes champs applicables). L’ordre est celui des listes déroulantes du rapport.'),
+      h('div', { class: 'pm-stack' }, Params.LINES.map(l => productCol(l.id))),
+    ];
+  }
+
+  /* ---------- Section : Règles d'applicabilité ---------- */
+  function secRules() {
+    const kindTxt = { only: 'Applicable seulement pour', not: 'Non applicable pour', label: 'Pour' };
+    return [
+      h('p', { class: 'pm-hint pm-lead', text: 'Cochez les produits concernés. Un champ non applicable reste visible, grisé, avec la mention « Non applicable (produit) », et n’est pas repris dans les alertes ni le PDF. Les produits « comme » un autre suivent ses cases.' }),
+      h('div', { class: 'pm-rules' }, Params.RULES.map(r => {
+        const names = Params.products(r.line).filter(x => !x.like).map(x => x.name);
+        const sel = P().rapport.rules[r.id];
+        return h('div', { class: 'pm-rule', 'data-line': r.line, id: `pm-rule-${r.id}` },
+          h('div', { class: 'pm-rule__what' },
+            h('span', { class: 'pm-card__eyebrow' }, lineDot(r.line), `${LINE[r.line].name} · ${r.band}`),
+            h('b', { class: 'pm-rule__field', text: r.field }),
+            h('span', { class: 'pm-rule__kind', text: kindTxt[r.kind] })),
+          chips({ id: `pm-rule-${r.id}`, label: `${r.field} (${LINE[r.line].name})`, items: names.map(n => ({ value: n, label: n })), selected: sel,
+            onToggle: (v, on, cid) => update(p => { const l = p.rapport.rules[r.id]; p.rapport.rules[r.id] = on ? [...new Set([...l, v])] : l.filter(n => n !== v); }, null, cid) }));
+      })),
+    ];
+  }
+
+  /* ---------- Section : Couleurs des lignes ---------- */
+  function secColors() {
+    const cols = P().rapport.colors, def = Params.DEFAULTS.rapport.colors;
+    return [
+      h('p', { class: 'pm-hint pm-lead', text: 'Chaque machine garde sa couleur (comme dans l’Excel) : en-tête des cartes, vigilance, accueil et PDF. Préférez des teintes claires : le texte reste lisible et le PDF s’imprime bien, même en noir et blanc.' }),
+      h('div', { class: 'pm-grid pm-grid--3' }, Params.LINES.map(l => {
+        const v = cols[l.id];
+        const pick = h('input', { type: 'color', id: `pm-col-${l.id}`, class: 'pm-color__pick', value: v.toLowerCase(), 'aria-label': `Couleur ${l.name}` });
+        const hex = textInput({ id: `pm-col-${l.id}-hex`, value: v, label: `Code couleur ${l.name}`, maxLength: 7, mono: true, upper: true, cls: 'pm-color__hex', onCommit: x => {
+          const t = x.startsWith('#') ? x : `#${x}`;
+          if (!/^#[0-9A-F]{6}$/i.test(t)) return 'Code couleur attendu au format #RRVVBB (ex. #D6EAF8).';
+          update(p => { p.rapport.colors[l.id] = t.toUpperCase(); }, null, `pm-col-${l.id}-hex`);
+          return null;
+        } });
+        pick.addEventListener('change', () => update(p => { p.rapport.colors[l.id] = pick.value.toUpperCase(); }, null, `pm-col-${l.id}`));
+        const dark = Params.lum(v) < 0.5;
+        return h('article', { class: 'pm-color', 'data-line': l.id },
+          h('div', { class: 'pm-color__preview', 'aria-hidden': 'true' },
+            h('span', { class: 'pm-color__cap' }, h('b', { text: l.name.toUpperCase() }), h('span', { class: 'pm-color__lot', text: 'VAT0102' })),
+            h('span', { class: 'pm-color__body' }, h('span', { class: 'pm-color__l', text: 'Statut local' }), h('span', { class: 'pm-color__v tone-ok', text: 'PRÊT' }))),
+          h('div', { class: 'pm-color__ctl' }, h('label', { class: 'field__label', for: `pm-col-${l.id}`, text: l.name }), h('div', { class: 'pm-color__row' }, pick, hex,
+            v !== def[l.id] ? h('button', { type: 'button', class: 'btn-link', id: `pm-col-${l.id}-reset`, onclick: () => update(p => { p.rapport.colors[l.id] = def[l.id]; }, null, `pm-col-${l.id}`) }, 'Rétablir') : null)),
+          dark ? h('p', { class: 'pm-warn-txt' }, icon('alert'), 'Couleur foncée : le texte sera moins lisible et l’impression plus chargée.') : null);
+      })),
+    ];
+  }
+
+  /* ---------- Section : Mail ---------- */
+  function secMail() {
+    const ms = Rapport.mailSettings();
+    const mk = (key, label, ph) => {
+      const el = h('input', { type: 'text', class: 'input', id: `pm-mail-${key}`, value: key === 'to' ? ms.mailTo : ms.mailCc, placeholder: ph, autocomplete: 'off', spellcheck: 'false' });
+      el.addEventListener('change', () => {
+        const cur = Rapport.mailSettings();
+        const to = key === 'to' ? el.value : cur.mailTo, cc = key === 'cc' ? el.value : cur.mailCc;
+        Rapport.setMailSettings(to, cc);
+        toast('Destinataires enregistrés');
+      });
+      return h('div', { class: 'field' }, h('label', { class: 'field__label', for: el.id, text: label }), el);
+    };
+    return [
+      h('p', { class: 'pm-hint pm-lead', text: 'Destinataires utilisés par « Préparer le mail » (rapport de shift). Séparez plusieurs adresses par des points-virgules.' }),
+      h('div', { class: 'pm-grid pm-grid--2' }, mk('to', 'Destinataires (À)', 'ex. formulation@exemple.com'), mk('cc', 'Copie (Cc)', 'facultatif')),
+      h('p', { class: 'pm-hint', text: 'Enregistrés avec le rapport (aussi accessibles depuis Rapport › ⋯ › Paramètres). S’ils sont vides, ceux du fichier de paramètres de l’équipe sont utilisés.' }),
+    ];
+  }
+
+  /* ---------- Section : Étiquettes ---------- */
+  let listeProduit = null;
+  function secEtiquettes() {
+    const E = P().etiquettes;
+    const prods = E.produits;
+    if (!prods.some(x => x.name === listeProduit)) listeProduit = prods[0].name;
+    const prodRows = prods.map((x, i) => {
+      const rid = `pm-et-p${i}`;
+      const setK = (k, v) => update(p => { p.etiquettes.produits[i][k] = v; }, null, `${rid}-${k}`);
+      return h('li', { class: 'pm-etp' },
+        textInput({ id: `${rid}-name`, value: x.name, label: `Produit étiquettes ${i + 1}`, upper: true, maxLength: 12, cls: 'pm-etp__name', onCommit: v => {
+          if (!v) return 'Le nom du produit ne peut pas être vide.';
+          if (prods.some((y, j) => j !== i && y.name === v)) return `Le produit « ${v} » existe déjà.`;
+          update(p => { const o = p.etiquettes.produits[i]; p.etiquettes.listes[v] = p.etiquettes.listes[o.name] || []; delete p.etiquettes.listes[o.name]; o.name = v; }, null, `${rid}-name`);
+          return null;
+        } }),
+        textInput({ id: `${rid}-nom1mL`, value: x.nom1mL, label: `${x.name} — nom 1 mL`, onCommit: v => (v ? (setK('nom1mL', v), null) : 'Le nom 1 mL ne peut pas être vide.') }),
+        textInput({ id: `${rid}-nom2mL`, value: x.nom2mL, label: `${x.name} — nom 2 mL`, onCommit: v => (v ? (setK('nom2mL', v), null) : 'Le nom 2 mL ne peut pas être vide.') }),
+        check({ id: `${rid}-blanche`, checked: x.blanche, label: 'Étiquette blanche (comme SB5)', onChange: v => setK('blanche', v) }),
+        h('span', { class: 'pm-prod__act' },
+          iconBtn('up', `Monter ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `pm-et-p${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${rid}-up`, disabled: i === 0 }),
+          iconBtn('down', `Descendre ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `pm-et-p${i + 1}-${i + 1 < prods.length - 1 ? 'down' : 'up'}`), { id: `${rid}-down`, disabled: i === prods.length - 1 }),
+          iconBtn('trash', `Supprimer ${x.name}`, () => {
+            if (prods.length <= 1) return warn('Gardez au moins un produit.');
+            withUndo(`Produit étiquettes « ${x.name} » supprimé`, p => { p.etiquettes.produits.splice(i, 1); delete p.etiquettes.listes[x.name]; });
+          }, { id: `${rid}-del`, danger: true })));
+    });
+    const newP = h('input', { type: 'text', class: 'input', id: 'pm-et-add-n', maxlength: 12, placeholder: 'ex. SB7', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Nouveau produit étiquettes' });
+    const addP = () => {
+      const v = newP.value.replace(/\s+/g, ' ').trim().toUpperCase();
+      if (!v) { warn('Saisissez le nom du produit à ajouter.'); newP.focus(); return; }
+      if (prods.some(y => y.name === v)) { warn(`Le produit « ${v} » existe déjà.`); newP.focus(); return; }
+      update(p => { p.etiquettes.produits.push({ name: v, nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false }); p.etiquettes.listes[v] = []; }, null, 'pm-et-add-n');
+      toast(`Produit « ${v} » ajouté aux étiquettes`);
+    };
+    newP.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addP(); } });
+    /* liste d'origine des « autres échantillons » du produit choisi */
+    const L = E.listes[listeProduit] || [];
+    const lpre = `pm-li-${idOf(listeProduit)}`;
+    const listRows = L.map(([nom, q], i) => h('li', { class: 'pm-li' },
+      h('span', { class: 'pm-li__n', text: String(i + 1) }),
+      textInput({ id: `${lpre}-${i}-nom`, value: nom, label: `Échantillon ${i + 1}`, maxLength: 60, onCommit: v => (v ? (update(p => { p.etiquettes.listes[listeProduit][i][0] = v; }, null, `${lpre}-${i}-nom`), null) : 'Le nom de l’échantillon ne peut pas être vide.') }),
+      textInput({ id: `${lpre}-${i}-q`, value: q, label: `Quantité ${i + 1}`, maxLength: 20, cls: 'pm-li__q', onCommit: v => (update(p => { p.etiquettes.listes[listeProduit][i][1] = v; }, null, `${lpre}-${i}-q`), null) }),
+      h('span', { class: 'pm-prod__act' },
+        iconBtn('up', `Monter ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `${lpre}-${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${lpre}-${i}-up`, disabled: i === 0 }),
+        iconBtn('down', `Descendre ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `${lpre}-${i + 1}-${i + 1 < L.length - 1 ? 'down' : 'up'}`), { id: `${lpre}-${i}-down`, disabled: i === L.length - 1 }),
+        iconBtn('trash', `Supprimer ${nom}`, () => withUndo(`« ${nom} » retiré de la liste ${listeProduit}`, p => { p.etiquettes.listes[listeProduit].splice(i, 1); }), { id: `${lpre}-${i}-del`, danger: true }))));
+    const newN = h('input', { type: 'text', class: 'input', id: `${lpre}-add-n`, maxlength: 60, placeholder: 'Nom de l’échantillon', autocomplete: 'off', 'aria-label': 'Nouvel échantillon' });
+    const newQ = h('input', { type: 'text', class: 'input pm-li__q', id: `${lpre}-add-q`, maxlength: 20, placeholder: 'ex. 50mL', autocomplete: 'off', 'aria-label': 'Quantité du nouvel échantillon' });
+    const addL = () => {
+      const n = newN.value.replace(/\s+/g, ' ').trim();
+      if (!n) { warn('Saisissez le nom de l’échantillon à ajouter.'); newN.focus(); return; }
+      update(p => { (p.etiquettes.listes[listeProduit] = p.etiquettes.listes[listeProduit] || []).push([n, newQ.value.trim()]); }, null, `${lpre}-add-n`);
+    };
+    [newN, newQ].forEach(x => x.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addL(); } }));
+    return [
+      h('div', { class: 'pm-grid pm-grid--2' },
+        h('div', { class: 'field' }, h('span', { class: 'field__label', id: 'pm-et-preset-l', text: 'Gabarit par défaut' }),
+          seg({ name: 'pm-et-preset', label: 'Gabarit par défaut', value: E.preset, options: [{ value: 'FIDUCIAL', label: 'Fiducial 115294' }, { value: 'PAPIER', label: 'Papier normal' }], onChange: v => update(p => { p.etiquettes.preset = v; }) }),
+          h('p', { class: 'pm-hint', text: 'Proposé à la première ouverture des étiquettes sur un PC. Chaque PC peut ensuite choisir sa planche (étape 4).' })),
+        h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Épaisseur du texte' }),
+          seg({ name: 'pm-et-ep', label: 'Épaisseur du texte', value: E.epaisseur, options: [{ value: 'normal', label: 'Normal' }, { value: 'renforce', label: 'Renforcé' }, { value: 'gras', label: 'Gras' }], onChange: v => update(p => { p.etiquettes.epaisseur = v; }) }),
+          h('p', { class: 'pm-hint', text: 'Renforcé (conseillé) : texte nettement plus noir, sans être du gras.' }))),
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Produits et noms des échantillons de poche' }),
+        h('p', { class: 'pm-hint', text: 'Noms par défaut des étiquettes 1 mL et 2 mL (ex. « SB4-Poche 1-Ech ID1 »). « Étiquette blanche » : 1 mL unique et 2ᵉ case laissée vide, comme en SB5.' })),
+      h('div', { class: 'pm-etp-head', 'aria-hidden': 'true' }, h('span', {}, 'Produit'), h('span', {}, 'Nom 1 mL'), h('span', {}, 'Nom 2 mL'), h('span', {}), h('span', {})),
+      h('ol', { class: 'pm-etps' }, prodRows),
+      h('div', { class: 'pm-add pm-add--inline' }, newP, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: 'pm-et-add', onclick: addP }, icon('plus'), 'Ajouter un produit')),
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Listes d’origine des « autres échantillons »' }),
+        h('p', { class: 'pm-hint', text: 'Liste proposée à l’étape 3 des étiquettes (« Rétablir la liste d’origine »). Un PC peut aussi enregistrer sa propre liste par défaut depuis l’étape 3.' })),
+      seg({ name: 'pm-li-prod', label: 'Produit de la liste', value: listeProduit, options: prods.map(x => ({ value: x.name, label: `${x.name} (${(E.listes[x.name] || []).length})` })), onChange: v => { listeProduit = v; render(); } }),
+      L.length ? h('ol', { class: 'pm-lis' }, listRows) : h('p', { class: 'pm-empty', text: `Aucun échantillon dans la liste ${listeProduit}.` }),
+      h('div', { class: 'pm-add pm-add--inline' }, newN, newQ, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${lpre}-add`, onclick: addL }, icon('plus'), 'Ajouter un échantillon')),
+      h('div', { class: 'pm-note' }, icon('target'), h('span', {}, h('b', {}, 'Calibration de l’imprimante : propre à ce PC. '), 'Le décalage X / Y et l’échelle se règlent dans Étiquettes › 4 Imprimer ; ils ne font pas partie des paramètres de l’équipe.'),
+        h('a', { class: 'btn-link', href: '#etiquettes' }, 'Ouvrir les étiquettes')),
+    ];
+  }
+
+  /* ---------- Source des paramètres, partage avec l'équipe ---------- */
+  const shortDate = iso => { const d = new Date(iso); return `${Core.pad2(d.getDate())}/${Core.pad2(d.getMonth() + 1)}`; };
+  function renderSource() {
+    const s = Params.source();
+    let ic, title, detail, tone;
+    if (s.kind === 'team') {
+      ic = 'users'; tone = 'ok'; title = 'Paramètres de l’équipe';
+      detail = `fichier du ${s.team.savedAt ? shortDate(s.team.savedAt) : '—'}${s.team.savedBy ? ` par ${s.team.savedBy}` : ''}`;
+    } else if (s.kind === 'local') {
+      ic = 'pc'; tone = 'wip'; title = 'Modifiés sur ce PC';
+      detail = s.local.modifiedAt ? `le ${Params.fmtStamp(new Date(s.local.modifiedAt))}` : '';
+    } else {
+      ic = 'info'; tone = 'na'; title = 'Valeurs d’origine';
+      detail = 'aucun fichier de paramètres de l’équipe à côté de l’outil';
+    }
+    const extra = [];
+    if (s.kind === 'local' && s.local.exportedAt) extra.push(h('p', { class: 'pm-src__note' }, icon('check'), `Fichier d’équipe enregistré le ${Params.fmtStamp(new Date(s.local.exportedAt))} : placez « ${Params.FILE_NAME} » à côté de « Outil Formulation.html » sur N:.`));
+    if (s.teamNewer) extra.push(h('p', { class: 'pm-src__note is-warn' }, icon('alert'), `Le fichier de l’équipe est plus récent que vos modifications (${shortDate(s.team.savedAt)}${s.team.savedBy ? `, ${s.team.savedBy}` : ''}).`));
+    $('#pm-source').replaceChildren(
+      h('div', { class: `pm-src__state tone-${tone}` },
+        h('span', { class: 'pm-src__ico', 'aria-hidden': 'true' }, icon(ic)),
+        h('div', { class: 'pm-src__txt' },
+          h('p', { class: 'pm-src__title' }, h('b', { text: title }), detail ? h('span', { text: ` (${detail})` }) : null),
+          s.kind === 'local' && s.team ? h('button', { type: 'button', class: 'btn-link', id: 'pm-revert', onclick: revertTeam }, 'Revenir aux paramètres de l’équipe') : null,
+          extra)),
+      h('div', { class: 'pm-src__actions' },
+        h('button', { type: 'button', class: 'btn btn-primary', id: 'pm-save-team', onclick: saveForTeam }, icon('users'), 'Enregistrer les paramètres pour toute l’équipe'),
+        h('button', { type: 'button', class: 'btn btn-secondary', id: 'pm-export', onclick: exportJson }, icon('download'), 'Exporter'),
+        h('button', { type: 'button', class: 'btn btn-secondary', id: 'pm-import', onclick: () => $('#pm-file').click() }, icon('upload'), 'Importer…'),
+        h('button', { type: 'button', class: 'btn btn-quiet', id: 'pm-reset', disabled: s.isDefault && s.kind !== 'local' ? true : null, onclick: resetDefaults }, icon('reset'), 'Rétablir les valeurs d’origine')));
+  }
+  async function revertTeam() {
+    const ok = await Core.confirmDialog({ title: 'Revenir aux paramètres de l’équipe ?', className: 'mod-params', confirmLabel: 'Revenir aux paramètres de l’équipe',
+      message: 'Les modifications faites sur ce PC seront remplacées par celles du fichier de l’équipe. Vous pourrez annuler.' });
+    if (!ok) return;
+    const snap = Params.snapshot();
+    Params.revertToTeam();
+    toast('Paramètres de l’équipe rétablis', { action: 'Annuler', onAction: () => Params.restore(snap) });
+  }
+  async function resetDefaults() {
+    const ok = await Core.confirmDialog({ title: 'Rétablir les valeurs d’origine ?', className: 'mod-params', confirmLabel: 'Rétablir', danger: true,
+      message: 'Holding times, produits, règles, couleurs et réglages des étiquettes reviennent aux valeurs d’origine de l’outil sur ce PC. Vous pourrez annuler.' });
+    if (!ok) return;
+    const snap = Params.snapshot();
+    Params.resetDefaults();
+    toast('Valeurs d’origine rétablies', { action: 'Annuler', onAction: () => Params.restore(snap) });
+  }
+  /** Téléchargement d'un fichier (sans réseau : lien vers un Blob local). */
+  function download(name, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const a = h('a', { href: url, download: name, hidden: true });
+    document.body.append(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+  }
+  async function writeFile(name, text, type, desc, ext) {
+    if (typeof window.showSaveFilePicker === 'function') {
+      try {
+        const handle = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: desc, accept: { [type]: [ext] } }] });
+        const w = await handle.createWritable();
+        await w.write(text);
+        await w.close();
+        return handle.name || name;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return null;
+        /* API refusée (ex. page ouverte depuis le disque) : téléchargement classique */
+      }
+    }
+    download(name, text, type);
+    return name;
+  }
+  function saveForTeam() {
+    const who = h('input', { type: 'text', class: 'input', id: 'pm-team-by', value: (Rapport.author || '').trim(), maxlength: 60, placeholder: 'ex. NB', autocomplete: 'name' });
+    const step = (n, ...kids) => h('li', { class: 'pm-step' }, h('span', { class: 'pm-step__n', text: String(n) }), h('div', {}, ...kids));
+    const body = h('div', { class: 'pm-form' },
+      h('ol', { class: 'pm-steps' },
+        step(1, h('b', { text: `Enregistrez le fichier « ${Params.FILE_NAME} ».` }), h('p', { class: 'pm-hint', text: 'Il contient tous les paramètres affichés ici (et les destinataires du mail).' })),
+        step(2, h('b', { text: 'Placez ce fichier à côté de « Outil Formulation.html » sur N:' }), h('p', { class: 'pm-hint', text: 'Dans le même dossier, en remplaçant l’ancien fichier s’il existe.' })),
+        step(3, h('b', { text: 'Chacun rouvre l’outil : les paramètres de l’équipe s’appliquent.' }), h('p', { class: 'pm-hint', text: 'Sauf sur un PC où des paramètres ont été modifiés : il garde les siens et affiche « Revenir aux paramètres de l’équipe ».' }))),
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-team-by', text: 'Enregistré par' }), who));
+    openDialog({ title: 'Enregistrer les paramètres pour toute l’équipe', icon: 'users', body, className: 'dlg--wide',
+      actions: [{ label: 'Annuler', value: false }, { label: `Enregistrer « ${Params.FILE_NAME} »…`, value: true, cls: 'btn-primary', icon: 'download', run: async () => {
+        const ms = Rapport.mailSettings();
+        const text = Params.teamFileText(who.value.trim(), { to: ms.mailTo, cc: ms.mailCc });
+        const name = await writeFile(Params.FILE_NAME, text, 'text/javascript', 'Paramètres de l’Outil Formulation', '.js');
+        if (!name) return false;
+        if (Params.source().kind !== 'local') Params.commit(Params.get());
+        Params.markExported();
+        render();
+        toast(`« ${name} » enregistré : placez-le à côté de Outil Formulation.html sur N:`, { timeout: 12000 });
+        return true;
+      } }],
+      onOpen: () => who.focus(),
+    });
+  }
+  async function exportJson() {
+    const d = new Date();
+    const name = `parametres-outil-${d.getFullYear()}-${Core.pad2(d.getMonth() + 1)}-${Core.pad2(d.getDate())}.json`;
+    const ms = Rapport.mailSettings();
+    const r = await writeFile(name, Params.jsonText(Rapport.author || '', { to: ms.mailTo, cc: ms.mailCc }), 'application/json', 'Paramètres (JSON)', '.json');
+    if (r) toast(`Paramètres exportés : « ${r} »`);
+  }
+  function importFile(file) {
+    const fr = new FileReader();
+    fr.onload = async () => {
+      let parsed;
+      try { parsed = Params.parseText(fr.result); } catch (e) {
+        Core.messageDialog('Import impossible', e.message === 'app' ? 'Ce fichier n’est pas un fichier de paramètres de l’Outil Formulation.' : 'Le fichier est illisible (JSON invalide).', 'mod-params');
+        return;
+      }
+      const ok = await Core.confirmDialog({ title: 'Importer ces paramètres ?', className: 'mod-params', confirmLabel: 'Importer',
+        message: 'Les paramètres de ce PC seront remplacés par ceux du fichier. Vous pourrez annuler.' });
+      if (!ok) return;
+      const snap = Params.snapshot();
+      Params.commit(parsed.params, { imported: true });
+      if (parsed.mail && (parsed.mail.to || parsed.mail.cc) && !Rapport.mailSettings().mailTo) Rapport.setMailSettings(parsed.mail.to || '', parsed.mail.cc || '');
+      toast('Paramètres importés', { action: 'Annuler', onAction: () => Params.restore(snap) });
+    };
+    fr.onerror = () => Core.messageDialog('Import impossible', 'Le fichier n’a pas pu être lu.', 'mod-params');
+    fr.readAsText(file);
+  }
+
+  /* ---------- Rendu ---------- */
+  const SECTIONS = [
+    { id: 'pm-ht', icon: 'clock', title: 'Rapport — Holding times', sub: () => { const p = P().rapport; return `${Params.HT_TABLES.length} règles · ${plural(p.custom.length, 'échéance personnalisée', 'échéances personnalisées')} · alerte ${fmtH(p.soonHours)} h avant`; }, body: secHT },
+    { id: 'pm-prod', icon: 'list', title: 'Rapport — Produits', sub: () => Params.LINES.map(l => `${l.name} ${Params.products(l.id).length}`).join(' · '), body: secProducts },
+    { id: 'pm-rules', icon: 'check', title: 'Rapport — Règles d’applicabilité', sub: () => `${Params.RULES.length} champs conditionnels`, body: secRules },
+    { id: 'pm-colors', icon: 'palette', title: 'Rapport — Couleurs des lignes', sub: () => 'Groninger · Inova 5 · Inova 4', body: secColors, swatches: true },
+    { id: 'pm-mail', icon: 'mail', title: 'Rapport — Mail', sub: () => { const m = Rapport.mailSettings(); return m.mailTo ? m.mailTo : 'aucun destinataire'; }, body: secMail },
+    { id: 'pm-et', icon: 'tag', title: 'Étiquettes', sub: () => { const e = P().etiquettes; return `${e.preset === 'PAPIER' ? 'Papier normal' : 'Fiducial 115294'} · texte ${{ normal: 'normal', renforce: 'renforcé', gras: 'gras' }[e.epaisseur]} · ${e.produits.map(x => x.name).join(', ')}`; }, body: secEtiquettes },
+  ];
+  function render() {
+    if (rendering) { dirty = true; return; }
+    rendering = true;
+    try { renderNow(); } finally { rendering = false; }
+    if (dirty && visible) render();
+  }
+  function renderNow() {
+    dirty = false;
+    const active = document.activeElement;
+    const keep = focusAfter || (active && active.id && active.closest('#view-parametres') ? active.id : null);
+    focusAfter = null;
+    const y = window.scrollY;
+    renderSource();
+    $('#pm-sections').replaceChildren(...SECTIONS.map(sec => {
+      const d = h('details', { class: 'pm-sec', id: sec.id },
+        h('summary', { class: 'pm-sec__sum' },
+          h('span', { class: 'pm-sec__ico', 'aria-hidden': 'true' }, icon(sec.icon)),
+          h('span', { class: 'pm-sec__txt' }, h('span', { class: 'pm-sec__title', text: sec.title }), h('span', { class: 'pm-sec__sub', text: sec.sub() })),
+          sec.swatches ? h('span', { class: 'pm-sec__sw', 'aria-hidden': 'true' }, Params.LINES.map(l => lineDot(l.id))) : null,
+          icon('chevron', 'icon pm-sec__chev')),
+        h('div', { class: 'pm-sec__body' }, sec.body()));
+      if (open.has(sec.id)) d.open = true;
+      d.addEventListener('toggle', () => { if (d.open) open.add(sec.id); else open.delete(sec.id); });
+      return d;
+    }));
+    Core.typoTree($('#view-parametres'));
+    if (keep) {
+      const el = document.getElementById(keep);
+      if (el && el.getClientRects().length) el.focus({ preventScroll: true });
+      else if (active && !active.isConnected) { const s = document.getElementById(keep.split('-').slice(0, 2).join('-')); if (s) s.focus({ preventScroll: true }); }
+    }
+    window.scrollTo(0, y);
+  }
+  Core.on('params', () => { if (visible) render(); else dirty = true; });
+  Core.on('params-mail', () => { if (visible) render(); else dirty = true; });
+  return {
+    init() {
+      $('#pm-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) importFile(f); });
+    },
+    show() { visible = true; if (dirty) render(); else renderSource(); },
+    hide() { visible = false; },
+    menuItems: () => [
+      { label: 'Enregistrer pour toute l’équipe…', icon: 'users', run: saveForTeam, narrow: true },
+      { label: 'Exporter les paramètres (JSON)', icon: 'download', run: exportJson },
+      { label: 'Importer des paramètres…', icon: 'upload', run: () => $('#pm-file').click() },
+      { sep: true },
+      { label: 'Rétablir les valeurs d’origine…', icon: 'reset', run: resetDefaults, danger: true },
+      { sep: true, narrow: true },
+      { aa: true },
+    ],
+    render,
+  };
 })();
 
 /* #########################################################################
@@ -4898,13 +6201,13 @@ const Accueil = (() => {
     const pills = [];
     if (s.frigo) pills.push(pill('cold', `${plural(s.frigo, 'échantillon')} au frigo`, 'snow'));
     if (s.overdue) pills.push(pill('todo', `${plural(s.overdue, 'échéance dépassée', 'échéances dépassées')}`));
-    if (s.soon) pills.push(pill('wip', `${plural(s.soon, 'échéance')} dans moins de 4 h`));
+    if (s.soon) pills.push(pill('wip', `${plural(s.soon, 'échéance')} dans moins de ${Params.fmtHours(s.soonHours)} h`));
     if (!pills.length) pills.push(pill('ok', 'Aucune alerte frigo ni holding time'));
     box.replaceChildren(
       h('p', { class: 'tile__line' }, icon('clock'), upd, s.shift ? h('span', { class: 'hpill hpill--navy', text: `Shift ${s.shift}` }) : null),
       h('div', { class: 'tile__pills' }, pills),
       h('dl', { class: 'tile__lots', 'aria-label': 'Lots en cours de remplissage' },
-        s.lots.map(l => h('div', {}, h('dt', { text: l.line }), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))));
+        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))));
   }
   function renderEtiquettes(s, now) {
     const box = $('#tile-etiquettes-status');
@@ -4958,6 +6261,7 @@ const Shell = (() => {
     accueil: { mod: Accueil, title: 'Outil Formulation' },
     rapport: { mod: Rapport, title: 'Outil Formulation — Rapport de shift' },
     etiquettes: { mod: Etiquettes, title: 'Outil Formulation — Étiquettes' },
+    parametres: { mod: ParamsView, title: 'Outil Formulation — Paramètres' },
   };
   const scrollPos = {};
   let current = null;
@@ -5187,6 +6491,7 @@ const Shell = (() => {
     $('#skip-link').addEventListener('click', e => { e.preventDefault(); const v = $(`#view-${current}`); if (v) v.focus(); });
     Rapport.init();
     Etiquettes.init();
+    ParamsView.init();
     Accueil.init();
     window.addEventListener('hashchange', applyRoute);
     window.addEventListener('resize', fitSoon);
