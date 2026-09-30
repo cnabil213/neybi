@@ -1,27 +1,23 @@
-# Outils Formulation
+# Outil Formulation
 
-Deux petites applications web qui remplacent les fichiers Excel de l'équipe formulation :
+Un seul fichier, `Outil Formulation.html`, remplace les deux Excel de l'équipe formulation
+(`RAPPORT.FORMU.LIVE.xlsx` et `étiquette_SB_NEW.xlsx`). Il s'ouvre sur un **accueil** avec deux
+tuiles, et des onglets en haut permettent de passer d'un module à l'autre à tout moment :
 
-| Fichier | Remplace | À quoi ça sert |
-|---|---|---|
-| `rapport-shift.html` | `RAPPORT.FORMU.LIVE.xlsx` | Rapport de shift : état des lots sur Groninger, Inova 5 et Inova 4, export PDF et préparation du mail pour le groupe formulation |
-| `etiquettes.html` | `étiquette_SB_NEW.xlsx` | Planches d'étiquettes pour les échantillons SB4, SB5, SB5B et SB16 (poches et autres échantillons) |
+- **Rapport de shift** : état des lots sur Groninger, Inova 5 et Inova 4, export PDF et mail au groupe formulation ;
+- **Étiquettes** : planches d'étiquettes pour les échantillons SB4, SB5, SB5B et SB16.
 
-Rien à installer, pas besoin d'internet : chaque outil est un seul fichier qu'on ouvre en
-double-cliquant dessus, dans **Microsoft Edge** ou **Google Chrome**.
+Rien à installer, pas besoin d'internet : on double-clique sur le fichier, il s'ouvre dans
+**Microsoft Edge** ou **Google Chrome**.
 
 ---
 
-## Mise en place (une seule fois)
+## Mise en place
 
-1. Mettez les **deux fichiers dans le même dossier**, de préférence le dossier Teams / SharePoint
-   de l'équipe, synchronisé sur les PC avec OneDrive (bouton « Synchroniser » dans Teams).
-   Comme ça, tout le monde utilise la même version.
-2. Ouvrez chaque fichier avec Edge (clic droit → *Ouvrir avec* → *Microsoft Edge*).
-3. Ajoutez un favori ou un raccourci sur le bureau pour y revenir facilement.
-
-> Pour ouvrir le fichier, passez par le dossier synchronisé sur le PC. Si vous l'ouvrez depuis
-> le site SharePoint dans le navigateur, SharePoint le télécharge au lieu de l'afficher.
+1. Copiez `Outil Formulation.html` dans le dossier partagé de l'équipe, par exemple
+   `N:\MFG\Formulation\Outil formulation`.
+2. Ouvrez-le avec Edge (clic droit → *Ouvrir avec* → *Microsoft Edge*).
+3. Ajoutez un raccourci sur le bureau pour y revenir facilement.
 
 ---
 
@@ -46,7 +42,7 @@ double-cliquant dessus, dans **Microsoft Edge** ou **Google Chrome**.
 
 - Tout s'**enregistre automatiquement** sur le PC à chaque modification (voir « ✓ Enregistré »
   en haut). En rouvrant le fichier, on retrouve le rapport tel qu'on l'a laissé.
-- **Si l'équipe utilise plusieurs PC**, ouvrez *⋯ → Sauvegarde & partage → Lier un fichier* et
+- **Partage entre PC** (à finaliser selon le test du disque N:) : si l'équipe utilise plusieurs PC, ouvrez *⋯ → Sauvegarde & partage → Lier un fichier* et
   créez `rapport-formulation-donnees.json` **dans le dossier Teams synchronisé**. Le rapport y est
   alors écrit automatiquement, et le shift suivant, sur un autre PC, retrouve le même état en liant
   le même fichier. Si quelqu'un a enregistré une version plus récente, l'outil le signale.
@@ -78,12 +74,12 @@ double-cliquant dessus, dans **Microsoft Edge** ou **Google Chrome**.
 
 ### Réglages d'impression
 
-- Le gabarit par défaut est une planche **A4 de 65 étiquettes 38,1 × 21,2 mm (5 × 13)**. Chaque
-  poche occupe une rangée de 4 étiquettes, comme dans l'Excel. Un gabarit personnalisé est possible.
-- Dans la fenêtre d'impression, réglez **Marges : Aucune** et **Échelle : 100 %** (surtout pas
-  « Ajuster à la page »).
+- Le gabarit par défaut reproduit **exactement la mise en page de l'Excel**. Chaque poche occupe
+  une rangée de 4 étiquettes. D'autres gabarits sont proposés (65 étiquettes L7651, papier normal
+  avec traits de coupe, personnalisé).
+- Dans la fenêtre d'impression, **laissez les réglages par défaut** (surtout pas « Ajuster à la page »).
 - La première fois, imprimez une **page de test** sur papier normal, posez-la sur une planche
-  d'étiquettes à contre-jour, puis corrigez si besoin le **décalage X/Y** (en mm). Le réglage est
+  d'étiquettes à contre-jour, puis corrigez si besoin le **décalage X/Y** (en mm) ou l'**échelle** (si le décalage grandit vers le bas). Le réglage est
   mémorisé sur le PC.
 - **Première ligne libre** : pour réutiliser une planche déjà entamée.
 - **Poches de … à …** : pour réimprimer seulement quelques poches.
