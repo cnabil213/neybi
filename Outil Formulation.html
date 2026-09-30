@@ -1160,9 +1160,10 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-etiquettes .sheet.v-top .lbl{ justify-content: flex-start; }
 .mod-etiquettes .sheet .ln{ flex: 0 0 var(--lnh); height: var(--lnh); line-height: var(--lnh); font-size: var(--fs); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 .mod-etiquettes .sheet .ln.sm{ font-size: var(--fs2); }
-/* Épaisseur du texte : noir pur ; « Renforcé » = contour fin sous le remplissage (nettement plus noir, pas du gras) */
+/* Épaisseur du texte : noir pur ; « Renforcé » = vraie police demi-grasse (Segoe UI Semibold, présente sur tout Windows),
+   dessinée en une seule passe : pas de contour superposé, qui bave ou se dédouble sur certaines imprimantes. */
 .mod-etiquettes .sheet .lbl{ color: #000; }
-.mod-etiquettes .sheet.w-renforce .lbl{ -webkit-text-stroke: .2pt #000; paint-order: stroke fill; }
+.mod-etiquettes .sheet.w-renforce .lbl, .mod-etiquettes .measure-box.w-renforce{ font-family: "Segoe UI Semibold", "Segoe UI", Arial, Helvetica, sans-serif; font-weight: 600; }
 .mod-etiquettes .sheet.w-gras .lbl, .mod-etiquettes .measure-box.w-gras{ font-weight: 700; }
 .mod-etiquettes .sheet .blank, .mod-etiquettes .measure-box .blank{ display: inline-block; height: 1px; vertical-align: baseline; }
 .mod-etiquettes .sheet.frames .lbl, .mod-etiquettes .sheet .cell.test{ outline: .2mm solid #000; outline-offset: -.2mm; }
