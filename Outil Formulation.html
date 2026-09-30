@@ -3951,7 +3951,7 @@ const GEO_FIELDS = [
 const CALIB_FIELDS = [
   { key: 'decalX', label: 'Décalage X', unit: 'mm', min: -10, max: 10, step: 0.1, decimals: 1, signed: true, hint: '+ vers la droite' },
   { key: 'decalY', label: 'Décalage Y', unit: 'mm', min: -10, max: 10, step: 0.1, decimals: 1, signed: true, hint: '+ vers le bas' },
-  { key: 'echelle', label: 'Échelle', unit: '%', min: 90, max: 105, step: 0.1, decimals: 1, hint: 'Défaut : 100 %' },
+  { key: 'echelle', label: 'Échelle', unit: '%', min: 85, max: 115, step: 0.1, decimals: 1, hint: 'Défaut : 100 %' },
 ];
 const ADV_FIELDS = [
   { key: 'policePt', label: 'Taille de police de base', unit: 'pt', min: 6, max: 12, step: 0.5, decimals: 1, hint: 'Ligne « Date » : 1 pt de moins (comme dans l\'Excel).' },
@@ -4125,7 +4125,7 @@ function normalizeState(raw) {
     /* calibration de l'imprimante de ce PC : conservée */
     s.reglages.decalX = round(num(r.decalX, -10, 10, 0), 1);
     s.reglages.decalY = round(num(r.decalY, -10, 10, 0), 1);
-    s.reglages.echelle = round(num(r.echelle, 90, 105, 100), 1);
+    s.reglages.echelle = round(num(r.echelle, 85, 115, 100), 1);
     const t = PRESETS[s.gabarit.preset].text || TEXT_GRID;
     s.reglages.cadres = bool(r.cadres, PRESETS[s.gabarit.preset].cadres || false);
     s.reglages.policePt = num(r.policePt, 6, 12, t.policePt);
@@ -4255,7 +4255,7 @@ function computeGeo() {
   const base = round(Math.max(MIN_PT, Math.min(r.policePt, maxByHeight)), 2);
   const small = round(Math.max(MIN_PT, base - 1), 2);
   const lnh = round(Math.min(usableH / 5, base * PT_MM * 1.16), 3);
-  const scale = clamp(r.echelle || 100, 90, 105) / 100;
+  const scale = clamp(r.echelle || 100, 85, 115) / 100;
   return { ...g, pad, padY, usableH, base, small, lnh, offX: r.decalX, offY: r.decalY, scale, top: !!r.texteEnHaut, weight: etp().epaisseur };
 }
 /* Position imprimée d'une case (mm) : échelle appliquée depuis le coin haut-gauche, puis décalage X/Y. */
@@ -5038,7 +5038,7 @@ function renderStep4() {
     btnAll.querySelector('#sub-all').textContent = plural(p.pages.length + a.pages.length, 'page');
   });
   const reminder = h('div', { class: 'print-reminder', id: 'print-reminder' },
-    icon('info'), h('span', { class: 'print-reminder__txt' }, h('b', null, 'Laissez les réglages d\'impression par défaut'), ' (marges « Par défaut », échelle 100 %).'),
+    icon('info'), h('span', { class: 'print-reminder__txt' }, h('b', null, 'Papier : A4'), ' (pas « Lettre ») · marges « Par défaut » · échelle 100 %.'),
     h('button', { type: 'button', class: 'link-btn', id: 'btn-help', onclick: () => showPrintHelp(false) }, 'Conseils d\'impression'));
 
   return [
@@ -5364,9 +5364,10 @@ async function showPrintHelp(beforePrint) {
   const body = h('div', { class: 'help-body' },
     h('p', null, h('b', null, 'Laissez les réglages d\'impression par défaut.'), ' La page impose déjà le format A4 et des marges nulles ; vérifiez seulement que rien n\'a été changé :'),
     h('ul', { class: 'help-list' },
+      h('li', null, h('span', { class: 'k' }, 'Papier'), h('span', { class: 'v' }, h('b', null, 'A4'), ' ', h('small', null, '(« Plus de paramètres » › Format du papier — surtout pas « Lettre » : tout serait réduit à 94 % et remonterait)'))),
       h('li', null, h('span', { class: 'k' }, 'Marges'), h('span', { class: 'v' }, 'Par défaut ', h('small', null, '(ou Aucune)'))),
       h('li', null, h('span', { class: 'k' }, 'Échelle'), h('span', { class: 'v' }, '100 % ', h('small', null, '(jamais « Ajuster à la page »)'))),
-      h('li', null, h('span', { class: 'k' }, 'Papier'), h('span', { class: 'v' }, 'A4 ', h('small', null, '· portrait')))),
+      h('li', null, h('span', { class: 'k' }, 'Orientation'), h('span', { class: 'v' }, 'Portrait'))),
     h('p', { class: 'hint' }, 'Étiquettes décalées ? Imprimez une page de test sur papier normal et suivez l\'aide « Mes étiquettes sont décalées ? » (étape 4).'));
   const res = await openDialog({ title: 'Avant d\'imprimer', icon: 'printer', body,
     checkbox: beforePrint ? 'Ne plus afficher ce message' : null,
@@ -5396,8 +5397,10 @@ async function showCalibHelp() {
   const step = (n, title, ...kids) => h('li', { class: 'calib-step' }, h('span', { class: 'calib-step__n', 'aria-hidden': 'true' }, String(n)), h('div', null, h('p', { class: 'calib-step__t' }, title), ...kids));
   const body = h('div', { class: 'calib-help-dlg' },
     h('ol', { class: 'calib-steps' },
-      step(1, 'Laissez les réglages d\'impression d\'Edge par défaut',
-        h('p', null, 'Marges « Par défaut » ou « Aucune », Échelle 100 %, jamais « Ajuster à la page ».')),
+      step(1, 'Vérifiez le format du papier : A4',
+        h('p', null, h('b', null, 'Cause la plus fréquente : '), 'dans la fenêtre d\'impression d\'Edge, « Plus de paramètres » › Format du papier réglé sur « Lettre » au lieu de « A4 ». La page est alors réduite à 94 % : le texte est bien placé en haut, puis remonte de plus en plus vers le bas de la planche. Choisissez A4.'),
+        h('p', null, 'Vérifiez aussi : Marges « Par défaut » ou « Aucune », Échelle 100 %, jamais « Ajuster à la page ».'),
+        h('p', { class: 'hint' }, 'Si l\'imprimante ne propose pas A4 : réglez l\'échelle de l\'outil sur 106,3 % (étape 4 › calibration).')),
       step(2, 'Imprimez la page de test sur du papier normal',
         h('p', null, 'Posez-la sur une planche d\'étiquettes et regardez à contre-jour (contre une fenêtre ou une lampe) : les cadres doivent tomber sur les étiquettes.')),
       step(3, 'Corrigez, puis recommencez',
