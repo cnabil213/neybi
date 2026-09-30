@@ -74,9 +74,8 @@ Rien à installer, pas besoin d'internet : on double-clique sur le fichier, il s
 
 ### Réglages d'impression
 
-- Le gabarit par défaut reproduit **exactement la mise en page de l'Excel**. Chaque poche occupe
-  une rangée de 4 étiquettes. D'autres gabarits sont proposés (65 étiquettes L7651, papier normal
-  avec traits de coupe, personnalisé).
+- Planche par défaut : **Fiducial 115294** (A4, 65 étiquettes 38,1 × 21,2 mm). Chaque poche occupe
+  une rangée de 4 étiquettes. Aussi : papier normal avec traits de coupe, ou gabarit personnalisé.
 - Dans la fenêtre d'impression, **laissez les réglages par défaut** (surtout pas « Ajuster à la page »).
 - La première fois, imprimez une **page de test** sur papier normal, posez-la sur une planche
   d'étiquettes à contre-jour, puis corrigez si besoin le **décalage X/Y** (en mm) ou l'**échelle** (si le décalage grandit vers le bas). Le réglage est
@@ -85,6 +84,13 @@ Rien à installer, pas besoin d'internet : on double-clique sur le fichier, il s
 - **Poches de … à …** : pour réimprimer seulement quelques poches.
 
 ---
+
+## Onglet Paramètres
+
+Holding times (durées par produit, échéances personnalisées), produits par ligne, champs grisés,
+couleurs des lignes, mail et réglages des étiquettes se modifient dans l'onglet **Paramètres**, sans
+toucher au code. **Enregistrer les paramètres pour toute l'équipe** crée `parametres-outil.js` : posez-le
+à côté de `Outil Formulation.html` sur N:, l'outil le lit automatiquement sur tous les PC.
 
 ## Corrections par rapport aux Excel
 
