@@ -3934,10 +3934,10 @@ const PRESETS = {
 const defaultPreset = () => (PRESETS[etp().preset] ? etp().preset : 'FIDUCIAL');
 /* Version du gabarit : une donnée d'une version précédente (dont « Identique à l'Excel ») bascule une fois sur le gabarit
    par défaut, calibration remise à zéro (l'ancien décalage compensait un mauvais gabarit). */
-const GABARIT_VERSION = 4;
+const GABARIT_VERSION = 5;
 /* STANDARD USINE (validé sur la planche Fiducial 115294 et le copieur de l'atelier) : valeurs rétablies par
    « Réinitialiser les paramètres ». Pour changer le standard, modifier uniquement cet objet. */
-const STANDARD_ETIQ = { preset: 'FIDUCIAL', decalX: 0, decalY: 0, echelle: 100, policePt: 8, margeInt: 2, texteEnHaut: false };
+const STANDARD_ETIQ = { preset: 'FIDUCIAL', decalX: 0, decalY: 1, echelle: 100, policePt: 8, margeInt: 2, texteEnHaut: false };
 const GEO_FIELDS = [
   { key: 'pageW', label: 'Largeur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
   { key: 'pageH', label: 'Hauteur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
@@ -5582,7 +5582,7 @@ function show() {
     /* donnée d'une version précédente : bascule faite une fois (gabarit Fiducial, calibration remise à zéro) — on le dit une fois */
     state.ui.migrationV3 = false;
     scheduleSave();
-    toast(`Nouveau gabarit : ${PRESETS[state.gabarit.preset].short} (la planche de l'usine). Le texte est maintenant centré dans chaque étiquette et la calibration a été remise à zéro. En cas de doute, imprimez une page de test.`,
+    toast(`Nouveau gabarit : ${PRESETS[state.gabarit.preset].short} (la planche de l'usine). Le texte est maintenant centré dans chaque étiquette et les réglages d'impression ont été remis au standard validé à l'atelier. En cas de doute, imprimez une page de test.`,
       { tone: 'warn', icon: 'info', action: 'Page de test', onAction: () => requestPrint('test'), timeout: 20000 });
   }
 }
