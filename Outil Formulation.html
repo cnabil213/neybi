@@ -3923,18 +3923,18 @@ const ORIGIN_LISTS = new Proxy({}, { get: (_, P) => etp().listes[String(P)] || [
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'];
 /* Gabarits de planche : les planches réellement utilisées à l'usine (A4, coins arrondis).
    Fiducial 115294 (équivalent Avery L7651) : 5 × 13 = 65 étiquettes de 38,1 × 21,2 mm. */
-const FIDUCIAL_GEO = { pageW: 210, pageH: 297, cols: 5, rows: 13, labelW: 38.1, labelH: 21.2, marginTop: 10.7, marginLeft: 4.7, pitchX: 40.6, pitchY: 21.2 };
+const FIDUCIAL_GEO = { pageW: 210, pageH: 297, cols: 5, rows: 13, labelW: 38.1, labelH: 21.2, marginTop: 10.7, marginLeft: 9.75, pitchX: 38.1, pitchY: 21.2 }; /* étiquettes jointives (sans espace), mesuré sur une planche imprimée */
 /* Réglages de texte : Arial 8 pt (ligne « Date » 7 pt), marge intérieure 2 mm à gauche et à droite, bloc de 5 lignes centré */
 const TEXT_GRID = { policePt: 8, margeInt: 2, texteEnHaut: false };
 const PRESETS = {
-  FIDUCIAL: { label: 'Fiducial 115294', sub: '65 étiquettes 38,1 × 21,2 mm', ref: 'Réf. imprimée sur la boîte · équivalent Avery L7651', short: 'Fiducial 115294', geo: FIDUCIAL_GEO, cadres: false, text: TEXT_GRID },
+  FIDUCIAL: { label: 'Fiducial 115294', sub: '65 étiquettes 38,1 × 21,2 mm', ref: 'Réf. imprimée sur la boîte · étiquettes jointives, marges 10,7 mm (haut) / 9,75 mm (gauche)', short: 'Fiducial 115294', geo: FIDUCIAL_GEO, cadres: false, text: TEXT_GRID },
   PAPIER: { label: 'Papier normal — traits de coupe', sub: 'Même grille, cadres imprimés', ref: 'Feuille A4 ordinaire, à découper', short: 'Papier normal A4', geo: FIDUCIAL_GEO, cadres: true, text: TEXT_GRID },
   PERSO: { label: 'Personnalisé', sub: 'Toutes les dimensions modifiables', ref: 'Autre planche', short: 'Personnalisé', geo: null },
 };
 const defaultPreset = () => (PRESETS[etp().preset] ? etp().preset : 'FIDUCIAL');
 /* Version du gabarit : une donnée d'une version précédente (dont « Identique à l'Excel ») bascule une fois sur le gabarit
    par défaut, calibration remise à zéro (l'ancien décalage compensait un mauvais gabarit). */
-const GABARIT_VERSION = 3;
+const GABARIT_VERSION = 4;
 const GEO_FIELDS = [
   { key: 'pageW', label: 'Largeur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
   { key: 'pageH', label: 'Hauteur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
