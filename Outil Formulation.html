@@ -2010,6 +2010,107 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .pv-chg li::before{content:"";position:absolute;left:.2mm;top:1.1mm;width:1.6mm;height:1.6mm;border-radius:50%;background:var(--lc,var(--b--nn-navy, var(--nn-navy)))}
 .mod-rapport .pv-chg__ref{margin:0;padding:.6mm 1.8mm 0;font-size:6.6pt;color:var(--muted)}
 
+/* ===== v5 : parcours (étapes) — synthèse, saisie, vide de ligne, holding times arrêtés, échantillons à suivre ===== */
+.mod-rapport{--fs-ok:#15803D;--fs-okDot:#16A34A;--fs-todoDot:#B9C2D3}
+:root[data-theme="dark"] .mod-rapport{--fs-ok:#6EE7A0;--fs-okDot:#22A05A;--fs-todoDot:#56647F}
+@media (prefers-color-scheme:dark){ :root[data-theme="auto"] .mod-rapport{--fs-ok:#6EE7A0;--fs-okDot:#22A05A;--fs-todoDot:#56647F} }
+/* synthèse : parcours vertical non numéroté */
+.mod-rapport .rs-vs{list-style:none;margin:.0625rem 0 0;padding:0}
+.mod-rapport .rs-vs li{position:relative;padding:0 0 .3125rem 1.375rem;font-size:.75rem;line-height:1.4;color:var(--rs-soft);overflow-wrap:anywhere}
+.mod-rapport .rs-vs li::before{content:"";position:absolute;left:.34375rem;top:.875rem;bottom:-.0625rem;width:2px;border-radius:2px;background:var(--rs-track)}
+.mod-rapport .rs-vs li:last-child{padding-bottom:0}
+.mod-rapport .rs-vs li:last-child::before{display:none}
+.mod-rapport .rs-vs li>i{position:absolute;left:0;top:.15625rem;display:grid;place-items:center;box-sizing:border-box;width:.8125rem;height:.8125rem;border-radius:50%;border:2px solid var(--fs-todoDot);background:var(--rs-card)}
+.mod-rapport .rs-vs li.is-ok{color:var(--rs-ink)}
+.mod-rapport .rs-vs li.is-ok>i{border-color:var(--fs-okDot);background:var(--fs-okDot);color:#FFFFFF}
+.mod-rapport .rs-vs li.is-ok>i .icon{width:.5625rem;height:.5625rem;stroke-width:3.6}
+.mod-rapport .rs-vs li.is-ok::before{background:var(--fs-okDot)}
+.mod-rapport .rs-vs__em{font-style:normal;color:var(--rs-mut)}
+.mod-rapport .rs-vs li.is-now{padding-bottom:.375rem;font-size:.875rem;font-weight:700;color:var(--lk)}
+.mod-rapport .rs-vs li.is-now::before{top:1.0625rem}
+.mod-rapport .rs-vs li.is-now>i{left:-.0625rem;top:.15625rem;width:.9375rem;height:.9375rem;border-color:var(--lc);background:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb,var(--lc) 24%,transparent)}
+.mod-rapport .rs-vs__man{font-size:.6875rem;font-weight:600;color:var(--rs-mut)}
+.mod-rapport .rs-vs__d{display:flex;flex-wrap:wrap;align-items:center;gap:.1875rem .25rem;margin-top:.1875rem;font-size:.75rem;font-weight:500;color:var(--rs-mut)}
+.mod-rapport .rs-vs li.is-ok .rs-vs__d,.mod-rapport .rs-vs li.is-todo .rs-vs__d{margin-top:.125rem}
+.mod-rapport .rs-vs .rs-pill{padding:.0625rem .5rem;font-size:.6875rem}
+.mod-rapport .rs-vs__kv{font-size:.75rem;color:var(--rs-mut)}
+.mod-rapport .rs-vs__kv b{font-weight:600;color:var(--rs-ink)}
+/* holding time arrêté : respecté (vert) / dépassé (rouge), sans barre */
+.mod-rapport .rs-ht.ht--done,.mod-rapport .rs-ht.ht--late{grid-template-areas:"n r";align-items:center;padding:.25rem .5rem;border-radius:8px;background:var(--rs-grnT)}
+.mod-rapport .rs-ht.ht--late{background:var(--rs-redPill)}
+.mod-rapport .rs-ht__st{font-weight:600;color:var(--rs-grn)}
+.mod-rapport .rs-ht.ht--late .rs-ht__st{color:var(--rs-redX)}
+.mod-rapport .rs-ht.ht--done .rs-ht__rt{display:inline-flex;align-items:center;gap:.25rem;font-size:.8125rem;color:var(--rs-grn)}
+.mod-rapport .rs-ht.ht--late .rs-ht__rt{font-size:.9375rem;color:var(--rs-redX)}
+.mod-rapport .rs-ht.ht--done .rs-ht__rt .icon{width:.875rem;height:.875rem;stroke-width:3}
+.mod-rapport .rs-ht.ht--done .rs-ht__nm span.rs-ht__st,.mod-rapport .rs-ht.ht--late .rs-ht__nm span.rs-ht__st{font-size:.71875rem}
+/* échantillons à suivre */
+.mod-rapport .rs-ech{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .875rem;margin-top:.75rem;padding:.5rem .875rem;color:var(--rs-ink)}
+.mod-rapport .rs-ech__h{display:inline-flex;align-items:center;gap:.375rem;margin:0;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.mod-rapport .rs-ech__h .icon{width:1rem;height:1rem}
+.mod-rapport .rs-ech__h span{font-weight:700}
+.mod-rapport .rs-ech__l{display:flex;flex:1;flex-wrap:wrap;gap:.375rem 1.25rem;margin:0;padding:0;list-style:none;min-width:0}
+.mod-rapport .rs-ech__i{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;font-size:.8125rem}
+.mod-rapport .rs-ech__i .rs-pill{font-size:.6875rem}
+.mod-rapport .rs-ech__done{min-height:2rem}
+.mod-rapport .pvs .rs-ech{margin-top:0}
+/* saisie : carte rangée par étape */
+.mod-rapport .card__body.card__body--steps{display:flex;flex-direction:column;gap:.875rem}
+.mod-rapport .fs-steps{display:flex;flex-direction:column;margin:0;padding:0;list-style:none}
+.mod-rapport .fs-step{position:relative;min-width:0;padding:0 0 .75rem 1.625rem}
+.mod-rapport .fs-step::before{content:"";position:absolute;left:.4375rem;top:1.25rem;bottom:.0625rem;width:2px;border-radius:2px;background:var(--border)}
+.mod-rapport .fs-step:last-child{padding-bottom:0}
+.mod-rapport .fs-step:last-child::before{display:none}
+.mod-rapport .fs-step.is-ok::before{background:var(--fs-okDot)}
+.mod-rapport .fs-dot{position:absolute;left:0;top:.3125rem;box-sizing:border-box;width:1rem;height:1rem;border-radius:50%;border:2px solid var(--fs-todoDot);background:var(--surface)}
+.mod-rapport .fs-step.is-ok .fs-dot{border-color:var(--fs-okDot);background:var(--fs-okDot)}
+.mod-rapport .fs-step.is-ok .fs-dot::after{content:"";position:absolute;left:.25rem;top:.0938rem;width:.1875rem;height:.4375rem;border:solid #FFFFFF;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.mod-rapport .fs-step.is-now .fs-dot{left:-.0625rem;top:.25rem;width:1.125rem;height:1.125rem;border-color:var(--lc);background:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb,var(--lc) 24%,transparent)}
+.mod-rapport .fs-head{display:flex;align-items:flex-start;gap:.5rem;min-width:0}
+.mod-rapport .fs-tog{display:flex;flex:1;flex-wrap:wrap;align-items:baseline;gap:.125rem .5rem;min-width:0;min-height:1.625rem;margin:0;padding:.125rem .25rem;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.mod-rapport .fs-tog:disabled{cursor:default;color:inherit}
+.mod-rapport .fs-tog:not(:disabled):hover{background:var(--tint)}
+.mod-rapport .fs-tog:focus-visible{outline:3px solid var(--nn-blue);outline-offset:1px}
+.mod-rapport .fs-name{font-size:.875rem;font-weight:700;letter-spacing:.005em}
+.mod-rapport .fs-step.is-now .fs-name{font-size:1rem;color:var(--lk)}
+.mod-rapport .fs-step.is-todo .fs-name{color:var(--muted)}
+.mod-rapport .fs-step.is-todo .fs-tog:disabled .fs-name{color:var(--muted)}
+.mod-rapport .fs-sum{flex:1 1 8rem;min-width:0;font-size:.8125rem;color:var(--muted);overflow-wrap:anywhere}
+.mod-rapport .fs-chev{align-self:center;flex:none;width:1rem;height:1rem;margin-left:auto;color:var(--muted);transition:transform .15s var(--ease)}
+.mod-rapport .fs-step:not(.is-closed) .fs-chev{transform:rotate(180deg)}
+.mod-rapport .fs-here{flex:none;min-height:1.625rem;margin-top:.0625rem;padding:.125rem .5rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted);font:inherit;font-size:.75rem;font-weight:600;cursor:pointer;opacity:0;transition:opacity .12s}
+.mod-rapport .fs-step:hover .fs-here,.mod-rapport .fs-here:focus-visible{opacity:1}
+.mod-rapport .fs-here:hover{border-color:var(--lc);color:var(--text)}
+.mod-rapport .fs-here:focus-visible{outline:3px solid var(--nn-blue);outline-offset:1px}
+@media (hover:none){ .mod-rapport .fs-here{opacity:1} }
+.mod-rapport .fs-flds{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr));gap:.875rem 1.25rem;margin-top:.5rem;min-width:0}
+.mod-rapport .fs-flds[hidden]{display:none}
+.mod-rapport .fs-go{grid-column:1/-1;justify-content:center;flex-wrap:wrap;width:100%;min-height:3rem;font-size:1rem;font-weight:700;border-radius:12px}
+.mod-rapport .fs-go .icon{width:1.25rem;height:1.25rem}
+.mod-rapport .fs-go[hidden]{display:none}
+.mod-rapport .fs-rest{padding-top:.75rem;border-top:1px dashed var(--border-strong)}
+.mod-rapport .fs-rest__t{margin:0;font-size:.6875rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mod-rapport .fs-rest .fs-flds{margin-top:.375rem}
+.mod-rapport .fs-notes{padding-top:.75rem;border-top:1px solid var(--border)}
+.mod-rapport .fs-manual{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;margin:0;padding:.375rem .625rem;border-radius:8px;background:var(--tint);font-size:.8125rem;color:var(--text)}
+.mod-rapport .fs-manual[hidden]{display:none}
+.mod-rapport .linefilter__all{flex:none}
+.mod-rapport .linefilter__all[aria-pressed="true"]{background:var(--t--nn-navy, var(--nn-navy));border-color:var(--t--nn-navy, var(--nn-navy));color:#FFFFFF}
+/* holding time de la saisie : « ✓ Fait », arrêté (respecté / dépassé), « Rouvrir » */
+.mod-rapport .derived__done{margin-left:auto;min-height:1.875rem;padding:.125rem .625rem}
+.mod-rapport .derived.is-stopped{padding-bottom:.4375rem}
+.mod-rapport .derived.is-stopped.is-kept{background:var(--ok-bg);border-color:var(--l-86d3a3, #86D3A3);color:var(--ok-fg)}
+.mod-rapport .derived.is-stopped .icon,.mod-rapport .derived.is-stopped .derived__lbl{color:inherit}
+.mod-rapport .derived__act{margin-left:auto;font-size:.8125rem;color:inherit;text-decoration:underline}
+/* confirmation « passer au lot suivant » */
+.mod-rapport .adv-open{margin:.25rem 0;padding:.5rem .75rem;border-radius:10px;background:var(--wip-bg);color:var(--wip-fg)}
+.mod-rapport .adv-open__t{display:flex;align-items:center;gap:.375rem;margin:0 0 .25rem;font-weight:700}
+.mod-rapport .adv-open ul{margin:0;padding-left:1.375rem}
+.mod-rapport .adv-ech{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem}
+@media (max-width:559.98px){
+  .mod-rapport .fs-step{padding-left:1.375rem}
+  .mod-rapport .rs-ech__l{flex-direction:column}
+}
 /* RS-V4-END */
 /* =========================================================================
    Thème sombre (jetons calculés par v3/theme_tokens.py ; écran seulement, impressions et papiers toujours en clair)
@@ -2342,6 +2443,8 @@ const Core = (() => {
     spark: '<path d="M12 3.5 13.9 10l6.6 2-6.6 2L12 20.5 10.1 14l-6.6-2 6.6-2z"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/>',
     moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    flask: '<path d="M9.5 3h5M10.5 3v6L5 18.5A1.6 1.6 0 0 0 6.4 21h11.2a1.6 1.6 0 0 0 1.4-2.5L13.5 9V3"/><path d="M7.5 15h9"/>',
+    route: '<circle cx="6" cy="5" r="2"/><circle cx="18" cy="19" r="2"/><path d="M8 5h8.5a3.5 3.5 0 0 1 0 7h-9a3.5 3.5 0 0 0 0 7H16"/>',
     themeauto: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17A8.5 8.5 0 0 0 12 3.5z" fill="currentColor"/>',
   };
   /** Icône SVG (classe « icon » par défaut ; cls = '' pour une icône sans classe). */
@@ -3324,7 +3427,7 @@ const Params = (() => {
   const LOCAL_KEY = 'nn-formu-parametres-v1';          /* modifications de ce PC, pas encore enregistrées sur N: */
   const TEAM_KEY = 'nn-formu-parametres-equipe-v1';    /* copie des paramètres de la dernière sauvegarde lue ou écrite */
   const APP = 'outil-formulation-parametres';
-  const SCHEMA = 1;
+  const SCHEMA = 2; /* v2 (outil v5) : parcours par machine et par produit, fin des holding times, vide de ligne */
   const HOURS_MAX = 1000;
   const clone = o => JSON.parse(JSON.stringify(o));
   const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -3337,11 +3440,11 @@ const Params = (() => {
   const BANDS = [{ id: 'enCours', name: 'Lot en cours' }, { id: 'suivant1', name: 'Lot suivant' }, { id: 'suivant2', name: 'Lot suivant +1' }];
   /** Tableaux de holding times intégrés au rapport (une durée par défaut + des exceptions par produit). */
   const HT_TABLES = [
-    { id: 'gronEnCours', line: 'groninger', band: 'Lot en cours', title: 'Limite HT depuis le début de filtration', field: 'Début filtration' },
-    { id: 'inova5EnCours', line: 'inova5', band: 'Lot en cours', title: 'Limite HT pour début filtration', field: 'Début formulation' },
-    { id: 'inova4EnCours', line: 'inova4', band: 'Lot en cours', title: 'Limite HT pour fin de remplissage', field: 'Début / fin de formulation' },
-    { id: 'gronHT72', line: 'groninger', band: 'Lot suivant et suivant +1', title: 'Début HT', field: 'Début HT' },
-    { id: 'gronHTFormu', line: 'groninger', band: 'Lot suivant et suivant +1', title: 'Début HT formu.', field: 'Début HT formu.' },
+    { id: 'gronEnCours', line: 'groninger', band: 'Lot en cours', bands: ['enCours'], title: 'Limite HT depuis le début de filtration', field: 'Début filtration' },
+    { id: 'inova5EnCours', line: 'inova5', band: 'Lot en cours', bands: ['enCours'], title: 'Limite HT pour début filtration', field: 'Début formulation' },
+    { id: 'inova4EnCours', line: 'inova4', band: 'Lot en cours', bands: ['enCours'], title: 'Limite HT pour fin de remplissage', field: 'Début / fin de formulation' },
+    { id: 'gronHT72', line: 'groninger', band: 'Lot suivant et suivant +1', bands: ['suivant1', 'suivant2'], title: 'Début HT', field: 'Début HT' },
+    { id: 'gronHTFormu', line: 'groninger', band: 'Lot suivant et suivant +1', bands: ['suivant1', 'suivant2'], title: 'Début HT formu.', field: 'Début HT formu.' },
   ];
   /** Règles d'applicabilité : « only » = applicable seulement pour les produits cochés ; « not » = non applicable pour eux ;
       « label » = choix du libellé. */
@@ -3440,6 +3543,49 @@ const Params = (() => {
   }
   /** Produits apparus dans une version de l'outil : ajoutés une fois aux paramètres d'une version précédente.
       v3 : modèle d'origine CT-P17 = noms « CTP17- » (1 mL) / « leg- » (2 mL) et liste « Endo-Bottom » / « Endo-Bottom-Backup ». */
+  /* ---------- v5 : parcours par défaut (étapes du procédé, champs rangés sous chaque étape, statuts qui les font avancer) ----------
+     « atteinte » : l'un des statuts a l'une des valeurs → le lot est au moins à cette étape ;
+     « franchie » : tous les statuts renseignés (hors N/A) ont l'une des valeurs → l'étape est faite.
+     La dernière étape est toujours « Vide de ligne » (identifiant vdl). */
+  const C = (k, ...v) => ({ k, v });
+  const STEP = (id, nom, champs, atteinte = [], franchie = []) => ({ id, nom, champs, atteinte, franchie });
+  const STEP_VDL = () => STEP('vdl', 'Vide de ligne', ['vdl'], [C('vdl', 'EN COURS')], [C('vdl', 'FAIT')]);
+  const CONN = ['EN COURS', 'FAIT', 'EN ATTENTE'];
+  const inova5Steps = contenant => [
+    STEP('rentree', `Rentrée des ${contenant}`, ['dossier', 'statutDS']),
+    STEP('equil', 'Équilibrage', ['sortieFrigo'], [C('statutDS', 'ÉQUILIBRAGE')], [C('statutDS', 'À TEMPÉRATURE')]),
+    STEP('formu', 'Formulation', ['pesee', 'cuveFormu', 'tampon', 'formulation', 'poidsFormule', 'debutFormulation'], [C('formulation', 'EN COURS'), C('pesee', 'EN COURS', 'FAIT')], [C('formulation', 'FAIT')]),
+    STEP('conn', 'Connexion', ['statutLocal', 'local', 'connexion', 'filtres', 'monitoring'], [C('connexion', ...CONN)]),
+    STEP_VDL(),
+  ];
+  const PARCOURS_DEFAULTS = {
+    groninger: { def: [
+      STEP('cuves', 'Cuves', ['dossier', 'cuveFormu', 'cuveStockage'], [], [C('cuveFormu', 'PRÊTE'), C('cuveStockage', 'PRÊTE')]),
+      STEP('pesee', 'Pesée', ['pesee'], [C('pesee', 'EN COURS', 'EN ATTENTE')], [C('pesee', 'FAIT')]),
+      STEP('formu', 'Formulation', ['formulation', 'debutHTFormu24', 'w3'], [C('formulation', 'EN COURS')], [C('formulation', 'FAIT')]),
+      STEP('filtsto', 'Filtration stockage', ['filtrationStockage', 'debutHT72'], [C('filtrationStockage', 'EN COURS')], [C('filtrationStockage', 'FAIT')]),
+      STEP('filtrem', 'Filtration remplissage', ['statutLocal', 'local', 'connexion', 'filtres', 'debutFiltration'], [C('connexion', ...CONN)]),
+      STEP_VDL(),
+    ], variants: {} },
+    inova5: { def: inova5Steps('poches'), variants: { 'CT-P17': inova5Steps('bidons') } },
+    inova4: {
+      def: [
+        STEP('cuves', 'Cuves', ['dossier', 'cuveFormu'], [], [C('cuveFormu', 'PRÊTE')]),
+        STEP('formu', 'Formulation', ['pesee', 'formulation', 'dateFormulation'], [C('formulation', 'EN COURS'), C('pesee', 'EN COURS', 'FAIT')], [C('formulation', 'FAIT')]),
+        STEP('conn', 'Connexion', ['statutLocal', 'local', 'connexion', 'filtres', 'checkShift'], [C('connexion', ...CONN)]),
+        STEP_VDL(),
+      ],
+      variants: { NACL: [
+        STEP('cuves', 'Cuves', ['dossier', 'cuveFormu'], [], [C('cuveFormu', 'PRÊTE')]),
+        STEP('pesee', 'Pesée', ['pesee'], [C('pesee', 'EN COURS', 'EN ATTENTE')], [C('pesee', 'FAIT')]),
+        STEP('formu', 'Formulation', ['formulation', 'dateFormulation'], [C('formulation', 'EN COURS')], [C('formulation', 'FAIT')]),
+        STEP('conn', 'Connexion', ['statutLocal', 'local', 'connexion', 'filtres', 'checkShift'], [C('connexion', ...CONN)]),
+        STEP_VDL(),
+      ] },
+    },
+  };
+  /** Champs jamais remis à N/A au vide de ligne. */
+  const VDL_KEEP = ['echantillon', 'vdl', 'lot', 'produit', 'remarques'];
   const ET_VERSION = 3;
   const ET_NEW_IN_V2 = ['CT-P17'];
   const CTP17_V2 = { noms: ['Ech ID', 'Ech REF'] };
@@ -3454,6 +3600,22 @@ const Params = (() => {
         gronHTFormu: { def: 24, defNone: false, rows: [] },
       },
       custom: [],
+      /* v5 : fin de chaque holding time intégré (« s'arrête quand ») : statut = valeur(s) de la même carte, champ date, ou manuel (bouton « ✓ Fait »).
+         HT filtration (Groninger, lot en cours) et HT formulation → fin de remplissage (Inova 4) : fin du remplissage = VDL EN COURS ou FAIT ;
+         HT formulation → filtration (Inova 5) : début de la filtration = Connexion FAIT ;
+         HT formulation 24 h (Groninger, lot suivant) : début de la filtration de stockage = Filtration stockage EN COURS ou FAIT ;
+         HT 72 h (Groninger, lot suivant) : se termine au remplissage, quand le lot est déjà passé « en cours » (ses données ne suivent pas) → manuel. */
+      htFin: {
+        gronEnCours: { type: 'statut', k: 'vdl', v: ['EN COURS', 'FAIT'] },
+        inova5EnCours: { type: 'statut', k: 'connexion', v: ['FAIT'] },
+        inova4EnCours: { type: 'statut', k: 'vdl', v: ['EN COURS', 'FAIT'] },
+        gronHT72: { type: 'manuel', k: '', v: [] },
+        gronHTFormu: { type: 'statut', k: 'filtrationStockage', v: ['EN COURS', 'FAIT'] },
+      },
+      /* v5 : parcours (étapes) par machine, avec des variantes par produit (« se comporte comme » s'applique) */
+      parcours: PARCOURS_DEFAULTS,
+      /* v5 : champs du lot en cours remis à N/A au vide de ligne (gardés : échantillon, remarques, VDL, lot, produit) */
+      vdlReset: { groninger: ['statutLocal', 'connexion', 'filtres'], inova5: ['statutLocal', 'connexion', 'filtres', 'monitoring'], inova4: ['statutLocal', 'connexion', 'filtres', 'checkShift'] },
       /* nom affiché de chaque holding time intégré (ce qu'il mesure) */
       htNames: { gronEnCours: 'HT filtration', inova5EnCours: 'HT formulation → filtration', inova4EnCours: 'HT formulation → fin de remplissage', gronHT72: 'HT 72 h', gronHTFormu: 'HT formulation 24 h' },
       products: {
@@ -3574,6 +3736,41 @@ const Params = (() => {
     return etProduct({ name, contenant, genre, ech, cases, disposition: p.disposition === 'suite' ? 'suite' : 'rangee', champs,
       modele: normModele(p.modele, o.modele), modeleAutres: normModele(p.modeleAutres, o.modeleAutres) });
   }
+  /* ---------- v5 : parcours, fins des holding times ---------- */
+  const KEY_RE = /^[a-z][a-zA-Z0-9_]{0,30}$/;
+  const normVals = v => (Array.isArray(v) ? [...new Set(v.map(x => str(x, 30)).filter(Boolean))].slice(0, 12) : []);
+  function normFin(f) {
+    if (!isObj(f)) return { type: 'manuel', k: '', v: [] };
+    const type = ['statut', 'date', 'manuel'].includes(f.type) ? f.type : 'manuel';
+    const k = typeof f.k === 'string' && KEY_RE.test(f.k) ? f.k : '';
+    if (type === 'manuel' || !k) return { type: 'manuel', k: '', v: [] };
+    if (type === 'date') return { type, k, v: [] };
+    const v = normVals(f.v);
+    return v.length ? { type, k, v } : { type: 'manuel', k: '', v: [] };
+  }
+  const normConds = a => (Array.isArray(a) ? a : []).filter(isObj).slice(0, 8)
+    .map(c => ({ k: typeof c.k === 'string' && KEY_RE.test(c.k) ? c.k : '', v: normVals(c.v) })).filter(c => c.k && c.v.length);
+  /** Étapes d'un parcours : noms, identifiants uniques, champs (chacun sous une seule étape), conditions ; « Vide de ligne » toujours en dernier. */
+  function normSteps(list, def) {
+    if (!Array.isArray(list)) return clone(def);
+    const out = [], ids = new Set(), used = new Set();
+    for (const s of list.slice(0, 15)) {
+      if (!isObj(s)) continue;
+      const nom = str(s.nom, 40);
+      if (!nom) continue;
+      let id = typeof s.id === 'string' && /^[a-z0-9_-]{1,24}$/i.test(s.id) ? s.id : `e${Core.uid().slice(-6).replace(/[^a-z0-9]/gi, 'x')}`;
+      while (ids.has(id)) id = `e${Core.uid().slice(-6).replace(/[^a-z0-9]/gi, 'x')}`;
+      ids.add(id);
+      const champs = (Array.isArray(s.champs) ? s.champs : []).filter(k => typeof k === 'string' && KEY_RE.test(k) && !used.has(k));
+      champs.forEach(k => used.add(k));
+      out.push({ id, nom, champs, atteinte: normConds(s.atteinte), franchie: normConds(s.franchie) });
+    }
+    if (!out.length) return clone(def);
+    let vi = out.findIndex(x => x.id === 'vdl');
+    if (vi < 0) { const v = STEP_VDL(); v.champs = v.champs.filter(k => !used.has(k)); out.push(v); vi = out.length - 1; }
+    if (vi !== out.length - 1) out.push(out.splice(vi, 1)[0]);
+    return out;
+  }
   function normalize(raw) {
     const d = clone(DEFAULTS);
     if (!isObj(raw)) return d;
@@ -3600,10 +3797,26 @@ const Params = (() => {
         /* départ : champ dédié ('') ou champ date existant d'une carte ; seuil d'alerte propre (h avant l'échéance) ou celui de l'outil */
         const start = HT_STARTS.some(x => x.key === c.start) ? c.start : '';
         const soon = hoursOk(c.soon) ? roundH(c.soon) : null;
-        d.rapport.custom.push({ id, nom, lines, bands, produits: normNames(c.produits, allNames) || [], h: roundH(c.h), start, soon });
+        d.rapport.custom.push({ id, nom, lines, bands, produits: normNames(c.produits, allNames) || [], h: roundH(c.h), start, soon, fin: normFin(c.fin) });
       }
     }
     if (isObj(R.htNames)) for (const t of HT_TABLES) { const n = str(R.htNames[t.id], 40); if (n) d.rapport.htNames[t.id] = n; }
+    if (isObj(R.htFin)) for (const t of HT_TABLES) if (R.htFin[t.id] !== undefined) d.rapport.htFin[t.id] = normFin(R.htFin[t.id]);
+    if (isObj(R.parcours)) for (const l of LINES) {
+      const src = R.parcours[l.id];
+      if (!isObj(src)) continue;
+      const pc = { def: normSteps(src.def, DEFAULTS.rapport.parcours[l.id].def), variants: {} };
+      if (isObj(src.variants)) for (const [name, steps] of Object.entries(src.variants)) {
+        const p = names(l.id).find(n => canon(n) === canon(name));
+        if (p && !pc.variants[p] && Object.keys(pc.variants).length < 20) pc.variants[p] = normSteps(steps, pc.def);
+      }
+      d.rapport.parcours[l.id] = pc;
+    } else for (const l of LINES) {
+      /* paramètres d'avant la v5 : variantes d'origine gardées seulement pour les produits encore dans la liste */
+      const v = d.rapport.parcours[l.id].variants;
+      for (const k of Object.keys(v)) if (!names(l.id).includes(k)) delete v[k];
+    }
+    if (isObj(R.vdlReset)) for (const l of LINES) if (Array.isArray(R.vdlReset[l.id])) d.rapport.vdlReset[l.id] = [...new Set(R.vdlReset[l.id].filter(k => typeof k === 'string' && KEY_RE.test(k) && !VDL_KEEP.includes(k)))].slice(0, 30);
     if (isObj(R.colors)) for (const l of LINES) if (hexOk(R.colors[l.id])) d.rapport.colors[l.id] = R.colors[l.id].trim().toUpperCase();
     if (isObj(R.mail)) {
       const web = str(R.mail.web, 200).replace(/\/+$/, '');
@@ -3855,10 +4068,21 @@ const Params = (() => {
   }
   const fmtHours = v => String(v).replace('.', ',');
   const htName = tableId => (cur.rapport.htNames && cur.rapport.htNames[tableId]) || DEFAULTS.rapport.htNames[tableId] || 'Holding time';
+  /** v5 : parcours d'un lot (machine + produit) : variante du produit, sinon de son produit de base (« comme »), sinon celui de la machine. */
+  function parcoursKey(lineId, p) {
+    const pc = cur.rapport.parcours[lineId];
+    if (p && pc.variants[p]) return p;
+    const b = baseOf(lineId, p);
+    return b && pc.variants[b] ? b : '';
+  }
+  const parcoursFor = (lineId, p) => { const k = parcoursKey(lineId, p); const pc = cur.rapport.parcours[lineId]; return k ? pc.variants[k] : pc.def; };
+  /** v5 : fin d'un holding time intégré ({ type: statut | date | manuel, k, v }). */
+  const htFinOf = tableId => (cur.rapport.htFin && cur.rapport.htFin[tableId]) || DEFAULTS.rapport.htFin[tableId] || { type: 'manuel', k: '', v: [] };
 
   init();
   return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, jsonText, importText, parseText,
     products, productNames, baseOf, ruleHas, htHours, htName, fmtHours, shades, lum, normalize, canon,
+    parcoursFor, parcoursKey, htFinOf, VDL_KEEP, STEP_VDL, normSteps,
     DEFAULTS, LINES, BANDS, HT_TABLES, HT_STARTS, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, fmtStamp,
     ET_VARS, ET_CHAMPS, parseLine, etOrigin, normEtProduct };
 })();
@@ -3872,7 +4096,7 @@ const Rapport = (() => {
    1. Constantes & utilitaires
    ========================================================================= */
 const APP_ID = 'rapport-formulation';
-const SCHEMA_VERSION = 2; /* v2 : commentaires (épinglables), 5 shifts */
+const SCHEMA_VERSION = 3; /* v2 : commentaires (épinglables), 5 shifts ; v3 : parcours (étape acquise, étape choisie, heures), fins des holding times, échantillons à suivre */
 const KEYS = { data: 'nn-formu-rapport-v1', prefs: 'nn-formu-rapport-prefs-v1', author: 'nn-formu-auteur', versions: 'nn-formu-rapport-versions-v1' };
 const HISTORY_MAX = 60;
 const UNDO_MAX = 50;
@@ -3992,6 +4216,7 @@ function parseMonthFolder(name) {
    ========================================================================= */
 const LISTS = Object.fromEntries(Object.entries({
   ETAT4: 'N/A:na|EN COURS:wip|FAIT:ok|EN ATTENTE:todo',
+  ETAT3: 'N/A:na|EN COURS:wip|FAIT:ok',
   LOCAL_STATUT: 'N/A:na|À NETTOYER:todo|PRÊT:ok',
   ECH_GRON_ENCOURS: 'N/A:na|AU QC:ok|À PRÉLEVER:todo|AU FRIGO:cold',
   ECH: 'N/A:na|FAIT:ok|EN ATTENTE:todo|AU FRIGO:cold',
@@ -4095,6 +4320,8 @@ const SCHEMA = {
       F.st('pesee', 'Pesée', 'ETAT4'),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
       F.st('cuveStockage', 'Cuve stockage', 'CUVE_STOCKAGE'),
+      F.st('formulation', 'Formulation', 'ETAT3'),
+      F.st('filtrationStockage', 'Filtration stockage', 'ETAT3'),
       F.dt('debutHT72', c => `Début HT (${hoursTxt(htOf('gronHT72', 'groninger')(c))})`, { print: c => `Début HT ${hoursTxt(htOf('gronHT72', 'groninger')(c))}`, limit: { label: c => `Limite HT ${hoursTxt(htOf('gronHT72', 'groninger')(c))}`, table: 'gronHT72', hours: htOf('gronHT72', 'groninger') } }),
       F.st('local', 'Local', 'LOCAL_PREP_GRON'),
       F.dt('debutHTFormu24', c => `Début HT formu. (${hoursTxt(htOf('gronHTFormu', 'groninger')(c))})`, { print: 'Déb. HT formu.', limit: { label: c => `Limite HT formu. ${hoursTxt(htOf('gronHTFormu', 'groninger')(c))}`, table: 'gronHTFormu', hours: htOf('gronHTFormu', 'groninger') } }),
@@ -4112,6 +4339,7 @@ const SCHEMA = {
       F.st('local', 'Local', 'LOCAL_PREP'),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('tampon', 'Tampon', 'TAMPON', { when: onlyForRule('tampon', 'inova5') }),
+      F.st('formulation', 'Formulation', 'ETAT3'),
       F.st('echantillon', 'Échantillon', 'ECH'),
       F.notes(),
     ],
@@ -4120,6 +4348,7 @@ const SCHEMA = {
       F.st('dossier', 'Dossier', 'DOSSIER'),
       F.st('pesee', 'Pesée', 'ETAT4', { when: onlyForRule('peseeInova4', 'inova4') }),
       F.st('cuveFormu', 'Cuve formu.', 'CUVE_FORMU'),
+      F.st('formulation', 'Formulation', 'ETAT3'),
       F.st('local', 'Local', 'LOCAL_PREP'),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
@@ -4162,7 +4391,10 @@ const LEVELS = [
   { id: 'info', label: 'Info', icon: 'info', rank: 2 },
 ];
 const levelOf = id => LEVELS.find(l => l.id === id) || LEVELS[2];
-const CM_MAX = 100, CM_TEXT_MAX = 1000;
+const CM_MAX = 100, CM_TEXT_MAX = 1000, ECH_MAX = 40;
+/* v5 : échantillon de l'ancien lot repris dans « Échantillons à suivre » au passage au lot suivant */
+const ECH_SUIVRE = new Set(['AU FRIGO', 'AU QC', 'À PRÉLEVER', 'EN ATTENTE']);
+const VDL_ON = new Set(['EN COURS', 'FAIT']);
 
 /* =========================================================================
    3. Modèle : valeurs par défaut, normalisation, migration
@@ -4170,7 +4402,24 @@ const CM_MAX = 100, CM_TEXT_MAX = 1000;
 function defaultCard(band, lineId) {
   const c = {};
   for (const f of fieldsFor(band, lineId)) c[f.key] = f.type === 'status' ? 'N/A' : '';
-  return c;
+  return Object.assign(c, cardMeta());
+}
+/** v5 : suivi du parcours et des holding times d'un lot (hors champs saisis) :
+    acquis = étape déjà atteinte (lot passé au suivant, données anciennes) ; etapeChoisie = clic de l'opérateur { id, sig : statuts au moment du clic } ;
+    etapesAt = heure à laquelle chaque étape est devenue faite ; htFin = arrêt de chaque holding time { at, par : statut | manuel }. */
+const cardMeta = () => ({ acquis: '', etapeChoisie: null, etapesAt: {}, htFin: {} });
+const STEP_ID_RE = /^[a-z0-9_-]{1,24}$/i, HT_ID_RE = /^[a-z0-9]{1,16}$/i;
+function normCardMeta(src, d) {
+  d.acquis = typeof src.acquis === 'string' && STEP_ID_RE.test(src.acquis) ? src.acquis : '';
+  const ch = src.etapeChoisie;
+  d.etapeChoisie = isObj(ch) && typeof ch.id === 'string' && STEP_ID_RE.test(ch.id) && typeof ch.sig === 'string' ? { id: ch.id, sig: ch.sig.slice(0, 3000) } : null;
+  d.etapesAt = {};
+  if (isObj(src.etapesAt)) for (const [k, v] of Object.entries(src.etapesAt)) { const t = normDateTime(v); if (STEP_ID_RE.test(k) && t) d.etapesAt[k] = t; }
+  d.htFin = {};
+  if (isObj(src.htFin)) for (const [k, v] of Object.entries(src.htFin)) {
+    const t = isObj(v) ? normDateTime(v.at) : '';
+    if (HT_ID_RE.test(k) && t) d.htFin[k] = { at: t, par: v.par === 'statut' ? 'statut' : 'manuel' };
+  }
 }
 const newFB = () => ({ id: uid(), lotConcerne: '', poids: '', lotSuivant: '', holdingTime: '' });
 const newSD = () => ({ id: uid(), lot: '', scan: 'N/A', check: 'N/A' });
@@ -4187,6 +4436,7 @@ function defaultReport() {
     verif5S: Object.fromEntries(S5.map(k => [k, { statut: 'N/A', note: '' }])),
     suiviDossier: [newSD(), newSD(), newSD()],
     pointsASuivre: '',
+    echantillons: [],
     comments: [],
     updatedAt: null,
     updatedBy: '',
@@ -4217,6 +4467,9 @@ function normalizeReport(r) {
     const src = r.bands?.[b.id]?.[l.id];
     if (!isObj(src)) continue;
     for (const f of fieldsFor(b, l.id)) d.bands[b.id][l.id][f.key] = normField(f, l.id, src[f.key]);
+    normCardMeta(src, d.bands[b.id][l.id]);
+    /* migration v5 : donnée d'avant les parcours → étape acquise calculée depuis ses statuts (lot en cours : au moins l'étape du remplissage) */
+    if (!('acquis' in src)) { const st = parcoursState(b, l, d.bands[b.id][l.id]); d.bands[b.id][l.id].acquis = st.steps[Math.min(st.auto, st.steps.length - 1)].id; }
     /* holding times personnalisés retirés (ou pas encore chargés) : leurs dates sont conservées */
     for (const k of Object.keys(src)) if (/^ht_[a-z0-9]{1,16}$/i.test(k) && !(k in d.bands[b.id][l.id])) { const v = normDateTime(src[k]); if (v) d.bands[b.id][l.id][k] = v; }
   }
@@ -4238,6 +4491,13 @@ function normalizeReport(r) {
     }));
   }
   d.pointsASuivre = str(r.pointsASuivre, 10000);
+  /* v5 : échantillons des lots passés au suivant, à sortir du frigo / envoyer au QC */
+  if (Array.isArray(r.echantillons)) {
+    d.echantillons = r.echantillons.filter(isObj).slice(0, ECH_MAX).map(x => ({
+      id: rowId(x), line: LINES.some(l => l.id === x.line) ? x.line : '', lot: str(x.lot, 40).toUpperCase(), produit: str(x.produit, 60),
+      etat: str(x.etat, 30), at: normDateTime(x.at),
+    })).filter(x => x.line && x.etat);
+  }
   if (Array.isArray(r.comments)) {
     d.comments = r.comments.filter(x => isObj(x) && str(x.text, CM_TEXT_MAX).trim()).slice(0, CM_MAX).map(x => ({
       id: rowId(x), text: str(x.text, CM_TEXT_MAX).trim(), level: levelOf(x.level).id,
@@ -4249,10 +4509,14 @@ function normalizeReport(r) {
   d.updatedBy = str(r.updatedBy, 80);
   return d;
 }
-/** Migrations : v1 → v2 (commentaires ajoutés, vides). La normalisation complète le reste. */
+/** Migrations : v1 → v2 (commentaires ajoutés, vides) ; v2 → v3 (parcours : étape acquise calculée depuis les statuts de chaque carte,
+    fins des holding times et échantillons à suivre vides). La normalisation complète le reste, sans rien perdre. */
 function migrate(report, version) {
-  if (version < 2 && isObj(report) && !Array.isArray(report.comments)) return { ...report, comments: [] };
-  return report;
+  if (!isObj(report)) return report;
+  let r = report;
+  if (version < 2 && !Array.isArray(r.comments)) r = { ...r, comments: [] };
+  if (version < 3 && !Array.isArray(r.echantillons)) r = { ...r, echantillons: [] };
+  return r;
 }
 function normalizeHistory(list) {
   if (!Array.isArray(list)) return [];
@@ -4300,8 +4564,21 @@ const naReason = (f, c) => (f.when ? f.when(c) : null);
 const htTitle = (nom, hours) => (new RegExp(`(^|\\D)${String(fmtH(hours)).replace('.', '\\.')}\\s*h\\b`).test(nom) ? nom : `${nom} (${fmtH(hours)} h)`);
 /** Limite de holding time : nom affiché, durée, départ (champ + date), échéance, % écoulé, ton (todo dépassé · wip bientôt ·
     neutral) et niveau de la barre (over dépassé · soon sous le seuil d'alerte · mid ≥ 50 % · ok < 50 %). */
-function makeLimit(start, hours, now, soonH, { id, nom, depart, perso }) {
+function makeLimit(start, hours, now, soonH, { id, nom, depart, perso, stop }) {
   const due = new Date(start.getTime() + hours * 3600e3);
+  if (stop) {
+    /* v5 : holding time arrêté (fin atteinte) : hors alertes et compteurs, gardé pour la traçabilité */
+    const marge = due - stop.at, ok = marge >= 0, label = htTitle(nom, hours);
+    const when = sameDayAs(stop.at, now) ? fmtTime(stop.at) : fmtDM(stop.at);
+    return {
+      id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining: marge, pct: Math.min(1, Math.max(0, (stop.at - start) / (hours * 3600e3))),
+      stopped: true, stopAt: stop.at, stopPar: stop.par, respected: ok,
+      full: `${nom} · ${fmtH(hours)} h — depuis ${depart.charAt(0).toLowerCase()}${depart.slice(1)} ${fmtDM(start)} — limite ${fmtDM(due)} — fait le ${fmtDM(stop.at)}`,
+      tone: ok ? 'ok' : 'todo', level: ok ? 'done' : 'late', etat: ok ? 'respecté' : 'dépassé',
+      rest: ok ? `Respecté · fait à ${when}, ${fmtDur(marge)} avant la limite` : `Dépassé de ${fmtDur(marge)} · fait à ${when}`,
+      short: ok ? 'Respecté' : `Dépassé de ${fmtDur(marge)}`, when,
+    };
+  }
   const remaining = due - now;
   const pct = Math.max(0, (now - start) / (hours * 3600e3));
   const soon = remaining < soonH * 3600e3;
@@ -4322,9 +4599,11 @@ function limitOf(f, c, now) {
   if (!start) return null; /* HT non démarré : n'apparaît pas */
   const hours = f.limit.hours(c);
   if (hours == null) return null; /* « aucune limite » pour ce produit (onglet Paramètres) */
+  const id = f.custom ? f.htId : f.limit.table;
+  const fin = f.custom ? (Params.get().rapport.custom.find(x => x.id === f.htId) || {}).fin : Params.htFinOf(f.limit.table);
   return makeLimit(start, hours, now, f.limit.soon ?? soonHours(), f.custom
-    ? { id: f.htId, nom: f.htName, depart: 'départ saisi', perso: true }
-    : { id: f.limit.table, nom: Params.htName(f.limit.table), depart: labelOf(f, c).replace(/\s*\(.*\)$/, '') });
+    ? { id, nom: f.htName, depart: 'départ saisi', perso: true, stop: htStopOf(id, fin, c) }
+    : { id, nom: Params.htName(f.limit.table), depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), stop: htStopOf(id, fin, c) });
 }
 /** Holding times personnalisés qui partent d'un champ date EXISTANT (onglet Paramètres › « Départ ») : pas de nouveau champ,
     une échéance de plus sous ce champ. */
@@ -4337,7 +4616,7 @@ function customLimitsOf(f, b, lineId, c, now) {
   if (!start) return [];
   return startCustoms(b, lineId).filter(x => x.start === f.key
       && (!x.produits.length || x.produits.includes(c.produit) || x.produits.includes(Params.baseOf(lineId, c.produit))))
-    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), perso: true }), custom: x }));
+    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), perso: true, stop: htStopOf(x.id, x.fin, c) }), custom: x }));
 }
 /** Toutes les limites d'un champ : la sienne (schéma ou champ personnalisé) + celles qui partent de lui. */
 function limitsOfField(f, b, lineId, c, now) {
@@ -4345,16 +4624,16 @@ function limitsOfField(f, b, lineId, c, now) {
   return [...(own ? [own] : []), ...customLimitsOf(f, b, lineId, c, now)];
 }
 function computeAlerts(report, now) {
-  const frigo = [], limits = [];
+  const frigo = [], limits = [], done = [];
   for (const b of BANDS) for (const l of LINES) {
     const c = report.bands[b.id][l.id];
     for (const f of fieldsFor(b, l.id)) {
       if (f.key === 'echantillon' && c.echantillon === 'AU FRIGO' && !naReason(f, c)) frigo.push({ band: b, line: l, lot: c.lot });
-      for (const lim of limitsOfField(f, b, l.id, c, now)) limits.push({ ...lim, band: b, line: l, lot: c.lot, field: f.key });
+      for (const lim of limitsOfField(f, b, l.id, c, now)) (lim.stopped ? done : limits).push({ ...lim, band: b, line: l, lot: c.lot, field: f.key });
     }
   }
   limits.sort((a, b) => a.due - b.due);
-  return { frigo, limits };
+  return { frigo, limits, done };
 }
 /** Holding times DÉMARRÉS (date de départ renseignée), triés par urgence ; filtre facultatif { line, band }.
     Chaque entrée : { id, nom, heures, departLabel, departDate, limite, restant, pct, etat (vert/orange/rouge), perso, ligne, bande, lot }. */
@@ -4364,6 +4643,107 @@ function htList(report, now = new Date(), { line, band } = {}) {
     etat: l.etat, perso: l.perso, ligne: l.line.name, bande: l.band.title, lot: l.lot || '', texte: l.full,
   }));
 }
+/* ---------- v5 : parcours (étapes) d'un lot ----------
+   Étapes de la machine (variante du produit si elle existe), champs rangés sous chaque étape (Paramètres). Étape actuelle :
+   automatique d'après les statuts reliés (« atteinte » : l'un des statuts a l'une des valeurs ; « franchie » : tous les statuts
+   renseignés ont l'une des valeurs), jamais avant l'étape acquise (lot passé au suivant) ; lot en cours sans étape acquise :
+   au moins l'étape du remplissage (celle de la Connexion). Un clic de l'opérateur l'emporte jusqu'au prochain changement de statut. */
+const statusSig = (b, lineId, c) => fieldsFor(b, lineId).filter(f => f.type === 'status').map(f => c[f.key] || '').join('|');
+function condVal(cd, fmap, c) {
+  const f = fmap.get(cd.k);
+  if (!f || f.type !== 'status' || naReason(f, c)) return null;
+  const v = c[cd.k];
+  return !v || v === 'N/A' ? null : cd.v.includes(v);
+}
+function parcoursState(b, l, c) {
+  const lineId = typeof l === 'string' ? l : l.id;
+  const steps = Params.parcoursFor(lineId, c.produit);
+  const fields = fieldsFor(b, lineId), fmap = new Map(fields.map(f => [f.key, f]));
+  let auto = 0;
+  steps.forEach((s, i) => {
+    if (s.atteinte.some(cd => condVal(cd, fmap, c) === true)) auto = Math.max(auto, i);
+    const fr = s.franchie.map(cd => condVal(cd, fmap, c)).filter(x => x !== null);
+    if (fr.length && fr.every(Boolean)) auto = Math.max(auto, i + 1);
+  });
+  const ai = c.acquis ? steps.findIndex(s => s.id === c.acquis) : -1;
+  if (ai >= 0) auto = Math.max(auto, ai);
+  else if (b.kind === 'enCours') { const fi = steps.findIndex(s => s.champs.includes('connexion')); if (fi >= 0) auto = Math.max(auto, fi); }
+  const n = steps.length;
+  let cur = Math.min(auto, n - 1), allDone = auto >= n, manual = false;
+  const ch = c.etapeChoisie;
+  if (ch && ch.sig === statusSig(b, lineId, c)) { const i = steps.findIndex(s => s.id === ch.id); if (i >= 0) { cur = i; allDone = false; manual = true; } }
+  const state = i => (i < cur || (allDone && i === cur) ? 'ok' : i === cur ? 'now' : 'todo');
+  return { steps, fields, fmap, auto, cur, allDone, manual, state, key: Params.parcoursKey(lineId, c.produit) };
+}
+/** Champs de la carte rangés par étape (+ « Hors parcours » : champs rattachés à aucune étape). */
+function stepFields(st) {
+  const all = st.fields.filter(f => f.type !== 'lot' && f.type !== 'product' && f.type !== 'textarea');
+  const placed = new Set();
+  const groups = st.steps.map(s => {
+    const fs = s.champs.map(k => all.find(f => f.key === k)).filter(Boolean);
+    fs.forEach(f => placed.add(f.key));
+    return fs;
+  });
+  return { groups, rest: all.filter(f => !placed.has(f.key)) };
+}
+/* ---------- v5 : holding times avec une fin ---------- */
+/** Holding times possibles d'une carte : { id, nom, key (champ de départ), fin }. */
+function htDefsOf(b, lineId) {
+  const out = [];
+  for (const f of fieldsFor(b, lineId)) {
+    if (f.limit && f.custom) out.push({ id: f.htId, key: f.key, fin: (Params.get().rapport.custom.find(x => x.id === f.htId) || {}).fin || { type: 'manuel' } });
+    else if (f.limit && f.limit.table) out.push({ id: f.limit.table, key: f.key, fin: Params.htFinOf(f.limit.table) });
+  }
+  for (const x of startCustoms(b, lineId)) out.push({ id: x.id, key: x.start, fin: x.fin || { type: 'manuel' } });
+  return out;
+}
+const finLabel = (fin, b, lineId) => {
+  if (!fin || fin.type === 'manuel') return 'manuel (bouton « ✓ Fait »)';
+  const f = fieldsFor(b, lineId).find(x => x.key === fin.k);
+  const lbl = f ? String(typeof f.label === 'function' ? f.label({}) : f.label).replace(/\s*\(.*\)$/, '') : fin.k;
+  return fin.type === 'date' ? `date « ${lbl} » saisie` : `${lbl} = ${fin.v.join(' ou ')}`;
+};
+/** Arrêt d'un holding time : { at: Date, par } ou null (champ date de fin, statut relevé à son passage, « ✓ Fait »). */
+function htStopOf(id, fin, c) {
+  if (fin && fin.type === 'date') { const d = parseLocal(c[fin.k]); if (d) return { at: d, par: 'date' }; }
+  const x = c.htFin && c.htFin[id];
+  const d = x ? parseLocal(x.at) : null;
+  return d ? { at: d, par: x.par } : null;
+}
+/** Suivi automatique après chaque modification : heure des étapes faites, arrêt des holding times par statut,
+    vide de ligne (VDL EN COURS / FAIT → champs listés remis à N/A). Renvoie les remises à N/A (pour le toast « Annuler »). */
+function trackReport(r, prev, now) {
+  const at = toLocalInput(now), resets = [];
+  for (const b of BANDS) for (const l of LINES) {
+    const c = r.bands[b.id][l.id], p = prev && prev[b.id] && prev[b.id][l.id];
+    if (!p) continue;
+    /* vide de ligne : passage de VDL à EN COURS ou FAIT (choisi aussi par un clic sur l'étape « Vide de ligne ») */
+    if (b.kind === 'enCours' && VDL_ON.has(c.vdl) && !VDL_ON.has(p.vdl)) {
+      const fs = fieldsFor(b, l.id);
+      const keys = Params.get().rapport.vdlReset[l.id].filter(k => !Params.VDL_KEEP.includes(k) && fs.some(f => f.key === k && f.type === 'status') && c[k] && c[k] !== 'N/A');
+      const saved = {};
+      for (const k of keys) { saved[k] = c[k]; c[k] = 'N/A'; }
+      if (keys.length) resets.push({ line: l, keys, saved, labels: keys.map(k => labelOf(fs.find(f => f.key === k), c)) });
+    }
+    /* clic sur une étape : signature des statuts prise APRÈS les effets du clic (vide de ligne) */
+    if (c.etapeChoisie && c.etapeChoisie.fresh) c.etapeChoisie = { id: c.etapeChoisie.id, sig: statusSig(b, l.id, c) };
+    /* holding times arrêtés par un statut : heure relevée au passage à la valeur */
+    for (const d of htDefsOf(b, l.id)) {
+      if (!d.fin || d.fin.type !== 'statut' || !parseLocal(c[d.key]) || (c.htFin && c.htFin[d.id])) continue;
+      if (d.fin.v.includes(c[d.fin.k]) && !d.fin.v.includes(p[d.fin.k])) c.htFin = { ...(c.htFin || {}), [d.id]: { at, par: 'statut' } };
+    }
+    /* heure des étapes devenues faites */
+    const was = parcoursState(b, l, p), st = parcoursState(b, l, c);
+    st.steps.forEach((s, i) => {
+      const done = st.state(i) === 'ok';
+      const wasDone = was.steps.some((x, j) => x.id === s.id && was.state(j) === 'ok');
+      if (done && !wasDone && !c.etapesAt[s.id]) c.etapesAt = { ...c.etapesAt, [s.id]: at };
+      if (!done && i > st.cur && c.etapesAt[s.id]) { const e = { ...c.etapesAt }; delete e[s.id]; c.etapesAt = e; }
+    });
+  }
+  return resets;
+}
+
 /* ---------- Commentaires ---------- */
 const cmExpired = (cm, now) => { const u = parseLocal(cm.until); return !!u && u <= now; };
 /** Épinglé et pas encore expiré (« valable jusqu'au » dépassé → désépinglé automatiquement). */
@@ -4511,15 +4891,40 @@ const htNameH = (nom, hours) => (htTitle(nom, hours) === nom ? nom : `${nom} · 
 /** Temps restant en gros : « 3 h 00 », « +1 h 06 » (dépassé). */
 const htLeft = l => `${l.remaining < 0 ? '+' : ''}${fmtDur(l.remaining)}`;
 const BAND_K = { enCours: 'En cours', suivant1: 'Suivant', suivant2: 'Suivant +1' };
-/** Carte d'un lot : TOUTES les valeurs renseignées (statuts dans l'ordre du procédé, valeurs, dates), holding times triés par urgence, remarques. */
+/** v5 : parcours d'un lot pour l'affichage : chaque étape (faite / actuelle / à venir, heure) avec les valeurs renseignées de ses champs. */
+function parcoursModel(b, l, c, at) {
+  const st = parcoursState(b, l, c);
+  const { groups, rest } = stepFields(st);
+  const itemOf = f => {
+    if (naReason(f, c)) return null;
+    const v = c[f.key], label = labelOf(f, c).replace(/\s*\(.*\)$/, '');
+    if (f.type === 'status') return v && v !== 'N/A' ? { kind: 'status', key: f.key, label, value: v, tone: toneOf(f.list, v), cold: v === 'AU FRIGO' } : null;
+    if (f.type === 'datetime') { const d = parseLocal(v); return d ? { kind: 'date', key: f.key, label, value: fmtDM(d), lims: limitsOfField(f, b, l.id, c, at).length > 0 } : null; }
+    return (v || '').trim() ? { kind: 'text', key: f.key, label, value: f.unit === 'kg' ? normKg(v) : v.trim() } : null;
+  };
+  const steps = st.steps.map((s, i) => ({ id: s.id, nom: s.nom, state: st.state(i), at: parseLocal(c.etapesAt && c.etapesAt[s.id]), items: groups[i].map(itemOf).filter(Boolean), fields: groups[i].map(f => f.key) }));
+  return { st, steps, rest: rest.map(itemOf).filter(Boolean), restFields: rest.map(f => f.key), cur: st.cur, manual: st.manual, allDone: st.allDone };
+}
+/** Texte court d'une étape faite : « 08:40 · W3 118 kg » (les statuts « faits » sont sous-entendus par la coche verte). */
+const stepWhen = (d, now) => (d ? (sameDayAs(d, now) ? fmtTime(d) : fmtDM(d)) : '');
+/** Carte d'un lot : en-tête, parcours (étapes, statuts renseignés sous leur étape), holding times triés par urgence, remarques. */
 function lotModel(b, l, c, at) {
   const d = detailModel(b, l, c, at, true);
-  const pills = d.steps.filter(x => x.kind === 'status');
-  const kv = [...d.steps.filter(x => x.kind !== 'status'), ...d.dates.map(x => ({ kind: 'date', label: x.label, value: x.value }))];
-  const hts = d.dates.flatMap(x => x.lims).sort((x, y) => x.remaining - y.remaining);
+  const pm = parcoursModel(b, l, c, at);
+  const hts = d.dates.flatMap(x => x.lims).sort((x, y) => (x.stopped ? 1 : 0) - (y.stopped ? 1 : 0) || x.remaining - y.remaining);
+  const any = pm.steps.some(s => s.items.length) || pm.rest.length;
+  const progressed = pm.st.auto > 0 || pm.manual;
+  const vs = pm.steps.map((s, i) => {
+    let items = s.items.filter(x => !(x.kind === 'date' && x.lims));
+    /* champs hors parcours (ex. Échantillon) : sous l'étape actuelle */
+    if (i === pm.cur) items = [...items, ...pm.rest.filter(x => !(x.kind === 'date' && x.lims))];
+    const shown = s.state === 'ok' ? items.filter(x => x.kind !== 'status' || x.tone !== 'ok') : items;
+    return { id: s.id, nom: s.nom, state: s.state, when: s.state === 'ok' ? stepWhen(s.at, at) : '', items: shown };
+  });
   return {
-    band: b, line: l, k: BAND_K[b.id], lot: c.lot || '', produit: c.produit || '', pills, kv, hts, notes: d.notes,
-    hot: hts.some(x => x.level === 'over'), empty: !pills.length && !kv.length && !hts.length && !d.notes,
+    band: b, line: l, k: BAND_K[b.id], lot: c.lot || '', produit: c.produit || '', vs, manual: pm.manual, allDone: pm.allDone,
+    pills: vs.flatMap(s => s.items.filter(x => x.kind === 'status')), kv: [], hts, notes: d.notes,
+    hot: hts.some(x => x.level === 'over'), empty: !any && !hts.length && !d.notes && !(c.lot && progressed),
   };
 }
 function boardModel(report, now, alerts = computeAlerts(report, now)) {
@@ -4559,7 +4964,9 @@ function boardModel(report, now, alerts = computeAlerts(report, now)) {
       cards, more,
     };
   });
-  return { syn, verdict: syn.verdict, vword: syn.vword, vicon: syn.vicon, banners, todo, soon, kpis, frigo, cols, now };
+  const ech = (report.echantillons || []).map(x => { const ln = LINES.find(l => l.id === x.line); const d = parseLocal(x.at);
+    return { ...x, lineObj: ln, cold: x.etat === 'AU FRIGO', text: `${ln ? ln.name : '—'} · ${x.lot || '—'}${x.produit ? ` ${x.produit}` : ''}`, since: d ? `depuis ${stepWhen(d, now)}` : '' }; });
+  return { syn, verdict: syn.verdict, vword: syn.vword, vicon: syn.vicon, banners, todo, soon, kpis, frigo, cols, ech, now };
 }
 /** Méta d'un bandeau épinglé : « Toutes lignes · Mehdi · 30/09 23:10 ». */
 const pinMeta = (cm, now) => {
@@ -4582,8 +4989,19 @@ function change(mutate, key = null) {
   const t = Date.now();
   if (!key || key !== undoMeta.key || t - undoMeta.t > 2500) pushUndo();
   undoMeta = { key, t };
+  const prev = clone(state.report.bands);
   mutate(state.report);
+  const resets = trackReport(state.report, prev, new Date());
   touched();
+  if (resets.length) vdlToast(resets);
+}
+/** v5 : « n champs remis à N/A — Annuler » (Annuler rétablit ces champs, le VDL reste). */
+function vdlToast(resets) {
+  const n = resets.reduce((a, x) => a + x.keys.length, 0);
+  toast(`${n} champ${n > 1 ? 's' : ''} remis à N/A (vide de ligne ${resets.map(x => x.line.name).join(', ')} : ${resets.flatMap(x => x.labels).join(', ')})`, {
+    icon: 'reset', timeout: 12000, action: 'Annuler',
+    onAction: () => change(r => { for (const x of resets) for (const k of x.keys) r.bands.enCours[x.line.id][k] = x.saved[k]; }),
+  });
 }
 function replaceReport(next) {
   pushUndo();
@@ -4613,7 +5031,7 @@ function undo() {
 /* =========================================================================
    6. Stockage local (localStorage, toujours sous try/catch)
    ========================================================================= */
-const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false, shiftSlot: '', shiftChoice: '' };
+const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false, shiftSlot: '', shiftChoice: '', allSteps: false };
 /* anciennes préférences du partage sur N: (version précédente) : lues une fois, pour la migration vers sauvegarde.js */
 let legacyShared = { knownSavedAt: null, dirty: false };
 function loadPrefs() {
@@ -4623,6 +5041,7 @@ function loadPrefs() {
       prefs.collapsed = isObj(p.collapsed) ? p.collapsed : {};
       prefs.lineFilter = ['all', ...LINES.map(l => l.id)].includes(p.lineFilter) ? p.lineFilter : 'all';
       prefs.printHelpSeen = p.printHelpSeen === true;
+      prefs.allSteps = p.allSteps === true;
       prefs.shiftSlot = typeof p.shiftSlot === 'string' ? p.shiftSlot.slice(0, 40) : '';
       prefs.shiftChoice = SHIFTS.includes(p.shiftChoice) ? p.shiftChoice : '';
       legacyShared = { knownSavedAt: validIso(p.sharedKnownSavedAt), dirty: p.sharedDirty === true };
@@ -4693,9 +5112,25 @@ function diffReports(ref, cur) {
   for (const b of BANDS) for (const l of LINES) {
     const o = ref.bands[b.id][l.id], c = cur.bands[b.id][l.id];
     if ((o.lot || '') !== (c.lot || '')) {
-      items.push({ kind: 'lot', line: l, band: b, lot: c.lot, label: b.title, from: o.lot || '—', to: c.lot || '—' });
+      /* v5 : passage au lot suivant (le lot suivant d'avant est devenu le lot en cours) */
+      const passed = b.id === 'enCours' && c.lot && c.lot === (ref.bands.suivant1[l.id].lot || '');
+      items.push({ kind: 'lot', line: l, band: b, lot: c.lot, label: passed ? 'Passage au lot suivant' : b.title, from: o.lot || '—', to: c.lot || '—' });
       keys.add(`${b.id}.${l.id}.lot`); keys.add(`${b.id}.${l.id}.*`);
       continue;
+    }
+    if (c.lot) {
+      /* v5 : changement d'étape du parcours */
+      const so = parcoursState(b, l, o), sc = parcoursState(b, l, c);
+      const nm = st => (st.allDone ? `${st.steps[st.steps.length - 1].nom} (fait)` : st.steps[st.cur].nom);
+      if (nm(so) !== nm(sc)) items.push({ kind: 'field', line: l, band: b, lot: c.lot, label: 'Étape', from: nm(so), to: nm(sc) });
+      /* v5 : holding times arrêtés depuis la version de référence */
+      const now = new Date();
+      for (const f of fieldsFor(b, l.id)) for (const lim of limitsOfField(f, b, l.id, c, now)) {
+        if (!lim.stopped) continue;
+        const d = htDefsOf(b, l.id).find(x => x.id === lim.id);
+        if (d && htStopOf(d.id, d.fin, o)) continue;
+        items.push({ kind: 'field', line: l, band: b, lot: c.lot, label: lim.nom, from: 'en cours', to: lim.respected ? `fait à ${fmtDM(lim.stopAt)} (respecté)` : `fait à ${fmtDM(lim.stopAt)} (dépassé de ${fmtDur(lim.remaining)})` });
+      }
     }
     for (const f of fieldsFor(b, l.id)) {
       if (f.type === 'lot') continue;
@@ -4719,6 +5154,11 @@ function diffReports(ref, cur) {
       if (o[k] !== x[k]) items.push({ kind: 'annex', label: `Suivi dossier · ${x.lot} · ${lbl}`, from: o[k], to: x[k] });
     }
   }
+  /* v5 : échantillons à suivre ajoutés (passage au suivant) ou sortis / envoyés */
+  const ids = r => new Set((r.echantillons || []).map(x => x.id));
+  const oe = ids(ref), ce = ids(cur);
+  for (const x of cur.echantillons || []) if (!oe.has(x.id)) items.push({ kind: 'annex', line: LINES.find(l => l.id === x.line), label: `Échantillon à suivre · ${x.lot}`, note: `ajouté (${x.etat.toLowerCase()})` });
+  for (const x of ref.echantillons || []) if (!ce.has(x.id)) items.push({ kind: 'annex', line: LINES.find(l => l.id === x.line), label: `Échantillon ${x.lot}`, note: 'sorti / envoyé' });
   const fbSig = r => JSON.stringify(r.fillingBreakdown.map(x => FB_FIELDS.map(f => x[f.key])).filter(a => a.some(Boolean)));
   if (fbSig(ref) !== fbSig(cur)) items.push({ kind: 'annex', label: 'Filling breakdown', note: 'mis à jour' });
   if (ref.pointsASuivre.trim() !== cur.pointsASuivre.trim()) { keys.add('points'); items.push({ kind: 'annex', label: 'Points à suivre', note: 'modifiés' }); }
@@ -4998,9 +5438,17 @@ function buildCardField(f, line, get, set, id, band) {
   let derivedSig = '', moreSig = '';
   const derivedRow = (lim, cls = '') => {
     const pct = Math.min(100, Math.round(lim.pct * 100));
+    /* v5 : holding time arrêté : « Respecté · fait à 08:40, 2 h 14 avant la limite » (vert) ou « Dépassé de … » (rouge), bouton « Rouvrir » */
+    if (lim.stopped) {
+      return [icon(lim.respected ? 'done' : 'alert'),
+        h('span', { class: 'derived__lbl', text: lim.label }),
+        h('span', { class: 'derived__val' }, h('b', { text: lim.rest }), ` · limite ${fmtDM(lim.due)}`),
+        band ? h('button', { type: 'button', class: 'btn-link derived__act', onclick: () => htReopen(band, line, lim.id), 'aria-label': `Rouvrir ${lim.nom}` }, 'Rouvrir') : null];
+    }
     return [icon(lim.tone === 'todo' ? 'alert' : 'clock'),
       h('span', { class: 'derived__lbl', text: lim.label }),
       h('span', { class: 'derived__val' }, h('b', { text: fmtDM(lim.due) }), ` · ${lim.rest}`),
+      band ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm derived__done', onclick: () => htDoneDialog(band, line, lim), 'aria-label': `${lim.nom} : fait` }, icon('check'), 'Fait') : null,
       h('span', { class: `derived__bar ht--${lim.level}${cls}`, 'aria-hidden': 'true' }, h('i', { style: `width:${pct}%` }))];
   };
   function sync() {
@@ -5016,23 +5464,23 @@ function buildCardField(f, line, get, set, id, band) {
     const now = new Date();
     if (derived) {
       const lim = limitOf(f, c, now);
-      const sig = lim ? `${lim.label}|${+lim.due}|${lim.rest}|${lim.tone}|${Math.round(lim.pct * 100)}` : '';
+      const sig = lim ? `${lim.label}|${+lim.due}|${lim.rest}|${lim.tone}|${Math.round(lim.pct * 100)}|${lim.stopped}` : '';
       if (sig !== derivedSig) {
         derivedSig = sig;
         derived.hidden = !lim;
         if (lim) {
-          derived.className = `derived tone-${lim.tone}`;
+          derived.className = `derived tone-${lim.tone}${lim.stopped ? ` is-stopped is-${lim.respected ? 'kept' : 'late'}` : ''}`;
           derived.replaceChildren(...derivedRow(lim));
         }
       }
     }
     if (more && band) {
       const lims = customLimitsOf(f, band, line.id, c, now);
-      const sig = lims.map(l => `${l.label}|${+l.due}|${l.rest}|${l.tone}|${Math.round(l.pct * 100)}`).join('#');
+      const sig = lims.map(l => `${l.label}|${+l.due}|${l.rest}|${l.tone}|${Math.round(l.pct * 100)}|${l.stopped}`).join('#');
       if (sig !== moreSig) {
         moreSig = sig;
         more.hidden = !lims.length;
-        more.replaceChildren(...lims.map(l => h('div', { class: `derived tone-${l.tone}` }, ...derivedRow(l))));
+        more.replaceChildren(...lims.map(l => h('div', { class: `derived tone-${l.tone}${l.stopped ? ` is-stopped is-${l.respected ? 'kept' : 'late'}` : ''}` }, ...derivedRow(l))));
       }
     }
     if (newKey) {
@@ -5045,32 +5493,98 @@ function buildCardField(f, line, get, set, id, band) {
   return { el, sync };
 }
 
+/* v5 : saisie rangée par étape : chaque champ sous son étape (Paramètres › Parcours), étapes faites repliées en une ligne résumé
+   (clic = rouvrir), étape actuelle ouverte, remarques toujours en bas. « Ouvrir toutes les étapes » : préférence de ce PC. */
+const stepOpen = new Map(); /* repli choisi à la main pendant la session : `${bande}.${ligne}.${étape}.${état}` → ouvert ? */
 function buildCard(b, l) {
   const get = () => state.report.bands[b.id][l.id];
   const set = (key, v, typing = false) => change(r => { r.bands[b.id][l.id][key] = v; }, typing ? `${b.id}.${l.id}.${key}` : null);
   const fields = fieldsFor(b, l.id);
   const fviews = fields.map(f => buildCardField(f, l, get, set, `f-${b.id}-${l.id}-${f.key}`, b));
+  const fv = new Map(fields.map((f, i) => [f.key, fviews[i]]));
   const titleId = `card-${b.id}-${l.id}`;
   const lotChip = h('span', { class: 'chip chip--lot', hidden: true });
   const prodChip = h('span', { class: 'chip chip--prod', hidden: true });
   const dots = h('span', { class: 'card__dots', 'aria-hidden': 'true' });
-  const body = h('div', { class: 'card__body' }, h('div', { class: 'field-pair' }, fviews[0].el, fviews[1].el), fviews.slice(2).map(v => v.el));
+  const steps = h('ol', { class: 'fs-steps', 'aria-label': `Étapes du lot (${l.name}, ${b.short})` });
+  const rest = h('section', { class: 'fs-rest', hidden: true }, h('h4', { class: 'fs-rest__t', text: 'Hors parcours' }), h('div', { class: 'fs-flds' }));
+  const manualNote = h('p', { class: 'fs-manual', hidden: true });
+  const notes = fv.get('remarques');
+  const body = h('div', { class: 'card__body card__body--steps' },
+    h('div', { class: 'field-pair' }, fv.get('lot').el, fv.get('produit').el), manualNote, steps, rest, notes ? h('div', { class: 'fs-notes' }, notes.el) : null);
+  const advance = () => confirmAdvance(l);
   const foot = b.kind === 'enCours'
-    ? h('div', { class: 'card__foot' }, h('button', { type: 'button', class: 'btn btn-quiet btn-sm', onclick: () => confirmAdvance(l) }, icon('done'), 'Lot terminé', icon('arrow', 'icon icon--sm'), 'passer au suivant'))
+    ? h('div', { class: 'card__foot' }, h('button', { type: 'button', class: 'btn btn-quiet btn-sm', onclick: advance }, icon('done'), 'Lot terminé', icon('arrow', 'icon icon--sm'), 'passer au suivant'))
     : null;
+  /* gros bouton dans l'étape « Vide de ligne » (lot en cours) */
+  const vdlGo = b.kind === 'enCours' ? h('button', { type: 'button', class: 'btn btn-primary fs-go', onclick: advance, hidden: true }, icon('done'), h('span', {}, 'Vide de ligne fait'), icon('arrow', 'icon'), h('span', {}, 'passer au lot suivant')) : null;
   const el = h('article', { class: 'card', 'data-line': l.id, 'data-band': b.id, 'aria-labelledby': titleId },
     h('header', { class: 'card__head' }, h('h3', { class: 'card__title', id: titleId, text: l.name }), lotChip, prodChip, dots), body, foot);
-  let dotsSig = '';
+  let dotsSig = '', layoutSig = '', items = [];
+  /** (Re)range les champs sous leurs étapes quand le parcours change (produit, Paramètres). */
+  function layout(st) {
+    const { groups, rest: hors } = stepFields(st);
+    const sig = JSON.stringify([st.steps.map(x => [x.id, x.nom]), groups.map(g => g.map(f => f.key)), hors.map(f => f.key)]);
+    if (sig === layoutSig) return;
+    layoutSig = sig;
+    items = st.steps.map((sp, i) => {
+      const fid = `fs-${b.id}-${l.id}-${sp.id}`;
+      const flds = h('div', { class: 'fs-flds', id: `${fid}-f` }, groups[i].map(f => fv.get(f.key).el));
+      if (sp.id === 'vdl' && vdlGo) flds.append(vdlGo);
+      const sum = h('span', { class: 'fs-sum' });
+      const has = groups[i].length > 0 || (sp.id === 'vdl' && !!vdlGo);
+      const tog = h('button', { type: 'button', class: 'fs-tog', id: `${fid}-t`, 'aria-controls': has ? flds.id : null, 'aria-expanded': has ? 'true' : null, disabled: has ? null : true },
+        h('span', { class: 'fs-name', text: sp.nom }), h('span', { class: 'fs-state sr-only' }), sum, has ? icon('chevron', 'icon fs-chev') : null);
+      const here = h('button', { type: 'button', class: 'fs-here', id: `${fid}-here`, title: 'Le lot est à cette étape (l’emporte jusqu’au prochain changement de statut)', onclick: () => chooseStep(b, l, sp.id) }, 'Étape actuelle ?');
+      const li = h('li', { class: 'fs-step', 'data-step': sp.id }, h('i', { class: 'fs-dot', 'aria-hidden': 'true' }), h('div', { class: 'fs-head' }, tog, here), flds);
+      tog.addEventListener('click', () => {
+        const k = `${b.id}.${l.id}.${sp.id}.${li.dataset.state}`;
+        stepOpen.set(k, li.classList.contains('is-closed'));
+        sync();
+        if (li.classList.contains('is-closed')) return;
+        autogrowIn(li);
+      });
+      return { sp, li, tog, sum, here, flds, has };
+    });
+    steps.replaceChildren(...items.map(x => x.li));
+    const rf = rest.querySelector('.fs-flds');
+    rf.replaceChildren(...hors.map(f => fv.get(f.key).el));
+    rest.hidden = !hors.length;
+  }
   function sync() {
     const c = get();
+    const st = parcoursState(b, l, c);
+    layout(st);
+    const pm = parcoursModel(b, l, c, new Date());
+    const all = !!prefs.allSteps;
+    items.forEach((x, i) => {
+      const s = st.state(i);
+      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? s !== 'ok');
+      x.li.dataset.state = s;
+      x.li.className = `fs-step is-${s}${x.has && !open ? ' is-closed' : ''}${i === st.cur && st.manual ? ' is-manual' : ''}`;
+      if (x.has) x.tog.setAttribute('aria-expanded', String(open));
+      x.flds.hidden = !open || !x.has;
+      x.tog.querySelector('.fs-state').textContent = s === 'ok' ? ', faite' : s === 'now' ? ', étape actuelle' : ', à venir';
+      const ms = pm.steps[i];
+      const parts = s === 'ok' ? [stepWhen(ms.at, new Date()), ...ms.items.filter(y => y.kind !== 'status' || y.tone !== 'ok').map(y => `${y.label} ${y.value}`)] : [];
+      const sumTxt = parts.filter(Boolean).join(' · ');
+      if (x.sum.textContent !== sumTxt) x.sum.textContent = sumTxt;
+      x.here.hidden = i === st.cur && !st.allDone;
+    });
+    if (vdlGo) vdlGo.hidden = !(st.steps[st.cur] && st.steps[st.cur].id === 'vdl') || !c.lot;
+    manualNote.hidden = !st.manual;
+    if (st.manual) {
+      manualNote.replaceChildren(icon('edit', 'icon icon--sm'), h('span', { text: `Étape « ${st.steps[st.cur].nom} » choisie à la main (jusqu’au prochain changement de statut). ` }),
+        h('button', { type: 'button', class: 'btn-link', onclick: () => autoStep(b, l) }, 'Revenir à l’automatique'));
+    }
     fviews.forEach(v => v.sync());
     lotChip.hidden = !c.lot; lotChip.textContent = c.lot;
     prodChip.hidden = !c.produit; prodChip.textContent = c.produit;
-    const st = fields.filter(f => f.type === 'status' && !naReason(f, c));
-    const sig = st.map(f => c[f.key]).join('|');
+    const stf = fields.filter(f => f.type === 'status' && !naReason(f, c));
+    const sig = stf.map(f => c[f.key]).join('|');
     if (sig !== dotsSig) {
       dotsSig = sig;
-      dots.replaceChildren(...st.map(f => h('span', { class: `card__dot tone-${toneOf(f.list, c[f.key])}`, title: `${labelOf(f, c)} : ${c[f.key]}` })));
+      dots.replaceChildren(...stf.map(f => h('span', { class: `card__dot tone-${toneOf(f.list, c[f.key])}`, title: `${labelOf(f, c)} : ${c[f.key]}` })));
     }
   }
   return { el, sync, card: true };
@@ -5106,7 +5620,14 @@ function buildLineFilter() {
     get: () => prefs.lineFilter,
     set: v => { prefs.lineFilter = v; savePrefs(); apply(); },
   });
-  root.append(h('div', { class: 'linefilter__in' }, h('span', { class: 'field__label linefilter__lbl', text: 'Afficher' }), pg.el));
+  const allBtn = h('button', { type: 'button', class: 'btn btn-secondary btn-sm linefilter__all', id: 'btn-all-steps', 'aria-pressed': String(!!prefs.allSteps) }, icon('list'), 'Ouvrir toutes les étapes');
+  allBtn.addEventListener('click', () => {
+    prefs.allSteps = !prefs.allSteps; savePrefs();
+    allBtn.setAttribute('aria-pressed', String(prefs.allSteps));
+    for (const v of views) if (v.card) v.sync();
+    autogrowIn($('#bands'));
+  });
+  root.append(h('div', { class: 'linefilter__in' }, h('span', { class: 'field__label linefilter__lbl', text: 'Afficher' }), pg.el, allBtn));
   pg.sync();
   syncLineFilter = () => pg.sync();
   apply();
@@ -5469,22 +5990,56 @@ function rsSumEl(bm) {
           h('div', { class: 'rs-frigo__t' }, h('b', { text: `${plural(bm.frigo.length, 'échantillon')} au frigo` }), bm.frigo.map(x => h('span', { text: x.text }))))
         : h('div', { class: 'rs-card rs-frigo0' }, icon('snow'), h('span', { text: 'Rien au frigo' }))));
 }
+/** v5 : parcours vertical non numéroté (début en haut, fin en bas) : faites en vert (coche, heure), actuelle à la couleur de la machine
+    avec ses statuts, à venir en gris. Il remplace les pastilles de statut. */
+const STEP_SR = { ok: ' (fait)', now: ' (étape actuelle)', todo: ' (à venir)' };
+const tagEl = x => (x.kind === 'status'
+  ? h('span', { class: `rs-pill t-${x.tone}${x.cold ? ' is-cold' : ''}` }, x.cold ? icon('snow') : null, `${x.label} `, h('b', { text: x.value }))
+  : h('span', { class: 'rs-vs__kv' }, `${x.label} `, h('b', { text: x.value })));
+function rsVsEl(m) {
+  return h('ol', { class: 'rs-vs', 'aria-label': `Parcours du lot ${m.lot || ''}`.trim() }, m.vs.map(s => {
+    const em = s.state === 'ok' ? [s.when, ...s.items.filter(x => x.kind !== 'status').map(x => `${x.label} ${x.value}`)].filter(Boolean).join(' · ') : '';
+    const tags = s.state === 'ok' ? s.items.filter(x => x.kind === 'status') : s.items;
+    return h('li', { class: `is-${s.state}`, 'data-step': s.id, 'aria-current': s.state === 'now' ? 'step' : null },
+      h('i', { 'aria-hidden': 'true' }, s.state === 'ok' ? icon('check') : null),
+      h('span', { class: 'rs-vs__n' }, s.nom, h('span', { class: 'sr-only', text: STEP_SR[s.state] }), s.state === 'now' && m.manual ? h('small', { class: 'rs-vs__man', text: ' · choisie' }) : null),
+      em ? h('em', { class: 'rs-vs__em', text: ` · ${em}` }) : null,
+      tags.length ? h('span', { class: 'rs-vs__d' }, tags.map(tagEl)) : null);
+  }));
+}
+/** Holding time d'une carte : en cours (reste, barre) ou arrêté (respecté en vert / dépassé en rouge, heure de fin). */
+function rsHtEl(x) {
+  const pct = Math.min(100, Math.round(x.pct * 100));
+  if (x.stopped) {
+    return h('div', { class: `rs-ht ht--${x.respected ? 'done' : 'late'}`, title: x.full },
+      h('div', { class: 'rs-ht__nm' }, h('b', {}, htNameH(x.nom, x.hours), x.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('span', { class: 'rs-ht__st', text: x.rest })),
+      h('b', { class: 'rs-ht__rt' }, x.respected ? [icon('check'), 'Respecté'] : `+${fmtDur(x.remaining)}`));
+  }
+  return h('div', { class: `rs-ht ht--${x.level}`, title: x.full },
+    h('div', { class: 'rs-ht__nm' }, h('b', {}, htNameH(x.nom, x.hours), x.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('span', { text: `limite ${fmtDM(x.dueAt)}` })),
+    h('b', { class: 'rs-ht__rt' }, htLeft(x), h('span', { class: 'sr-only', text: ` (${htWhen(x)})` })),
+    h('span', { class: 'rs-ht__tr', role: 'meter', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(pct), 'aria-label': `${pct} % du holding time écoulé` }, h('i', { style: `width:${pct}%` })));
+}
 /** Carte d'un lot (fond blanc dans la colonne de sa machine) ; entourée de rouge si un holding time est dépassé. */
 function rsLotEl(m, col) {
   return h('div', { class: `rs-lot${m.hot ? ' is-hot' : ''}${m.empty ? ' is-empty' : ''}`, 'data-band': m.band.id, 'data-line': m.line.id },
     h('div', { class: 'rs-lh' }, h('span', { class: 'rs-k', text: m.k }), h('b', { class: 'rs-lotv', text: m.lot || 'Aucun lot' }), m.produit ? h('span', { class: 'rs-p', text: m.produit }) : null,
       m.band.id === 'enCours' && col.over && m.lot ? h('span', { class: `rs-pill rs-prod t-${{ g: 'ok', o: 'wip', r: 'todo', n: 'na' }[col.prodTone]}` }, h('i', { 'aria-hidden': 'true' }), col.prodWord) : null),
-    m.pills.length ? h('div', { class: 'rs-pl' }, m.pills.map(x => h('span', { class: `rs-pill t-${x.tone}${x.cold ? ' is-cold' : ''}` }, x.cold ? icon('snow') : null, `${x.label} `, h('b', { text: x.value })))) : null,
-    m.kv.length ? h('div', { class: 'rs-kv' }, m.kv.map(x => h('span', {}, `${x.label} `, h('b', { text: x.value })))) : null,
-    m.hts.map(x => {
-      const pct = Math.min(100, Math.round(x.pct * 100));
-      return h('div', { class: `rs-ht ht--${x.level}`, title: x.full },
-        h('div', { class: 'rs-ht__nm' }, h('b', {}, htNameH(x.nom, x.hours), x.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('span', { text: `limite ${fmtDM(x.dueAt)}` })),
-        h('b', { class: 'rs-ht__rt' }, htLeft(x), h('span', { class: 'sr-only', text: ` (${htWhen(x)})` })),
-        h('span', { class: 'rs-ht__tr', role: 'meter', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(pct), 'aria-label': `${pct} % du holding time écoulé` }, h('i', { style: `width:${pct}%` })));
-    }),
+    m.empty ? null : rsVsEl(m),
+    m.hts.map(rsHtEl),
     m.notes ? h('p', { class: 'rs-note' }, icon('comment'), h('span', { text: m.notes })) : null,
     m.empty ? h('p', { class: 'rs-none', text: m.lot ? 'Rien de renseigné' : 'Aucun lot en cours' }) : null);
+}
+/** v5 : « Échantillons à suivre » (lots passés au suivant) : sorti du frigo / envoyé au QC. */
+function rsEchEl(bm, { actions = true } = {}) {
+  if (!bm.ech.length) return null;
+  return h('section', { class: 'rs-card rs-ech', 'aria-labelledby': actions ? 'ech-title' : null },
+    h('h3', { class: 'rs-ech__h', id: actions ? 'ech-title' : null }, icon('flask'), 'Échantillons à suivre', h('span', { text: ` · ${bm.ech.length}` })),
+    h('ul', { class: 'rs-ech__l' }, bm.ech.map(x => h('li', { class: 'rs-ech__i', 'data-line': x.line, 'data-id': x.id },
+      h('span', { class: 'rs-mt', 'data-line': x.line, text: x.text }),
+      h('span', { class: `rs-pill t-${x.cold ? 'cold' : 'wip'}${x.cold ? ' is-cold' : ''}` }, x.cold ? icon('snow') : null, h('b', { text: x.etat })),
+      x.since ? h('span', { class: 'rs-m', text: x.since }) : null,
+      actions ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm rs-ech__done', onclick: () => echDone(x.id), 'aria-label': `Échantillon ${x.lot} sorti / envoyé` }, icon('check'), 'Sorti / envoyé') : null))));
 }
 const rsMoreEl = x => h('p', { class: 'rs-more', 'data-band': x.band.id }, `${x.k} · `, x.lot ? [h('b', { text: x.lot }), x.produit ? ` ${x.produit}` : '', ' · rien de renseigné'] : 'aucun lot prévu');
 /** Colonne d'une machine : en-tête plein à la couleur de la ligne, fond teinté, cartes de lot blanches. */
@@ -5519,11 +6074,11 @@ function goToCard(lineId, bandId = 'enCours') {
   if (t) { t.tabIndex = -1; t.focus({ preventScroll: true }); }
 }
 const boardSig = bm => [bm.todo.map(x => [x.what, x.sub, x.tone, x.line.id, x.lot]), bm.soon.map(x => [x.what, x.sub, x.line.id, x.lot]), bm.kpis, bm.frigo.map(x => x.text),
-  bm.cols.map(c => [c.line.id, c.feu, c.state, c.frigo, c.prod.k, c.more, c.cards.map(m => [m.band.id, m.lot, m.produit, m.pills.map(x => [x.label, x.value, x.tone]), m.kv.map(x => [x.label, x.value]), m.notes,
-    m.hts.map(x => [x.nom, x.hours, x.perso, htLeft(x), x.level, Math.round(x.pct * 100), +x.dueAt])])])];
+  bm.cols.map(c => [c.line.id, c.feu, c.state, c.frigo, c.prod.k, c.more, c.cards.map(m => [m.band.id, m.lot, m.produit, m.vs.map(s => [s.id, s.nom, s.state, s.when, s.items.map(x => [x.label, x.value, x.tone])]), m.manual, m.notes,
+    m.hts.map(x => [x.nom, x.hours, x.perso, htLeft(x), x.level, Math.round(x.pct * 100), +x.dueAt, x.rest])])]), bm.ech.map(x => [x.id, x.etat, x.text])];
 function renderBoard(bm) {
   if (!sectionChanged('board', boardSig(bm))) return;
-  $('#sum').replaceChildren(rsSumEl(bm));
+  $('#sum').replaceChildren(rsSumEl(bm), rsEchEl(bm) || '');
   const grid = rsColsEl(bm);
   for (const el of grid.querySelectorAll('.rs-lot')) {
     const line = el.dataset.line, band = el.dataset.band;
@@ -5678,7 +6233,7 @@ function detailModel(b, l, c, at, full = false) {
     if (f.type === 'datetime') {
       const d = parseLocal(v);
       if (!d) return;
-      const lims = limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone, nom: x.nom, hours: x.hours, remaining: x.remaining, dueAt: x.due, perso: x.perso, full: x.full }));
+      const lims = limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone, nom: x.nom, hours: x.hours, remaining: x.remaining, dueAt: x.due, perso: x.perso, full: x.full, id: x.id, start: x.start, due0: x.due, stopped: !!x.stopped, respected: x.respected, stopAt: x.stopAt, short: x.short, when: x.when }));
       if (lims.length) dates.push({ label, value: fmtDM(d), lims });
       else steps.push({ kind: 'date', r: rank(f.key, i), label, value: fmtDM(d), tone: 'neutral' });
       return;
@@ -5702,6 +6257,7 @@ function buildSynth(m) {
       verdictEl(bm, null)),
     bm.banners.length ? h('div', { class: 'pins' }, bm.banners.map(cm => pinBandEl(cm, m.at, { actions: false }))) : null,
     rsSumEl(bm),
+    rsEchEl(bm, { actions: false }),
     h('div', { class: 'rs-cols' }, rsColsEl(bm)),
     h('footer', { class: 'pv-foot' }, h('span', { text: `${m.base} — Synthèse (page 1)` }), h('span', { text: `Généré par l’Outil Formulation le ${fmtDate(m.at)} à ${fmtTime(m.at)}` })));
 }
@@ -6123,50 +6679,77 @@ function rsLotLayout(m, col, w, maxH = 999) {
       doc.text(px + 3.4, oy + 3.7, col.prodWord, { size: 6.6, font: 'B', color: fg });
     }
   } });
-  /* en-tête de carte : titre + statuts + valeurs (toujours ensemble) */
-  const ops = [];
-  let y = 5.6;
-  if (m.pills.length) {
-    let x = 0;
-    for (const p of m.pills) {
-      const pw = Math.min(iw, rsPillW(p.label, p.value, 7.2, p.cold ? 'snow' : null));
-      if (x && x + pw > iw) { x = 0; y += 5.1; }
-      ops.push({ t: 'pill', x, y, p, w: pw });
-      x += pw + 1.2;
+  /* en-tête de carte : titre + parcours vertical (étapes faites en vert, actuelle à la couleur de la machine avec ses statuts, à venir en gris) */
+  const TAG_H = 3.9, TAG_S = 6.6, IND = 4.6;
+  const rows = [];
+  let y = m.empty ? 5.6 : 6.4;
+  if (!m.empty) for (const st of m.vs) {
+    const now = st.state === 'now', ok = st.state === 'ok';
+    const rowH = now ? 4.5 : 3.6;
+    const em = ok ? [st.when, ...st.items.filter(x => x.kind !== 'status').map(x => `${x.label} ${x.value}`)].filter(Boolean).join(' · ') : '';
+    const tagItems = ok ? st.items.filter(x => x.kind === 'status') : st.items;
+    const tags = [];
+    let tx = 0, ty = rowH + 0.3;
+    for (const it of tagItems) {
+      const tw = Math.min(iw - IND, rsPillW(`${it.label}`, it.value, TAG_S, it.cold ? 'snow' : null));
+      if (tx && tx + tw > iw - IND) { tx = 0; ty += TAG_H + 0.7; }
+      tags.push({ x: tx, y: ty, w: tw, it });
+      tx += tw + 1;
     }
-    y += 5.6;
+    const h0 = rowH + (tags.length ? ty - rowH + TAG_H + 0.6 : 0.15);
+    rows.push({ st, y, rowH, h: h0, em, tags, now, ok });
+    y += h0;
   }
-  if (m.kv.length) {
-    let x = 0;
-    for (const k of m.kv) {
-      const kw = P.width(`${k.label} `, 7.8) + P.width(k.value, 7.8, 'B');
-      if (x && x + kw > iw) { x = 0; y += 3.9; }
-      ops.push({ t: 'kv', x, y, k, w: Math.min(kw, iw) });
-      x += kw + 3.2;
-    }
-    y += 4.4;
-  }
+  if (!m.empty) y += 1.4;
   const lh0 = lhUnit(false);
   const head = { h: y, draw: (doc, ix, oy) => {
     lh0.draw(doc, ix, oy);
-    for (const o of ops) {
-      const py = oy + o.y;
-      if (o.t === 'pill') {
-        const [bg, fg] = o.p.cold ? RS.pill.cold : RS.pill[o.p.tone] || RS.pill.neutral;
-        doc.rect(ix + o.x, py, o.w, 4.4, { fill: bg, r: 2.2 });
-        let tx = ix + o.x + 2.1;
-        if (o.p.cold) { pdfIcon(doc, 'snow', tx + 1.3, py + 2.2, 2.8, fg); tx += 3.4; }
-        tx += doc.text(tx, py + 3.1, o.p.label, { size: 7.2, color: fg }) + 1.1;
-        doc.text(tx, py + 3.1, P.fit(o.p.value, o.w - (tx - ix - o.x) - 1.6, 7.2, 'B'), { size: 7.2, font: 'B', color: fg });
-      } else {
-        const lw = doc.text(ix + o.x, py + 2.9, `${o.k.label} `, { size: 7.8, color: RS.mut });
-        doc.text(ix + o.x + lw, py + 2.9, P.fit(o.k.value, Math.max(4, o.w - lw + 0.6), 7.8, 'B'), { size: 7.8, font: 'B', color: RS.ink });
+    const dx = ix + 1.6;
+    rows.forEach((r, k) => {
+      const cy = oy + r.y + r.rowH / 2 - 0.15;
+      const nx = rows[k + 1];
+      if (nx) doc.line(dx, cy, dx, oy + nx.y + nx.rowH / 2 - 0.15, { color: r.ok ? '#16A34A' : RS.track, lw: 0.5 });
+    });
+    rows.forEach(r => {
+      const cy = oy + r.y + r.rowH / 2 - 0.15;
+      if (r.ok) {
+        doc.circle(dx, cy, 1.3, { fill: '#16A34A' });
+        doc.poly([[dx - 0.6, cy + 0.05], [dx - 0.15, cy + 0.5], [dx + 0.65, cy - 0.45]], { stroke: '#FFFFFF', lw: 0.35, open: true });
+      } else if (r.now) {
+        doc.circle(dx, cy, 2.05, { fill: col.sh.tint });
+        doc.circle(dx, cy, 1.45, { fill: col.sh.head });
+      } else doc.circle(dx, cy, 1.05, { fill: RS.card, stroke: '#B9C2D3', lw: 0.4 });
+      const nx0 = ix + IND, base = oy + r.y + r.rowH * 0.74;
+      const nsz = r.now ? 8.6 : 7.4, nfont = r.now ? 'B' : 'R';
+      const nm = P.fit(r.st.nom, iw - IND, nsz, nfont);
+      const nw = doc.text(nx0, base, nm, { size: nsz, font: nfont, color: r.now ? col.sh.head : r.ok ? RS.ink : RS.soft });
+      if (r.em && iw - IND - nw > 8) doc.text(nx0 + nw, base, P.fit(` · ${r.em}`, iw - IND - nw, 6.8), { size: 6.8, color: RS.mut });
+      for (const t of r.tags) {
+        const py = oy + r.y + t.y, px = nx0 + t.x, it = t.it;
+        const [bg, fg] = it.cold ? RS.pill.cold : it.kind === 'status' ? RS.pill[it.tone] || RS.pill.neutral : RS.pill.neutral;
+        doc.rect(px, py, t.w, TAG_H, { fill: bg, r: TAG_H / 2 });
+        let ttx = px + 2.1;
+        if (it.cold) { pdfIcon(doc, 'snow', ttx + 1.3, py + TAG_H / 2, 2.6, fg); ttx += 3.4; }
+        ttx += doc.text(ttx, py + 2.75, it.label, { size: TAG_S, color: fg }) + 1.1;
+        doc.text(ttx, py + 2.75, P.fit(it.value, Math.max(3, t.w - (ttx - px) - 1.6), TAG_S, 'B'), { size: TAG_S, font: 'B', color: fg });
       }
-    }
+    });
   } };
   const units = [head];
   /* holding times : un par ligne, triés par urgence */
   for (const ht of m.hts) {
+    if (ht.stopped) {
+      /* v5 : holding time arrêté : bandeau vert « Respecté · fait à … » ou rouge « Dépassé de … » */
+      const okH = ht.respected, rt = okH ? 'Respecté' : `+${fmtDur(ht.remaining)}`, rw = P.width(rt, 8.6, 'B');
+      const name = P.fit(htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : ''), iw - rw - 6, 7.6, 'B');
+      units.push({ h: 9.2, draw: (doc, ix, oy) => {
+        doc.rect(ix, oy + 0.5, iw, 8.2, { fill: okH ? RS.grnT : RS.redT, r: 1.6 });
+        doc.text(ix + 1.8, oy + 3.9, name, { size: 7.6, font: 'B', color: RS.ink });
+        doc.text(ix + 1.8, oy + 7.3, P.fit(ht.rest, iw - 4, 6.6), { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX });
+        doc.text(ix + iw - 1.8, oy + 5.6, rt, { size: 8.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' });
+      } });
+      continue;
+    }
     const rt = htLeft(ht), rw = P.width(rt, 11, 'B');
     const name = P.clamp(htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : ''), iw - rw - 3, 7.8, 'B', 2);
     units.push({ h: name.length * 3.3 + 3.1 + 2.6 + 1, draw: (doc, ix, oy) => {
@@ -6331,6 +6914,32 @@ function pdfSynth(doc, m) {
     doc.text(rx + 10, fy + fh / 2 + 1.2, 'Rien au frigo', { size: 8.4, color: RS.mut });
   }
   y += sumH + RS_GAP + 0.6;
+  /* 3 bis. v5 : échantillons à suivre (lots passés au suivant) */
+  if (bm.ech.length) {
+    const title = 'ÉCHANTILLONS À SUIVRE', x0 = X0 + 3 + P.width(title, 7.2, 'B') + 5, LH = 5.6;
+    const its = bm.ech.map(e => {
+      const tw = P.width(e.text, 6.8, 'B') + 4, sw = P.width(e.etat, 6.8, 'B') + (e.cold ? 7.4 : 4), mw = e.since ? P.width(e.since, 6.6) + 1.5 : 0;
+      return { e, tw, sw, mw, w: Math.min(X1 - 3 - x0, tw + 1 + sw + mw) };
+    });
+    let lx = x0, ln = 0;
+    for (const it of its) { if (lx > x0 && lx + it.w > X1 - 3) { lx = x0; ln++; } it.x = lx; it.ln = ln; lx += it.w + 4; }
+    const eh = 3 + (ln + 1) * LH;
+    if (y + eh > YMAX) y = rsContHead(doc, m);
+    doc.rect(X0, y, W, eh, { fill: RS.card, r: 2.8 });
+    doc.text(X0 + 3, y + 5.6, title, { size: 7.2, font: 'B', color: RS.ink });
+    for (const it of its) {
+      const iy = y + 1.8 + it.ln * LH;
+      doc.rect(it.x, iy, it.tw, 4.2, { fill: lineShade(it.e.line).head, r: 2.1 });
+      doc.text(it.x + 2, iy + 3, P.fit(it.e.text, it.tw - 3, 6.8, 'B'), { size: 6.8, font: 'B', color: '#FFFFFF' });
+      const sx = it.x + it.tw + 1;
+      const [bg, fg] = it.e.cold ? RS.pill.cold : RS.pill.wip;
+      doc.rect(sx, iy, it.sw, 4.2, { fill: bg, r: 2.1 });
+      if (it.e.cold) pdfIcon(doc, 'snow', sx + 2.9, iy + 2.1, 2.6, fg);
+      doc.text(sx + (it.e.cold ? 5 : 2), iy + 3, it.e.etat, { size: 6.8, font: 'B', color: fg });
+      if (it.mw) doc.text(sx + it.sw + 1.5, iy + 3, it.e.since, { size: 6.6, color: RS.mut });
+    }
+    y += eh + RS_GAP;
+  }
   /* 4. colonnes des 3 machines (une page de plus si besoin, jamais de chevauchement) */
   const cw = (W - 2 * RS_GAP) / 3, HEAD = 9, PAD = 2, GAP = 2;
   const fullAvail = YMAX - RS_CONT - HEAD - 2 * PAD;
@@ -6836,30 +7445,102 @@ async function closeShift() {
 /* =========================================================================
    13. Actions : lot terminé, historique, sauvegarde & partage, paramètres
    ========================================================================= */
+/** v5 : points encore ouverts d'un lot (statuts applicables ni faits ni N/A : dossier À SIGNER, cuve pas PRÊTE…). */
+function openPoints(b, lineId, c) {
+  return fieldsFor(b, lineId).filter(f => f.type === 'status' && !naReason(f, c) && c[f.key] && c[f.key] !== 'N/A' && ['todo', 'wip'].includes(toneOf(f.list, c[f.key])))
+    .map(f => ({ label: labelOf(f, c), value: c[f.key], tone: toneOf(f.list, c[f.key]) }));
+}
+/** Passer au lot suivant : le lot suivant devient le lot en cours (lot, produit, remarques et étape atteinte repris ; ses données propres
+    — dossier, cuves, D.S.… — ne suivent pas), le suivant +1 devient le suivant ; l'échantillon de l'ancien lot part dans « Échantillons à suivre ». */
 async function confirmAdvance(l) {
   const r = state.report;
   const cur = r.bands.enCours[l.id], next = r.bands.suivant1[l.id];
+  const open = openPoints(bandById('suivant1'), l.id, next);
+  const ech = ECH_SUIVRE.has(cur.echantillon) && cur.lot ? cur.echantillon : '';
+  const nst = parcoursState(bandById('suivant1'), l, next);
   const ok = await confirmDialog({
-    title: 'Lot terminé ?',
-    confirmLabel: 'Oui, passer au suivant',
+    title: open.length ? 'Passer quand même au lot suivant ?' : 'Lot terminé ?',
+    confirmLabel: open.length ? 'Passer quand même' : 'Oui, passer au suivant',
     message: [
       h('p', {}, 'Le lot ', h('b', { class: 'mono', text: cur.lot || '(non renseigné)' }), ` (${l.name}) est terminé ?`),
-      h('p', {}, 'Le lot suivant ', h('b', { class: 'mono', text: next.lot || '(non renseigné)' }), ' passera en cours et le lot suivant +1 deviendra le lot suivant.'),
-      h('p', { class: 'muted', text: 'Les statuts du nouveau lot en cours repartent à N/A (lot, produit et remarques sont repris). Vous pourrez annuler.' }),
+      h('p', {}, 'Le lot suivant ', h('b', { class: 'mono', text: next.lot || '(non renseigné)' }), ` passera en cours (étape « ${nst.steps[nst.allDone ? nst.steps.length - 1 : nst.cur].nom} ») et le lot suivant +1 deviendra le lot suivant.`),
+      open.length ? h('div', { class: 'adv-open', role: 'note' },
+        h('p', { class: 'adv-open__t' }, icon('alert'), `Encore ouvert sur le lot suivant ${next.lot || ''} :`),
+        h('ul', {}, open.map(x => h('li', {}, `${x.label} `, h('b', { text: x.value }))))) : null,
+      ech ? h('p', { class: 'adv-ech' }, icon('flask'), 'Échantillon de ', h('b', { class: 'mono', text: cur.lot }), ` (${ech.toLowerCase()}) : ajouté à « Échantillons à suivre ».`) : null,
+      h('p', { class: 'muted', text: 'Seuls le lot, le produit, les remarques et l’étape atteinte suivent : dossier, cuves, D.S. et autres données propres au lot suivant repartent à vide. Vous pourrez annuler.' }),
     ],
   });
   if (!ok) return;
+  advanceLot(l);
+  toast(`Lot avancé — ${l.name}${ech ? ' · échantillon ajouté aux échantillons à suivre' : ''}`, { action: 'Annuler', onAction: undo });
+}
+function advanceLot(l) {
   change(rep => {
-    const s1 = rep.bands.suivant1[l.id], s2 = rep.bands.suivant2[l.id];
+    const c0 = rep.bands.enCours[l.id], s1 = rep.bands.suivant1[l.id], s2 = rep.bands.suivant2[l.id];
+    if (ECH_SUIVRE.has(c0.echantillon) && c0.lot) {
+      rep.echantillons = [...(rep.echantillons || []), { id: uid(), line: l.id, lot: c0.lot, produit: c0.produit, etat: c0.echantillon, at: toLocalInput(new Date()) }].slice(-ECH_MAX);
+    }
+    const st = parcoursState(bandById('suivant1'), l, s1);
     const nc = defaultCard(bandById('enCours'), l.id);
     nc.lot = s1.lot;
     nc.produit = PRODUCTS[l.id].includes(s1.produit) ? s1.produit : '';
     nc.remarques = s1.remarques;
+    /* le parcours reprend là où il en était */
+    nc.acquis = st.steps[Math.min(st.allDone ? st.steps.length - 1 : st.cur, st.steps.length - 1)].id;
+    nc.etapesAt = { ...s1.etapesAt };
     rep.bands.enCours[l.id] = nc;
-    rep.bands.suivant1[l.id] = clone(s2);
+    const n1 = clone(s2);
+    rep.bands.suivant1[l.id] = n1;
     rep.bands.suivant2[l.id] = defaultCard(bandById('suivant2'), l.id);
   });
-  toast(`Lot avancé — ${l.name}`, { action: 'Annuler', onAction: undo });
+}
+/** v5 : clic de l'opérateur sur une étape (l'emporte jusqu'au prochain changement de statut). « Vide de ligne » ⇒ VDL EN COURS. */
+function chooseStep(b, l, stepId) {
+  change(r => {
+    const c = r.bands[b.id][l.id];
+    c.etapeChoisie = { id: stepId, fresh: true };
+    if (stepId === 'vdl' && b.kind === 'enCours' && !VDL_ON.has(c.vdl) && fieldsFor(b, l.id).some(f => f.key === 'vdl')) c.vdl = 'EN COURS';
+  });
+}
+function autoStep(b, l) { change(r => { r.bands[b.id][l.id].etapeChoisie = null; }); }
+/** v5 : « ✓ Fait » sur un holding time en cours : heure préremplie à maintenant, modifiable. Fin « date » : la date est écrite dans son champ. */
+function htDoneDialog(b, l, lim) {
+  const inp = h('input', { type: 'datetime-local', class: 'input', id: 'ht-done-at', step: 60, value: toLocalInput(new Date()) });
+  const err = h('p', { class: 'cm-err', role: 'alert', hidden: true });
+  const def = htDefsOf(b, l.id).find(x => x.id === lim.id);
+  return openDialog({
+    title: 'Holding time terminé', icon: 'check', className: 'dlg--htdone',
+    body: h('div', { class: 'cm-form' },
+      h('p', {}, h('b', { text: htNameH(lim.nom, lim.hours) }), ` · ${l.name} · ${state.report.bands[b.id][l.id].lot || 'lot non renseigné'}`),
+      h('p', { class: 'muted', text: `Limite : ${fmtDM(lim.due)}. Fin prévue : ${finLabel(def && def.fin, b, l.id)}.` }),
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'ht-done-at', text: 'Fait le' }), inp), err),
+    actions: [{ label: 'Annuler', value: false }, { label: 'Enregistrer', value: true, cls: 'btn-primary', icon: 'check', run: () => {
+      const v = normDateTime(inp.value);
+      if (!v) { err.textContent = 'Date et heure incomplètes.'; err.hidden = false; return false; }
+      if (parseLocal(v) < lim.start) { err.textContent = Core.typo('L’heure de fin est avant le départ du holding time.'); err.hidden = false; return false; }
+      change(r => {
+        const c = r.bands[b.id][l.id];
+        if (def && def.fin && def.fin.type === 'date' && fieldsFor(b, l.id).some(f => f.key === def.fin.k)) c[def.fin.k] = v;
+        else c.htFin = { ...(c.htFin || {}), [lim.id]: { at: v, par: 'manuel' } };
+      });
+      const d = parseLocal(v), ok = d <= lim.due;
+      toast(`${lim.nom} : ${ok ? `respecté (fait à ${fmtTime(d)})` : `dépassé de ${fmtDur(lim.due - d)}`}`, { action: 'Annuler', onAction: undo });
+      return true;
+    } }],
+    onOpen: () => inp.focus(),
+  });
+}
+function htReopen(b, l, id) {
+  change(r => { const c = r.bands[b.id][l.id]; const x = { ...(c.htFin || {}) }; delete x[id]; c.htFin = x; });
+  toast('Holding time rouvert', { action: 'Annuler', onAction: undo });
+}
+/** v5 : échantillon de la liste « à suivre » sorti du frigo / envoyé. */
+function echDone(id) {
+  const x = state.report.echantillons.find(e => e.id === id);
+  if (!x) return;
+  change(r => { r.echantillons = r.echantillons.filter(e => e.id !== id); });
+  toast(`Échantillon ${x.lot} sorti / envoyé`, { action: 'Annuler', onAction: undo });
 }
 function addSnapshot(at, ch = currentChanges(at)) {
   state.history.unshift({ id: uid(), at: at.toISOString(), shift: state.report.meta.shift, author: state.author, report: clone(state.report),
