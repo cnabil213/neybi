@@ -842,11 +842,67 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .pm-warn-txt{display:flex;gap:.375rem;align-items:flex-start;font-size:.8125rem;color:var(--wip-fg);font-weight:600}
 .mod-params .pm-warn-txt .icon{width:1rem;height:1rem;margin-top:.1rem}
 /* étiquettes */
-.mod-params .pm-etp-head,.mod-params .pm-etp{display:grid;grid-template-columns:6.5rem minmax(0,1fr) minmax(0,1fr) auto auto;gap:.5rem .625rem;align-items:center}
-.mod-params .pm-etp-head{padding:0 .625rem;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
-.mod-params .pm-etp{padding:.375rem .625rem;border-bottom:1px solid #EEF1F6}
+.mod-params .pm-etps{max-width:48rem}
+.mod-params .pm-etp{display:grid;grid-template-columns:7.5rem minmax(0,1fr) auto;gap:.5rem .75rem;align-items:center;padding:.375rem .625rem;border-bottom:1px solid #EEF1F6;border-radius:var(--radius-sm)}
+.mod-params .pm-etp.is-sel{background:var(--tint)}
 .mod-params .pm-etp .input{min-height:2.25rem;padding-block:.25rem}
 .mod-params .pm-etp__name{font-weight:700}
+.mod-params .pm-etp__info{display:flex;align-items:center;gap:.625rem;min-width:0;min-height:2.25rem;padding:0 .5rem;border:0;border-radius:var(--radius-sm);background:none;color:var(--muted);font:inherit;font-size:.875rem;text-align:left;cursor:pointer}
+.mod-params .pm-etp__info:hover{background:var(--surface-2);color:var(--text)}
+.mod-params .pm-etp__info:focus-visible{outline:none;box-shadow:var(--focus)}
+.mod-params .pm-etp__info>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-params .pm-etp__cont{flex:none;padding:.0625rem .5rem;border-radius:999px;border:1px solid var(--border-strong);background:#fff;color:var(--nn-navy);font-weight:700;font-size:.75rem;letter-spacing:.02em}
+/* éditeur « ce qu'il y a sur l'étiquette » */
+.mod-params .pm-etx{display:flex;flex-direction:column;gap:1rem;padding:1rem 1.125rem 1.125rem;border:1px solid var(--border);border-top:3px solid var(--nn-navy);border-radius:var(--radius);background:#fff}
+.mod-params .pm-etx__head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.625rem 1rem}
+.mod-params .pm-etx__title{display:flex;align-items:baseline;flex-wrap:wrap;gap:.25rem .75rem;min-width:0}
+.mod-params .pm-etx__prod{font-size:1.25rem;font-weight:700;color:var(--nn-navy);letter-spacing:.01em}
+.mod-params .pm-etx__sum{font-size:.875rem;color:var(--muted)}
+.mod-params .pm-etx__acts{display:flex;flex-wrap:wrap;gap:.5rem}
+.mod-params .pm-etx__grid{display:grid;grid-template-columns:minmax(0,25rem) minmax(0,1fr);gap:1.25rem 1.75rem;align-items:start}
+.mod-params .pm-etx__simple{display:flex;flex-direction:column;gap:1.125rem;min-width:0}
+.mod-params .pm-cont-other{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+.mod-params .pm-cont-other .input{flex:1 1 9rem;width:auto}
+.mod-params .pm-ech{display:grid;grid-template-columns:1.75rem minmax(0,1fr) 6.5rem;gap:.5rem;align-items:center}
+.mod-params .pm-ech .input{min-height:2.25rem;padding-block:.25rem}
+.mod-params .pm-ech--head{font-size:.75rem;font-weight:600;color:var(--muted)}
+.mod-params .pm-ech__n{display:grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);font-size:.75rem;font-weight:700;color:var(--nn-navy)}
+.mod-params .pm-ech__vol{font-weight:600}
+/* aperçu en direct (rendu réel de la planche, mis à l'échelle) */
+.mod-params .pm-pv{display:flex;flex-direction:column;gap:.875rem;min-width:0;padding:.875rem 1rem 1rem;border-radius:var(--radius-sm);background:repeating-linear-gradient(135deg,#F3F5F9 0 6px,#EEF1F6 6px 12px);border:1px solid var(--border)}
+.mod-params .pm-pv__one,.mod-params .pm-pv__row{display:flex;flex-direction:column;gap:.375rem;min-width:0}
+.mod-params .pm-pv__cap{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.mod-params .pm-pv__fit{width:100%;min-width:0}
+.mod-params .pm-pv__frame{position:relative;overflow:hidden;background:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(11,21,53,.12),0 6px 18px rgba(11,21,53,.10)}
+.mod-params .pm-pv__frame>.sheet{position:absolute;left:0;top:0;transform:scale(var(--s,1));transform-origin:0 0}
+/* réglages avancés */
+.mod-params .pm-adv{border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2)}
+.mod-params .pm-adv__sum{display:flex;align-items:center;gap:.625rem;min-height:3rem;padding:.5rem .875rem;cursor:pointer;list-style:none;color:var(--nn-navy);font-size:.9375rem;border-radius:var(--radius-sm)}
+.mod-params .pm-adv__sum::-webkit-details-marker{display:none}
+.mod-params .pm-adv__sum:focus-visible{outline:none;box-shadow:var(--focus)}
+.mod-params .pm-adv__sum>span{flex:1;min-width:0}
+.mod-params .pm-adv__sub{color:var(--muted);font-size:.8125rem}
+.mod-params .pm-adv__chev{flex:none;color:var(--muted);transition:transform .15s}
+.mod-params .pm-adv[open] .pm-adv__chev{transform:rotate(180deg)}
+.mod-params .pm-adv__body{display:flex;flex-direction:column;gap:1rem;padding:.25rem .875rem 1rem;border-top:1px solid var(--border);background:#fff;border-radius:0 0 var(--radius-sm) var(--radius-sm);padding-top:1rem}
+.mod-params .pm-cases{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,19rem),1fr));gap:.5rem .875rem}
+.mod-params .pm-case{display:grid;grid-template-columns:3.5rem minmax(0,1fr) 5.5rem;gap:.375rem;align-items:center;padding:.375rem .5rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2)}
+.mod-params .pm-case__n{font-size:.8125rem;font-weight:700;color:var(--nn-navy)}
+.mod-params .pm-case .select--sm{width:100%}
+.mod-params .pm-case .input{min-height:2.25rem;padding-block:.25rem}
+/* modèles de texte */
+.mod-params .pm-tpl{display:flex;flex-direction:column;gap:.625rem;min-width:0}
+.mod-params .pm-vars{display:flex;flex-wrap:wrap;gap:.375rem}
+.mod-params .pm-var{display:inline-flex;align-items:center;gap:.3rem;min-height:2rem;padding:0 .625rem 0 .5rem;border:1px dashed var(--border-strong);border-radius:999px;background:#fff;color:var(--nn-navy);font:inherit;font-size:.8125rem;font-weight:600;cursor:pointer}
+.mod-params .pm-var:hover{border-style:solid;border-color:var(--nn-navy);background:var(--tint)}
+.mod-params .pm-var:focus-visible{outline:none;box-shadow:var(--focus)}
+.mod-params .pm-var__plus{font-weight:700;color:var(--muted)}
+.mod-params .pm-tpl__rows{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.375rem}
+.mod-params .pm-tpl__row{display:grid;grid-template-columns:1.5rem minmax(0,1fr) auto auto;gap:.5rem;align-items:center}
+.mod-params .pm-tpl__n{font-size:.8125rem;font-weight:700;color:var(--muted);text-align:center}
+.mod-params .pm-tpl__in{font-size:.9375rem;min-height:2.375rem;padding-block:.25rem}
+.mod-params .pm-tpl__sm{min-height:2.25rem;font-size:.8125rem;color:var(--muted)}
+.mod-params .pm-tpl__foot{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem}
 .mod-params .pm-li{display:grid;grid-template-columns:1.75rem minmax(0,1fr) 7.5rem auto;gap:.5rem;align-items:center;padding:.25rem 0;border-bottom:1px solid #EEF1F6}
 .mod-params .pm-li .input{min-height:2.25rem;padding-block:.25rem}
 .mod-params .pm-li__n{font-size:.8125rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
@@ -865,6 +921,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .field--hours .unit-input{width:8rem}
 @media (max-width:1023.98px){
   .mod-params .pm-grid--3{grid-template-columns:minmax(0,1fr)}
+  .mod-params .pm-etx__grid{grid-template-columns:minmax(0,1fr)}
   .mod-params .pm-rule{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:759.98px){
@@ -877,11 +934,22 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
   .mod-params .pm-row .pm-check{grid-column:1/-1;grid-row:2;min-height:1.75rem}
   .mod-params .pm-prod{grid-template-columns:minmax(0,1fr) auto;padding-inline:.5rem}
   .mod-params .pm-prod>.input{grid-column:1/-1}
-  .mod-params .pm-etp-head{display:none}
-  .mod-params .pm-etp{grid-template-columns:minmax(0,1fr) auto;padding-inline:0}
-  .mod-params .pm-etp>.input,.mod-params .pm-etp>.pm-check{grid-column:1/-1}
+  .mod-params .pm-etp{grid-template-columns:minmax(0,1fr) auto;padding-inline:.25rem}
   .mod-params .pm-etp>.pm-etp__name{grid-column:1;grid-row:1}
   .mod-params .pm-etp>.pm-prod__act{grid-column:2;grid-row:1}
+  .mod-params .pm-etp>.pm-etp__info{grid-column:1/-1;grid-row:2;padding-inline:.25rem}
+  .mod-params .pm-etx{padding:.875rem .75rem 1rem}
+  .mod-params .pm-etx__acts,.mod-params .pm-etx__acts .btn{flex:1 1 auto}
+  .mod-params .pm-pv{padding:.75rem}
+  .mod-params .pm-adv__sub{display:none}
+  .mod-params .pm-adv__body{padding-inline:.625rem}
+  .mod-params .pm-tpl__row{grid-template-columns:1.25rem minmax(0,1fr) auto;grid-template-areas:"n i i" ". s d"}
+  .mod-params .pm-tpl__n{grid-area:n}
+  .mod-params .pm-case{grid-template-columns:minmax(0,1fr) 5.5rem}
+  .mod-params .pm-case__n{grid-column:1/-1}
+  .mod-params .pm-tpl__in{grid-area:i}
+  .mod-params .pm-tpl__sm{grid-area:s;min-height:1.75rem}
+  .mod-params .pm-tpl__row>.btn{grid-area:d}
   .mod-params .pm-li{grid-template-columns:1.25rem minmax(0,1fr) auto}
   .mod-params .pm-li>.pm-li__q{grid-column:2;grid-row:2;max-width:none}
   .mod-params .pm-li>.pm-prod__act{grid-row:1/3;grid-column:3}
@@ -1309,7 +1377,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
         <button type="button" class="btn btn-primary" id="btn-pdf" title="Exporter le rapport en PDF (Ctrl+P)"><span data-icon="pdf"></span><span class="lbl"><span class="lbl-opt">Exporter en </span>PDF</span></button>
       </div>
       <div class="hdr-actions" data-for="etiquettes" hidden>
-        <button type="button" class="btn btn-secondary btn-collapse" id="btn-new" title="Vider le lot, la date et les poches, et remettre les autres échantillons à la liste par défaut (produit, visa, noms, gabarit et calibration sont conservés)" aria-label="Nouveau lot"><span data-icon="newdoc"></span><span class="lbl lbl-opt">Nouveau lot</span></button>
+        <button type="button" class="btn btn-secondary btn-collapse" id="btn-new" title="Vider le lot, la date et les contenants (poches, bidons), et remettre les autres échantillons à la liste par défaut (produit, visa, noms, gabarit et calibration sont conservés)" aria-label="Nouveau lot"><span data-icon="newdoc"></span><span class="lbl lbl-opt">Nouveau lot</span></button>
       </div>
       <span class="hdr-sep" aria-hidden="true"></span>
       <button type="button" class="btn btn-quiet btn-icon btn-aa" id="btn-aa" aria-pressed="false" title="Taille du texte : normal / grand" aria-label="Texte plus grand"><span aria-hidden="true"><span class="aa-a">A</span><span class="aa-b">a</span></span></button>
@@ -1347,7 +1415,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <a class="tile" href="#etiquettes" id="tile-etiquettes" aria-describedby="tile-etiquettes-desc tile-etiquettes-status">
         <div class="tile__head">
           <span class="tile__icon" aria-hidden="true"><span data-icon="tag"></span></span>
-          <div><h2 class="tile__title">Étiquettes</h2><p class="tile__desc" id="tile-etiquettes-desc">Préparez et imprimez les planches d'étiquettes des échantillons SB : poches et autres échantillons.</p></div>
+          <div><h2 class="tile__title">Étiquettes</h2><p class="tile__desc" id="tile-etiquettes-desc">Préparez et imprimez les planches d'étiquettes des échantillons SB et CT-P17 : poches, bidons et autres échantillons.</p></div>
         </div>
         <div class="tile__status" id="tile-etiquettes-status"></div>
         <div class="tile__foot"><span class="tile__cta">Ouvrir<span data-icon="arrow"></span></span></div>
@@ -1496,7 +1564,7 @@ const Core = (() => {
     .replace(/([A-Za-zÀ-ÿ])'(?=[A-Za-zÀ-ÿ])/g, '$1\u2019')
     .replace(/\b(Inova|INOVA|Groninger|GRONINGER) (?=\d)/g, '$1\u00a0')
     .replace(/\bSEMA K (?=\d)/g, 'SEMA\u00a0K\u00a0').replace(/\bSEMA K\b/g, 'SEMA\u00a0K')
-    .replace(/(\d) (?=(h|min|mm|pt|mL|kg|poches?|pages?|étiquettes?|échantillons?|échéances?)(?![\wÀ-ÿ]))/g, '$1\u00a0')   /* 34 h, 29 poches… */
+    .replace(/(\d) (?=(h|min|mm|pt|mL|kg|poches?|bidons?|pages?|étiquettes?|échantillons?|échéances?)(?![\wÀ-ÿ]))/g, '$1\u00a0')   /* 34 h, 29 poches… */
     .replace(/(\d\u00a0h) (?=\d)/g, '$1\u00a0');                                                                      /* 1 h 06 */
   /** Création d'élément : les chaînes deviennent des nœuds texte (jamais de HTML). */
   function h(tag, props, ...kids) {
@@ -1580,7 +1648,7 @@ const Core = (() => {
   }
   /** Applique la typographie française aux textes statiques de la page (hors scripts et styles). */
   function typoTree(root) {
-    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && /^(SCRIPT|STYLE)$/.test(n.parentElement.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => (n.parentElement && (/^(SCRIPT|STYLE)$/.test(n.parentElement.tagName) || n.parentElement.closest('.sheet, .no-typo')) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
     for (let n = w.nextNode(); n; n = w.nextNode()) { const t = typo(n.nodeValue); if (t !== n.nodeValue) n.nodeValue = t; }
   }
 
@@ -1774,6 +1842,81 @@ const Params = (() => {
   ];
   const seq6 = (name, qty) => [1, 2, 3, 4, 5, 6].map(i => [`${name} (${i}/6)`, qty]);
   const prods = (...names) => names.map(n => (Array.isArray(n) ? { name: n[0], like: n[1] } : { name: n, like: '' }));
+
+  /* ---------- Étiquettes : contenu par produit (contenant, échantillons, étiquettes d'un contenant, modèles de texte) ----------
+     Modèle = 3 à 5 lignes de texte avec des variables entre accolades. Les modèles d'origine reproduisent exactement
+     les étiquettes de l'Excel (ex. « SB4-Poche 1-Ech ID1 », « lot: P001 1mL (1/2) », « Date: 29Sep26 N° Poche: 7 »). */
+  const ET_VARS = {
+    contenant: [
+      { k: 'produit', tok: 'Produit', label: 'Produit', ex: 'SB4', lab: true },
+      { k: 'lot', tok: 'Lot', label: 'Lot', ex: 'FA123' },
+      { k: 'contenant', tok: 'Contenant', label: 'Contenant', ex: 'Poche', lab: true },
+      { k: 'num', tok: 'N° contenant', label: 'N° contenant', ex: '1', alias: ['NO CONTENANT', 'N CONTENANT', 'NUMERO CONTENANT'] },
+      { k: 'nom', tok: 'Nom', label: 'Nom échantillon', ex: 'Ech ID', alias: ['NOM ECHANTILLON', 'ECHANTILLON'] },
+      { k: 'lotc', tok: 'Lot contenant', label: 'Lot contenant', ex: 'P001' },
+      { k: 'vol', tok: 'Volume', label: 'Volume', ex: '1mL', opt: true },
+      { k: 'rang', tok: 'Rang', label: 'Rang (1/2)', ex: '(1/2)', opt: true, alias: ['MOITIE'] },
+      { k: 'date', tok: 'Date', label: 'Date', ex: '29Sep26', champ: 'date' },
+      { k: 'client', tok: 'N° client', label: 'N° client', ex: '7', champ: 'client', alias: ['NO CLIENT', 'N CLIENT', 'NUMERO CLIENT'] },
+      { k: 'visa', tok: 'Visa', label: 'Visa', ex: 'NB', champ: 'visa' },
+      { k: 'heure', tok: 'Heure', label: 'Blanc heure', ex: '', champ: 'heure' },
+    ],
+    autres: [
+      { k: 'produit', tok: 'Produit', label: 'Produit', ex: 'SB4', lab: true },
+      { k: 'lot', tok: 'Lot', label: 'Lot', ex: 'FA123' },
+      { k: 'contenant', tok: 'Contenant', label: 'Contenant', ex: 'Poche', lab: true },
+      { k: 'ech', tok: 'Échantillon', label: 'Échantillon', ex: 'SB4 - Endo', alias: ['NOM'] },
+      { k: 'qte', tok: 'Quantité', label: 'Quantité', ex: '5mL', opt: true },
+      { k: 'date', tok: 'Date', label: 'Date', ex: '29Sep26', champ: 'date' },
+      { k: 'visa', tok: 'Visa', label: 'Visa', ex: 'NB', champ: 'visa' },
+      { k: 'heure', tok: 'Heure', label: 'Blanc heure', ex: '', champ: 'heure' },
+    ],
+  };
+  const squash = s => canon(s).replace(/[^A-Z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const VAR_INDEX = Object.fromEntries(Object.entries(ET_VARS).map(([kind, list]) => [kind, new Map(list.flatMap(v => [[squash(v.tok), v], ...(v.alias || []).map(a => [a, v])]))]));
+  /** Découpe une ligne de modèle : [{ lit: 'texte' } | { v: 'cle', def } | { bad: '{inconnu}' }]. */
+  function parseLine(src, kind = 'contenant') {
+    const out = [];
+    const re = /\{([^{}]{1,30})\}/g;
+    let last = 0, m;
+    const s = String(src ?? '');
+    while ((m = re.exec(s))) {
+      if (m.index > last) out.push({ lit: s.slice(last, m.index) });
+      const def = VAR_INDEX[kind].get(squash(m[1]));
+      out.push(def ? { v: def.k, def } : { bad: m[0] });
+      last = re.lastIndex;
+    }
+    if (last < s.length) out.push({ lit: s.slice(last) });
+    return out;
+  }
+  const ET_CHAMPS = ['date', 'visa', 'heure', 'client'];
+  const ET_MODELE = { lignes: ['{Produit} {Lot}', '{Produit}-{Contenant} {N° contenant}-{Nom}{N° contenant}', 'lot: {Lot contenant} {Volume} {Rang}', 'Date: {Date} N° {Contenant}: {N° client}', 'VISA: {Visa} Heure: {Heure}'], petites: [3] };
+  const ET_MODELE_AUTRES = { lignes: ['{Produit} {Lot}', '{Échantillon}', '{Quantité}', 'Date: {Date}', 'VISA: {Visa} Heure: {Heure}'], petites: [3] };
+  const CASES_SB4 = [{ e: 0, rang: '(1/2)' }, { e: 0, rang: '(2/2)' }, { e: 1, rang: '(1/2)' }, { e: 1, rang: '(2/2)' }];
+  const CASES_SB5 = [{ e: 0, rang: '' }, { e: -1, rang: '' }, { e: 1, rang: '(1/2)' }, { e: 1, rang: '(2/2)' }];
+  /** Produit d'étiquettes complet, clés toujours dans le même ordre (comparaison « valeurs d'origine »).
+      nom1mL / nom2mL / blanche : copies de compatibilité pour les versions précédentes de l'outil. */
+  function etProduct(x) {
+    const ech = x.ech, cases = x.cases;
+    return {
+      name: x.name, contenant: x.contenant, genre: x.genre, ech, cases, disposition: x.disposition,
+      champs: x.champs, modele: x.modele, modeleAutres: x.modeleAutres,
+      nom1mL: ech[0].nom, nom2mL: (ech[1] || ech[0]).nom, blanche: cases.some(c => c.e < 0),
+    };
+  }
+  /** Produit « comme SB4 » (ou SB5 : étiquette blanche, 1 mL unique), avec son contenant. */
+  function etBase(name, contenant, nom1, nom2, sb5 = false) {
+    return etProduct({
+      name, contenant, genre: canon(contenant) === 'BIDON' ? 'm' : 'f',
+      ech: [{ nom: nom1, vol: '1mL' }, { nom: nom2, vol: sb5 ? '1mL' : '2mL' }],
+      cases: JSON.parse(JSON.stringify(sb5 ? CASES_SB5 : CASES_SB4)), disposition: 'rangee',
+      champs: { date: true, visa: true, heure: true, client: true },
+      modele: JSON.parse(JSON.stringify(ET_MODELE)), modeleAutres: JSON.parse(JSON.stringify(ET_MODELE_AUTRES)),
+    });
+  }
+  /** Produits apparus dans une version de l'outil : ajoutés une fois aux paramètres d'une version précédente. */
+  const ET_VERSION = 2;
+  const ET_NEW_IN_V2 = ['CT-P17'];
   const DEFAULTS = {
     rapport: {
       soonHours: 4,
@@ -1802,10 +1945,11 @@ const Params = (() => {
       preset: 'FIDUCIAL',
       epaisseur: 'renforce',
       produits: [
-        { name: 'SB4', nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false },
-        { name: 'SB5', nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag', blanche: true },
-        { name: 'SB5B', nom1mL: 'ID_Bag', nom2mL: 'Leg_Bag', blanche: false },
-        { name: 'SB16', nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false },
+        etBase('SB4', 'Poche', 'Ech ID', 'Ech REF'),
+        etBase('SB5', 'Poche', 'ID_Bag', 'Leg_Bag', true),
+        etBase('SB5B', 'Poche', 'ID_Bag', 'Leg_Bag'),
+        etBase('SB16', 'Poche', 'Ech ID', 'Ech REF'),
+        etBase('CT-P17', 'Bidon', 'Ech ID', 'Ech REF'),
       ],
       /* listes d'origine des « autres échantillons » (quantités SB16 corrigées par rapport à l'Excel) */
       listes: {
@@ -1818,7 +1962,9 @@ const Params = (() => {
           ['Step5_pH_Osmo', '50mL'], ['Step8_pH_Osmo', '50mL'], ['Step8_SoloVPE', '2mL'], ['Step8_BB', '100mL'], ['Step8_Endo', '3mL'],
           ...seq6('Step8_BB_Val', '250mL'), ['Step8_Endo_Val', '3mL'],
         ],
+        'CT-P17': [],
       },
+      v: ET_VERSION,
     },
   };
   const ET_PRESETS = ['FIDUCIAL', 'PAPIER'];
@@ -1866,6 +2012,39 @@ const Params = (() => {
     }
     return o;
   }
+  /** Produit d'étiquettes d'origine (ou « comme SB4 », en poche, pour un produit ajouté). */
+  const etOrigin = name => { const o = DEFAULTS.etiquettes.produits.find(x => x.name === name); return o ? clone(o) : etBase(name, 'Poche', 'Ech ID', 'Ech REF'); };
+  function normModele(m, def) {
+    if (!isObj(m) || !Array.isArray(m.lignes) || m.lignes.length < 3) return clone(def);
+    const lignes = m.lignes.slice(0, 5).map(x => str(x, 120));
+    const petites = Array.isArray(m.petites) ? [...new Set(m.petites.filter(i => Number.isInteger(i) && i >= 0 && i < lignes.length))].sort((a, b) => a - b) : [];
+    return { lignes, petites };
+  }
+  /** Produit d'étiquettes lu (fichier d'équipe, ce PC, import) : tout est vérifié ; l'ancien format
+      (nom1mL / nom2mL / blanche) est converti à l'identique (poche, 1 mL / 2 mL, règle SB5). */
+  function normEtProduct(p, name) {
+    const o = etOrigin(name);
+    const contenant = str(p.contenant, 16) || o.contenant;
+    const genre = p.genre === 'm' || p.genre === 'f' ? p.genre : canon(contenant) === canon(o.contenant) ? o.genre : canon(contenant) === 'BIDON' ? 'm' : 'f';
+    let ech, cases = null;
+    if (Array.isArray(p.ech) && p.ech.some(isObj)) {
+      ech = p.ech.filter(isObj).slice(0, 5).map((e, k) => ({ nom: str(e.nom, 40) || (o.ech[k] || o.ech[0]).nom, vol: str(e.vol, 12) }));
+    } else {
+      const sb5 = p.blanche === true;
+      ech = [{ nom: str(p.nom1mL, 40) || o.ech[0].nom, vol: '1mL' }, { nom: str(p.nom2mL, 40) || o.ech[1].nom, vol: sb5 ? '1mL' : '2mL' }];
+      if (!Array.isArray(p.cases)) cases = clone(sb5 ? CASES_SB5 : CASES_SB4);
+    }
+    if (!cases) {
+      cases = Array.isArray(p.cases) && p.cases.some(isObj)
+        ? p.cases.filter(isObj).slice(0, 5).map(c => ({ e: Number.isInteger(c.e) && c.e >= -1 && c.e < ech.length ? c.e : 0, rang: str(c.rang, 12) }))
+        : clone(o.cases).map(c => ({ e: Math.min(c.e, ech.length - 1), rang: c.rang }));
+    }
+    if (!cases.some(c => c.e >= 0)) cases[0].e = 0;
+    const champs = {};
+    for (const k of ET_CHAMPS) champs[k] = isObj(p.champs) && typeof p.champs[k] === 'boolean' ? p.champs[k] : true;
+    return etProduct({ name, contenant, genre, ech, cases, disposition: p.disposition === 'suite' ? 'suite' : 'rangee', champs,
+      modele: normModele(p.modele, o.modele), modeleAutres: normModele(p.modeleAutres, o.modeleAutres) });
+  }
   function normalize(raw) {
     const d = clone(DEFAULTS);
     if (!isObj(raw)) return d;
@@ -1904,9 +2083,13 @@ const Params = (() => {
         const name = str(p.name, 12).toUpperCase();
         if (!name || seen.has(name)) continue;
         seen.add(name);
-        out.push({ name, nom1mL: str(p.nom1mL, 40) || 'Ech ID', nom2mL: str(p.nom2mL, 40) || 'Ech REF', blanche: p.blanche === true });
+        out.push(normEtProduct(p, name));
       }
-      if (out.length) d.etiquettes.produits = out.slice(0, 12);
+      if (out.length) {
+        /* paramètres d'une version précédente de l'outil : les produits apparus depuis (CT-P17) sont ajoutés une fois */
+        if (E.v !== ET_VERSION) for (const n of ET_NEW_IN_V2) if (!seen.has(n) && out.length < 12) out.push(etOrigin(n));
+        d.etiquettes.produits = out.slice(0, 12);
+      }
     }
     const listes = {};
     for (const p of d.etiquettes.produits) {
@@ -2089,7 +2272,8 @@ const Params = (() => {
   init();
   return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, teamFileText, jsonText, markExported, importText, parseText,
     products, productNames, baseOf, ruleHas, htHours, fmtHours, shades, lum, normalize, canon,
-    DEFAULTS, LINES, BANDS, HT_TABLES, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, FILE_NAME, fmtStamp };
+    DEFAULTS, LINES, BANDS, HT_TABLES, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, FILE_NAME, fmtStamp,
+    ET_VARS, ET_CHAMPS, parseLine, etOrigin, normEtProduct };
 })();
 
 /* #########################################################################
@@ -3917,7 +4101,32 @@ const SCHEMA_VERSION = 1;
 const etp = () => Params.get().etiquettes;
 const PRODUCTS = new Proxy([], { get: (_, k) => { const a = etp().produits.map(p => p.name); const v = a[k]; return typeof v === 'function' ? v.bind(a) : v; } });
 const productDef = P => etp().produits.find(p => p.name === P) || etp().produits[0];
-const DEFAULT_NAMES = new Proxy({}, { get: (_, P) => { const d = productDef(String(P)); return { nom1mL: d.nom1mL, nom2mL: d.nom2mL }; } });
+/* Noms d'échantillon du contenant (modifiables à l'étape 1) : clés de l'état, dans l'ordre des échantillons du produit */
+const NOM_KEYS = ['nom1mL', 'nom2mL', 'nom3', 'nom4', 'nom5'];
+const defaultName = (P, k) => { const e = productDef(P).ech; return (e[NOM_KEYS.indexOf(k)] || e[0]).nom; };
+/* Volume affiché : « 1mL » → « 1 mL » (libellés d'interface) */
+const fmtVol = v => String(v || '').replace(/(\d)\s*(mL|L|µL|uL|g|mg)$/i, '$1 $2');
+/* Libellé du champ « Nom échantillon » k : par son volume (« 1 mL ») s'il est propre à cet échantillon, sinon par son rang. */
+function nameLabels(def) {
+  const vols = def.ech.map(e => fmtVol(e.vol));
+  const unique = vols.every((v, i) => v && vols.indexOf(v) === i);
+  return def.ech.map((e, i) => (unique ? `Nom échantillon ${vols[i]}` : `Nom échantillon ${i + 1}${vols[i] ? ` (${vols[i]})` : ''}`));
+}
+/* Mots du contenant (poche, bidon, ou texte libre) et accords : « Aucune poche » / « Aucun bidon », « N° 1ʳᵉ poche » / « N° 1er bidon »… */
+function contWords(def) {
+  const raw = String(def.contenant || 'Poche').trim() || 'Poche';
+  const f = def.genre !== 'm';
+  const S = raw.charAt(0).toUpperCase() + raw.slice(1), s = raw.charAt(0).toLowerCase() + raw.slice(1);
+  const pl = w => (/[sxz]$/i.test(w) ? w : w + 's');
+  const vowel = /^[aeiouyhàâéèêëîïôûü]/i.test(raw);
+  return {
+    S, s, P: pl(S), p: pl(s), f,
+    un: f ? 'une' : 'un', Un: f ? 'Une' : 'Un', le: vowel ? 'l\'' : f ? 'la ' : 'le ', du: vowel ? 'de l\'' : f ? 'de la ' : 'du ', au: vowel ? 'à l\'' : f ? 'à la ' : 'au ', duN: f ? 'de la ' : 'du ', leN: f ? 'la ' : 'le ', aucun: f ? 'aucune' : 'aucun', Aucun: f ? 'Aucune' : 'Aucun',
+    er: f ? 'ʳᵉ' : 'er', premier: f ? 'première' : 'premier', dernier: f ? 'dernière' : 'dernier', Seul: f ? 'Seule' : 'Seul', Seuls: f ? 'Seules' : 'Seuls',
+    ce: f ? 'cette' : vowel ? 'cet' : 'ce', chaque: 'chaque', nb: (n, cap) => plural(n, cap ? S : s, cap ? pl(S) : pl(s)),
+  };
+}
+const CW = () => contWords(productDef(state.produit));
 const ORIGIN_LISTS = new Proxy({}, { get: (_, P) => etp().listes[String(P)] || [] });
 /* Abréviations normalisées françaises sans accent (identiques à l'Excel). */
 const MONTHS = ['Jan', 'Fev', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aou', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -3978,18 +4187,28 @@ const PARAM_FIELDS = [
       if (v.length < 3) return [h('span', { class: 'hint-warn' }, 'Un visa fait 3 ou 6 lettres. '), 'Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)];
       return ['Sur l\'étiquette : ', h('span', { class: 'mono' }, 'VISA: ' + v)];
     } },
-  { heading: 'Noms des échantillons de poche', hint: 'Ex. « SB4-Poche 1-Ech ID1 » : le nom est suivi du numéro de poche.' },
-  { key: 'nom1mL', label: 'Nom échantillon 1 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
-  { key: 'nom2mL', label: 'Nom échantillon 2 mL', type: 'text', maxLength: 40, defaultName: true, span: 3 },
 ];
+/* Champs « Nom échantillon » du produit choisi (un par échantillon du contenant, réglés dans Paramètres › Étiquettes) */
+function nameFields() {
+  const def = productDef(state.produit), w = CW(), labels = nameLabels(def);
+  const n = def.ech.length;
+  return [
+    { heading: `Noms des échantillons de ${w.s}`, hint: `Ex. « ${state.produit}-${w.S} 1-${def.ech[0].nom}1 » : le nom est suivi du numéro de ${w.s}.` },
+    ...def.ech.map((e, i) => ({ key: NOM_KEYS[i], label: labels[i], type: 'text', maxLength: 40, defaultName: true, span: n === 1 ? 6 : n === 3 ? 2 : 3 })),
+  ];
+}
 const MAX_POCHES_ROW = 999;
 /* Nombre maximal de lignes (mêmes limites à la saisie et au rechargement : rien n'est tronqué en silence) */
 const POCHES_ROWS_MAX = 200, AUTRES_MAX = 300;
-const POCHE_FIELDS = [
-  { key: 'lotPoche', label: 'Lot poche', type: 'text', maxLength: 40, placeholder: 'ex. P001' },
-  { key: 'nbPoches', label: 'Nombre de poches', type: 'number', min: 0, max: MAX_POCHES_ROW, stepper: true, emptyAs: 0, placeholder: '0' },
-  { key: 'premierNumero', label: 'N° 1ʳᵉ poche', optional: true, type: 'number', min: 0, max: 999999, emptyAs: null, placeholder: '—', title: 'Numéro client de la 1ʳᵉ poche de ce lot (facultatif)' },
-];
+/* Colonnes des lots de contenants (libellés accordés au contenant du produit : poche, bidon…) */
+function pocheFields() {
+  const w = CW();
+  return [
+    { key: 'lotPoche', label: `Lot ${w.s}`, type: 'text', maxLength: 40, placeholder: 'ex. P001' },
+    { key: 'nbPoches', label: `Nombre de ${w.p}`, type: 'number', min: 0, max: MAX_POCHES_ROW, stepper: true, emptyAs: 0, placeholder: '0' },
+    { key: 'premierNumero', label: `N° 1${w.er} ${w.s}`, optional: true, type: 'number', min: 0, max: 999999, emptyAs: null, placeholder: '—', title: `Numéro client ${w.duN}1${w.er} ${w.s} de ce lot (facultatif)` },
+  ];
+}
 const AUTRE_FIELDS = [
   { key: 'imprimer', label: 'Imprimer', type: 'check' },
   { key: 'nom', label: 'Échantillon', type: 'text', maxLength: 60, placeholder: 'Nom de l\'échantillon' },
@@ -4090,7 +4309,7 @@ function normalizeState(raw) {
   s.lot = str(raw.lot, 40);
   s.visa = str(raw.visa, VISA_MAX);
   s.dateFormulation = typeof raw.dateFormulation === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(raw.dateFormulation) ? raw.dateFormulation : '';
-  if (raw.noms && typeof raw.noms === 'object') for (const k of ['nom1mL', 'nom2mL']) s.noms[k] = typeof raw.noms[k] === 'string' ? raw.noms[k].slice(0, 40) : null;
+  if (raw.noms && typeof raw.noms === 'object') for (const k of NOM_KEYS) { if (typeof raw.noms[k] === 'string') s.noms[k] = raw.noms[k].slice(0, 40); else if (k in s.noms) s.noms[k] = null; }
   const ids = new Set();
   const safeId = v => { let id = typeof v === 'string' && /^[a-z0-9]{1,16}$/i.test(v) ? v : uid(); while (ids.has(id)) id = uid(); ids.add(id); return id; };
   if (Array.isArray(raw.poches)) {
@@ -4151,10 +4370,8 @@ let state = defaultState();
 /* Accès dérivés */
 const geo = () => state.gabarit.geo;
 /* Noms 1 mL / 2 mL : nettoyés des espaces ; un nom vidé reprend la valeur par défaut du produit (avec un avertissement). */
-function names() {
-  const d = DEFAULT_NAMES[state.produit];
-  const pick = k => { const v = state.noms[k] == null ? d[k] : state.noms[k].trim(); return v || d[k]; };
-  return { nom1mL: pick('nom1mL'), nom2mL: pick('nom2mL') };
+function names(P = state.produit) {
+  return productDef(P).ech.map((e, i) => { const k = NOM_KEYS[i]; const v = state.noms[k] == null ? e.nom : state.noms[k].trim(); return v || e.nom; });
 }
 const emptyName = k => state.noms[k] != null && !state.noms[k].trim();
 function defaultList(p) { const perso = state.listesPerso[p]; return perso ? perso.map(i => ({ id: uid(), ...i })) : listFromPairs(ORIGIN_LISTS[p]); }
@@ -4172,15 +4389,57 @@ function formatDateLabel(iso) {
   return m[3] + MONTHS[mi - 1] + m[1].slice(2);
 }
 function labelContext() {
-  const n = names();
-  return { P: state.produit, LOT: state.lot.trim().toUpperCase(), D: formatDateLabel(state.dateFormulation), V: state.visa.trim().toUpperCase(), n1: n.nom1mL, n2: n.nom2mL };
+  return { P: state.produit, def: productDef(state.produit), LOT: state.lot.trim().toUpperCase(), D: formatDateLabel(state.dateFormulation), V: state.visa.trim().toUpperCase(), noms: names() };
 }
 /* Une ligne = segments de texte {t} ou de blanc à remplir à la main {b: largeur mm}. */
 const T = t => ({ t: String(t) });
 const B = mm => ({ b: mm });
 const BF = mm => ({ b: mm, fixed: true });   /* blanc de largeur fixe (mm) : ne rétrécit pas avec le texte */
 const line = (segs, sm = false) => ({ segs, sm });
-
+/* Ligne d'un modèle (Paramètres › Étiquettes) → segments. Une variable vide qui doit disparaître (volume, rang, quantité)
+   ou un champ masqué (date, visa, heure, N° client) retire aussi le texte qui la précède depuis la valeur précédente
+   (« Date: 29Sep26 N° Poche: 7 » sans N° client → « Date: 29Sep26 »). Les blancs gardent leurs largeurs d'origine. */
+function modelLine(src, kind, vals, champs, sm) {
+  const items = Params.parseLine(src, kind);
+  const DROP = {};
+  const res = items.map(it => {
+    if (it.lit != null) return { seg: T(it.lit), lab: true };
+    if (it.bad) return { seg: T(it.bad), lab: true };
+    const d = it.def;
+    if (d.champ && champs && champs[d.champ] === false) return DROP;
+    let seg;
+    switch (it.v) {
+      case 'date': seg = vals.D ? T(vals.D) : B(BLANK_DATE_MM); break;
+      case 'visa': seg = vals.V ? T(vals.V) : BF(BLANK_VISA_MM); break;
+      case 'heure': seg = BF(BLANK_HEURE_MM); break;
+      default: { const v = vals[it.v] == null ? '' : String(vals[it.v]); if (d.opt && !v) return DROP; seg = T(v); }
+    }
+    return { seg, lab: !!d.lab };
+  });
+  let dropped = false;
+  for (let i = 0; i < res.length; i++) {
+    if (res[i] !== DROP) continue;
+    dropped = true;
+    res[i] = null;
+    for (let j = i - 1; j >= 0 && res[j] && res[j] !== DROP && res[j].lab; j--) res[j] = null;
+  }
+  const segs = [];
+  for (const r of res) {
+    if (!r || r === DROP) continue;
+    const last = segs[segs.length - 1];
+    if (r.seg.t != null && last && last.t != null) segs[segs.length - 1] = T(last.t + r.seg.t);
+    else segs.push(r.seg);
+  }
+  if (dropped) {
+    if (segs[0] && segs[0].t != null) segs[0] = T(segs[0].t.replace(/^\s+/, ''));
+    const z = segs.length - 1;
+    if (segs[z] && segs[z].t != null) segs[z] = T(segs[z].t.replace(/\s+$/, ''));
+  }
+  return line(segs.filter(x => x.t == null || x.t !== ''), sm);
+}
+function modelLabel(modele, kind, vals, champs) {
+  return { lines: modele.lignes.map((src, i) => modelLine(src, kind, vals, champs, modele.petites.includes(i))) };
+}
 /* Numérotation globale des poches, rang dans le lot, N° client. */
 function allPoches() {
   const list = [];
@@ -4205,34 +4464,28 @@ function selectedPoches(all) {
   if (state.plage.mode !== 'range') return { list: all, error: null };
   const N = all.length, de = state.plage.de, a = plageA(N);
   if (!N) return { list: [], error: null };
-  if (de == null || a == null) return { list: [], error: 'Plage de poches incomplète : indiquez « de » et « à ».' };
-  if (de < 1 || a < 1 || de > a) return { list: [], error: `Plage de poches invalide : « de ${de} à ${a} ».` };
-  if (de > N) return { list: [], error: `Plage de poches invalide : il n'y a que ${plural(N, 'poche')}.` };
+  const w = CW();
+  if (de == null || a == null) return { list: [], error: `Plage de ${w.p} incomplète : indiquez « de » et « à ».` };
+  if (de < 1 || a < 1 || de > a) return { list: [], error: `Plage de ${w.p} invalide : « de ${de} à ${a} ».` };
+  if (de > N) return { list: [], error: `Plage de ${w.p} invalide : il n'y a que ${w.nb(N)}.` };
   const to = Math.min(a, N);
   return { list: all.slice(de - 1, to), error: null, from: de, to, clipped: a > N };
 }
-/* Étiquettes d'une poche : 4 colonnes × 5 lignes (règles exactes de l'Excel). */
+/* Étiquettes d'un contenant (une par case réglée dans Paramètres ; null = étiquette blanche). Avec les modèles d'origine :
+   règles exactes de l'Excel (SB4 : 1 mL (1/2), 1 mL (2/2), 2 mL (1/2), 2 mL (2/2) ; SB5 : 1 mL, blanche, 1 mL (1/2), 1 mL (2/2)). */
 function pocheLabels(p, ctx) {
-  const { P, LOT, D, V, n1, n2 } = ctx;
-  const head = line([T(`${P} ${LOT}`)]);
-  const name1 = line([T(`${P}-Poche ${p.n}-${n1}${p.n}`)]);
-  const name2 = line([T(`${P}-Poche ${p.n}-${n2}${p.n}`)]);
-  const lotL = vol => line([T(`lot: ${p.lp} ${vol}`)]);
-  const date = line([T('Date: '), D ? T(D) : B(BLANK_DATE_MM), T(` N° Poche: ${p.c}`)], true);
-  const visa = line([T('VISA: '), V ? T(V) : BF(BLANK_VISA_MM), T(' Heure: '), BF(BLANK_HEURE_MM)]);
-  const mk = (l2, l3) => ({ lines: [head, l2, l3, date, visa] });
-  /* règle SB5 (ou produit réglé « comme SB5 » dans l'onglet Paramètres) : 1 mL unique, étiquette blanche en 2ᵉ position */
-  if (productDef(P).blanche) return [mk(name1, lotL('1mL')), null, mk(name2, lotL('1mL (1/2)')), mk(name2, lotL('1mL (2/2)'))];
-  return [mk(name1, lotL('1mL (1/2)')), mk(name1, lotL('1mL (2/2)')), mk(name2, lotL('2mL (1/2)')), mk(name2, lotL('2mL (2/2)'))];
+  const def = ctx.def, w = contWords(def);
+  return def.cases.map(c => {
+    if (c.e < 0 || !def.ech[c.e]) return null;
+    const vals = { produit: ctx.P, lot: ctx.LOT, contenant: w.S, num: p.n, nom: ctx.noms[c.e] ?? def.ech[c.e].nom, lotc: p.lp, vol: def.ech[c.e].vol, rang: c.rang, D: ctx.D, V: ctx.V, client: p.c };
+    return modelLabel(def.modele, 'contenant', vals, def.champs);
+  });
 }
-/* Étiquette « autre échantillon » : P LOT / nom / quantité / Date / VISA. */
+/* Étiquette « autre échantillon » (modèle d'origine : P LOT / nom / quantité / Date / VISA). */
 function autreLabel(item, ctx) {
-  const { P, LOT, D, V } = ctx;
-  return { lines: [
-    line([T(`${P} ${LOT}`)]), line([T(item.nom.trim())]), line([T(item.quantite.trim())]),
-    line([T('Date: '), D ? T(D) : B(BLANK_DATE_MM)], true),
-    line([T('VISA: '), V ? T(V) : BF(BLANK_VISA_MM), T(' Heure: '), BF(BLANK_HEURE_MM)]),
-  ] };
+  const def = ctx.def;
+  const vals = { produit: ctx.P, lot: ctx.LOT, contenant: contWords(def).S, ech: item.nom.trim(), qte: item.quantite.trim(), D: ctx.D, V: ctx.V };
+  return modelLabel(def.modeleAutres, 'autres', vals, def.champs);
 }
 /* Case (r, c) d'un type d'étiquettes, en mm AVANT calibration : { x, y, w, h }. */
 function cellBox(g, kind, r, c) {
@@ -4279,9 +4532,12 @@ function problemsOfGeo(g) {
 }
 /* Pagination. Page = { cells[rows*cols], used (rangées déjà utilisées), items[] }. */
 function emptyPage(g, used = 0) { return { cells: new Array(g.rows * g.cols).fill(null), used, items: [] }; }
-/* Poches : chaque poche commence une nouvelle rangée (4 étiquettes, 5ᵉ colonne vide). */
-function layoutPoches(groups, g, startRow) {
-  const rowsPer = Math.max(1, Math.ceil(4 / g.cols));
+/* Contenants (poches, bidons…) : chaque contenant commence une nouvelle rangée (SB : 4 étiquettes, 5ᵉ colonne vide) ;
+   disposition « à la suite » (Paramètres) : les étiquettes se suivent et remplissent toutes les colonnes. */
+function layoutPoches(groups, g, startRow, suite = false) {
+  if (suite) return layoutSuite(groups, g, startRow);
+  const perGroup = groups.length ? groups[0].labels.length : 4;
+  const rowsPer = Math.max(1, Math.ceil(perGroup / g.cols));
   const pages = [];
   if (rowsPer > g.rows) return pages;
   let first = true, page, r;
@@ -4296,6 +4552,23 @@ function layoutPoches(groups, g, startRow) {
     });
     page.items.push(grp.n);
     r += rowsPer;
+  }
+  close();
+  return pages;
+}
+/* Contenants « à la suite » : remplissage continu ; un contenant n'est jamais coupé entre deux pages. */
+function layoutSuite(groups, g, startRow) {
+  const pages = [];
+  const per = groups.length ? groups[0].labels.length : 1;
+  if (per > g.rows * g.cols) return pages;
+  let first = true, page, k;
+  const open = () => { page = emptyPage(g, first ? clamp(startRow, 1, g.rows) - 1 : 0); k = page.used * g.cols; first = false; };
+  const close = () => { if (page.items.length) pages.push(page); };
+  open();
+  for (const grp of groups) {
+    if (k + grp.labels.length > g.rows * g.cols) { close(); open(); }
+    grp.labels.forEach(lab => { page.cells[k] = lab ? { label: lab, n: grp.n } : { blank: true, n: grp.n }; k += 1; });
+    page.items.push(grp.n);
   }
   close();
   return pages;
@@ -4328,7 +4601,7 @@ function buildDoc(kind) {
     const sel = selectedPoches(all);
     const groups = sel.list.map(p => ({ n: p.n, labels: pocheLabels(p, ctx) }));
     const range = !sel.error && sel.from ? { from: sel.from, to: sel.to, clipped: sel.clipped, a: plageA(all.length) } : null;
-    return { kind, g, frames, pages: layoutPoches(groups, g, state.premiereLigne), count: sel.list.length, total: all.length, error: sel.error, range };
+    return { kind, g, frames, pages: layoutPoches(groups, g, state.premiereLigne, ctx.def.disposition === 'suite'), count: sel.list.length, total: all.length, error: sel.error, range };
   }
   if (kind === 'autres') {
     const items = autresList().filter(i => i.imprimer && i.nom.trim());
@@ -4715,7 +4988,7 @@ function ListEditor({ cls, fields, rows, idPrefix, rowLabel, onSet, onRemove, ex
 function paramBinding(def) {
   const id = 'f-' + def.key;
   if (def.defaultName) {
-    return { id, get: () => state.noms[def.key] ?? DEFAULT_NAMES[state.produit][def.key], set: v => { state.noms[def.key] = v.trim() === DEFAULT_NAMES[state.produit][def.key] ? null : v; commit(); } };
+    return { id, get: () => state.noms[def.key] ?? defaultName(state.produit, def.key), set: v => { state.noms[def.key] = v.trim() === defaultName(state.produit, def.key) ? null : v; commit(); } };
   }
   return { id, get: () => state[def.key], set: v => { state[def.key] = v; commit({ rerender: !!def.rerender }); } };
 }
@@ -4723,7 +4996,7 @@ function renderStep1() {
   const body = [];
   let grid = null;
   const flush = () => { if (grid) { body.push(grid); grid = null; } };
-  for (const def of PARAM_FIELDS) {
+  for (const def of [...PARAM_FIELDS, ...nameFields()]) {
     if (def.heading) {
       flush();
       body.push(h('div', { class: 'subsection', style: 'padding-top:1rem;gap:.25rem' }, h('h3', { class: 'subhead' }, def.heading), h('div', { class: 'hint' }, def.hint)));
@@ -4735,7 +5008,7 @@ function renderStep1() {
     if (def.defaultName) {
       fdef = { ...def };
       fdef.hint = () => {
-        const d = DEFAULT_NAMES[state.produit][def.key];
+        const d = defaultName(state.produit, def.key);
         if (state.noms[def.key] == null) return [`Valeur par défaut pour ${state.produit}`];
         if (emptyName(def.key)) return [h('span', { class: 'hint-warn' }, `Vide : « ${d} » sera imprimé. `), h('button', { type: 'button', class: 'link-btn', onclick: () => { state.noms[def.key] = null; commit({ rerender: true, focus: bind.id }); } }, icon('reset'), ' Rétablir')];
         return [h('button', { type: 'button', class: 'link-btn', onclick: () => { state.noms[def.key] = null; commit({ rerender: true, focus: bind.id }); } }, icon('reset'), ' Rétablir la valeur par défaut'), ` (${d})`];
@@ -4747,19 +5020,20 @@ function renderStep1() {
   return body;
 }
 function renderStep2() {
+  const w = CW(), def = productDef(state.produit);
   const list = ListEditor({
-    cls: 'list-poches', ariaLabel: 'Lots de poches', fields: POCHE_FIELDS, rows: state.poches, idPrefix: 'p',
-    rowLabel: (row, i) => `lot de poches ${i + 1}`,
-    removeLabel: 'Supprimer ce lot de poches',
-    emptyText: 'Aucun lot de poches. Ajoutez-en un ci-dessous.',
-    extraHead: 'Poches',
+    cls: 'list-poches', ariaLabel: `Lots de ${w.p}`, fields: pocheFields(), rows: state.poches, idPrefix: 'p',
+    rowLabel: (row, i) => `lot de ${w.p} ${i + 1}`,
+    removeLabel: `Supprimer ce lot de ${w.p}`,
+    emptyText: `Aucun lot de ${w.p}. Ajoutez-en un ci-dessous.`,
+    extraHead: w.P,
     extraCell: (row, i) => {
       const pill = h('span', { class: 'range-pill', id: `p-${row.id}-range` });
       onDerived(() => {
         const rg = pocheRanges()[state.poches.indexOf(row)];
         pill.classList.toggle('none', !rg);
-        pill.textContent = rg ? (rg.from === rg.to ? `n° ${rg.from}` : `${rg.from} → ${rg.to}`) : 'aucune';
-        pill.title = rg ? `Poches ${rg.from} à ${rg.to}` : 'Aucune poche';
+        pill.textContent = rg ? (rg.from === rg.to ? `n° ${rg.from}` : `${rg.from} → ${rg.to}`) : w.aucun;
+        pill.title = rg ? `${w.P} ${rg.from} à ${rg.to}` : `${w.Aucun} ${w.s}`;
       });
       return pill;
     },
@@ -4769,7 +5043,7 @@ function renderStep2() {
       commit({ tab: 'poches' });
     },
     onRemove: (row, i) => {
-      withUndo(`Lot de poches ${i + 1} supprimé`, () => { state.poches.splice(state.poches.indexOf(row), 1); }, { tab: 'poches' });
+      withUndo(`Lot de ${w.p} ${i + 1} supprimé`, () => { state.poches.splice(state.poches.indexOf(row), 1); }, { tab: 'poches' });
       const next = state.poches[i] || state.poches[i - 1];
       focusLater(next ? `#p-${next.id}-del` : '#btn-add-poche');
     },
@@ -4778,25 +5052,31 @@ function renderStep2() {
   onDerived(() => {
     const d = derived.poches;
     const partial = state.plage.mode === 'range' && d.total > 0;
-    total.replaceChildren(h('strong', null, plural(d.total, 'poche')), partial ? ` · ${d.count} à imprimer` : '', ` · ${plural(d.pages.length, 'page')}`);
+    total.replaceChildren(h('strong', null, w.nb(d.total)), partial ? ` · ${d.count} à imprimer` : '', ` · ${plural(d.pages.length, 'page')}`);
   });
   const full = state.poches.length >= POCHES_ROWS_MAX;
-  const add = h('button', { type: 'button', class: 'btn btn-secondary', id: 'btn-add-poche', disabled: full, title: full ? `${POCHES_ROWS_MAX} lots de poches au maximum` : null, onclick: () => {
+  const add = h('button', { type: 'button', class: 'btn btn-secondary', id: 'btn-add-poche', disabled: full, title: full ? `${POCHES_ROWS_MAX} lots de ${w.p} au maximum` : null, onclick: () => {
     if (state.poches.length >= POCHES_ROWS_MAX) return;
     const row = newPocheRow(); state.poches.push(row); commit({ rerender: true, tab: 'poches', focus: `p-${row.id}-lotPoche` });
-  } }, icon('plus'), 'Ajouter un lot de poches');
+  } }, icon('plus'), `Ajouter un lot de ${w.p}`);
 
-  const layoutHelp = productDef(state.produit).blanche
-    ? `En ${state.produit}, une poche = une rangée de 4 cases : 1 mL, case vide, 1 mL (1/2), 1 mL (2/2).`
-    : `En ${state.produit}, une poche = une rangée de 4 étiquettes : 2 × 1 mL, 2 × 2 mL.`;
+  /* rangée d'un contenant, décrite d'après Paramètres › Étiquettes (SB4 : « 2 × 1 mL, 2 × 2 mL » ; SB5 : case vide) */
+  const cases = def.cases, nLab = cases.filter(c => c.e >= 0).length;
+  const desc = cases.some(c => c.e < 0)
+    ? cases.map(c => (c.e < 0 ? 'case vide' : `${fmtVol(def.ech[c.e].vol) || def.ech[c.e].nom}${c.rang ? ' ' + c.rang : ''}`)).join(', ')
+    : (() => { const parts = []; for (const c of cases) { const lab = fmtVol(def.ech[c.e].vol) || def.ech[c.e].nom; const last = parts[parts.length - 1]; if (last && last.lab === lab) last.n += 1; else parts.push({ lab, n: 1 }); } return parts.map(x => (x.n > 1 ? `${x.n} × ${x.lab}` : x.lab)).join(', '); })();
+  const what = cases.some(c => c.e < 0) ? `${cases.length} cases` : plural(nLab, 'étiquette');
+  const layoutHelp = def.disposition === 'suite'
+    ? `En ${state.produit}, ${w.un} ${w.s} = ${what} : ${desc}, à la suite sur la planche.`
+    : `En ${state.produit}, ${w.un} ${w.s} = une rangée de ${what} : ${desc}.`;
   return [
-    h('p', { class: 'hint step-intro', id: 'poches-layout-hint' }, layoutHelp, ' Les poches sont numérotées à la suite, dans l\'ordre des lignes.'),
+    h('p', { class: 'hint step-intro', id: 'poches-layout-hint' }, layoutHelp, ` Les ${w.p} sont numéroté${w.f ? 'e' : ''}s à la suite, dans l'ordre des lignes.`),
     list,
     h('div', { class: 'list-foot' }, add, total),
-    full ? h('p', { class: 'hint', style: 'margin:-.5rem 0 0' }, `${POCHES_ROWS_MAX} lots de poches au maximum : augmentez plutôt le nombre de poches d'un lot.`) : null,
-    h('p', { class: 'hint', style: 'margin:-.5rem 0 0' }, h('b', null, 'N° 1ʳᵉ poche'), ' (facultatif) : numéro client de la 1ʳᵉ poche du lot, si la numérotation client est suivie. Il s\'imprime après « N° Poche: » et augmente de 1 à chaque poche.'),
+    full ? h('p', { class: 'hint', style: 'margin:-.5rem 0 0' }, `${POCHES_ROWS_MAX} lots de ${w.p} au maximum : augmentez plutôt le nombre de ${w.p} d'un lot.`) : null,
+    h('p', { class: 'hint', style: 'margin:-.5rem 0 0' }, h('b', null, `N° 1${w.er} ${w.s}`), ` (facultatif) : numéro client ${w.duN}1${w.er} ${w.s} du lot, si la numérotation client est suivie. Il s'imprime après « N° ${w.S}: » et augmente de 1 à chaque ${w.s}.`),
     h('div', { class: 'subsection' },
-      h('h3', { class: 'subhead' }, 'Options d\'impression des poches'),
+      h('h3', { class: 'subhead' }, `Options d'impression des ${w.p}`),
       renderRangeField(),
       renderFirstLineField('premiereLigne', 'f-premiereLigne', 'poches')),
   ].filter(Boolean);
@@ -4806,7 +5086,8 @@ function markEmptyLot(row) {
   if (el) el.classList.toggle('warn-empty', row.nbPoches > 0 && !row.lotPoche.trim());
 }
 function renderRangeField() {
-  const mode = Segmented({ name: 'f-plage-mode', ariaLabel: 'Poches à imprimer', value: state.plage.mode,
+  const w = CW();
+  const mode = Segmented({ name: 'f-plage-mode', ariaLabel: `${w.P} à imprimer`, value: state.plage.mode,
     options: [{ value: 'all', label: 'Toutes' }, { value: 'range', label: 'Une partie' }],
     onChange: v => {
       state.plage.mode = v;
@@ -4817,15 +5098,15 @@ function renderRangeField() {
   if (state.plage.mode === 'range') {
     const num = (id, label, get, set) => NumberInput({ id, get, set: v => { set(v); commit({ tab: 'poches' }); }, min: 1, max: 99999, stepper: true, emptyAs: null, ariaLabel: label });
     kids.push(h('div', { class: 'range-inputs' },
-      h('span', { class: 'sep' }, 'De'), num('f-plage-de', 'première poche à imprimer', () => state.plage.de, v => { state.plage.de = v; }),
-      h('span', { class: 'sep' }, 'à'), num('f-plage-a', 'dernière poche à imprimer', () => plageA(allPoches().length), v => { state.plage.a = v; state.plage.aAuto = false; })));
+      h('span', { class: 'sep' }, 'De'), num('f-plage-de', `${w.premier} ${w.s} à imprimer`, () => state.plage.de, v => { state.plage.de = v; }),
+      h('span', { class: 'sep' }, 'à'), num('f-plage-a', `${w.dernier} ${w.s} à imprimer`, () => plageA(allPoches().length), v => { state.plage.a = v; state.plage.aAuto = false; })));
     /* « à » automatique : suit le nombre de poches saisi ensuite */
     onDerived(() => {
       const inp = document.getElementById('f-plage-a');
       if (inp && state.plage.aAuto && document.activeElement !== inp) { const v = plageA(derived.poches.total); inp.value = v == null ? '' : String(v); }
     });
   }
-  return Field({ id: 'f-plage', label: 'Poches à imprimer', labelFor: false,
+  return Field({ id: 'f-plage', label: `${w.P} à imprimer`, labelFor: false,
     hint: () => state.plage.mode === 'range' ? 'Pour réimprimer une partie : les numéros restent ceux de la liste complète.' : null,
     control: h('div', { style: 'display:flex;flex-direction:column;gap:.625rem', role: 'group', 'aria-labelledby': 'f-plage-label' }, kids) });
 }
@@ -5049,14 +5330,14 @@ function renderStep4() {
   onDerived(() => renderWarnings(warnBox));
 
   const btnPoches = h('button', { type: 'button', class: 'btn btn-primary btn-lg btn-block', id: 'btn-print-poches', onclick: () => requestPrint('poches') },
-    icon('printer'), h('span', { class: 'btn-stack' }, h('span', null, 'Imprimer les étiquettes poches'), h('span', { class: 'btn-sub', id: 'sub-poches' })));
+    icon('printer'), h('span', { class: 'btn-stack' }, h('span', null, `Imprimer les étiquettes ${CW().p}`), h('span', { class: 'btn-sub', id: 'sub-poches' })));
   const btnAutres = h('button', { type: 'button', class: 'btn btn-secondary btn-lg', id: 'btn-print-autres', onclick: () => requestPrint('autres') },
     icon('printer'), h('span', { class: 'btn-stack' }, h('span', null, 'Imprimer les autres étiquettes'), h('span', { class: 'btn-sub', id: 'sub-autres' })));
   const btnAll = h('button', { type: 'button', class: 'btn btn-secondary btn-lg', id: 'btn-print-all', onclick: () => requestPrint('all') },
     icon('layers'), h('span', { class: 'btn-stack' }, h('span', null, 'Tout imprimer'), h('span', { class: 'btn-sub', id: 'sub-all' })));
   onDerived(() => {
     const p = derived.poches, a = derived.autres;
-    btnPoches.querySelector('#sub-poches').textContent = `${plural(p.count, 'poche')} · ${plural(p.pages.length, 'page')}`;
+    btnPoches.querySelector('#sub-poches').textContent = `${CW().nb(p.count)} · ${plural(p.pages.length, 'page')}`;
     btnAutres.querySelector('#sub-autres').textContent = `${plural(a.count, 'étiquette')} · ${plural(a.pages.length, 'page')}`;
     btnAll.querySelector('#sub-all').textContent = plural(p.pages.length + a.pages.length, 'page');
   });
@@ -5076,19 +5357,22 @@ function computeWarnings() {
   const w = [];
   const p = derived.poches;
   if (!state.lot.trim()) w.push({ msg: 'Le lot n\'est pas renseigné.', focus: '#f-lot' });
-  if (!p.total) w.push({ msg: 'Aucune poche : indiquez un nombre de poches à l\'étape 2.', focus: state.poches[0] ? `#p-${state.poches[0].id}-nbPoches` : '#btn-add-poche' });
-  state.poches.forEach((r, i) => { if (r.nbPoches > 0 && !r.lotPoche.trim()) w.push({ msg: `Lot de poches ${i + 1} : ${plural(r.nbPoches, 'poche')} sans « Lot poche ».`, focus: `#p-${r.id}-lotPoche` }); });
+  const c = CW(), def = productDef(state.produit);
+  if (!p.total) w.push({ msg: `${c.Aucun} ${c.s} : indiquez un nombre de ${c.p} à l'étape 2.`, focus: state.poches[0] ? `#p-${state.poches[0].id}-nbPoches` : '#btn-add-poche' });
+  state.poches.forEach((r, i) => { if (r.nbPoches > 0 && !r.lotPoche.trim()) w.push({ msg: `Lot de ${c.p} ${i + 1} : ${c.nb(r.nbPoches)} sans « Lot ${c.s} ».`, focus: `#p-${r.id}-lotPoche` }); });
   if (p.error) w.push({ msg: p.error, focus: '#f-plage-de' });
   else if (p.range && !(p.range.from === 1 && p.range.to === p.total && !p.range.clipped)) {
     /* impression partielle : toujours annoncée, avec un raccourci pour tout imprimer */
     const r = p.range;
-    w.push({ msg: r.from === r.to ? `Seule la poche ${r.from} (sur ${p.total}) sera imprimée.` : `Seules les poches ${r.from} à ${r.to} (sur ${p.total}) seront imprimées.`,
-      action: { label: 'Imprimer toutes les poches', run: () => { state.plage.mode = 'all'; commit({ rerender: true, tab: 'poches' }); } } });
-    if (r.clipped) w.push({ msg: `« à » (${r.a}) dépasse le nombre de poches (${p.total}) : impression jusqu'à la poche ${p.total}.`, focus: '#f-plage-a' });
+    w.push({ msg: r.from === r.to ? `${c.Seul} ${c.le}${c.s} ${r.from} (sur ${p.total}) sera imprimé${c.f ? 'e' : ''}.` : `${c.Seuls} les ${c.p} ${r.from} à ${r.to} (sur ${p.total}) seront imprimé${c.f ? 'e' : ''}s.`,
+      action: { label: `Imprimer tou${c.f ? 'tes' : 's'} les ${c.p}`, run: () => { state.plage.mode = 'all'; commit({ rerender: true, tab: 'poches' }); } } });
+    if (r.clipped) w.push({ msg: `« à » (${r.a}) dépasse le nombre de ${c.p} (${p.total}) : impression jusqu'${c.au}${c.s} ${p.total}.`, focus: '#f-plage-a' });
   }
-  if (p.count > BIG_BATCH) w.push({ msg: `${p.count} poches (plus de ${BIG_BATCH}) à imprimer : une confirmation sera demandée avant l'impression.` });
-  for (const k of ['nom1mL', 'nom2mL']) if (emptyName(k)) w.push({ msg: `Nom échantillon ${k === 'nom1mL' ? '1' : '2'} mL vide : « ${DEFAULT_NAMES[state.produit][k]} » sera imprimé.`, focus: `#f-${k}` });
-  if (geo().cols < 4) w.push({ msg: `Gabarit à ${geo().cols} colonne(s) : chaque poche occupera ${Math.ceil(4 / geo().cols)} rangées.` });
+  if (p.count > BIG_BATCH) w.push({ msg: `${p.count} ${c.p} (plus de ${BIG_BATCH}) à imprimer : une confirmation sera demandée avant l'impression.` });
+  const labels = nameLabels(def);
+  def.ech.forEach((e, i) => { const k = NOM_KEYS[i]; if (emptyName(k)) w.push({ msg: `${labels[i]} vide : « ${e.nom} » sera imprimé.`, focus: `#f-${k}` }); });
+  const perC = def.cases.length;
+  if (def.disposition !== 'suite' && geo().cols < perC) w.push({ msg: `Gabarit à ${geo().cols} colonne(s) : chaque ${c.s} occupera ${Math.ceil(perC / geo().cols)} rangées.` });
   const geoProblems = problemsOfGeo(geo());
   for (const m of geoProblems) w.push({ msg: m, focus: '#f-preset' });
   if (!geoProblems.length) w.push(...edgeWarnings());
@@ -5103,7 +5387,8 @@ const EDGE_MM = 4;
 function printedExtents() {
   const g = computeGeo(), frames = state.reglages.cadres, s = g.scale;
   const ext = { left: { v: Infinity }, top: { v: Infinity }, right: { v: -Infinity }, bottom: { v: -Infinity } };
-  const kinds = [['poches', Math.min(4, g.cols)], ['autres', clamp(state.reglages.autresParRangee, 1, g.cols)]];
+  const def = productDef(state.produit);
+  const kinds = [['poches', def.disposition === 'suite' ? g.cols : Math.min(def.cases.length, g.cols)], ['autres', clamp(state.reglages.autresParRangee, 1, g.cols)]];
   for (const [kind, ncols] of kinds) {
     for (let r = 0; r < g.rows; r++) for (let c = 0; c < ncols; c++) {
       const b = cellBox(g, kind, r, c);
@@ -5160,7 +5445,7 @@ function updateSummaries() {
   $('#sum-1').replaceChildren(h('span', { class: 'chip navy' }, P), lot ? h('span', { class: 'chip ok' }, lot) : h('span', { class: 'chip todo' }, 'Lot à saisir'));
   const p = derived.poches;
   const partial = state.plage.mode === 'range' && p.total > 0 ? `${p.count} / ` : '';
-  $('#sum-2').replaceChildren(h('span', { class: 'chip ' + (p.count ? 'plain' : 'todo') }, `${partial}${plural(p.total, 'poche')} · ${plural(p.pages.length, 'page')}`));
+  $('#sum-2').replaceChildren(h('span', { class: 'chip ' + (p.count ? 'plain' : 'todo') }, `${partial}${CW().nb(p.total)} · ${plural(p.pages.length, 'page')}`));
   const a = derived.autres;
   $('#sum-3').replaceChildren(h('span', { class: 'chip plain' }, `${plural(a.count, 'étiquette')} · ${plural(a.pages.length, 'page')}`));
   const calib = calibText();
@@ -5252,7 +5537,8 @@ function zoomStep(dir) {
 }
 function updateTabs() {
   const p = derived.poches, a = derived.autres;
-  $('#tab-poches').textContent = `Poches (${p.count})`;
+  $('#tab-poches').textContent = `${CW().P} (${p.count})`;
+  $('#step-2-title').textContent = CW().P;
   $('#tab-autres').textContent = `Autres (${a.count})`;
   for (const t of document.querySelectorAll('.pv-tab')) {
     const on = t.dataset.kind === state.ui.apercu;
@@ -5272,7 +5558,8 @@ function setPreviewTab(kind, save = true) {
 }
 function pageCaption(doc, page, i, n) {
   const first = page.items[0], last = page.items[page.items.length - 1];
-  const what = doc.kind === 'poches' ? (first === last ? `Poche ${first}` : `Poches ${first} → ${last}`) : (first === last ? `Étiquette ${first}` : `Étiquettes ${first} → ${last}`);
+  const w = CW();
+  const what = doc.kind === 'poches' ? (first === last ? `${w.S} ${first}` : `${w.P} ${first} → ${last}`) : (first === last ? `Étiquette ${first}` : `Étiquettes ${first} → ${last}`);
   return [h('span', null, `Page ${i + 1} / ${n}`), h('span', null, page.items.length ? what : '')];
 }
 function renderPreview() {
@@ -5289,8 +5576,8 @@ function renderPreview() {
     const frame = h('div', { class: 'sheet-frame' }, sheet);
     if (isEmpty) {
       frame.append(h('div', { class: 'pv-empty' }, h('div', null,
-        h('strong', null, kind === 'poches' ? 'Aucune poche à imprimer' : 'Aucune autre étiquette à imprimer'),
-        kind === 'poches' ? (doc.error || 'Indiquez les lots de poches et leur nombre à l\'étape 2.') : 'Cochez au moins un échantillon à l\'étape 3.')));
+        h('strong', null, kind === 'poches' ? `${CW().Aucun} ${CW().s} à imprimer` : 'Aucune autre étiquette à imprimer'),
+        kind === 'poches' ? (doc.error || `Indiquez les lots de ${CW().p} et leur nombre à l'étape 2.`) : 'Cochez au moins un échantillon à l\'étape 3.')));
     }
     return h('div', { class: 'pv-page' }, h('div', { class: 'pv-cap' }, isEmpty ? [h('span', null, 'Planche vide'), h('span')] : pageCaption(doc, doc.pages[i], i, n)), frame);
   });
@@ -5356,7 +5643,7 @@ function preparePrint(kind) {
     /* rien d'imprimable (impression lancée depuis le menu du navigateur) : une page explicative plutôt qu'une page blanche */
     const g = geo();
     sheets.push(h('div', { class: 'sheet sheet-empty', dataset: { kind: 'vide', page: '1' }, style: `width:${g.pageW}mm;height:${g.pageH}mm` },
-      h('div', { class: 'sheet-msg' }, h('b', null, 'Rien à imprimer.'), ' Renseignez les poches (étape 2) ou cochez des autres échantillons (étape 3), puis utilisez les boutons « Imprimer » de l\'étape 4.')));
+      h('div', { class: 'sheet-msg' }, h('b', null, 'Rien à imprimer.'), ` Renseignez les ${CW().p} (étape 2)`, ' ou cochez des autres échantillons (étape 3), puis utilisez les boutons « Imprimer » de l\'étape 4.')));
   }
   root.replaceChildren(...sheets);
   applyPageSize();
@@ -5441,7 +5728,7 @@ async function requestPrint(kind) {
   const p = derived.poches, a = derived.autres;
   const pages = kind === 'poches' ? p.pages.length : kind === 'autres' ? a.pages.length : kind === 'all' ? p.pages.length + a.pages.length : 1;
   if (!pages) {
-    toast(kind === 'autres' ? 'Aucune autre étiquette à imprimer : cochez au moins un échantillon (étape 3).' : kind === 'poches' ? (p.error || 'Aucune poche à imprimer : renseignez l\'étape 2.') : 'Rien à imprimer.', { icon: 'alert', tone: 'warn' });
+    toast(kind === 'autres' ? 'Aucune autre étiquette à imprimer : cochez au moins un échantillon (étape 3).' : kind === 'poches' ? (p.error || `${CW().Aucun} ${CW().s} à imprimer : renseignez l'étape 2.`) : 'Rien à imprimer.', { icon: 'alert', tone: 'warn' });
     return;
   }
   if (kind !== 'test' && !state.lot.trim()) {
@@ -5453,15 +5740,16 @@ async function requestPrint(kind) {
   }
   if (kind === 'all' && (!p.pages.length || !a.pages.length)) {
     /* « Tout imprimer » alors qu'une des deux parties est vide : on le dit avant d'imprimer */
-    const missing = !p.pages.length ? `Les étiquettes poches ne seront pas imprimées (${p.error ? p.error.replace(/\.$/, '') : 'aucune poche'}).` : 'Les autres étiquettes ne seront pas imprimées (aucun échantillon coché).';
+    const cw = CW();
+    const missing = !p.pages.length ? `Les étiquettes ${cw.p} ne seront pas imprimées (${p.error ? p.error.replace(/\.$/, '') : `${cw.aucun} ${cw.s}`}).` : 'Les autres étiquettes ne seront pas imprimées (aucun échantillon coché).';
     const r = await openDialog({ title: 'Impression partielle', icon: 'alert', tone: 'warn',
-      body: h('p', null, `${missing} Imprimer seulement les ${!p.pages.length ? 'autres étiquettes' : 'étiquettes poches'} ?`),
+      body: h('p', null, `${missing} Imprimer seulement les ${!p.pages.length ? 'autres étiquettes' : `étiquettes ${cw.p}`} ?`),
       actions: [{ label: 'Annuler', value: 'cancel' }, { label: 'Imprimer quand même', value: 'ok', primary: true }] });
     if (r.value !== 'ok') return;
   }
   if ((kind === 'poches' || kind === 'all') && p.count > BIG_BATCH) {
-    const r = await openDialog({ title: 'Beaucoup de poches', icon: 'alert', tone: 'warn',
-      body: h('p', null, `Vous allez imprimer ${p.count} poches, soit ${plural(p.pages.length, 'planche')}. Continuer ?`),
+    const r = await openDialog({ title: `Beaucoup de ${CW().p}`, icon: 'alert', tone: 'warn',
+      body: h('p', null, `Vous allez imprimer ${p.count} ${CW().p}, soit ${plural(p.pages.length, 'planche')}. Continuer ?`),
       actions: [{ label: 'Annuler', value: 'cancel' }, { label: 'Continuer', value: 'ok', primary: true }] });
     if (r.value !== 'ok') return;
   }
@@ -5489,7 +5777,7 @@ const toast = (msg, opts = {}) => Core.toast(msg, { icon: 'info', ...opts });
    13. En-tête : nouveau lot, taille du texte, menu mobile
    ===================================================================== */
 function newLot() {
-  withUndo('Nouveau lot : lot, date, poches et autres échantillons remis à zéro.', () => {
+  withUndo(`Nouveau lot : lot, date, ${CW().p} et autres échantillons remis à zéro.`, () => {
     state.lot = ''; state.dateFormulation = '';
     state.poches = [newPocheRow()];
     state.plage = { mode: 'all', de: null, a: null, aAuto: false };
@@ -5602,7 +5890,7 @@ function menuItems() {
 function summary() {
   const p = derived.poches, a = derived.autres;
   return {
-    produit: state.produit, lot: state.lot.trim().toUpperCase(), poches: p.total, count: p.count, partial: state.plage.mode === 'range' && p.total > 0,
+    produit: state.produit, lot: state.lot.trim().toUpperCase(), poches: p.total, contenant: CW(), count: p.count, partial: state.plage.mode === 'range' && p.total > 0,
     pages: p.pages.length, autres: a.count, autresPages: a.pages.length,
     gabarit: PRESETS[state.gabarit.preset].short, calibration: calibText() || 'aucune correction', updatedAt: saveKind === 'saved' ? saveAt : null,
   };
@@ -5618,7 +5906,35 @@ function onParams() {
 }
 Core.on('params', onParams);
 
-return { init, show, hide, onKey, print, beforePrint, afterPrint, menuItems, summary };
+/* Aperçu pour Paramètres › Étiquettes : étiquettes d'exemple d'un produit (réglages en cours de saisie compris), rendues
+   exactement comme sur la planche (gabarit, police, blancs, réduction anti-débordement). Renvoie la rangée d'un
+   contenant (ou des autres étiquettes) et la 1ʳᵉ étiquette, à agrandir. */
+const SAMPLE = { LOT: 'FA123', D: '29Sep26', V: 'NB', lp: 'P001', n: 1, c: 7 };
+function previewLabels(def, kind, opts = {}) {
+  const g0 = computeGeo();
+  const ctx = { P: def.name, def, LOT: SAMPLE.LOT, D: opts.sansDate ? '' : SAMPLE.D, V: opts.sansVisa ? '' : SAMPLE.V, noms: def.ech.map(e => e.nom) };
+  let labels;
+  if (kind === 'autres') {
+    const list = (etp().listes[def.name] || []).filter(x => x[0]).slice(0, 4);
+    const items = list.length ? list.map(([nom, quantite]) => ({ nom, quantite })) : [{ nom: `${def.name} - Endo`, quantite: '5mL' }];
+    labels = items.map(it => autreLabel(it, ctx));
+  } else labels = pocheLabels({ n: SAMPLE.n, lp: SAMPLE.lp, c: SAMPLE.c }, ctx);
+  const mk = list => {
+    const n = Math.max(1, list.length);
+    const g = { ...g0, cols: n, rows: 1, marginLeft: 0, marginTop: 0, pageW: round(g0.pitchX * (n - 1) + g0.labelW, 3), pageH: g0.labelH, offX: 0, offY: 0, scale: 1, top: g0.top };
+    const page = emptyPage(g);
+    list.forEach((lab, i) => { page.cells[i] = lab ? { label: lab, n: 1 } : { blank: true, n: 1 }; });
+    page.items.push(1);
+    const doc = fitDoc({ kind: kind === 'autres' ? 'autres' : 'poches', g, frames: false, pages: [page] });
+    const sheet = renderSheets(doc, { screen: true })[0];
+    sheet.classList.add('pv-mini');
+    return { sheet, wmm: g.pageW, hmm: g.pageH, truncated: doc.truncated };
+  };
+  const first = labels.find(Boolean);
+  return { row: mk(labels), one: first ? mk([first]) : null, texts: labels.map(l => (l ? l.lines.map(ln => ln.segs.map(sg => (sg.b != null ? '_'.repeat(Math.round(sg.b / 2)) : sg.t)).join('')) : null)) };
+}
+
+return { init, show, hide, onKey, print, beforePrint, afterPrint, menuItems, summary, previewLabels, contWords, nameLabels };
 })();
 
 /* #########################################################################
@@ -5955,23 +6271,110 @@ const ParamsView = (() => {
 
   /* ---------- Section : Étiquettes ---------- */
   let listeProduit = null;
+  const etAdvOpen = new Set();      /* « Réglages avancés » dépliés, par produit (pendant la session) */
+  const contAutre = new Set();      /* produits pour lesquels « Autre… » est choisi comme contenant */
+  const lastLine = {};              /* dernière ligne de modèle utilisée, par modèle : cible des boutons de variables */
+  const MODEL_KEYS = ['contenant', 'genre', 'ech', 'cases', 'disposition', 'champs', 'modele', 'modeleAutres'];
+  const modelOf = x => JSON.stringify(MODEL_KEYS.map(k => x[k]));
+  const fmtVol = v => String(v || '').replace(/(\d)\s*(mL|L|µL|uL|g|mg)$/i, '$1 $2');
+  /* Aperçu en direct : rendu exact de la planche (police, blancs, réduction), mis à l'échelle de la place disponible */
+  const MM_PX = 96 / 25.4;
+  let pvObserver = null;
+  function fitPv(fit) {
+    const w = +fit.dataset.wmm * MM_PX, hh = +fit.dataset.hmm * MM_PX, max = +fit.dataset.max || 3;
+    const avail = fit.clientWidth;
+    if (!avail) return;
+    const s = Math.min(max, avail / w);
+    const fr = fit.firstElementChild;
+    fr.style.setProperty('--s', s.toFixed(4));
+    fr.style.width = `${(w * s).toFixed(1)}px`; fr.style.height = `${(hh * s).toFixed(1)}px`;
+  }
+  function pvFrame(r, max, label) {
+    const fit = h('div', { class: 'pm-pv__fit', dataset: { wmm: String(r.wmm), hmm: String(r.hmm), max: String(max) }, role: 'img', 'aria-label': label },
+      h('div', { class: 'pm-pv__frame mod-etiquettes' }, r.sheet));
+    if (pvObserver) pvObserver.observe(fit);
+    requestAnimationFrame(() => fitPv(fit));
+    return fit;
+  }
+  /** Bloc d'aperçu d'un produit : 1ʳᵉ étiquette agrandie + rangée complète (contenant) ou suite d'autres étiquettes. */
+  function pvBlock(def, kind, id) {
+    const box = h('div', { class: 'pm-pv no-typo', id });
+    const draw = d => {
+      const w = Etiquettes.contWords(d);
+      const r = Etiquettes.previewLabels(d, kind);
+      const rowTitle = kind === 'autres' ? ((P().etiquettes.listes[d.name] || []).length ? 'Autres étiquettes (liste d’origine)' : 'Autre étiquette (exemple : liste vide)') : `Rangée d'${w.un === 'une' ? 'une' : 'un'} ${w.s} (${d.cases.length} case${d.cases.length > 1 ? 's' : ''})`;
+      box.replaceChildren(
+        h('div', { class: 'pm-pv__one' }, h('span', { class: 'pm-pv__cap' }, 'Étiquette 1 · agrandie'),
+          r.one ? pvFrame(r.one, 2.6, `Aperçu agrandi de l'étiquette 1 : ${(r.texts.find(Boolean) || []).join(' / ')}`) : h('p', { class: 'pm-empty', text: 'Aucune étiquette imprimée.' })),
+        h('div', { class: 'pm-pv__row' }, h('span', { class: 'pm-pv__cap' }, rowTitle),
+          pvFrame(r.row, 1.6, `Aperçu de la rangée : ${r.texts.map(t => (t ? t[1] || t[0] : 'étiquette blanche')).join(' | ')}`),
+          r.row.truncated ? h('p', { class: 'pm-warn-txt' }, icon('alert'), h('span', {}, 'Ligne trop longue : réduite au minimum puis raccourcie « … » sur l’étiquette.')) : null));
+      box.dataset.texts = JSON.stringify(r.texts);
+    };
+    draw(def);
+    box.redraw = draw;
+    return box;
+  }
+
+  /** Éditeur d'un modèle d'étiquette (3 à 5 lignes, variables, petites lignes), avec aperçu en direct. */
+  function tplEditor(i, x, key, kind, pv) {
+    const M = x[key], pre = `pm-et-p${i}-${key === 'modele' ? 'm' : 'a'}`;
+    const vars = Params.ET_VARS[kind];
+    const draft = () => {
+      const d = JSON.parse(JSON.stringify(x));
+      d[key].lignes = M.lignes.map((_, L) => { const el = document.getElementById(`${pre}${L}`); return el ? el.value : M.lignes[L]; });
+      return d;
+    };
+    const setLines = (mut, focusId) => update(p => { mut(p.etiquettes.produits[i][key]); }, null, focusId);
+    const insert = tok => {
+      const L = Math.min(lastLine[pre] ?? 0, M.lignes.length - 1);
+      const el = document.getElementById(`${pre}${L}`);
+      if (!el) return;
+      const a = el.selectionStart ?? el.value.length, b = el.selectionEnd ?? a;
+      const v = (el.value.slice(0, a) + `{${tok}}` + el.value.slice(b)).replace(/\s+/g, ' ').trim();
+      setLines(m => { m.lignes[L] = v; }, `${pre}${L}`);
+    };
+    const toolbar = h('div', { class: 'pm-vars', role: 'group', 'aria-label': 'Insérer une variable dans la ligne choisie' },
+      vars.map(v => h('button', { type: 'button', class: 'pm-var', id: `${pre}-v-${v.k}`, title: `Insère {${v.tok}}${v.ex ? ` — ex. « ${v.ex} »` : ''}`, onmousedown: e => e.preventDefault(), onclick: () => insert(v.tok) }, h('span', { class: 'pm-var__plus', 'aria-hidden': 'true' }, '+'), v.label)));
+    const bad = new Set();
+    const rows = M.lignes.map((src, L) => {
+      for (const it of Params.parseLine(src, kind)) if (it.bad) bad.add(it.bad);
+      const inp = textInput({ id: `${pre}${L}`, value: src, label: `${key === 'modele' ? 'Modèle contenant' : 'Modèle autres'} — ligne ${L + 1}`, maxLength: 120, mono: true, cls: 'pm-tpl__in',
+        onCommit: v => (setLines(m => { m.lignes[L] = v; }, `${pre}${L}`), null) });
+      inp.addEventListener('focus', () => { lastLine[pre] = L; });
+      inp.addEventListener('input', () => pv.redraw(draft()));
+      return h('li', { class: 'pm-tpl__row' },
+        h('span', { class: 'pm-tpl__n', text: String(L + 1) }), inp,
+        check({ id: `${pre}${L}-sm`, checked: M.petites.includes(L), label: 'Petit', cls: 'pm-tpl__sm', onChange: on => setLines(m => { m.petites = on ? [...m.petites, L] : m.petites.filter(n => n !== L); }, `${pre}${L}-sm`) }),
+        iconBtn('trash', `Supprimer la ligne ${L + 1}`, () => setLines(m => { m.lignes.splice(L, 1); m.petites = m.petites.filter(n => n !== L).map(n => (n > L ? n - 1 : n)); }, `${pre}${Math.max(0, L - 1)}`), { id: `${pre}${L}-del`, disabled: M.lignes.length <= 3, danger: true }));
+    });
+    return h('div', { class: 'pm-tpl' },
+      toolbar,
+      h('ol', { class: 'pm-tpl__rows' }, rows),
+      h('div', { class: 'pm-tpl__foot' },
+        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, disabled: M.lignes.length >= 5, onclick: () => setLines(m => { m.lignes.push(''); }, `${pre}${M.lignes.length}`) }, icon('plus'), 'Ajouter une ligne'),
+        h('span', { class: 'pm-hint', text: `${M.lignes.length} ligne${M.lignes.length > 1 ? 's' : ''} (3 à 5) · « Petit » : 1 pt de moins, comme la ligne Date.` })),
+      bad.size ? h('p', { class: 'pm-warn-txt' }, icon('alert'), h('span', {}, `Variable inconnue, imprimée telle quelle : ${[...bad].join(', ')}`)) : null);
+  }
+
   function secEtiquettes() {
     const E = P().etiquettes;
     const prods = E.produits;
     if (!prods.some(x => x.name === listeProduit)) listeProduit = prods[0].name;
+    /* --- liste des produits : nom, contenant, ordre, suppression --- */
     const prodRows = prods.map((x, i) => {
-      const rid = `pm-et-p${i}`;
-      const setK = (k, v) => update(p => { p.etiquettes.produits[i][k] = v; }, null, `${rid}-${k}`);
-      return h('li', { class: 'pm-etp' },
+      const rid = `pm-et-p${i}`, w = Etiquettes.contWords(x);
+      const nLab = x.cases.filter(c => c.e >= 0).length;
+      return h('li', { class: 'pm-etp' + (x.name === listeProduit ? ' is-sel' : '') },
         textInput({ id: `${rid}-name`, value: x.name, label: `Produit étiquettes ${i + 1}`, upper: true, maxLength: 12, cls: 'pm-etp__name', onCommit: v => {
           if (!v) return 'Le nom du produit ne peut pas être vide.';
           if (prods.some((y, j) => j !== i && y.name === v)) return `Le produit « ${v} » existe déjà.`;
+          if (listeProduit === x.name) listeProduit = v;
           update(p => { const o = p.etiquettes.produits[i]; p.etiquettes.listes[v] = p.etiquettes.listes[o.name] || []; delete p.etiquettes.listes[o.name]; o.name = v; }, null, `${rid}-name`);
           return null;
         } }),
-        textInput({ id: `${rid}-nom1mL`, value: x.nom1mL, label: `${x.name} — nom 1 mL`, onCommit: v => (v ? (setK('nom1mL', v), null) : 'Le nom 1 mL ne peut pas être vide.') }),
-        textInput({ id: `${rid}-nom2mL`, value: x.nom2mL, label: `${x.name} — nom 2 mL`, onCommit: v => (v ? (setK('nom2mL', v), null) : 'Le nom 2 mL ne peut pas être vide.') }),
-        check({ id: `${rid}-blanche`, checked: x.blanche, label: 'Étiquette blanche (comme SB5)', onChange: v => setK('blanche', v) }),
+        h('button', { type: 'button', class: 'pm-etp__info', id: `${rid}-edit`, title: `Régler le contenu des étiquettes ${x.name}`, onclick: () => { listeProduit = x.name; focusAfter = `pm-li-prod-${idOf(x.name)}`; render(); } },
+          h('span', { class: 'pm-etp__cont', text: w.S }), h('span', { text: `${nLab} étiquette${nLab > 1 ? 's' : ''} par ${w.s} · ${x.ech.map(e => fmtVol(e.vol)).filter(Boolean).join(' / ') || 'sans volume'}` })),
         h('span', { class: 'pm-prod__act' },
           iconBtn('up', `Monter ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `pm-et-p${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${rid}-up`, disabled: i === 0 }),
           iconBtn('down', `Descendre ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `pm-et-p${i + 1}-${i + 1 < prods.length - 1 ? 'down' : 'up'}`), { id: `${rid}-down`, disabled: i === prods.length - 1 }),
@@ -5985,21 +6388,111 @@ const ParamsView = (() => {
       const v = newP.value.replace(/\s+/g, ' ').trim().toUpperCase();
       if (!v) { warn('Saisissez le nom du produit à ajouter.'); newP.focus(); return; }
       if (prods.some(y => y.name === v)) { warn(`Le produit « ${v} » existe déjà.`); newP.focus(); return; }
-      update(p => { p.etiquettes.produits.push({ name: v, nom1mL: 'Ech ID', nom2mL: 'Ech REF', blanche: false }); p.etiquettes.listes[v] = []; }, null, 'pm-et-add-n');
-      toast(`Produit « ${v} » ajouté aux étiquettes`);
+      if (prods.length >= 12) { warn('12 produits au maximum.'); return; }
+      listeProduit = v;
+      update(p => { p.etiquettes.produits.push(Params.etOrigin(v)); p.etiquettes.listes[v] = []; }, null, 'pm-et-add-n');
+      toast(`Produit « ${v} » ajouté aux étiquettes (modèle des poches SB4, modifiable ci-dessous)`);
     };
     newP.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addP(); } });
+
+    /* --- produit en cours de réglage --- */
+    const i = prods.findIndex(x => x.name === listeProduit), x = prods[i], rid = `pm-et-p${i}`;
+    const w = Etiquettes.contWords(x);
+    const setP = (mut, focusId) => update(p => { mut(p.etiquettes.produits[i]); }, null, focusId);
+    const origin = Params.etOrigin(x.name);
+    const isOrigin = modelOf(x) === modelOf(origin);
+    const sb4 = prods.find(y => y.name === 'SB4');
+    const pvMain = pvBlock(x, 'contenant', `${rid}-pv`);
+    /* contenant : Poche, Bidon ou texte libre (avec l'accord : un / une) */
+    const cc = canon(x.contenant);
+    const contVal = contAutre.has(x.name) || !['POCHE', 'BIDON'].includes(cc) ? 'autre' : cc === 'BIDON' ? 'bidon' : 'poche';
+    const contSeg = seg({ name: `${rid}-cont`, label: `Contenant ${x.name}`, value: contVal,
+      options: [{ value: 'poche', label: 'Poche' }, { value: 'bidon', label: 'Bidon' }, { value: 'autre', label: 'Autre…' }],
+      onChange: v => {
+        if (v === 'autre') { contAutre.add(x.name); focusAfter = `${rid}-cont-txt`; render(); return; }
+        contAutre.delete(x.name);
+        setP(o => { o.contenant = v === 'bidon' ? 'Bidon' : 'Poche'; o.genre = v === 'bidon' ? 'm' : 'f'; }, `${rid}-cont-${v}`);
+      } });
+    const contOther = contVal === 'autre' ? h('div', { class: 'pm-cont-other' },
+      textInput({ id: `${rid}-cont-txt`, value: ['POCHE', 'BIDON'].includes(cc) ? '' : x.contenant, label: `Nom du contenant ${x.name}`, maxLength: 16, placeholder: 'ex. Flacon',
+        onCommit: v => { if (!v) return 'Indiquez le nom du contenant (ex. Flacon).'; setP(o => { o.contenant = v.charAt(0).toUpperCase() + v.slice(1); }, `${rid}-cont-txt`); return null; } }),
+      seg({ name: `${rid}-genre`, label: 'Accord', value: x.genre, options: [{ value: 'm', label: '« un »' }, { value: 'f', label: '« une »' }], onChange: v => setP(o => { o.genre = v; }) })) : null;
+    /* échantillons du contenant : nom par défaut + volume */
+    const labels = Etiquettes.nameLabels(x);
+    const NK = ['nom1mL', 'nom2mL', 'nom3', 'nom4', 'nom5'];
+    const echRows = x.ech.map((e, k) => h('div', { class: 'pm-ech' },
+      h('span', { class: 'pm-ech__n', text: String(k + 1), title: labels[k] }),
+      textInput({ id: `${rid}-${NK[k]}`, value: e.nom, label: `${x.name} — nom de l’échantillon ${k + 1} (${labels[k]})`, maxLength: 40,
+        onCommit: v => (v ? (setP(o => { o.ech[k].nom = v; }, `${rid}-${NK[k]}`), null) : 'Le nom de l’échantillon ne peut pas être vide.') }),
+      textInput({ id: `${rid}-vol${k + 1}`, value: e.vol, label: `${x.name} — volume de l’échantillon ${k + 1}`, maxLength: 12, cls: 'pm-ech__vol', placeholder: 'ex. 1mL',
+        onCommit: v => (setP(o => { o.ech[k].vol = v; }, `${rid}-vol${k + 1}`), null) })));
+    const simple = h('div', { class: 'pm-etx__simple' },
+      h('div', { class: 'field' }, h('span', { class: 'field__label', id: `${rid}-cont-l`, text: 'Contenant' }), contSeg, contOther,
+        h('p', { class: 'pm-hint', text: `Imprimé sur l’étiquette (« ${x.name}-${w.S} 1-… », « N° ${w.S}: ») et repris dans l’écran des étiquettes (« Lot ${w.s} », « ${w.P} à imprimer »).` })),
+      h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Échantillons du contenant' }),
+        h('div', { class: 'pm-ech pm-ech--head', 'aria-hidden': 'true' }, h('span'), h('span', { text: 'Nom par défaut' }), h('span', { text: 'Volume' })),
+        echRows,
+        h('p', { class: 'pm-hint', text: 'Volume : texte libre (1mL, 2mL, 5 mL, 50mL…). Les noms se modifient aussi pour un lot, à l’étape 1 des étiquettes.' })));
+    /* réglages avancés (repliés) */
+    const nSeg = (name, label, value, onChange) => seg({ name, label, value: String(value), options: [1, 2, 3, 4, 5].map(n => ({ value: String(n), label: String(n) })), onChange: v => onChange(+v) });
+    const caseRows = x.cases.map((c, k) => {
+      const sel = h('select', { class: 'select select--sm pm-case__e', id: `${rid}-c${k + 1}-e`, 'aria-label': `Case ${k + 1} : échantillon` },
+        x.ech.map((e, j) => { const o = h('option', { value: String(j), text: `${e.nom}${e.vol ? ' · ' + e.vol : ''}` }); o.selected = c.e === j; return o; }),
+        (() => { const o = h('option', { value: '-1', text: 'Étiquette blanche (case vide)' }); o.selected = c.e < 0; return o; })());
+      sel.addEventListener('change', () => setP(o => { o.cases[k].e = +sel.value; }, `${rid}-c${k + 1}-e`));
+      const rang = textInput({ id: `${rid}-c${k + 1}-rang`, value: c.rang, label: `Case ${k + 1} : rang`, maxLength: 12, placeholder: 'aucun', cls: 'pm-case__rang', onCommit: v => (setP(o => { o.cases[k].rang = v; }, `${rid}-c${k + 1}-rang`), null) });
+      if (c.e < 0) rang.disabled = true;
+      return h('li', { class: 'pm-case' }, h('span', { class: 'pm-case__n', text: `Case ${k + 1}` }), sel, rang);
+    });
+    const pvAutres = pvBlock(x, 'autres', `${rid}-pva`);
+    const champsLbl = { date: 'Date', visa: 'Visa', heure: 'Heure', client: 'N° client' };
+    const adv = h('details', { class: 'pm-adv', id: `${rid}-adv` },
+      h('summary', { class: 'pm-adv__sum' }, icon('sliders'), h('span', {}, h('b', { text: 'Réglages avancés' }), h('span', { class: 'pm-adv__sub', text: ' · cases d’un contenant, disposition, champs imprimés, modèles de texte' })), icon('chevron', 'icon pm-adv__chev')),
+      h('div', { class: 'pm-adv__body' },
+        h('div', { class: 'pm-grid pm-grid--2' },
+          h('div', { class: 'field' }, h('span', { class: 'field__label', text: `Étiquettes par ${w.s}` }),
+            nSeg(`${rid}-n`, `Étiquettes par ${w.s}`, x.cases.length, n => setP(o => { while (o.cases.length < n) o.cases.push({ e: Math.min(o.cases.length ? Math.max(0, o.cases[o.cases.length - 1].e) : 0, o.ech.length - 1), rang: '' }); o.cases.length = n; }, `${rid}-n-${n}`))),
+          h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Échantillons différents' }),
+            nSeg(`${rid}-ne`, 'Échantillons différents', x.ech.length, n => setP(o => { while (o.ech.length < n) o.ech.push({ nom: `Ech ${o.ech.length + 1}`, vol: '' }); o.ech.length = n; o.cases.forEach(c => { if (c.e >= n) c.e = n - 1; }); }, `${rid}-ne-${n}`)))),
+        h('ol', { class: 'pm-cases' }, caseRows),
+        h('p', { class: 'pm-hint', text: 'Rang : mention imprimée après le volume, ex. (1/2), (2/2) ; vide = aucune. Une étiquette blanche laisse la case vide (règle SB5).' }),
+        h('div', { class: 'pm-grid pm-grid--2' },
+          h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Disposition sur la planche' }),
+            seg({ name: `${rid}-disp`, label: 'Disposition', value: x.disposition, options: [{ value: 'rangee', label: `1 ${w.s} = 1 rangée` }, { value: 'suite', label: 'À la suite' }], onChange: v => setP(o => { o.disposition = v; }) }),
+            h('p', { class: 'pm-hint', text: `« À la suite » : les étiquettes remplissent les 5 colonnes, ${w.un} ${w.s} n’est jamais coupé${w.f ? 'e' : ''} entre deux pages.` })),
+          h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Champs imprimés' }),
+            chips({ id: `${rid}-ch`, label: 'Champs imprimés', items: Object.entries(champsLbl).map(([value, label]) => ({ value, label })), selected: Object.keys(champsLbl).filter(k => x.champs[k]),
+              onToggle: (v, on, cid) => setP(o => { o.champs[v] = on; }, cid) }),
+            h('p', { class: 'pm-hint', text: 'Un champ masqué disparaît avec son libellé (ex. sans N° client : « Date: 29Sep26 »).' }))),
+        h('div', { class: 'pm-sub' }, h('h5', { class: 'pm-sub__t', text: `Modèle de l’étiquette ${w.s}` }),
+          h('p', { class: 'pm-hint', text: 'Cliquez dans une ligne puis sur une variable pour l’insérer. Une variable vide (volume, rang) disparaît avec le texte qui la précède.' })),
+        tplEditor(i, x, 'modele', 'contenant', pvMain),
+        h('div', { class: 'pm-sub' }, h('h5', { class: 'pm-sub__t', text: 'Modèle des autres étiquettes' })),
+        h('div', { class: 'pm-etx__grid' }, tplEditor(i, x, 'modeleAutres', 'autres', pvAutres), pvAutres)));
+    if (etAdvOpen.has(x.name)) adv.open = true;
+    adv.addEventListener('toggle', () => { if (adv.open) etAdvOpen.add(x.name); else etAdvOpen.delete(x.name); });
+    const editor = h('section', { class: 'pm-etx', 'aria-label': `Contenu des étiquettes ${x.name}` },
+      h('div', { class: 'pm-etx__head' },
+        h('div', { class: 'pm-etx__title' }, h('span', { class: 'pm-etx__prod', text: x.name }),
+          h('span', { class: 'pm-etx__sum', text: `${w.S} · ${x.cases.length} case${x.cases.length > 1 ? 's' : ''} par ${w.s}${isOrigin ? ' · modèle d’origine' : ' · modèle modifié'}` })),
+        h('div', { class: 'pm-etx__acts' },
+          sb4 && x.name !== 'SB4' ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${rid}-dup`, title: 'Reprendre les échantillons, cases et modèles de SB4 (le contenant est conservé)',
+            onclick: () => withUndo(`Modèle de SB4 repris pour ${x.name}`, p => { const o = p.etiquettes.produits[i], s = p.etiquettes.produits.find(y => y.name === 'SB4'); for (const k of ['ech', 'cases', 'disposition', 'champs', 'modele', 'modeleAutres']) o[k] = JSON.parse(JSON.stringify(s[k])); }) }, icon('layers'), 'Dupliquer depuis SB4') : null,
+          h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${rid}-reset`, disabled: isOrigin, title: isOrigin ? 'Le modèle est déjà celui d’origine' : null,
+            onclick: () => { contAutre.delete(x.name); withUndo(`Modèle d’origine rétabli pour ${x.name}`, p => { const o = p.etiquettes.produits[i]; for (const k of MODEL_KEYS) o[k] = JSON.parse(JSON.stringify(origin[k])); }); } }, icon('reset'), 'Rétablir le modèle d’origine'))),
+      h('div', { class: 'pm-etx__grid' }, simple, pvMain),
+      adv);
     /* liste d'origine des « autres échantillons » du produit choisi */
     const L = E.listes[listeProduit] || [];
     const lpre = `pm-li-${idOf(listeProduit)}`;
-    const listRows = L.map(([nom, q], i) => h('li', { class: 'pm-li' },
-      h('span', { class: 'pm-li__n', text: String(i + 1) }),
-      textInput({ id: `${lpre}-${i}-nom`, value: nom, label: `Échantillon ${i + 1}`, maxLength: 60, onCommit: v => (v ? (update(p => { p.etiquettes.listes[listeProduit][i][0] = v; }, null, `${lpre}-${i}-nom`), null) : 'Le nom de l’échantillon ne peut pas être vide.') }),
-      textInput({ id: `${lpre}-${i}-q`, value: q, label: `Quantité ${i + 1}`, maxLength: 20, cls: 'pm-li__q', onCommit: v => (update(p => { p.etiquettes.listes[listeProduit][i][1] = v; }, null, `${lpre}-${i}-q`), null) }),
+    const listRows = L.map(([nom, q], j) => h('li', { class: 'pm-li' },
+      h('span', { class: 'pm-li__n', text: String(j + 1) }),
+      textInput({ id: `${lpre}-${j}-nom`, value: nom, label: `Échantillon ${j + 1}`, maxLength: 60, onCommit: v => (v ? (update(p => { p.etiquettes.listes[listeProduit][j][0] = v; }, null, `${lpre}-${j}-nom`), null) : 'Le nom de l’échantillon ne peut pas être vide.') }),
+      textInput({ id: `${lpre}-${j}-q`, value: q, label: `Quantité ${j + 1}`, maxLength: 20, cls: 'pm-li__q', onCommit: v => (update(p => { p.etiquettes.listes[listeProduit][j][1] = v; }, null, `${lpre}-${j}-q`), null) }),
       h('span', { class: 'pm-prod__act' },
-        iconBtn('up', `Monter ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `${lpre}-${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${lpre}-${i}-up`, disabled: i === 0 }),
-        iconBtn('down', `Descendre ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `${lpre}-${i + 1}-${i + 1 < L.length - 1 ? 'down' : 'up'}`), { id: `${lpre}-${i}-down`, disabled: i === L.length - 1 }),
-        iconBtn('trash', `Supprimer ${nom}`, () => withUndo(`« ${nom} » retiré de la liste ${listeProduit}`, p => { p.etiquettes.listes[listeProduit].splice(i, 1); }), { id: `${lpre}-${i}-del`, danger: true }))));
+        iconBtn('up', `Monter ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j - 1], a[j]] = [a[j], a[j - 1]]; }, null, `${lpre}-${j - 1}-${j - 1 ? 'up' : 'down'}`), { id: `${lpre}-${j}-up`, disabled: j === 0 }),
+        iconBtn('down', `Descendre ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j + 1], a[j]] = [a[j], a[j + 1]]; }, null, `${lpre}-${j + 1}-${j + 1 < L.length - 1 ? 'down' : 'up'}`), { id: `${lpre}-${j}-down`, disabled: j === L.length - 1 }),
+        iconBtn('trash', `Supprimer ${nom}`, () => withUndo(`« ${nom} » retiré de la liste ${listeProduit}`, p => { p.etiquettes.listes[listeProduit].splice(j, 1); }), { id: `${lpre}-${j}-del`, danger: true }))));
     const newN = h('input', { type: 'text', class: 'input', id: `${lpre}-add-n`, maxlength: 60, placeholder: 'Nom de l’échantillon', autocomplete: 'off', 'aria-label': 'Nouvel échantillon' });
     const newQ = h('input', { type: 'text', class: 'input pm-li__q', id: `${lpre}-add-q`, maxlength: 20, placeholder: 'ex. 50mL', autocomplete: 'off', 'aria-label': 'Quantité du nouvel échantillon' });
     const addL = () => {
@@ -6007,7 +6500,7 @@ const ParamsView = (() => {
       if (!n) { warn('Saisissez le nom de l’échantillon à ajouter.'); newN.focus(); return; }
       update(p => { (p.etiquettes.listes[listeProduit] = p.etiquettes.listes[listeProduit] || []).push([n, newQ.value.trim()]); }, null, `${lpre}-add-n`);
     };
-    [newN, newQ].forEach(x => x.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addL(); } }));
+    [newN, newQ].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addL(); } }));
     return [
       h('div', { class: 'pm-grid pm-grid--2' },
         h('div', { class: 'field' }, h('span', { class: 'field__label', id: 'pm-et-preset-l', text: 'Gabarit par défaut' }),
@@ -6016,15 +6509,17 @@ const ParamsView = (() => {
         h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Épaisseur du texte' }),
           seg({ name: 'pm-et-ep', label: 'Épaisseur du texte', value: E.epaisseur, options: [{ value: 'normal', label: 'Normal' }, { value: 'renforce', label: 'Renforcé' }, { value: 'gras', label: 'Gras' }], onChange: v => update(p => { p.etiquettes.epaisseur = v; }) }),
           h('p', { class: 'pm-hint', text: 'Renforcé (conseillé) : texte nettement plus noir, sans être du gras.' }))),
-      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Produits et noms des échantillons de poche' }),
-        h('p', { class: 'pm-hint', text: 'Noms par défaut des étiquettes 1 mL et 2 mL (ex. « SB4-Poche 1-Ech ID1 »). « Étiquette blanche » : 1 mL unique et 2ᵉ case laissée vide, comme en SB5.' })),
-      h('div', { class: 'pm-etp-head', 'aria-hidden': 'true' }, h('span', {}, 'Produit'), h('span', {}, 'Nom 1 mL'), h('span', {}, 'Nom 2 mL'), h('span', {}), h('span', {})),
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Produits' }),
+        h('p', { class: 'pm-hint', text: 'Produits proposés à l’étape 1 des étiquettes, dans cet ordre. Un produit ajouté part du modèle des poches SB4.' })),
       h('ol', { class: 'pm-etps' }, prodRows),
       h('div', { class: 'pm-add pm-add--inline' }, newP, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: 'pm-et-add', onclick: addP }, icon('plus'), 'Ajouter un produit')),
-      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Listes d’origine des « autres échantillons »' }),
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: 'Ce qu’il y a sur l’étiquette' }),
+        h('p', { class: 'pm-hint', text: 'Choisissez un produit : contenant, échantillons et volumes, aperçu en direct. Le standard d’impression (planche, marges, décalage) ne change pas.' })),
+      seg({ name: 'pm-li-prod', label: 'Produit à régler', value: listeProduit, options: prods.map(y => ({ value: y.name, label: y.name })), onChange: v => { listeProduit = v; render(); } }),
+      editor,
+      h('div', { class: 'pm-sub' }, h('h4', { class: 'pm-sub__t', text: `Liste d’origine des « autres échantillons » ${listeProduit}` }),
         h('p', { class: 'pm-hint', text: 'Liste proposée à l’étape 3 des étiquettes (« Rétablir la liste d’origine »). Un PC peut aussi enregistrer sa propre liste par défaut depuis l’étape 3.' })),
-      seg({ name: 'pm-li-prod', label: 'Produit de la liste', value: listeProduit, options: prods.map(x => ({ value: x.name, label: `${x.name} (${(E.listes[x.name] || []).length})` })), onChange: v => { listeProduit = v; render(); } }),
-      L.length ? h('ol', { class: 'pm-lis' }, listRows) : h('p', { class: 'pm-empty', text: `Aucun échantillon dans la liste ${listeProduit}.` }),
+      L.length ? h('ol', { class: 'pm-lis' }, listRows) : h('p', { class: 'pm-empty', text: `Aucun échantillon dans la liste ${listeProduit} : ajoutez-les ci-dessous.` }),
       h('div', { class: 'pm-add pm-add--inline' }, newN, newQ, h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${lpre}-add`, onclick: addL }, icon('plus'), 'Ajouter un échantillon')),
       h('div', { class: 'pm-note' }, icon('target'), h('span', {}, h('b', {}, 'Calibration de l’imprimante : propre à ce PC. '), 'Le décalage X / Y et l’échelle se règlent dans Étiquettes › 4 Imprimer ; ils ne font pas partie des paramètres de l’équipe.'),
         h('a', { class: 'btn-link', href: '#etiquettes' }, 'Ouvrir les étiquettes')),
@@ -6175,6 +6670,8 @@ const ParamsView = (() => {
     focusAfter = null;
     const y = window.scrollY;
     renderSource();
+    if (pvObserver) pvObserver.disconnect();
+    pvObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(es => es.forEach(e => fitPv(e.target))) : null;
     $('#pm-sections').replaceChildren(...SECTIONS.map(sec => {
       const d = h('details', { class: 'pm-sec', id: sec.id },
         h('summary', { class: 'pm-sec__sum' },
@@ -6200,6 +6697,11 @@ const ParamsView = (() => {
   return {
     init() {
       $('#pm-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) importFile(f); });
+      /* aperçus des étiquettes : remis à l'échelle quand la fenêtre change (y compris dans une partie repliée) */
+      const refit = () => document.querySelectorAll('#view-parametres .pm-pv__fit').forEach(fitPv);
+      window.addEventListener('resize', refit);
+      Core.on('textsize', () => requestAnimationFrame(refit));
+      document.addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('pm-adv')) refit(); }, true);
     },
     show() { visible = true; if (dirty) render(); else renderSource(); },
     hide() { visible = false; },
@@ -6258,12 +6760,12 @@ const Accueil = (() => {
     const kv = h('p', { class: 'tile__meta' }, h('span', {}, 'Gabarit : ', h('b', { text: s.gabarit })), h('span', {}, 'Calibration : ', h('b', { text: s.calibration })));
     if (!s.lot && !s.poches) {
       box.replaceChildren(h('p', { class: 'tile__line is-empty' }, icon('info'), 'Prêt à préparer des étiquettes'),
-        h('p', { class: 'tile__desc', text: `Produit ${s.produit}. Saisissez le lot et les poches : l'aperçu des planches se construit en direct.` }), kv);
+        h('p', { class: 'tile__desc', text: `Produit ${s.produit}. Saisissez le lot et les ${s.contenant.p} : l'aperçu des planches se construit en direct.` }), kv);
       return;
     }
     box.replaceChildren(
       /* même lecture qu'à l'étape 2 : « 13 / 29 poches · 1 page » quand seule une partie des poches est à imprimer */
-      h('p', { class: 'tile__line' }, icon('tag'), `Dernier lot : ${s.produit} ${s.lot || '(lot non saisi)'} ·\u00a0${s.partial ? `${s.count} / ` : ''}${plural(s.poches, 'poche')} ·\u00a0${plural(s.pages, 'page')}`),
+      h('p', { class: 'tile__line' }, icon('tag'), `Dernier lot : ${s.produit} ${s.lot || '(lot non saisi)'} ·\u00a0${s.partial ? `${s.count} / ` : ''}${s.contenant.nb(s.poches)} ·\u00a0${plural(s.pages, 'page')}`),
       h('dl', { class: 'tile__lots', 'aria-label': 'Lot en préparation' },
         h('div', {}, h('dt', { text: 'Produit' }), h('dd', { text: s.produit })),
         h('div', {}, h('dt', { text: 'Lot' }), h('dd', { class: s.lot ? null : 'is-empty', text: s.lot || 'à saisir' })),
