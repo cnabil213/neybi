@@ -769,6 +769,14 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .pm-src__note .icon{width:1rem;height:1rem;margin-top:.1rem}
 .mod-params .pm-src__note.is-warn{color:var(--wip-fg);font-weight:600}
 .mod-params #pm-save-note{color:var(--muted)}
+/* Dossier principal (ce PC) */
+.mod-params .pm-kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.375rem 1.25rem;margin:0;font-size:.9375rem}
+.mod-params .pm-kv dt{color:var(--muted)}
+.mod-params .pm-kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.mod-params .pm-kv dd.mono{font-family:var(--mono);font-size:.875rem;font-weight:500}
+.mod-params .pm-badge{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem;border-radius:999px;background:var(--t-bg);color:var(--t-fg);font-size:.8125rem;font-weight:700}
+.mod-params .pm-badge::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:var(--t-dot)}
+.mod-params .pm-dir__actions{display:flex;flex-wrap:wrap;gap:.5rem}
 .mod-params .pm-src__actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 .mod-params .pm-src__actions .btn{white-space:normal;text-align:left;max-width:100%}
 /* sections repliables */
@@ -1858,6 +1866,205 @@ const Core = (() => {
 })();
 
 /* #########################################################################
+   DISQUE N: — DOSSIER PRINCIPAL de l'outil : celui qui contient « Outil Formulation.html » et « sauvegarde.js »
+   (et, plus tard, les sous-dossiers mensuels des PDF). Choisi une fois par PC / session Windows
+   (showDirectoryPicker), mémorisé dans IndexedDB ; propre à ce PC, jamais dans la sauvegarde.
+   API pour les modules (le futur export PDF mensuel s'en servira) :
+     Disk.getRoot({ ask })              → dossier principal autorisé ; s'il manque, le demande (aide puis fenêtre Windows),
+                                          s'il faut, redemande l'autorisation ; null si l'utilisateur renonce ;
+     Disk.ensureDir(nom, { parent })    → sous-dossier (créé s'il n'existe pas) du dossier principal (ou de parent) ;
+     Disk.writeFile(dossier, nom, blob | texte) → écriture atomique (fichier temporaire remplacé à la fermeture) ;
+     Disk.readFile(dossier, nom)        → texte du fichier, ou null s'il n'existe pas ;
+     Disk.info() · Disk.choose() · Disk.reauthorize() · Disk.forget() — Paramètres › Dossier principal.
+   Événement Core « disk » à chaque changement (dossier lié, autorisation).
+   ######################################################################### */
+const Disk = (() => {
+  const { h } = Core;
+  const IDB_NAME = 'nn-formu-outil', IDB_KEY = 'dossierPrincipal';
+  const S = { canPick: typeof window.showDirectoryPicker === 'function', root: null, perm: 'none', ready: Promise.resolve() };
+
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => req.result.createObjectStore('kv');
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      } catch (e) { reject(e); }
+    });
+  }
+  async function idbDo(mode, fn) {
+    const db = await idbOpen();
+    try {
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction('kv', mode);
+        const req = fn(tx.objectStore('kv'));
+        tx.oncomplete = () => resolve(req?.result);
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
+    } finally { db.close(); }
+  }
+  const idbGet = k => idbDo('readonly', s => s.get(k));
+  const idbSet = (k, v) => idbDo('readwrite', s => s.put(v, k));
+  const idbDel = k => idbDo('readwrite', s => s.delete(k));
+
+  /** Nom de la page (« Outil Formulation.html ») : le dossier principal doit la contenir. */
+  function pageFile() {
+    try { return decodeURIComponent(location.pathname.split('/').pop()) || 'Outil Formulation.html'; } catch { return 'Outil Formulation.html'; }
+  }
+  /** Dossier de l'outil, tel que Windows l'affiche (N:\MFG\…), d'après l'adresse de la page. */
+  function toolFolder() {
+    try {
+      if (location.protocol !== 'file:') return '';
+      const p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, '');
+      if (/^\/[A-Za-z]:/.test(p)) return p.slice(1).replace(/\//g, '\\');
+      if (location.host) return `\\\\${location.host}${p.replace(/\//g, '\\')}`;
+      return p || '/';
+    } catch { return ''; }
+  }
+  const emit = () => Core.emit('disk', info());
+  async function queryPerm(dir) {
+    try { return (await dir.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; } catch { return 'prompt'; }
+  }
+  /** État pour l'affichage : 'unsupported' (navigateur sans accès aux dossiers) · 'none' (non lié) · 'prompt' (à réautoriser) · 'granted'. */
+  function info() {
+    return {
+      supported: S.canPick, name: S.root ? S.root.name : '', expected: toolFolder(), file: pageFile(),
+      state: !S.canPick ? 'unsupported' : !S.root ? 'none' : S.perm === 'granted' ? 'granted' : 'prompt',
+    };
+  }
+  function init() {
+    if (!S.canPick) return;
+    S.ready = idbGet(IDB_KEY).then(async dir => {
+      if (!dir || typeof dir.queryPermission !== 'function' || typeof dir.getFileHandle !== 'function') return;
+      S.root = dir;
+      S.perm = await queryPerm(dir);
+      emit();
+    }).catch(() => {});
+    /* emplacement de l'ancien fichier donnees-rapport.js (version précédente) : abandonné */
+    try { indexedDB.deleteDatabase('nn-formu-rapport'); } catch { /* rien à nettoyer */ }
+  }
+
+  /* ---------- Choix du dossier principal (aide, fenêtre Windows, vérification) ---------- */
+  function folderSchema() {
+    const folder = toolFolder() || 'N:\\MFG\\Formulation\\Outil formulation';
+    const row = (name, ic, cls = '') => h('div', { class: `nsch__file ${cls}`.trim() }, h('span', { class: `nsch__ico nsch__ico--${ic}`, 'aria-hidden': 'true' }), name);
+    return h('figure', { class: 'nsch', 'aria-label': 'Schéma de la fenêtre « Sélectionner un dossier »' },
+      h('div', { class: 'nsch__bar' }, h('span', { class: 'nsch__step', text: '1' }), h('span', { class: 'nsch__path', text: folder })),
+      h('div', { class: 'nsch__files' }, row(pageFile(), 'html', 'is-target'), row('sauvegarde.js', 'js')),
+      h('div', { class: 'nsch__foot' },
+        h('span', { class: 'nsch__step', text: '2' }), h('span', { class: 'nsch__btn', text: 'Sélectionner le dossier' }),
+        h('span', { class: 'nsch__step', text: '3' }), h('span', { class: 'nsch__btn', text: 'Autoriser' })),
+      h('figcaption', { class: 'muted', text: '1 : le dossier de l’outil · 2 : Sélectionner le dossier · 3 : autoriser la modification des fichiers' }));
+  }
+  function helpBeforePicker() {
+    const folder = toolFolder();
+    return Core.openDialog({
+      title: 'Choisir le dossier principal sur N:', icon: 'save', className: 'dlg-n dlg--wide',
+      body: [
+        h('p', {}, 'Pour enregistrer sur le disque N:, l’outil a besoin de son ', h('b', { text: 'dossier principal' }), ' : celui qui contient ',
+          h('b', { text: pageFile() }), folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', '. La sauvegarde de tout l’outil, ',
+          h('b', { class: 'mono', text: 'sauvegarde.js' }), ', y est écrite ; sur n’importe quel PC, l’outil la rouvre tout seul.'),
+        h('p', {}, 'La fenêtre Windows « Sélectionner un dossier » va s’ouvrir : allez dans ce dossier, cliquez ', h('b', { text: 'Sélectionner le dossier' }),
+          ', puis ', h('b', { text: 'autorisez' }), ' la modification des fichiers.'),
+        folderSchema(),
+        h('p', { class: 'muted', text: 'À faire une seule fois sur ce PC (session Windows) : ensuite, Ctrl+S (ou « Enregistrer ») écrit directement. Le dossier se change dans Paramètres › Dossier principal.' }),
+      ],
+      actions: [
+        { label: 'Annuler', value: false },
+        { label: 'Choisir le dossier…', value: true, cls: 'btn-primary', icon: 'save', autofocus: true },
+      ],
+    }).result;
+  }
+  async function contains(dir, name) {
+    try { await dir.getFileHandle(name); return true; } catch { return false; }
+  }
+  /** Aide puis fenêtre « Sélectionner un dossier » ; vérifie que le dossier contient l'outil ; renvoie le dossier, ou null. */
+  async function choose() {
+    if (!S.canPick) return null;
+    for (;;) {
+      if ((await helpBeforePicker()) !== true) return null;
+      let dir;
+      try { dir = await window.showDirectoryPicker({ id: 'outil-formulation', mode: 'readwrite' }); }
+      catch (e) {
+        if (!e || e.name !== 'AbortError') Core.toast('La fenêtre « Sélectionner un dossier » n’a pas pu s’ouvrir.', { tone: 'warn' });
+        return null;
+      }
+      if (await contains(dir, pageFile())) {
+        S.root = dir;
+        S.perm = await queryPerm(dir);
+        try { await idbSet(IDB_KEY, dir); } catch { /* non mémorisable : redemandé la prochaine fois */ }
+        emit();
+        return dir;
+      }
+      const again = await Core.openDialog({
+        title: 'Ce n’est pas le dossier de l’outil', icon: 'alert', tone: 'warn', className: 'dlg-n',
+        body: [
+          h('p', {}, 'Le dossier ', h('b', { text: `« ${dir.name || '?'} »` }), ' ne contient pas ', h('b', { text: pageFile() }), '.'),
+          h('p', {}, 'Choisissez le dossier principal de l’outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
+          h('p', { class: 'muted', text: 'Rien n’a été écrit dans ce dossier.' }),
+        ],
+        actions: [{ label: 'Annuler', value: false }, { label: 'Choisir à nouveau…', value: true, cls: 'btn-primary', autofocus: true }],
+      }).result;
+      if (again !== true) return null;
+    }
+  }
+  async function reauthorize() {
+    await S.ready;
+    if (!S.root) return false;
+    try { S.perm = (await S.root.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'denied'; }
+    catch { S.perm = 'denied'; }
+    emit();
+    return S.perm === 'granted';
+  }
+  async function forget() {
+    S.root = null;
+    S.perm = 'none';
+    try { await idbDel(IDB_KEY); } catch { /* rien à oublier */ }
+    emit();
+  }
+  /** Relit l'autorisation du dossier lié (elle peut expirer : nouvelle session, onglet rouvert…). */
+  async function refresh() {
+    await S.ready;
+    if (!S.root) return info();
+    const p = await queryPerm(S.root);
+    if (p !== S.perm && !(p === 'prompt' && S.perm === 'denied')) { S.perm = p; emit(); }
+    return info();
+  }
+  async function getRoot({ ask = true } = {}) {
+    await S.ready;
+    if (S.root) {
+      S.perm = await queryPerm(S.root);
+      if (S.perm === 'granted') return S.root;
+      if (!ask) return null;
+      return (await reauthorize()) ? S.root : null;
+    }
+    return ask ? choose() : null;
+  }
+
+  /* ---------- Fichiers et sous-dossiers ---------- */
+  async function ensureDir(name, { parent } = {}) {
+    const dir = parent || await getRoot();
+    return dir ? dir.getDirectoryHandle(name, { create: true }) : null;
+  }
+  async function writeFile(dir, name, data) {
+    const fh = await dir.getFileHandle(name, { create: true });
+    const w = await fh.createWritable();
+    try { await w.write(data); await w.close(); }
+    catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
+    return fh;
+  }
+  async function readFile(dir, name) {
+    try { return await (await (await dir.getFileHandle(name)).getFile()).text(); }
+    catch (e) { if (e && e.name === 'NotFoundError') return null; throw e; }
+  }
+
+  init();
+  return { getRoot, ensureDir, writeFile, readFile, info, refresh, choose, reauthorize, forget, toolFolder, pageFile, get supported() { return S.canPick; } };
+})();
+
+/* #########################################################################
    SAUVEGARDE SUR LE DISQUE N: — UN SEUL fichier « sauvegarde.js » posé à côté de l'outil, pour TOUT l'outil.
    Comme un classeur Excel partagé : Ctrl+S (ou « Enregistrer », dans l'en-tête de chaque onglet) écrit l'état
    partageable de chaque module ; à l'ouverture, sur n'importe quel PC, l'outil applique ce fichier tout seul
@@ -1871,12 +2078,13 @@ const Core = (() => {
      · importState(data, meta)→ applique ces données (meta = { savedAt, savedBy }) ;
      · key(data)              → chaîne de comparaison (par défaut JSON.stringify) : sert à savoir si le module a changé ;
      · pristine()             → vrai si ce PC n'a rien saisi dans ce module (1re ouverture de cette version) ;
-     · mergeOnSave(remote)    → fusion avant écriture (ex. historique du rapport) ; onKeepMine(remote) → « Garder la mienne ».
+     · mergeOnSave(remote)    → fusion avant écriture (ex. historique du rapport) ; onKeepMine(remote) → « Garder la mienne » ;
+     · adopt(data, meta)      → contenu identique à la version de N: (lue ou tout juste écrite) : le module peut la noter.
    Un futur module n'a qu'à s'enregistrer : il est sauvegardé, rechargé et comparé comme les autres.
 
    Format : window.__NN_OUTIL_SAUVEGARDE__ = { app, schema, savedAt, savedBy, modules: { rapport: { schema, … }, … } };
    Restent sur ce PC (jamais dans le fichier) : calibration de l'imprimante, taille du texte, dernier onglet, zoom…
-   Écriture : File System Access API (Edge / Chrome), emplacement mémorisé dans IndexedDB ; sinon téléchargement.
+   Écriture : dans le DOSSIER PRINCIPAL (voir Disk : choisi une fois par PC, mémorisé) ; sinon (Firefox…) téléchargement.
    Migration : sans sauvegarde.js, les anciens fichiers « donnees-rapport.js » et « parametres-outil.js » sont lus
    et tout est regroupé dans sauvegarde.js au premier enregistrement.
    L'enregistrement automatique de chaque module sur ce PC (localStorage) reste le filet de sécurité.
@@ -1889,8 +2097,6 @@ const Sauvegarde = (() => {
   const SCHEMA = 1;
   const PREFS_KEY = 'nn-formu-sauvegarde-v1';
   const POLL_MS = 60000;
-  const IDB_NAME = 'nn-formu-outil', IDB_KEY = 'sauvegarde';
-  const TYPES = [{ description: 'Sauvegarde de l’Outil Formulation (sauvegarde.js)', accept: { 'text/javascript': ['.js'] } }];
   /* Fichiers d'une version précédente (un fichier par module) : lus seulement si sauvegarde.js est absent */
   const LEGACY = [
     { id: 'rapport', file: 'donnees-rapport.js', global: '__NN_RAPPORT_DATA__', data: raw => raw },
@@ -1906,8 +2112,6 @@ const Sauvegarde = (() => {
 
   const mods = [];                          /* modules enregistrés, dans l'ordre d'application (paramètres d'abord) */
   const S = {
-    canWrite: typeof window.showSaveFilePicker === 'function',
-    handle: null, perm: 'none',
     known: null,       /* version du fichier sur laquelle repose ce PC { savedAt, savedBy } */
     base: {},          /* id → empreinte du module dans cette version (ou de son dernier état « propre ») */
     dirty: new Set(),  /* modules modifiés depuis (pas encore enregistrés sur N:) */
@@ -2096,7 +2300,7 @@ const Sauvegarde = (() => {
       const data = prepare(m, d.modules[m.id]);
       if (!data) continue;
       const rs = sigOf(m, data);
-      if (rs === localSig(m)) { setBase(m, rs); continue; }
+      if (rs === localSig(m)) { setBase(m, rs); if (m.adopt) m.adopt(data, metaOf(d)); continue; }
       if (!wasDirty.has(m.id)) { if (takeable) apply(m, data, d, snaps); }
       else if (newer) conflicts.push(m);
       /* modifié ici, fichier non plus récent : ce sont nos modifications pas encore enregistrées */
@@ -2147,110 +2351,11 @@ const Sauvegarde = (() => {
     await onDisk(await readDisk());
   }
 
-  /* ---------- Enregistrement (Ctrl+S, bouton « Enregistrer ») ---------- */
-  /** Dossier de l'outil, tel que Windows l'affiche (N:\MFG\…), d'après l'adresse de la page. */
-  function toolFolder() {
-    try {
-      if (location.protocol !== 'file:') return '';
-      const p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, '');
-      if (/^\/[A-Za-z]:/.test(p)) return p.slice(1).replace(/\//g, '\\');
-      if (location.host) return `\\\\${location.host}${p.replace(/\//g, '\\')}`;
-      return p || '/';
-    } catch { return ''; }
-  }
-  function idbOpen() {
-    return new Promise((resolve, reject) => {
-      try {
-        const req = indexedDB.open(IDB_NAME, 1);
-        req.onupgradeneeded = () => req.result.createObjectStore('kv');
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      } catch (e) { reject(e); }
-    });
-  }
-  async function idbDo(mode, fn) {
-    const db = await idbOpen();
-    try {
-      return await new Promise((resolve, reject) => {
-        const tx = db.transaction('kv', mode);
-        const req = fn(tx.objectStore('kv'));
-        tx.oncomplete = () => resolve(req?.result);
-        tx.onerror = () => reject(tx.error);
-        tx.onabort = () => reject(tx.error);
-      });
-    } finally { db.close(); }
-  }
-  const idbGet = k => idbDo('readonly', s => s.get(k));
-  const idbSet = (k, v) => idbDo('readwrite', s => s.put(v, k));
-  const idbDel = k => idbDo('readwrite', s => s.delete(k));
-
-  function folderSchema() {
-    const folder = toolFolder() || 'N:\\MFG\\Formulation\\Outil formulation';
-    const row = (name, ic, cls = '') => h('div', { class: `nsch__file ${cls}`.trim() }, h('span', { class: `nsch__ico nsch__ico--${ic}`, 'aria-hidden': 'true' }), name);
-    return h('figure', { class: 'nsch', 'aria-label': 'Schéma de la fenêtre « Enregistrer sous »' },
-      h('div', { class: 'nsch__bar' }, h('span', { class: 'nsch__step', text: '1' }), h('span', { class: 'nsch__path', text: folder })),
-      h('div', { class: 'nsch__files' }, row('Outil Formulation.html', 'html'), row(FILE, 'js', 'is-target')),
-      h('div', { class: 'nsch__foot' },
-        h('span', { class: 'nsch__lbl', text: 'Nom du fichier :' }), h('span', { class: 'nsch__name', text: FILE }),
-        h('span', { class: 'nsch__step', text: '2' }), h('span', { class: 'nsch__btn', text: 'Enregistrer' }),
-        h('span', { class: 'nsch__step', text: '3' }), h('span', { class: 'nsch__btn', text: 'Oui' })),
-      h('figcaption', { class: 'muted', text: '1 : le dossier de l’outil · 2 : Enregistrer · 3 : « Oui » pour remplacer le fichier existant' }));
-  }
-  function helpBeforePicker() {
-    const folder = toolFolder();
-    return Core.openDialog({
-      title: 'Enregistrer sur le disque N:', icon: 'save', className: 'dlg-n dlg--wide',
-      body: [
-        h('p', {}, 'Tout l’outil (', allLabels().join(', ').toLowerCase(), ') est enregistré dans ', h('b', { text: 'un seul fichier' }), ', ',
-          h('b', { class: 'mono', text: FILE }), ', à côté de l’outil : sur n’importe quel PC, l’outil le rouvre tout seul.'),
-        h('p', {}, 'La fenêtre Windows « Enregistrer sous » va s’ouvrir, avec le nom ', h('b', { class: 'mono', text: FILE }), ' déjà rempli. ',
-          'Choisissez le dossier où se trouve ', h('b', { text: 'Outil Formulation.html' }),
-          folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et cliquez ', h('b', { text: 'Enregistrer' }), ', puis ', h('b', { text: 'Oui' }), ' pour remplacer.'),
-        folderSchema(),
-        h('p', { class: 'muted', text: 'À faire une seule fois sur ce PC : ensuite, Ctrl+S (ou « Enregistrer ») écrit directement dans ce fichier.' }),
-      ],
-      actions: [
-        { label: 'Annuler', value: false },
-        { label: 'Choisir l’emplacement…', value: true, cls: 'btn-primary', icon: 'save', autofocus: true },
-      ],
-    }).result;
-  }
-  async function forgetHandle() {
-    S.handle = null;
-    S.perm = 'none';
-    try { await idbDel(IDB_KEY); } catch { /* rien à oublier */ }
-  }
-  /** Fenêtre « Enregistrer sous » (après l'aide) ; renvoie le fichier choisi, ou null. */
-  async function pickFile() {
-    for (;;) {
-      if ((await helpBeforePicker()) !== true) return null;
-      let handle;
-      try { handle = await window.showSaveFilePicker({ id: 'outil-formulation', suggestedName: FILE, types: TYPES }); }
-      catch (e) {
-        if (!e || e.name !== 'AbortError') Core.toast('La fenêtre « Enregistrer sous » n’a pas pu s’ouvrir.', { tone: 'warn' });
-        return null;
-      }
-      if ((handle.name || '').toLowerCase() === FILE) return handle;
-      const again = await Core.openDialog({
-        title: 'Nom de fichier à corriger', icon: 'alert', tone: 'warn', className: 'dlg-n',
-        body: [
-          h('p', {}, 'Le fichier choisi s’appelle ', h('b', { class: 'mono', text: handle.name || '?' }), '. Pour que les collègues retrouvent tout, il doit s’appeler exactement ',
-            h('b', { class: 'mono', text: FILE }), ' et être dans le dossier de l’outil.'),
-          h('p', { class: 'muted', text: 'Rien n’a été écrit dans ce fichier.' }),
-        ],
-        actions: [{ label: 'Annuler', value: false }, { label: 'Choisir à nouveau…', value: true, cls: 'btn-primary', autofocus: true }],
-      }).result;
-      if (again !== true) return null;
-    }
-  }
-  async function ensurePerm(handle) {
-    try { if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return 'granted'; } catch { /* on demande */ }
-    try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'denied'; }
-    catch { return 'denied'; }
-  }
+  /* ---------- Enregistrement (Ctrl+S, bouton « Enregistrer ») : sauvegarde.js dans le dossier principal ---------- */
+  const toolFolder = Disk.toolFolder;
   function errorText(e) {
     if (e && e.name === 'NotAllowedError') return 'Windows n’a pas autorisé l’écriture sur N:.';
-    if (e && e.name === 'NotFoundError') return 'Le fichier ou le dossier N: est introuvable (déplacé, supprimé, ou disque N: déconnecté ?).';
+    if (e && e.name === 'NotFoundError') return 'Le dossier principal est introuvable sur N: (déplacé, supprimé, ou disque N: déconnecté ?).';
     return 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs.';
   }
   function conflictOnSave(remote, conflicts) {
@@ -2282,13 +2387,11 @@ const Sauvegarde = (() => {
     }
     return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(authorOf(), 60), modules };
   }
-  /** Relit le fichier, fusionne, puis l'écrit (écriture atomique : fichier temporaire remplacé à close()). */
-  async function writeTo(handle) {
+  /** Relit sauvegarde.js dans le dossier principal, fusionne, puis l'écrit (écriture atomique : fichier temporaire remplacé à close()). */
+  async function writeTo(root) {
     let remote = null;
-    try {
-      const txt = await (await handle.getFile()).text();
-      if (txt.trim()) { try { remote = parseText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
-    } catch (e) { if (!e || e.name !== 'NotFoundError') throw e; }
+    const txt = await Disk.readFile(root, FILE);
+    if (txt && txt.trim()) { try { remote = parseText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
     if (remote && isNewer(remote)) {
       /* quelqu'un a enregistré depuis la version de ce PC : ses modules non modifiés ici sont repris, les autres → question */
       const takes = [], conflicts = [];
@@ -2320,12 +2423,9 @@ const Sauvegarde = (() => {
     const data = build(remote);
     S.writing = true;
     render();
-    try {
-      const w = await handle.createWritable();
-      try { await w.write(fileText(data)); await w.close(); }
-      catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
-    } finally { S.writing = false; }
-    for (const m of mods) setBase(m, localSig(m));
+    try { await Disk.writeFile(root, FILE, fileText(data)); }
+    finally { S.writing = false; }
+    for (const m of mods) { if (m.adopt) m.adopt(m.exportState(), metaOf(data)); setBase(m, localSig(m)); }
     setKnown(data);
     S.disk = { savedAt: data.savedAt, savedBy: data.savedBy, legacy: false };
     S.extra = Object.fromEntries(Object.entries(data.modules).filter(([id]) => !modById(id)));
@@ -2339,38 +2439,25 @@ const Sauvegarde = (() => {
     for (const m of mods) if (m.flush) m.flush();
     recheckAll();
     if (S.busy) return;
-    if (!S.canWrite) { downloadFile(); return; }
+    if (!Disk.supported) { downloadFile(); return; }
     S.busy = true;
     render();
-    let fresh = false;
     try {
-      let handle = S.handle;
-      if (handle) {
-        S.perm = await ensurePerm(handle);
-        if (S.perm !== 'granted') {
-          Core.toast('Autorisation refusée : rien n’a été enregistré sur N:.', { tone: 'warn', action: 'Réessayer', onAction: save, timeout: 10000 });
-          return;
-        }
-      } else {
-        handle = await pickFile();
-        if (!handle) return;
-        fresh = true;
+      const fresh = Disk.info().state === 'none';
+      const root = await Disk.getRoot();
+      if (!root) {
+        if (Disk.info().state === 'prompt') Core.toast('Autorisation refusée : rien n’a été enregistré sur N:.', { tone: 'warn', action: 'Réessayer', onAction: save, timeout: 10000 });
+        return;
       }
       let data;
-      try { data = await writeTo(handle); }
+      try { data = await writeTo(root); }
       catch (e) {
-        if (!fresh && e && e.name === 'NotFoundError') await forgetHandle();
         await Core.openDialog({
           title: 'Non enregistré sur N:', icon: 'alert', tone: 'warn', className: 'dlg-n',
-          body: [h('p', { text: errorText(e) }), h('p', { class: 'muted', text: 'Tout reste enregistré sur ce PC. Réessayez dans un instant, ou choisissez de nouveau l’emplacement.' })],
+          body: [h('p', { text: errorText(e) }), h('p', { class: 'muted', text: 'Tout reste enregistré sur ce PC. Réessayez dans un instant, ou choisissez de nouveau le dossier principal (Paramètres › Dossier principal).' })],
           actions: [{ label: 'Fermer', value: false, cls: 'btn-primary', autofocus: true }],
         }).result;
         return;
-      }
-      if (fresh) {
-        S.handle = handle;
-        S.perm = 'granted';
-        try { await idbSet(IDB_KEY, handle); } catch { /* emplacement non mémorisable : redemandé la prochaine fois */ }
       }
       if (!data) return;
       Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}`, { icon: 'check' });
@@ -2387,8 +2474,9 @@ const Sauvegarde = (() => {
       const raw = await loadScript(FILE, GLOBAL);
       if (raw && raw.savedAt === savedAt) { S.disk = { savedAt, savedBy: str(raw.savedBy, 80), legacy: false }; render(); return; }
     }
-    /* pas à côté de l'outil : ce n'est pas « sur N: » pour les collègues → emplacement oublié, tout est à enregistrer */
-    await forgetHandle();
+    /* pas à côté de l'outil : ce n'est pas « sur N: » pour les collègues → dossier oublié, tout est à enregistrer */
+    const wrong = Disk.info().name;
+    await Disk.forget();
     for (const m of mods) S.base[m.id] = null;
     S.known = null;
     savePrefs();
@@ -2399,8 +2487,8 @@ const Sauvegarde = (() => {
     const choice = await Core.openDialog({
       title: 'Enregistré dans un autre dossier ?', icon: 'alert', tone: 'warn', className: 'dlg-n dlg--wide',
       body: [
-        h('p', {}, 'Le fichier a été écrit, mais l’outil ne le retrouve pas à côté de ', h('b', { text: 'Outil Formulation.html' }), '. Les collègues ne verront donc pas cette sauvegarde.'),
-        h('p', {}, 'Choisissez le dossier où se trouve l’outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
+        h('p', {}, h('b', { class: 'mono', text: FILE }), ' a été écrit dans le dossier ', h('b', { text: `« ${wrong || '?'} »` }), ', mais l’outil ouvert ici ne l’y retrouve pas : ce n’est pas son dossier. Les collègues ne verront donc pas cette sauvegarde.'),
+        h('p', {}, 'Choisissez le dossier principal de cet outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
       ],
       actions: [{ label: 'Plus tard', value: false }, { label: 'Choisir le bon dossier…', value: true, cls: 'btn-primary', autofocus: true }],
     }).result;
@@ -2482,7 +2570,7 @@ const Sauvegarde = (() => {
     const body = h('div', { class: 'form-grid' });
     let dref = null;
     const draw = () => {
-      const st = status(), folder = toolFolder();
+      const st = status(), folder = toolFolder(), dk = Disk.info();
       const disk = S.disk && S.disk.savedAt ? new Date(S.disk.savedAt) : null;
       const badge = { ok: ['ok', 'À jour sur N:'], dirty: ['wip', 'Modifications non enregistrées'], local: ['na', 'Sur ce PC seulement'], busy: ['wip', 'Enregistrement…'], error: ['todo', 'Mémoire locale indisponible'] }[st];
       const modsList = h('ul', { class: 'sv-mods' }, shown().map(m => h('li', { class: S.dirty.has(m.id) ? 'is-dirty' : '' },
@@ -2497,11 +2585,11 @@ const Sauvegarde = (() => {
             h('dt', { text: 'Sur N:' }), h('dd', { text: disk ? `${S.disk.legacy ? 'Anciens fichiers (donnees-rapport.js, parametres-outil.js) du' : 'Sauvegarde du'} ${fmtDate(disk)} à ${fmtTime(disk)}${S.disk.savedBy ? ` par ${S.disk.savedBy}` : ''}` : 'Aucune sauvegarde pour l’instant' }),
             h('dt', { text: 'Contenu' }), h('dd', {}, modsList),
             folder ? [h('dt', { text: 'Dossier' }), h('dd', { class: 'mono', text: folder })] : null,
-            S.canWrite ? [h('dt', { text: 'Ce PC' }), h('dd', { text: S.handle ? `Emplacement mémorisé (« ${S.handle.name} »)` : 'Emplacement pas encore choisi : il sera demandé au 1er enregistrement' })] : null),
-          S.canWrite ? null : h('p', { class: 'muted', text: 'Ce navigateur ne peut pas écrire sur N: : « Enregistrer » télécharge le fichier, à déposer dans le dossier de l’outil. La lecture automatique fonctionne.' }),
+            dk.supported ? [h('dt', { text: 'Dossier principal' }), h('dd', { text: dk.state === 'none' ? 'Pas encore choisi sur ce PC : il sera demandé au 1er enregistrement' : `« ${dk.name} » (${dk.state === 'granted' ? 'autorisé' : 'à réautoriser'})` })] : null),
+          dk.supported ? null : h('p', { class: 'muted', text: 'Ce navigateur ne peut pas écrire sur N: : « Enregistrer » télécharge le fichier, à déposer dans le dossier de l’outil. La lecture automatique fonctionne.' }),
           h('div', { class: 'sect__actions' },
             h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => { dref?.close(); save(); } }, icon('save'), 'Enregistrer'),
-            S.canWrite && S.handle ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { dref?.close(); await forgetHandle(); save(); } }, icon('link'), 'Changer d’emplacement…') : null,
+            dk.supported && dk.state !== 'none' ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: () => { dref?.close(); Disk.choose(); } }, icon('link'), 'Changer de dossier…') : null,
             h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { await check({ force: true }); Core.toast(S.disk ? 'Disque N: relu' : 'Aucune sauvegarde sur N: pour l’instant', { icon: 'info' }); } }, icon('reset'), 'Relire N: maintenant'))),
         h('section', { class: 'sect' }, h('h3', { text: 'Sur ce PC (automatique)' }),
           h('p', { text: 'Chaque modification est aussi gardée automatiquement dans ce navigateur : rien n’est perdu si l’on ferme sans enregistrer sur N:.' }),
@@ -2509,6 +2597,7 @@ const Sauvegarde = (() => {
     };
     draw();
     S.onchange = draw;
+    Disk.refresh();
     dref = Core.openDialog({ title: 'Sauvegarde sur le disque N:', icon: 'cloud', className: 'mod-rapport dlg-n dlg--wide', body, actions: [{ label: 'Fermer', value: false }] });
     dref.result.then(() => { if (S.onchange === draw) S.onchange = null; });
   }
@@ -2531,16 +2620,7 @@ const Sauvegarde = (() => {
     else readLegacy().then(d => onDisk(d, { initial: true }));
     savePrefs();
     render();
-    if (S.canWrite) {
-      idbGet(IDB_KEY).then(async handle => {
-        if (!handle || typeof handle.queryPermission !== 'function') return;
-        S.handle = handle;
-        try { S.perm = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; } catch { S.perm = 'prompt'; }
-        render();
-      }).catch(() => {});
-      /* emplacement de l'ancien fichier donnees-rapport.js : abandonné (le nom du fichier a changé) */
-      try { indexedDB.deleteDatabase('nn-formu-rapport'); } catch { /* rien à nettoyer */ }
-    }
+    Core.on('disk', () => { if (S.onchange) S.onchange(); });
     setInterval(() => { if (document.visibilityState !== 'hidden') check({ force: true }); }, POLL_MS);
     document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'hidden') check(); });
     window.addEventListener('focus', () => check());
@@ -2561,7 +2641,7 @@ const Sauvegarde = (() => {
   }
 
   return {
-    register, changed, start, save, check, openPanel, info, status, toolFolder,
+    register, changed, start, save, check, openPanel, info, status,
     setAuthor(fn) { authorOf = fn; },
     FILE, GLOBAL, APP,
   };
@@ -3007,6 +3087,16 @@ const Params = (() => {
       changed();
     },
     pristine: () => !local,
+    /* contenu identique à celui de N: (lu, ou tout juste enregistré) : ce sont les paramètres de l'équipe */
+    adopt(data, meta) {
+      const n = normalize(data);
+      if (!meta || (!local && team && team.savedAt === meta.savedAt && same(team.params, n))) return;
+      team = { params: n, savedAt: meta.savedAt, savedBy: str(meta.savedBy, 60) };
+      writeTeam();
+      local = null; writeLocal();
+      recompute();
+      Core.emit('params-source');
+    },
   });
 
   /* ---------- Export / import (fichier .json) ---------- */
@@ -6758,7 +6848,33 @@ const ParamsView = (() => {
     return [
       h('p', { class: 'pm-hint pm-lead', text: 'Destinataires utilisés par « Préparer le mail » (rapport de shift). Séparez plusieurs adresses par des points-virgules.' }),
       h('div', { class: 'pm-grid pm-grid--2' }, mk('to', 'Destinataires (À)', 'ex. formulation@exemple.com'), mk('cc', 'Copie (Cc)', 'facultatif')),
-      h('p', { class: 'pm-hint', text: 'Enregistrés avec le rapport (aussi accessibles depuis Rapport › ⋯ › Paramètres). S’ils sont vides, ceux du fichier de paramètres de l’équipe sont utilisés.' }),
+      h('p', { class: 'pm-hint', text: 'Enregistrés avec le rapport (aussi accessibles depuis Rapport › ⋯ › Paramètres). S’ils sont vides, ceux des paramètres de l’équipe sont utilisés.' }),
+    ];
+  }
+
+  /* ---------- Section : Dossier principal (propre à ce PC / session Windows, jamais dans la sauvegarde) ---------- */
+  const DIR_STATE = { granted: ['ok', 'Autorisé'], prompt: ['wip', 'À réautoriser'], none: ['na', 'Non lié'], unsupported: ['na', 'Non disponible dans ce navigateur'] };
+  function dirSub() {
+    const d = Disk.info();
+    return d.state === 'none' ? 'Non lié sur ce PC : demandé au 1er enregistrement' : d.state === 'unsupported' ? 'Non disponible dans ce navigateur' : `« ${d.name} » · ${DIR_STATE[d.state][1].toLowerCase()}`;
+  }
+  function secDir() {
+    const d = Disk.info();
+    const [tone, label] = DIR_STATE[d.state];
+    const btn = (id, cls, ic, text, run) => h('button', { type: 'button', class: `btn ${cls} btn-sm`, id, onclick: run }, icon(ic), text);
+    return [
+      h('p', { class: 'pm-hint pm-lead' }, 'Le dossier principal est celui qui contient ', h('b', { text: d.file }), ' sur le disque N: : la sauvegarde de tout l’outil (',
+        h('span', { class: 'mono', text: 'sauvegarde.js' }), ') y est écrite, et plus tard les PDF du rapport, rangés par mois. Il se choisit une fois par PC (session Windows).'),
+      h('dl', { class: 'pm-kv' },
+        h('dt', { text: 'Dossier lié' }), h('dd', { id: 'pm-dir-name', text: d.name ? `« ${d.name} »` : '—' }),
+        h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `pm-badge tone-${tone}`, id: 'pm-dir-state', text: label })),
+        d.expected ? [h('dt', { text: 'Chemin attendu' }), h('dd', { class: 'mono', id: 'pm-dir-expected', text: d.expected })] : null),
+      d.state === 'unsupported' ? h('p', { class: 'pm-hint', text: 'Ce navigateur ne donne pas accès aux dossiers : « Enregistrer » télécharge sauvegarde.js, à déposer dans le dossier de l’outil. Utilisez Microsoft Edge pour enregistrer en un clic.' })
+        : h('div', { class: 'pm-dir__actions' },
+          d.state === 'none' ? btn('pm-dir-choose', 'btn-primary', 'link', 'Choisir le dossier principal…', () => Disk.choose()) : null,
+          d.state === 'prompt' ? btn('pm-dir-reauth', 'btn-primary', 'check', 'Réautoriser', () => Disk.reauthorize()) : null,
+          d.state !== 'none' ? btn('pm-dir-change', 'btn-secondary', 'link', 'Changer de dossier…', () => Disk.choose()) : null),
+      h('div', { class: 'pm-note' }, icon('pc'), h('span', {}, h('b', {}, 'Propre à ce PC. '), 'Le dossier principal ne fait pas partie de la sauvegarde : chaque PC (session Windows) le choisit une fois.')),
     ];
   }
 
@@ -7114,6 +7230,7 @@ const ParamsView = (() => {
 
   /* ---------- Rendu ---------- */
   const SECTIONS = [
+    { id: 'pm-dir', icon: 'link', title: 'Dossier principal (ce PC)', sub: dirSub, body: secDir },
     { id: 'pm-ht', icon: 'clock', title: 'Rapport — Holding times', sub: () => { const p = P().rapport; return `${Params.HT_TABLES.length} règles · ${plural(p.custom.length, 'échéance personnalisée', 'échéances personnalisées')} · alerte ${fmtH(p.soonHours)} h avant`; }, body: secHT },
     { id: 'pm-prod', icon: 'list', title: 'Rapport — Produits', sub: () => Params.LINES.map(l => `${l.name} ${Params.products(l.id).length}`).join(' · '), body: secProducts },
     { id: 'pm-rules', icon: 'check', title: 'Rapport — Règles d’applicabilité', sub: () => `${Params.RULES.length} champs conditionnels`, body: secRules },
@@ -7158,6 +7275,8 @@ const ParamsView = (() => {
   }
   Core.on('params', () => { if (visible) render(); else dirty = true; });
   Core.on('params-mail', () => { if (visible) render(); else dirty = true; });
+  Core.on('params-source', () => { if (visible) renderSource(); });
+  Core.on('disk', () => { if (visible) render(); else dirty = true; });
   return {
     init() {
       $('#pm-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) importFile(f); });
@@ -7167,7 +7286,7 @@ const ParamsView = (() => {
       Core.on('textsize', () => requestAnimationFrame(refit));
       document.addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('pm-adv')) refit(); }, true);
     },
-    show() { visible = true; if (dirty) render(); else renderSource(); },
+    show() { visible = true; if (dirty) render(); else renderSource(); Disk.refresh(); },
     hide() { visible = false; },
     menuItems: () => [
       { label: 'Exporter les paramètres (JSON)', icon: 'download', run: exportJson },
@@ -7555,6 +7674,8 @@ const Shell = (() => {
 })();
 
 Shell.start();
+/* Accès pour le dépannage et les tests (console du navigateur) : dossier principal et sauvegarde sur N: */
+window.OutilFormulation = Object.freeze({ Disk, Sauvegarde });
 })();
 </script>
 </body>
