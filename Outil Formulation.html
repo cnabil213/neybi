@@ -1283,7 +1283,8 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .pv-card.pvd{border:0;border-radius:2.2mm;background:var(--line-faint);box-shadow:inset 0 0 0 .25mm var(--line)}
 .mod-rapport .pvd .pv-cap{padding:1.1mm 2.4mm 1.1mm 3.2mm;border-radius:2.2mm 2.2mm 0 0;border-bottom:0}
 .mod-rapport .pvd-body{display:flex;flex-direction:column;gap:1.3mm;padding:1.8mm 2.4mm 2mm 2.6mm}
-.mod-rapport .pvd-chips,.mod-rapport .pva-5s{display:flex;flex-wrap:wrap;gap:1mm}
+.mod-rapport .pvd-chips,.mod-rapport .pva-5s{display:flex;flex-wrap:wrap;align-items:center;gap:1mm}
+.mod-rapport .pvd-sep{color:#9AA3B5;font-weight:800;font-size:8pt}
 .mod-rapport .pvd-chip{display:inline-flex;align-items:baseline;gap:1mm;padding:.55mm 1.8mm;border-radius:3mm;background:#fff;box-shadow:inset 0 0 0 .2mm var(--border);color:var(--text);line-height:1.15;white-space:nowrap}
 .mod-rapport .pvd-chip small{font-size:5.9pt;font-weight:600;opacity:.8}
 .mod-rapport .pvd-chip b{font-size:7pt;font-weight:800}
@@ -4370,18 +4371,24 @@ const whereOf = x => `${x.line.name} · ${x.lot || 'lot non renseigné'}`;
 /* ---------- Synthèse du shift (écran, impression, PDF, mail, accueil) : verdict, phrase, chiffres clés, état de chaque ligne ---------- */
 const PROD = {
   prod: { word: 'En production', tone: 'ok', icon: 'done' },
+  conn: { word: 'Connexion en cours', tone: 'wip', icon: 'clock' },
+  waitc: { word: 'En attente de connexion', tone: 'wip', icon: 'clock' },
   wait: { word: 'En attente', tone: 'wip', icon: 'clock' },
   clean: { word: 'Arrêt · nettoyage', tone: 'todo', icon: 'alert' },
   free: { word: 'Libre', tone: 'na', icon: 'minus' },
 };
-/** État de production d'une ligne, déduit du lot en cours : pas de lot → Libre ; local À NETTOYER → Arrêt · nettoyage ;
-    connexion FAIT → En production (remplissage) ; sinon En attente (avec la raison). */
+/** État de production d'une ligne, déduit du lot en cours (sens de la Connexion donné par l'équipe) : pas de lot → Libre ;
+    local À NETTOYER → Arrêt · nettoyage ; Connexion FAIT → En production (connecté, le remplissage tourne) ;
+    EN COURS → Connexion en cours ; EN ATTENTE → En attente de connexion (formulation prête, attend le remplissage) ;
+    Connexion N/A → En attente (rien de plus à dire). */
 function prodState(report, l) {
   const c = report.bands.enCours[l.id];
   if (!c.lot) return { k: 'free', why: 'Aucun lot en cours' };
   if (c.statutLocal === 'À NETTOYER') return { k: 'clean', why: 'Local à nettoyer' };
-  if (c.connexion === 'FAIT') return { k: 'prod', why: 'Connexion faite' };
-  return { k: 'wait', why: c.connexion === 'EN COURS' ? 'connexion en cours' : c.connexion === 'EN ATTENTE' ? 'connexion en attente' : 'connexion à faire' };
+  if (c.connexion === 'FAIT') return { k: 'prod', why: 'remplissage en cours' };
+  if (c.connexion === 'EN COURS') return { k: 'conn', why: 'connexion en train de se faire' };
+  if (c.connexion === 'EN ATTENTE') return { k: 'waitc', why: 'formulation prête, attend le remplissage pour connecter' };
+  return { k: 'wait', why: '' };
 }
 const VERDICTS = {
   red: { word: 'Action requise', icon: 'alert' },
@@ -4390,7 +4397,6 @@ const VERDICTS = {
 };
 /** Holding time en clair : « dépassé depuis 1 h 06 » (rouge) · « dans 3 h 00 » (orange / normal). */
 const htWhen = l => (l.remaining < 0 ? `dépassé depuis ${fmtDur(l.remaining)}` : `dans ${fmtDur(l.remaining)}`);
-const KEY_STATUS = ['statutLocal', 'connexion', 'echantillon'];
 function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
   const st = lineStatuses(report, now, alerts);
   const pins = pinnedComments(report, now);
@@ -4398,8 +4404,8 @@ function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
   const lines = st.map(s => {
     const b = bandById('enCours'), c = report.bands.enCours[s.line.id];
     const fields = fieldsFor(b, s.line.id);
-    const keys = KEY_STATUS.map(k => fields.find(f => f.key === k)).filter(f => f && !naReason(f, c))
-      .map(f => ({ label: printLabelOf(f, c), value: c[f.key], tone: toneOf(f.list, c[f.key]), cold: c[f.key] === 'AU FRIGO' }));
+    void fields;
+    const keys = detailModel(b, s.line, c, now).steps.filter(x => x.kind === 'status');
     const nx = report.bands.suivant1[s.line.id];
     const lims = alerts.limits.filter(x => x.line.id === s.line.id);
     return {
@@ -4417,7 +4423,7 @@ function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
   const p = (n, one, many) => (n > 1 ? many : one);
   B(`${nProd} ligne${nProd > 1 ? 's' : ''} sur 3`); N(' en production');
   const notProd = lines.filter(x => x.prod.k !== 'prod');
-  if (notProd.length) N(` (${notProd.map(x => `${x.line.name} : ${x.prod.k === 'wait' ? `en attente, ${x.prod.why}` : x.prod.word.toLowerCase()}`).join(' ; ')})`);
+  if (notProd.length) N(` (${notProd.map(x => `${x.line.name} : ${x.prod.word.toLowerCase()}`).join(' ; ')})`);
   N('. ');
   if (over.length) {
     B(`${over.length} holding time${over.length > 1 ? 's' : ''} ${p(over.length, 'dépassé', 'dépassés')}`); N(' : ');
@@ -5312,7 +5318,7 @@ function lineCardEl(s, tag = 'article') {
     h('div', { class: 'dtile__lot' },
       h('span', { class: `dtile__lotv${s.lot ? '' : ' is-empty'}`, text: s.lot || 'Aucun lot' }),
       s.produit ? h('span', { class: 'dtile__prod', text: s.produit }) : null),
-    s.prod.k === 'wait' ? h('p', { class: 'dtile__wait', text: `En attente : ${s.prod.why}` }) : null,
+    s.prod.k === 'waitc' ? h('p', { class: 'dtile__wait', text: `Formulation prête : attend le remplissage pour connecter` }) : null,
     s.keys.length ? h('div', { class: 'dtile__keys' }, s.keys.map(k => h('span', { class: `chipst tone-${k.tone}` }, h('small', { text: k.label }), k.cold ? icon('snow', 'icon icon--sm') : null, h('b', { text: k.value })))) : null,
     top ? h('div', { class: `dtile__ht ht--${top.level}` },
       h('div', { class: 'dtile__htl' }, h('span', { text: top.label }), h('b', { text: htWhen(top) })),
@@ -5519,38 +5525,47 @@ function cardModel(b, l, c, at) {
   if (cells.length % 2) cells.push({ label: '', value: '', cls: 'is-fill' });
   return { cells: cells.concat(timed), notes };
 }
-/** Détail d'une carte, lisible d'un coup d'œil : statuts renseignés (pastilles), dates et échéances (frises),
-    textes, remarques ; les champs à N/A, vides ou non applicables sont seulement comptés. */
+/** Ordre du procédé (parcours d'étapes) : lot en cours puis lots suivants ; les autres champs viennent ensuite. */
+const PROCESS_ORDER = {
+  enCours: ['statutLocal', 'connexion', 'vdl', 'filtres', 'echantillon', 'monitoring', 'checkShift', 'w3', 'poidsFormule'],
+  suivant: ['dossier', 'pesee', 'cuveFormu', 'cuveStockage', 'statutDS', 'sortieFrigo', 'local', 'filtres', 'tampon', 'echantillon'],
+};
+/** Détail d'une carte : TOUTES les valeurs renseignées, dans l'ordre du procédé (statuts avec leur ton, textes, dates),
+    puis les holding times (date de départ + échéances) et les remarques. Un champ à N/A, vide ou non applicable n'apparaît pas. */
 function detailModel(b, l, c, at) {
-  const st = [], dates = [], texts = [];
-  let notes = '', na = 0, off = 0, empty = 0;
-  for (const f of fieldsFor(b, l.id)) {
-    if (f.type === 'lot' || f.type === 'product') continue;
-    if (f.type === 'textarea') { notes = (c[f.key] || '').trim(); continue; }
-    if (naReason(f, c)) { off++; continue; }
+  const steps = [], dates = [];
+  const order = PROCESS_ORDER[b.kind] || [];
+  const rank = (k, i) => { const r = order.indexOf(k); return r < 0 ? 100 + i : r; };
+  let notes = '';
+  fieldsFor(b, l.id).forEach((f, i) => {
+    if (f.type === 'lot' || f.type === 'product') return;
+    if (f.type === 'textarea') { notes = (c[f.key] || '').trim(); return; }
+    if (naReason(f, c)) return;
     const label = printLabelOf(f, c), v = c[f.key];
-    if (f.type === 'status') { if (v === 'N/A') na++; else st.push({ label, value: v, tone: toneOf(f.list, v), cold: v === 'AU FRIGO' }); continue; }
+    if (f.type === 'status') { if (v && v !== 'N/A') steps.push({ kind: 'status', r: rank(f.key, i), label, value: v, tone: toneOf(f.list, v), cold: v === 'AU FRIGO' }); return; }
     if (f.type === 'datetime') {
       const d = parseLocal(v);
-      if (!d) { empty++; continue; }
-      dates.push({ label, value: fmtDM(d), lims: limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone })) });
-      continue;
+      if (!d) return;
+      const lims = limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone }));
+      if (lims.length) dates.push({ label, value: fmtDM(d), lims });
+      else steps.push({ kind: 'date', r: rank(f.key, i), label, value: fmtDM(d), tone: 'neutral' });
+      return;
     }
-    if ((v || '').trim()) texts.push({ label, value: v.trim() }); else empty++;
-  }
-  const rest = [na ? `${na} à N/A` : '', off ? `${off} non applicable${off > 1 ? 's' : ''}` : '', empty ? `${empty} vide${empty > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
-  return { st, dates, texts, notes, rest: rest ? `Autres champs : ${rest}` : '' };
+    if ((v || '').trim()) steps.push({ kind: 'text', r: rank(f.key, i), label, value: v.trim(), tone: 'neutral' });
+  });
+  steps.sort((x, y) => x.r - y.r);
+  return { steps, st: steps, dates, texts: [], notes, rest: '' };
 }
 function printCard(b, l, c, at) {
   const m = detailModel(b, l, c, at);
-  const blank = !m.st.length && !m.dates.length && !m.texts.length && !m.notes;
+  const blank = !m.steps.length && !m.dates.length && !m.notes;
   return h('div', { class: `pv-card pvd${m.notes.length > PV_FLOW_CHARS ? ' pv-flow' : ''}`, 'data-line': l.id },
     h('div', { class: 'pv-cap' }, h('b', { text: l.name.toUpperCase() }),
       h('span', { class: `pv-lot${c.lot ? '' : ' pv-empty'}`, text: c.lot || 'Lot —', title: c.lot || null }),
       h('span', { class: `pv-prod${c.produit ? '' : ' pv-empty'}`, text: c.produit || '—' })),
     h('div', { class: 'pvd-body' },
-      m.st.length ? h('div', { class: 'pvd-chips' }, m.st.map(x => h('span', { class: `pvd-chip t-${x.tone}` },
-        h('small', { text: x.label }), x.cold ? icon('snow', 'icon pv-snow') : null, h('b', { text: x.value })))) : null,
+      m.steps.length ? h('div', { class: 'pvd-chips' }, m.steps.map((x, i) => [i ? h('span', { class: 'pvd-sep', 'aria-hidden': 'true', text: '›' }) : null,
+        h('span', { class: `pvd-chip t-${x.tone}` }, h('small', { text: x.label }), x.cold ? icon('snow', 'icon pv-snow') : null, h('b', { text: x.value }))])) : null,
       m.dates.map(d => h('div', { class: 'pvd-date' },
         h('span', { class: 'pvd-date__s' }, icon('clock'), h('small', { text: d.label }), h('b', { text: d.value })),
         d.lims.map(x => h('span', { class: `pvd-lim ht--${x.level}` }, h('span', { class: 'pvd-bar' }, h('i', { style: `width:${Math.min(100, Math.round(x.pct * 100))}%` })),
@@ -5635,12 +5650,14 @@ function buildDetail(report, { at, author }) {
             h('span', { text: [x.poids && `Poids ${x.poids}`, x.lotSuivant && `→ ${x.lotSuivant}`, x.holdingTime && `HT ${x.holdingTime}`].filter(Boolean).join(' · ') || '—' }))))
         : h('div', { class: 'pv-none', text: 'Aucun arrêt signalé' })),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Vérification 5S' }),
-        h('div', { class: 'pva-5s' }, S5.map(k => h('span', { class: `pvd-chip ${tone(report.verif5S[k].statut)}` }, h('small', { text: k }), h('b', { text: report.verif5S[k].statut }),
-          report.verif5S[k].note ? h('em', { text: report.verif5S[k].note }) : null)))),
+        S5.some(k => report.verif5S[k].statut !== 'N/A' || report.verif5S[k].note)
+          ? h('div', { class: 'pva-5s' }, S5.filter(k => report.verif5S[k].statut !== 'N/A' || report.verif5S[k].note).map(k => h('span', { class: `pvd-chip ${tone(report.verif5S[k].statut)}` }, h('small', { text: k }),
+              report.verif5S[k].statut !== 'N/A' ? h('b', { text: report.verif5S[k].statut }) : null, report.verif5S[k].note ? h('em', { text: report.verif5S[k].note }) : null)))
+          : h('div', { class: 'pv-none', text: 'Rien de renseigné' })),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Suivi dossier' }), sd.length
         ? h('ul', { class: 'pva-list' }, sd.map(x => h('li', {}, h('b', { class: 'mono', text: x.lot || '—' }),
-            h('span', { class: `pvd-chip ${tone(x.scan)}` }, h('small', { text: 'Scan + transfert' }), h('b', { text: x.scan })),
-            h('span', { class: `pvd-chip ${tone(x.check)}` }, h('small', { text: 'Check' }), h('b', { text: x.check })))))
+            x.scan !== 'N/A' ? h('span', { class: `pvd-chip ${tone(x.scan)}` }, h('small', { text: 'Scan + transfert' }), h('b', { text: x.scan })) : null,
+            x.check !== 'N/A' ? h('span', { class: `pvd-chip ${tone(x.check)}` }, h('small', { text: 'Check' }), h('b', { text: x.check })) : null)))
         : h('div', { class: 'pv-none', text: 'Aucun dossier à suivre' }))),
     cms.length ? h('section', { class: 'pv-cms' }, h('h3', { text: 'Commentaires' }),
       h('ul', {}, cms.map(cm => h('li', { class: `pv-cm pv-cm--${cm.level}` },
@@ -6065,10 +6082,12 @@ function pdfSynth(doc, m) {
   if (pins.length) y += 1.4;
   /* 5. les 3 lignes */
   const cw = (W - 8) / 3;
+  const chipWd = k => P.width(k.label, 5.9) + P.width(k.value, 7, 'B') + (k.cold ? 3.2 : 0) + 5.6;
+  const chipRows = keys => { let rows = keys.length ? 1 : 0, cx = 0; for (const k of keys) { const w = chipWd(k); if (cx && cx + w > cw - 8.8) { rows++; cx = 0; } cx += w + 1.4; } return rows; };
   const cards = syn.lines.map(s => {
     let h2 = 24.5;
-    if (s.prod.k === 'wait') h2 += 4;
-    if (s.keys.length) h2 += 6.6;
+    if (s.prod.k === 'waitc') h2 += 4;
+    h2 += chipRows(s.keys) * 5.8 + (s.keys.length ? 0.8 : 0);
     h2 += 14.2;
     h2 += s.frigo.length * 5.6 + s.crit.length * 5.6;
     return h2 + 9;
@@ -6084,8 +6103,12 @@ function pdfSynth(doc, m) {
     const lotW = doc.text(cx + 4.4, y + 17.6, P.fit(s.lot || 'Aucun lot', cw - 30, 14, s.lot ? 'M' : 'R'), { size: 14, font: s.lot ? 'M' : 'R', color: s.lot ? C.text : C.muted });
     if (s.produit) doc.text(cx + 4.4 + lotW + 3, y + 17.4, P.fit(s.produit, cw - lotW - 10, 10, 'B'), { size: 10, font: 'B', color: C.navy });
     let cy = y + 21.5;
-    if (s.prod.k === 'wait') { doc.text(cx + 4.4, cy + 2, `En attente : ${s.prod.why}`, { size: 7.4, font: 'B', color: '#8A4B00' }); cy += 4; }
-    if (s.keys.length) { let kx = cx + 4.4; for (const k of s.keys) { const ww = pdfChip(doc, kx, cy + 0.6, k.label, k.value, k.tone, k.cold); kx += ww + 1.4; } cy += 6.6; }
+    if (s.prod.k === 'waitc') { doc.text(cx + 4.4, cy + 2, 'Formulation prête : attend le remplissage pour connecter', { size: 7.4, font: 'B', color: '#8A4B00' }); cy += 4; }
+    if (s.keys.length) {
+      let kx = cx + 4.4;
+      for (const k of s.keys) { if (kx > cx + 4.4 && kx + chipWd(k) > cx + cw - 4.4) { kx = cx + 4.4; cy += 5.8; } kx += pdfChip(doc, kx, cy + 0.6, k.label, k.value, k.tone, k.cold) + 1.4; }
+      cy += 6.6;
+    }
     const top = s.lims[0];
     const hbg = top ? { over: '#FDECEA', soon: '#FFF4E5' }[top.level] || '#F6F8FB' : '#F6F8FB';
     doc.rect(cx + 3.4, cy + 0.6, cw - 6.8, 12.4, { fill: hbg, r: 1.8 });
@@ -6170,12 +6193,13 @@ function pdfCardLayout(md, w) {
   const chipW = x => P.width(x.label, 5.8, 'R') + P.width(x.value, 7, 'B') + (x.cold ? 3.2 : 0) + 5.6;
   if (md.st.length) {
     let cx = 0;
-    for (const x of md.st) {
+    md.st.forEach((x, i) => {
       const cw = Math.min(chipW(x), iw);
-      if (cx && cx + cw > iw) { cx = 0; y += 5.9; }
+      if (i && cx + 3 + cw > iw) { cx = 0; y += 5.9; }
+      else if (i) { ops.push({ t: 'sep', x: cx + 0.4, y }); cx += 3; }
       ops.push({ t: 'chip', x: cx, y, w: cw, it: x });
-      cx += cw + 1.2;
-    }
+      cx += cw + 0.4;
+    });
     y += 5.9 + 0.8;
   }
   for (const d of md.dates) {
@@ -6212,6 +6236,8 @@ function pdfDrawCard(doc, md, lay, x, y, w, hh, nav) {
       tx += doc.text(tx, oy + 3.3, o.it.label, { size: 5.8, color: tn.fg }) + 1;
       if (o.it.cold) { pdfIcon(doc, 'snow', tx + 1.2, oy + 2.4, 2.6, tn.dot); tx += 3.2; }
       doc.text(tx, oy + 3.4, P.fit(o.it.value, o.w - (tx - cx) - 1.2, 7, 'B'), { size: 7, font: 'B', color: tn.fg });
+    } else if (o.t === 'sep') {
+      doc.text(ix + o.x + 1, oy + 3.5, '›', { size: 8, font: 'B', color: '#9AA3B5', align: 'center' });
     } else if (o.t === 'date') {
       const dw = w - 5;
       doc.rect(ix, oy, dw, o.h, { fill: C.white, r: 1.4 });
@@ -6316,7 +6342,9 @@ function pdfDetail(doc, report, m) {
   ax += aw[0] + 4;
   box(aw[1], 'Vérification 5S');
   let cx = ax + 2.4;
-  for (const k of S5) cx += chip(cx, y + 6.6, k, report.verif5S[k].statut, t3(report.verif5S[k].statut)) + 1.2;
+  const s5 = S5.filter(k => report.verif5S[k].statut !== 'N/A');
+  if (!s5.length && !S5.some(k => report.verif5S[k].note)) doc.text(ax + 2.4, y + 10, 'Rien de renseigné', { size: 7, color: '#A9B0C0' });
+  for (const k of s5) cx += chip(cx, y + 6.6, k, report.verif5S[k].statut, t3(report.verif5S[k].statut)) + 1.2;
   const notes = S5.filter(k => report.verif5S[k].note).map(k => `${k} : ${report.verif5S[k].note}`).join(' · ');
   if (notes) doc.text(ax + 2.4, y + 15, P.fit(notes, aw[1] - 4.8, 6.4), { size: 6.4, color: C.muted });
   ax += aw[1] + 4;
@@ -6326,8 +6354,8 @@ function pdfDetail(doc, report, m) {
     const ry = y + 6.4 + k * RH;
     let sx = ax + 2.4 + Math.max(16, P.width(x.lot || '—', 7.2, 'M') + 2);
     doc.text(ax + 2.4, ry + 3.3, x.lot || '—', { size: 7.2, font: 'M', color: C.text });
-    sx += chip(sx, ry, 'Scan + transfert', x.scan, t3(x.scan)) + 1.2;
-    chip(sx, ry, 'Check', x.check, t3(x.check));
+    if (x.scan !== 'N/A') sx += chip(sx, ry, 'Scan + transfert', x.scan, t3(x.scan)) + 1.2;
+    if (x.check !== 'N/A') chip(sx, ry, 'Check', x.check, t3(x.check));
   });
   y += ah + 4;
   /* commentaires */
@@ -6664,7 +6692,7 @@ async function closeShift() {
       parts.push(`PDF rangé dans ${pdf.folder}`);
     } else { set('pdf', 'fail', 'PDF non créé (annulé).'); parts.push('PDF non créé'); }
     /* l'instantané du PDF (historique) est ajouté après l'enregistrement : il part aussi sur N: */
-    if (pdf && saved === true && Sauvegarde.status() === 'dirty') await Sauvegarde.save();
+    if (pdf && saved === true) await Sauvegarde.save();
     set('mail', 'run', 'Ouverture du mail…');
     const name = pdf ? pdf.file : `${base}.pdf`;
     const opened = prepareMail(name, { quiet: true });
