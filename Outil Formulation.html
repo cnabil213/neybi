@@ -1864,7 +1864,8 @@ const Core = (() => {
    (balise <script> de la page, sans clic), puis le relit au retour sur l'onglet et toutes les 60 s.
 
    Registre extensible : chaque module se déclare avec
-     Sauvegarde.register({ id, label, schema, exportState, importState, normalize, key?, pristine?, mergeOnSave?, onKeepMine? })
+     Sauvegarde.register({ id, label, schema, order, pos, exportState, importState, normalize, key?, pristine?, mergeOnSave?, onKeepMine?, flush? })
+     · order : ordre d'application (les paramètres d'abord : les autres modules en dépendent) ; pos : ordre d'affichage ;
      · exportState()          → état partageable du module (objet JSON, forme canonique) ;
      · normalize(data)        → données lues dans le fichier → même forme canonique (lève une erreur si illisible) ;
      · importState(data, meta)→ applique ces données (meta = { savedAt, savedBy }) ;
@@ -1929,7 +1930,10 @@ const Sauvegarde = (() => {
   const sigOf = (m, data) => hash(m.key ? m.key(data) : JSON.stringify(data));
   const localSig = m => sigOf(m, m.exportState());
   const modById = id => mods.find(m => m.id === id);
-  const labels = ids => mods.filter(m => ids.includes(m.id)).map(m => m.label);
+  /** Modules dans l'ordre d'affichage (pos), pour les messages : « Rapport de shift, Étiquettes, Paramètres ». */
+  const shown = () => [...mods].sort((a, b) => a.pos - b.pos);
+  const labels = ids => shown().filter(m => ids.includes(m.id)).map(m => m.label);
+  const allLabels = () => shown().map(m => m.label);
 
   /* ---------- Préférences de ce PC (version connue, empreintes) ---------- */
   function loadPrefs() {
@@ -1945,7 +1949,7 @@ const Sauvegarde = (() => {
   /* ---------- Registre ---------- */
   function register(def) {
     if (modById(def.id)) throw new Error(`module « ${def.id} » déjà enregistré`);
-    mods.push({ order: 100, schema: 1, label: def.id, ...def });
+    mods.push({ order: 100, pos: 100, schema: 1, label: def.id, ...def });
     mods.sort((a, b) => a.order - b.order);
     if (S.started) { if (!(def.id in S.base)) S.base[def.id] = def.pristine && !def.pristine() ? null : localSig(modById(def.id)); recheck(def.id); }
   }
@@ -1971,7 +1975,7 @@ const Sauvegarde = (() => {
   const oneLine = s => String(s || '').replace(/[\r\n]+/g, ' ').replace(/\*\//g, '* /');
   function fileText(data) {
     const d = new Date(data.savedAt);
-    return `/* Sauvegarde de l'Outil Formulation (${mods.map(m => m.label).join(', ')}). Enregistrée le ${fmtDate(d)} à ${fmtTime(d)}${data.savedBy ? ` par ${oneLine(data.savedBy)}` : ''}.\n` +
+    return `/* Sauvegarde de l'Outil Formulation (${allLabels().join(', ')}). Enregistrée le ${fmtDate(d)} à ${fmtTime(d)}${data.savedBy ? ` par ${oneLine(data.savedBy)}` : ''}.\n` +
       `   Lue automatiquement par « Outil Formulation.html » posé dans le même dossier. Ne pas modifier à la main. */\n` +
       `window.${GLOBAL} = ${JSON.stringify(data)};\n`;
   }
@@ -2197,7 +2201,7 @@ const Sauvegarde = (() => {
     return Core.openDialog({
       title: 'Enregistrer sur le disque N:', icon: 'save', className: 'dlg-n dlg--wide',
       body: [
-        h('p', {}, 'Tout l’outil (', mods.map(m => m.label).join(', ').toLowerCase(), ') est enregistré dans ', h('b', { text: 'un seul fichier' }), ', ',
+        h('p', {}, 'Tout l’outil (', allLabels().join(', ').toLowerCase(), ') est enregistré dans ', h('b', { text: 'un seul fichier' }), ', ',
           h('b', { class: 'mono', text: FILE }), ', à côté de l’outil : sur n’importe quel PC, l’outil le rouvre tout seul.'),
         h('p', {}, 'La fenêtre Windows « Enregistrer sous » va s’ouvrir, avec le nom ', h('b', { class: 'mono', text: FILE }), ' déjà rempli. ',
           'Choisissez le dossier où se trouve ', h('b', { text: 'Outil Formulation.html' }),
@@ -2481,7 +2485,7 @@ const Sauvegarde = (() => {
       const st = status(), folder = toolFolder();
       const disk = S.disk && S.disk.savedAt ? new Date(S.disk.savedAt) : null;
       const badge = { ok: ['ok', 'À jour sur N:'], dirty: ['wip', 'Modifications non enregistrées'], local: ['na', 'Sur ce PC seulement'], busy: ['wip', 'Enregistrement…'], error: ['todo', 'Mémoire locale indisponible'] }[st];
-      const modsList = h('ul', { class: 'sv-mods' }, mods.map(m => h('li', { class: S.dirty.has(m.id) ? 'is-dirty' : '' },
+      const modsList = h('ul', { class: 'sv-mods' }, shown().map(m => h('li', { class: S.dirty.has(m.id) ? 'is-dirty' : '' },
         S.dirty.has(m.id) ? h('span', { class: 'ss-dot', 'aria-hidden': 'true' }) : icon('check'), h('span', { text: m.label }),
         h('span', { class: 'sv-mods__st', text: S.dirty.has(m.id) ? 'modifié, non enregistré' : S.known ? 'enregistré' : 'sur ce PC' }))));
       body.replaceChildren(
@@ -2990,7 +2994,7 @@ const Params = (() => {
 
   /* ---------- Sauvegarde sur N: (module « parametres » du fichier sauvegarde.js) ---------- */
   Sauvegarde.register({
-    id: 'parametres', label: 'Paramètres', schema: SCHEMA, order: 10,
+    id: 'parametres', label: 'Paramètres', schema: SCHEMA, order: 10, pos: 30,
     exportState: () => clone(cur),
     normalize: data => { if (!isObj(data.rapport) && !isObj(data.etiquettes)) throw new Error('format'); return normalize(data); },
     /* meta = version lue ou écrite sur N: → paramètres de l'équipe ; sans meta (« Annuler » un chargement) → modification de ce PC */
@@ -3556,7 +3560,7 @@ function importShared(d, meta) {
   refresh();
 }
 Sauvegarde.register({
-  id: 'rapport', label: 'Rapport de shift', schema: SCHEMA_VERSION, order: 20,
+  id: 'rapport', label: 'Rapport de shift', schema: SCHEMA_VERSION, order: 20, pos: 10,
   exportState: exportShared,
   normalize: (data, schema) => { const d = normalizeData({ ...data, app: null, schema }); return { report: d.report, history: d.history, settings: d.settings }; },
   key: shareKey,
@@ -6101,7 +6105,7 @@ function shareKey(d) {
   return JSON.stringify({ ...d, poches: strip(d.poches), autres });
 }
 Sauvegarde.register({
-  id: 'etiquettes', label: 'Étiquettes', schema: SCHEMA_VERSION, order: 30,
+  id: 'etiquettes', label: 'Étiquettes', schema: SCHEMA_VERSION, order: 30, pos: 20,
   exportState: () => sharedOf(state),
   normalize: d => sharedOf(normalizeState(d)),
   key: shareKey,
@@ -7206,8 +7210,8 @@ const Accueil = (() => {
     const dirty = i.state === 'dirty' ? h('span', { class: 'tile__n-warn' }, h('span', { class: 'ss-dot', 'aria-hidden': 'true' }), 'Modifications non enregistrées') : null;
     if (i.savedAt) {
       el.className = 'home__save';
-      el.replaceChildren(icon('cloud'), h('span', {}, 'Dernière sauvegarde : ', h('b', { text: `${whenShort(i.savedAt, now)}${i.savedBy ? ` par ${i.savedBy}` : ''}` })), dirty,
-        h('span', { class: 'home__save-hint', text: 'Tout l’outil est enregistré sur N: avec Ctrl+S ou « Enregistrer ».' }));
+      el.replaceChildren(...[icon('cloud'), h('span', {}, 'Dernière sauvegarde : ', h('b', { text: `${whenShort(i.savedAt, now)}${i.savedBy ? ` par ${i.savedBy}` : ''}` })), dirty,
+        h('span', { class: 'home__save-hint', text: 'Tout l’outil est enregistré sur N: avec Ctrl+S ou « Enregistrer ».' })].filter(Boolean));
     } else {
       el.className = 'home__save is-local';
       el.replaceChildren(icon('pc'), h('span', { text: 'Aucune sauvegarde sur le disque N: pour l’instant : tout est gardé sur ce PC.' }),
