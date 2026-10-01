@@ -1098,6 +1098,15 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
   .mod-rapport .verdict__sentence{font-size:1rem}
   .mod-rapport .kpi__n{font-size:2rem}
 }
+.mod-rapport .dtile__hts{display:flex;flex-direction:column;gap:.375rem}
+.mod-rapport .dtile__hts>.dtile__k{font-size:.6875rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mod-rapport .dtile__hts .dtile__ht{gap:.25rem;padding:.5rem .75rem}
+.mod-rapport .dtile__htl>span{display:inline-flex;align-items:center;gap:.375rem;min-width:0}
+.mod-rapport .dtile__htn{font-size:.875rem;color:var(--text) !important;font-weight:700}
+.mod-rapport .dtile__htw{font-size:.875rem !important}
+.mod-rapport .dtile__ht .ht__bar{height:.3125rem}
+.mod-rapport .dtile__none{font-size:.8125rem;color:var(--muted)}
+.mod-rapport .perso{display:inline-block;padding:0 .375rem;border-radius:999px;background:#E9E3FF;color:#4A2DB5;font-size:.625rem;font-weight:800;letter-spacing:.06em;vertical-align:middle;margin-left:.375rem}
 /* =========================================================================
    Vue d'impression (rendu dédié, généré depuis l'état)
    ========================================================================= */
@@ -1618,6 +1627,8 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-params .pm-form__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:1rem}
 .mod-params .pm-httop{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem;margin-bottom:1rem;padding:1rem 1.125rem;border-radius:14px;background:linear-gradient(110deg,#EEF3FF,#F7F9FE);box-shadow:inset 0 0 0 1px #D5E1F8}
 .mod-params .pm-httop .pm-hint{flex:1 1 20rem;margin:0}
+.mod-params .pm-htname-l{display:flex;align-items:center;gap:.5rem;margin-top:.375rem;font-size:.8125rem;font-weight:600;color:var(--muted)}
+.mod-params .pm-htname-l .input{flex:1;min-width:0;min-height:2.25rem;font-weight:700;color:var(--nn-navy)}
 .mod-params .pm-cu__start{display:block;color:var(--nn-blue) !important}
 .mod-params .pm-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.875rem}
 .mod-params .pm-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.75rem;align-items:start}
@@ -3456,6 +3467,8 @@ const Params = (() => {
         gronHTFormu: { def: 24, defNone: false, rows: [] },
       },
       custom: [],
+      /* nom affiché de chaque holding time intégré (ce qu'il mesure) */
+      htNames: { gronEnCours: 'HT filtration', inova5EnCours: 'HT formulation → filtration', inova4EnCours: 'HT formulation → fin de remplissage', gronHT72: 'HT 72 h', gronHTFormu: 'HT formulation 24 h' },
       products: {
         groninger: prods('SEMA K 0.5', 'SEMA K 0.75', 'SEMA K 1.0', 'SEMA K 2.0', 'SEMA K 2.27', 'SEMA K 3.2', 'MFT'),
         inova5: prods('SB4', 'SB5B', 'SB16', 'CT-P17', 'SWFI', 'MFT', ['SB4 SCALE UP', 'SB4'], ['CT-P17 SCALE UP', 'CT-P17']),
@@ -3603,6 +3616,7 @@ const Params = (() => {
         d.rapport.custom.push({ id, nom, lines, bands, produits: normNames(c.produits, allNames) || [], h: roundH(c.h), start, soon });
       }
     }
+    if (isObj(R.htNames)) for (const t of HT_TABLES) { const n = str(R.htNames[t.id], 40); if (n) d.rapport.htNames[t.id] = n; }
     if (isObj(R.colors)) for (const l of LINES) if (hexOk(R.colors[l.id])) d.rapport.colors[l.id] = R.colors[l.id].trim().toUpperCase();
     if (isObj(R.mail)) {
       const web = str(R.mail.web, 200).replace(/\/+$/, '');
@@ -3831,10 +3845,11 @@ const Params = (() => {
     return t.defNone ? null : t.def;
   }
   const fmtHours = v => String(v).replace('.', ',');
+  const htName = tableId => (cur.rapport.htNames && cur.rapport.htNames[tableId]) || DEFAULTS.rapport.htNames[tableId] || 'Holding time';
 
   init();
   return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, jsonText, importText, parseText,
-    products, productNames, baseOf, ruleHas, htHours, fmtHours, shades, lum, normalize, canon,
+    products, productNames, baseOf, ruleHas, htHours, htName, fmtHours, shades, lum, normalize, canon,
     DEFAULTS, LINES, BANDS, HT_TABLES, HT_STARTS, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, fmtStamp,
     ET_VARS, ET_CHAMPS, parseLine, etOrigin, normEtProduct };
 })();
@@ -4100,7 +4115,7 @@ const SCHEMA = {
 function customField(x, lineId) {
   const applies = c => x.produits.includes(c.produit) || x.produits.includes(Params.baseOf(lineId, c.produit));
   return {
-    key: `ht_${x.id}`, label: `${x.nom} (${hoursTxt(x.h)})`, type: 'datetime', custom: true, print: x.nom,
+    key: `ht_${x.id}`, label: `${x.nom} (${hoursTxt(x.h)})`, type: 'datetime', custom: true, print: x.nom, htId: x.id, htName: x.nom,
     when: x.produits.length ? c => (applies(c) ? null : c.produit ? `Non applicable (${c.produit})` : 'Selon le produit') : null,
     limit: { label: `Limite ${x.nom}`, variable: true, hours: () => x.h, soon: x.soon ?? undefined },
   };
@@ -4264,15 +4279,22 @@ const printLabelOf = (f, c) => (typeof f.print === 'function' ? f.print(c) : f.p
 const naReason = (f, c) => (f.when ? f.when(c) : null);
 /** Limite de holding time : échéance, % écoulé, ton (todo dépassé · wip bientôt · neutral) et niveau de la barre
     (over dépassé · soon sous le seuil d'alerte · mid ≥ 50 % · ok < 50 %). */
-function makeLimit(start, hours, now, soonH, label, printLabel) {
+/** Nom d'un holding time avec sa durée : « HT filtration (150 h) » ; « HT 72 h » n'est pas répété. */
+const htTitle = (nom, hours) => (new RegExp(`(^|\\D)${String(fmtH(hours)).replace('.', '\\.')}\\s*h\\b`).test(nom) ? nom : `${nom} (${fmtH(hours)} h)`);
+/** Limite de holding time : nom affiché, durée, départ (champ + date), échéance, % écoulé, ton (todo dépassé · wip bientôt ·
+    neutral) et niveau de la barre (over dépassé · soon sous le seuil d'alerte · mid ≥ 50 % · ok < 50 %). */
+function makeLimit(start, hours, now, soonH, { id, nom, depart, perso }) {
   const due = new Date(start.getTime() + hours * 3600e3);
   const remaining = due - now;
   const pct = Math.max(0, (now - start) / (hours * 3600e3));
   const soon = remaining < soonH * 3600e3;
+  const label = htTitle(nom, hours);
   return {
-    label, printLabel, hours, start, due, remaining, pct,
+    id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining, pct,
+    full: `${nom} · ${fmtH(hours)} h — depuis ${depart.charAt(0).toLowerCase()}${depart.slice(1)} ${fmtDM(start)} — limite ${fmtDM(due)}`,
     tone: remaining < 0 ? 'todo' : soon ? 'wip' : 'neutral',
     level: remaining < 0 ? 'over' : soon ? 'soon' : pct >= 0.5 ? 'mid' : 'ok',
+    etat: remaining < 0 ? 'rouge' : soon ? 'orange' : 'vert',
     rest: remaining < 0 ? `dépassé de ${fmtDur(remaining)}` : `reste ${fmtDur(remaining)}`,
   };
 }
@@ -4280,12 +4302,12 @@ const soonHours = () => Params.get().rapport.soonHours;
 function limitOf(f, c, now) {
   if (!f.limit || naReason(f, c)) return null;
   const start = parseLocal(c[f.key]);
-  if (!start) return null;
+  if (!start) return null; /* HT non démarré : n'apparaît pas */
   const hours = f.limit.hours(c);
   if (hours == null) return null; /* « aucune limite » pour ce produit (onglet Paramètres) */
-  const base = typeof f.limit.label === 'function' ? f.limit.label(c) : f.limit.label;
-  return makeLimit(start, hours, now, f.limit.soon ?? soonHours(),
-    base + (f.limit.variable ? ` (${fmtH(hours)} h)` : ''), f.custom ? `Lim. ${fmtH(hours)} h` : `Lim. HT ${fmtH(hours)} h`);
+  return makeLimit(start, hours, now, f.limit.soon ?? soonHours(), f.custom
+    ? { id: f.htId, nom: f.htName, depart: 'départ saisi', perso: true }
+    : { id: f.limit.table, nom: Params.htName(f.limit.table), depart: labelOf(f, c).replace(/\s*\(.*\)$/, '') });
 }
 /** Holding times personnalisés qui partent d'un champ date EXISTANT (onglet Paramètres › « Départ ») : pas de nouveau champ,
     une échéance de plus sous ce champ. */
@@ -4298,7 +4320,7 @@ function customLimitsOf(f, b, lineId, c, now) {
   if (!start) return [];
   return startCustoms(b, lineId).filter(x => x.start === f.key
       && (!x.produits.length || x.produits.includes(c.produit) || x.produits.includes(Params.baseOf(lineId, c.produit))))
-    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), `Limite ${x.nom} (${fmtH(x.h)} h)`, `Lim. ${fmtH(x.h)} h`), custom: x }));
+    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), perso: true }), custom: x }));
 }
 /** Toutes les limites d'un champ : la sienne (schéma ou champ personnalisé) + celles qui partent de lui. */
 function limitsOfField(f, b, lineId, c, now) {
@@ -4316,6 +4338,14 @@ function computeAlerts(report, now) {
   }
   limits.sort((a, b) => a.due - b.due);
   return { frigo, limits };
+}
+/** Holding times DÉMARRÉS (date de départ renseignée), triés par urgence ; filtre facultatif { line, band }.
+    Chaque entrée : { id, nom, heures, departLabel, departDate, limite, restant, pct, etat (vert/orange/rouge), perso, ligne, bande, lot }. */
+function htList(report, now = new Date(), { line, band } = {}) {
+  return computeAlerts(report, now).limits.filter(l => (!line || l.line.id === line) && (!band || l.band.id === band)).map(l => ({
+    id: l.id, nom: l.nom, heures: l.hours, departLabel: l.depart, departDate: l.start, limite: l.due, restant: l.remaining, pct: l.pct,
+    etat: l.etat, perso: l.perso, ligne: l.line.name, bande: l.band.title, lot: l.lot || '', texte: l.full,
+  }));
 }
 /* ---------- Commentaires ---------- */
 const cmExpired = (cm, now) => { const u = parseLocal(cm.until); return !!u && u <= now; };
@@ -4407,7 +4437,7 @@ function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
     void fields;
     const keys = detailModel(b, s.line, c, now).steps.filter(x => x.kind === 'status');
     const nx = report.bands.suivant1[s.line.id];
-    const lims = alerts.limits.filter(x => x.line.id === s.line.id);
+    const lims = alerts.limits.filter(x => x.line.id === s.line.id && x.band.id === 'enCours');
     return {
       ...s, prod: { ...PROD[prodState(report, s.line).k], ...prodState(report, s.line) }, keys, lims,
       frigo: alerts.frigo.filter(x => x.line.id === s.line.id),
@@ -4427,12 +4457,14 @@ function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
   N('. ');
   if (over.length) {
     B(`${over.length} holding time${over.length > 1 ? 's' : ''} ${p(over.length, 'dépassé', 'dépassés')}`); N(' : ');
-    over.slice(0, 2).forEach((l, i) => { N(`${i ? ', ' : ''}${l.line.name} (${l.lot || '—'}, `); B(`+${fmtDur(l.remaining)}`); N(')'); });
+    over.slice(0, 2).forEach((l, i) => { N(`${i ? ', ' : ''}${l.line.name} · ${l.nom} (${l.lot || '—'}, `); B(`+${fmtDur(l.remaining)}`); N(')'); });
+    if (over.length > 2) N(`, + ${over.length - 2} autre${over.length > 3 ? 's' : ''}`);
     N(soon.length ? ' ; ' : '. ');
   }
   if (soon.length) {
     B(`${soon.length} ${p(soon.length, 'proche', 'proches')}`); N(' de l’échéance : ');
-    soon.slice(0, 2).forEach((l, i) => { N(`${i ? ', ' : ''}${l.line.name} (${l.lot || '—'}, reste `); B(fmtDur(l.remaining)); N(')'); });
+    soon.slice(0, 2).forEach((l, i) => { N(`${i ? ', ' : ''}${l.line.name} · ${l.nom} (${l.lot || '—'}, reste `); B(fmtDur(l.remaining)); N(')'); });
+    if (soon.length > 2) N(`, + ${soon.length - 2} autre${soon.length > 3 ? 's' : ''}`);
     N('. ');
   }
   if (!over.length && !soon.length) N('Aucun holding time dépassé ni proche. ');
@@ -5309,8 +5341,7 @@ function renderVerdict(now, syn) {
         h('p', { class: 'verdict__sentence' }, richEl(syn.sentence)))),
     h('div', { class: 'kpis' }, syn.kpis.map(k => kpiEl(k))));
 }
-function lineCardEl(s, tag = 'article') {
-  const top = s.lims[0] || null;
+function lineCardEl(s, tag = 'article', max = 99) {
   const el = h(tag, { class: `dtile dtile--${s.feu} prod--${s.prod.k}`, 'data-line': s.line.id, 'data-feu': s.feu, 'data-prod': s.prod.k },
     h('div', { class: 'dtile__head' },
       h('span', { class: 'dtile__name' }, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), s.line.name),
@@ -5320,11 +5351,14 @@ function lineCardEl(s, tag = 'article') {
       s.produit ? h('span', { class: 'dtile__prod', text: s.produit }) : null),
     s.prod.k === 'waitc' ? h('p', { class: 'dtile__wait', text: `Formulation prête : attend le remplissage pour connecter` }) : null,
     s.keys.length ? h('div', { class: 'dtile__keys' }, s.keys.map(k => h('span', { class: `chipst tone-${k.tone}` }, h('small', { text: k.label }), k.cold ? icon('snow', 'icon icon--sm') : null, h('b', { text: k.value })))) : null,
-    top ? h('div', { class: `dtile__ht ht--${top.level}` },
-      h('div', { class: 'dtile__htl' }, h('span', { text: top.label }), h('b', { text: htWhen(top) })),
-      h('span', { class: 'ht__bar' }, h('i', { style: `width:${Math.min(100, Math.round(top.pct * 100))}%` })),
-      h('small', { text: `Échéance ${fmtDM(top.due)}${s.lims.length > 1 ? ` · +${s.lims.length - 1} autre${s.lims.length > 2 ? 's' : ''} échéance${s.lims.length > 2 ? 's' : ''}` : ''}` }))
-      : h('div', { class: 'dtile__ht is-none' }, h('small', { text: 'Aucun holding time en cours' })),
+    h('div', { class: 'dtile__hts' },
+      h('p', { class: 'dtile__k' }, `Holding times en cours · ${s.lims.length}`),
+      s.lims.length ? s.lims.slice(0, max).map(l => h('div', { class: `dtile__ht ht--${l.level}`, title: l.full },
+        h('div', { class: 'dtile__htl' }, h('span', {}, h('b', { class: 'dtile__htn', text: l.label }), l.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('b', { class: 'dtile__htw', text: htWhen(l) })),
+        h('span', { class: 'ht__bar' }, h('i', { style: `width:${Math.min(100, Math.round(l.pct * 100))}%` })),
+        h('small', { text: `depuis ${l.depart.toLowerCase()} ${fmtDM(l.start)} · limite ${fmtDM(l.due)}` })))
+        : h('p', { class: 'dtile__none', text: 'Aucun holding time démarré' }),
+      s.lims.length > max ? h('p', { class: 'dtile__none', text: `+ ${s.lims.length - max} autre${s.lims.length - max > 1 ? 's' : ''} (voir le détail)` }) : null),
     s.frigo.length ? h('p', { class: 'dtile__flag is-frigo' }, icon('snow', 'icon icon--sm'), `Au frigo : ${s.frigo.map(x => `${x.lot || '—'} (${x.band.short})`).join(', ')}`) : null,
     s.crit.map(cm => h('p', { class: 'dtile__flag is-crit' }, icon('octagon', 'icon icon--sm'), cm.text)),
     h('p', { class: 'dtile__next' }, h('span', { class: 'dtile__k', text: 'Ensuite' }),
@@ -5389,16 +5423,16 @@ function renderWatch(now = new Date(), alerts = computeAlerts(state.report, now)
     return h('div', { class: `wcard wcard--ht ht ht--${l.level} tone-${l.tone}`, 'data-line': l.line.id, 'data-level': l.level },
       h('div', { class: 'ht__info' },
         h('div', { class: 'wcard__where' }, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), h('span', { text: `${whereOf(l)} · ${l.band.short}` })),
-        h('div', { class: 'wcard__what', text: l.label })),
+        h('div', { class: 'wcard__what' }, l.label, l.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null)),
       h('div', { class: 'ht__count' }, h('b', { text: `${l.remaining < 0 ? '+' : ''}${fmtDur(l.remaining)}` }), h('span', { text: l.remaining < 0 ? 'dépassé' : 'restant' })),
       h('div', { class: 'ht__bar', role: 'meter', 'aria-valuemin': '0', 'aria-valuemax': '100', 'aria-valuenow': String(Math.min(pct, 100)), 'aria-label': `${pct} % du holding time écoulé` },
         h('i', { style: `width:${Math.min(100, pct)}%` })),
-      h('div', { class: 'ht__due' }, h('span', {}, 'Échéance ', h('b', { text: fmtDM(l.due) })), h('span', { class: 'ht__pct', text: `${pct} % écoulé · ${HT_LEVEL_TXT[l.level]}` })));
+      h('div', { class: 'ht__due' }, h('span', {}, `Depuis ${l.depart.toLowerCase()} ${fmtDM(l.start)} · limite `, h('b', { text: fmtDM(l.due) })), h('span', { class: 'ht__pct', text: `${pct} % écoulé · ${HT_LEVEL_TXT[l.level]}` })));
   });
   $('#watch').replaceChildren(
     h('div', { class: 'sec-head' },
       h('div', { class: 'sec-head__t' }, h('span', { class: 'sec-ico', 'aria-hidden': 'true' }, icon('clock')),
-        h('h2', { class: 'sec-title', text: 'Holding times' }), h('span', { class: 'sec-sub', text: 'Triés par urgence, calculés en direct' })),
+        h('h2', { class: 'sec-title', text: 'Holding times' }), h('span', { class: 'sec-sub', text: 'Démarrés, triés par urgence, calculés en direct' })),
       h('span', { class: 'legend' }, h('span', { class: 'lg lg--green', text: '< 50 %' }), h('span', { class: 'lg lg--yellow', text: '≥ 50 %' }),
         h('span', { class: 'lg lg--orange', text: `< ${soon} h` }), h('span', { class: 'lg lg--red', text: 'dépassé' }))),
     h('div', { class: 'watch__row' }, items.length ? items : h('div', { class: 'wcard wcard--none', text: 'Aucune échéance en cours' })));
@@ -5598,11 +5632,11 @@ function buildSynth(m) {
       return h('div', { class: `pvs-pin pvs-pin--${lv.id}` }, h('span', { class: 'pvs-pin__ico' }, icon(lv.icon)), h('b', { class: 'pvs-pin__lvl', text: lv.label }),
         h('span', { class: 'pvs-pin__txt', text: cm.text }), h('span', { class: 'pvs-pin__meta', text: `${cm.line ? lineName(cm.line) : 'Général'} · ${cm.author || '—'} · ${fmtDM(new Date(cm.at))}` }));
     }), morePins > 0 ? h('p', { class: 'pvs-more', text: `+ ${morePins} autre${morePins > 1 ? 's' : ''} épinglé${morePins > 1 ? 's' : ''} (voir le détail)` }) : null) : null,
-    h('div', { class: 'pvs-dash' }, syn.lines.map(s => lineCardEl(s, 'div'))),
+    h('div', { class: 'pvs-dash' }, syn.lines.map(s => lineCardEl(s, 'div', 3))),
     h('div', { class: 'pvs-row' },
-      h('section', { class: 'pvs-ht' }, h('h2', { class: 'pvs-h2', text: 'Holding times' }),
+      h('section', { class: 'pvs-ht' }, h('h2', { class: 'pvs-h2', text: 'Holding times les plus urgents' }),
         lims.length ? lims.map(l => h('div', { class: `pvs-htr ht--${l.level}`, 'data-line': l.line.id },
-          h('div', { class: 'pvs-htr__info' }, h('b', { text: `${whereOf(l)} · ${l.band.short}` }), h('span', { text: `${l.label} · échéance ${fmtDM(l.due)}` })),
+          h('div', { class: 'pvs-htr__info' }, h('b', { text: `${whereOf(l)} — ${l.label}${l.perso ? ' · PERSO' : ''}` }), h('span', { text: `depuis ${l.depart.toLowerCase()} ${fmtDM(l.start)} · limite ${fmtDM(l.due)} · ${l.band.short}` })),
           h('span', { class: 'pvs-bar' }, h('i', { style: `width:${Math.min(100, Math.round(l.pct * 100))}%` })),
           h('b', { class: 'pvs-htr__w', text: htWhen(l) }))) : h('p', { class: 'pvs-none', text: 'Aucune échéance en cours' }),
         moreLims > 0 ? h('p', { class: 'pvs-more', text: `+ ${moreLims} autre${moreLims > 1 ? 's' : ''}` }) : null),
@@ -6019,6 +6053,7 @@ function pdfChip(doc, x, y, label, value, tone, cold) {
   return w;
 }
 const HTW = { over: '#B3261E', soon: '#A24E00', mid: '#7A5800', ok: '#0E6128' };
+const CARD_HT_MAX = 3, URGENT_MAX = 3;
 function pdfSynth(doc, m) {
   const P = PdfGen, W = X1 - X0, syn = m.syn;
   doc.page();
@@ -6088,7 +6123,7 @@ function pdfSynth(doc, m) {
     let h2 = 24.5;
     if (s.prod.k === 'waitc') h2 += 4;
     h2 += chipRows(s.keys) * 5.8 + (s.keys.length ? 0.8 : 0);
-    h2 += 14.2;
+    h2 += 4.4 + Math.max(1, Math.min(CARD_HT_MAX, s.lims.length)) * 6.8 + (s.lims.length > CARD_HT_MAX ? 4 : 0) + 0.8;
     h2 += s.frigo.length * 5.6 + s.crit.length * 5.6;
     return h2 + 9;
   });
@@ -6109,17 +6144,21 @@ function pdfSynth(doc, m) {
       for (const k of s.keys) { if (kx > cx + 4.4 && kx + chipWd(k) > cx + cw - 4.4) { kx = cx + 4.4; cy += 5.8; } kx += pdfChip(doc, kx, cy + 0.6, k.label, k.value, k.tone, k.cold) + 1.4; }
       cy += 6.6;
     }
-    const top = s.lims[0];
-    const hbg = top ? { over: '#FDECEA', soon: '#FFF4E5' }[top.level] || '#F6F8FB' : '#F6F8FB';
-    doc.rect(cx + 3.4, cy + 0.6, cw - 6.8, 12.4, { fill: hbg, r: 1.8 });
-    if (top) {
-      doc.text(cx + 5.6, cy + 4.9, P.fit(top.label, cw - 52, 6.6), { size: 6.6, color: C.muted });
-      doc.text(cx + cw - 5.6, cy + 5.1, htWhen(top), { size: 8.6, font: 'B', color: HTW[top.level], align: 'right' });
-      doc.rect(cx + 5.6, cy + 6.6, cw - 11.2, 2, { fill: '#DFE4EC', r: 1 });
-      if (top.pct > 0) doc.rect(cx + 5.6, cy + 6.6, Math.max(2, (cw - 11.2) * Math.min(1, top.pct)), 2, { fill: C.ht[top.level].bar, r: 1 });
-      doc.text(cx + 5.6, cy + 11.6, `Échéance ${fmtDM(top.due)}${s.lims.length > 1 ? ` · + ${s.lims.length - 1} autre${s.lims.length > 2 ? 's' : ''}` : ''}`, { size: 6.2, color: C.muted });
-    } else doc.text(cx + 5.6, cy + 7.6, 'Aucun holding time en cours', { size: 7, color: C.muted });
-    cy += 14.2;
+    doc.text(cx + 4.4, cy + 3.2, `HOLDING TIMES EN COURS · ${s.lims.length}`, { size: 5.8, font: 'B', color: C.muted });
+    cy += 4.4;
+    if (!s.lims.length) { doc.text(cx + 4.4, cy + 2.8, 'Aucun holding time démarré', { size: 7, color: C.muted }); cy += 4.6; }
+    for (const l of s.lims.slice(0, CARD_HT_MAX)) {
+      doc.rect(cx + 3.4, cy, cw - 6.8, 6.2, { fill: { over: '#FDECEA', soon: '#FFF4E5' }[l.level] || '#F6F8FB', r: 1.4 });
+      const nmW = Math.min(P.width(l.label, 6.9, 'B'), cw - 36);
+      doc.text(cx + 5.2, cy + 2.9, P.fit(l.label, cw - 36, 6.9, 'B'), { size: 6.9, font: 'B', color: C.text });
+      if (l.perso) { doc.rect(cx + 6 + nmW, cy + 0.8, 8.6, 2.8, { fill: '#E9E3FF', r: 1.4 }); doc.text(cx + 6 + nmW + 4.3, cy + 2.8, 'PERSO', { size: 5, font: 'B', color: '#4A2DB5', align: 'center' }); }
+      doc.text(cx + cw - 5.2, cy + 2.9, htWhen(l), { size: 7, font: 'B', color: HTW[l.level], align: 'right' });
+      doc.rect(cx + 5.2, cy + 4, cw - 10.4, 1.1, { fill: '#DFE4EC', r: 0.55 });
+      if (l.pct > 0) doc.rect(cx + 5.2, cy + 4, Math.max(1.1, (cw - 10.4) * Math.min(1, l.pct)), 1.1, { fill: C.ht[l.level].bar, r: 0.55 });
+      cy += 6.8;
+    }
+    if (s.lims.length > CARD_HT_MAX) { doc.text(cx + 4.4, cy + 2.6, `+ ${s.lims.length - CARD_HT_MAX} autre${s.lims.length - CARD_HT_MAX > 1 ? 's' : ''} (voir le détail)`, { size: 6.4, color: C.muted }); cy += 4; }
+    cy += 0.8;
     for (const f of s.frigo) {
       doc.rect(cx + 3.4, cy, cw - 6.8, 4.8, { fill: C.tone.cold.bg, r: 1.4 });
       pdfIcon(doc, 'snow', cx + 6, cy + 2.4, 3, C.tone.cold.fg);
@@ -6142,23 +6181,24 @@ function pdfSynth(doc, m) {
   y += ch + 4;
   /* 6-8. holding times | au frigo + changements */
   const hw = 150;
-  doc.text(X0, y + 3, 'HOLDING TIMES', { size: 7.6, font: 'B', color: C.navy });
+  doc.text(X0, y + 3, 'HOLDING TIMES LES PLUS URGENTS', { size: 7.6, font: 'B', color: C.navy });
   let hy = y + 5.2;
-  const rh = 8.6;
+  const rh = 7.6;
   const room = Math.max(1, Math.floor((YMAX + 1 - hy) / (rh + 1.2)));
-  const shown = syn.limits.slice(0, syn.limits.length > room ? room - 1 : room);
+  const cap = Math.min(URGENT_MAX, room);
+  const shown = syn.limits.slice(0, cap);
   if (!syn.limits.length) doc.text(X0, hy + 4, 'Aucune échéance en cours', { size: 7.4, color: C.muted });
   for (const l of shown) {
     const sh = lineShade(l.line.id);
     doc.clip(X0, hy, hw, rh, 1.6, () => { doc.rect(X0, hy, hw, rh, { fill: { over: '#FDECEA', soon: '#FFF4E5' }[l.level] || '#F6F8FB' }); doc.rect(X0, hy, 1.2, rh, { fill: sh.strong }); });
-    doc.text(X0 + 3.6, hy + 3.6, P.fit(`${whereOf(l)} · ${l.band.short}`, 70, 7.4, 'B'), { size: 7.4, font: 'B', color: C.text });
-    doc.text(X0 + 3.6, hy + 7.1, P.fit(`${l.label} · échéance ${fmtDM(l.due)}`, 76, 6.2), { size: 6.2, color: C.muted });
+    doc.text(X0 + 3.6, hy + 3.3, P.fit(`${whereOf(l)} — ${l.label}${l.perso ? ' · PERSO' : ''}`, 76, 7.4, 'B'), { size: 7.4, font: 'B', color: C.text });
+    doc.text(X0 + 3.6, hy + 6.5, P.fit(`depuis ${l.depart.toLowerCase()} ${fmtDM(l.start)} · limite ${fmtDM(l.due)} · ${l.band.short}`, 76, 6.2), { size: 6.2, color: C.muted });
     doc.rect(X0 + 82, hy + 3.3, 30, 2.2, { fill: '#DFE4EC', r: 1.1 });
     if (l.pct > 0) doc.rect(X0 + 82, hy + 3.3, Math.max(2.2, 30 * Math.min(1, l.pct)), 2.2, { fill: C.ht[l.level].bar, r: 1.1 });
     doc.text(X0 + hw - 3, hy + 5.4, htWhen(l), { size: 8.4, font: 'B', color: HTW[l.level], align: 'right' });
     hy += rh + 1.2;
   }
-  if (syn.limits.length > shown.length) { const k = syn.limits.length - shown.length; doc.text(X0 + 1, hy + 2, `+ ${k} autre${k > 1 ? 's' : ''} (voir le détail)`, { size: 6.6, color: C.muted }); }
+  if (syn.limits.length > shown.length) { const k = syn.limits.length - shown.length; doc.text(X0 + 1, Math.min(hy + 2, 201.2), `+ ${k} autre${k > 1 ? 's' : ''} holding time${k > 1 ? 's' : ''} en cours (voir les cartes et le détail)`, { size: 6.6, color: C.muted }); }
   const sx = X0 + hw + 6, sw = X1 - sx;
   doc.text(sx, y + 3, 'AU FRIGO', { size: 7.6, font: 'B', color: C.navy });
   let fy = y + 5.2;
@@ -6249,7 +6289,8 @@ function pdfDrawCard(doc, md, lay, x, y, w, hh, nav) {
         doc.rect(ix + 2, ly + 0.9, 13, 1.7, { fill: '#E1E6EE', r: 0.85 });
         if (l.pct > 0) doc.rect(ix + 2, ly + 0.9, Math.max(1.7, 13 * Math.min(1, l.pct)), 1.7, { fill: c.bar, r: 0.85 });
         let tx = ix + 17;
-        tx += doc.text(tx, ly + 2.7, l.label, { size: 6, color: C.muted }) + 1.2;
+        const lmax = dw - 17 - P.width(l.due, 7, 'B') - P.width(l.rest, 6.6, 'B') - 6;
+        tx += doc.text(tx, ly + 2.7, P.fit(l.label, lmax, 6), { size: 6, color: C.muted }) + 1.2;
         doc.text(tx, ly + 2.8, l.due, { size: 7, font: 'B', color: C.text });
         doc.text(ix + dw - 1.6, ly + 2.8, l.rest, { size: 6.6, font: 'B', color: c.fg, align: 'right' });
       });
@@ -7011,7 +7052,7 @@ function init() {
   if (problem) toast('Les données enregistrées étaient illisibles : rapport vierge.', { tone: 'warn', timeout: 8000 });
 }
 /* Accès pour le dépannage et les tests (fonctions pures : shifts, dates, noms de fichiers, dossiers mensuels, mail, PDF) */
-const test = Object.freeze({ autoShift, shiftStart, reportDate, fileBase, monthFolder, parseMonthFolder, monthDir, buildMail: (pdf) => buildMail(state.report, state.author, new Date(), pdf),
+const test = Object.freeze({ htList: (o) => htList(state.report, new Date(), o), autoShift, shiftStart, reportDate, fileBase, monthFolder, parseMonthFolder, monthDir, buildMail: (pdf) => buildMail(state.report, state.author, new Date(), pdf),
   renderPdf: () => renderPdf(state.report, liveOpts()), lineStatuses: () => lineStatuses(state.report, new Date()), changes: () => currentChanges().items.map(changeText) });
 return { init, show, hide, onKey, print: () => exportPdf(), beforePrint, afterPrint, menuItems, summary, updateUndoUI, mailSettings, setMailSettings, closeShift, test, get author() { return state.author; } };
 })();
@@ -9023,11 +9064,16 @@ const ParamsView = (() => {
     const add = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, disabled: !free.length, title: free.length ? null : 'Tous les produits de la ligne ont déjà une règle' },
       icon('plus'), 'Ajouter un produit');
     add.addEventListener('click', () => update(p => { p.rapport.ht[t.id].rows.push({ p: free[0], h: tb.def, none: false }); }, null, `${pre}-r${tb.rows.length}-p`));
+    const nom = textInput({ id: `${pre}-nom`, value: Params.htName(t.id), label: `${t.title} — nom affiché`, maxLength: 40, cls: 'pm-htname', onCommit: v => {
+      if (!v) return 'Le nom affiché ne peut pas être vide.';
+      update(p => { p.rapport.htNames = { ...(p.rapport.htNames || {}), [t.id]: v }; }, null, `${pre}-nom`); toast(`Nom affiché : « ${v} »`); return null;
+    } });
     return h('article', { class: 'pm-card', 'data-line': t.line, id: pre },
       h('header', { class: 'pm-card__head' },
         h('span', { class: 'pm-card__eyebrow' }, lineDot(t.line), `${LINE[t.line].name} · ${t.band}`),
         h('h4', { class: 'pm-card__title', text: t.title }),
-        h('span', { class: 'pm-card__sub', text: `À partir du champ « ${t.field} »` })),
+        h('span', { class: 'pm-card__sub', text: `À partir du champ « ${t.field} »` }),
+        h('label', { class: 'pm-htname-l', for: `${pre}-nom` }, h('span', { text: 'Nom affiché' }), nom)),
       rows, h('div', { class: 'pm-card__foot' }, add));
   }
   function customDialog(existing) {
