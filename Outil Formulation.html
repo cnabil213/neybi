@@ -1107,6 +1107,9 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .dtile__ht .ht__bar{height:.3125rem}
 .mod-rapport .dtile__none{font-size:.8125rem;color:var(--muted)}
 .mod-rapport .perso{display:inline-block;padding:0 .375rem;border-radius:999px;background:#E9E3FF;color:#4A2DB5;font-size:.625rem;font-weight:800;letter-spacing:.06em;vertical-align:middle;margin-left:.375rem}
+.mod-rapport .kg{position:relative}
+.mod-rapport .kg .input--kg{padding-right:2.75rem;font-variant-numeric:tabular-nums}
+.mod-rapport .kg-unit{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font-size:.875rem;font-weight:700;color:var(--muted);pointer-events:none}
 /* =========================================================================
    Vue d'impression (rendu dédié, généré depuis l'état)
    ========================================================================= */
@@ -3926,6 +3929,14 @@ const SHIFT_DEFS = [
   { name: 'Week-end PM', start: 22, hours: 12 },
 ];
 const SHIFTS = SHIFT_DEFS.map(s => s.name);
+/** Poids en kilogrammes (W3, Poids formulé) : « 118 », « 118kg », « 118 KG » → « 118 kg » ; « 12.45 » → « 12,45 kg » (virgule belge) ;
+    un texte qui n'est pas un nombre est gardé tel quel (anciennes saisies). */
+const KG_RE = /^(\d+(?:[.,]\d+)?)\s*(?:kg)?$/i;
+function normKg(v) {
+  const t = String(v ?? '').trim();
+  const m = KG_RE.exec(t);
+  return m ? `${m[1].replace('.', ',')} kg` : t;
+}
 const shiftDef = name => SHIFT_DEFS.find(s => s.name === name) || null;
 /** Shift en cours d'après l'horloge du PC. */
 function autoShift(d) {
@@ -4036,7 +4047,7 @@ const SCHEMA = {
       F.dt('debutFiltration', 'Début filtration', { print: 'Début filtr.', limit: { label: 'Limite HT', variable: true, table: 'gronEnCours', hours: htOf('gronEnCours', 'groninger') } }),
       F.st('connexion', 'Connexion', 'ETAT4'),
       F.st('vdl', 'VDL', 'ETAT4'),
-      F.tx('w3', 'W3', { placeholder: 'Texte libre' }),
+      F.tx('w3', 'W3', { unit: 'kg', placeholder: 'ex. 118' }),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH_GRON_ENCOURS'),
       F.notes(),
@@ -4046,7 +4057,7 @@ const SCHEMA = {
       F.st('statutLocal', 'Statut local', 'LOCAL_STATUT'),
       F.st('monitoring', 'Monitoring', 'MONITORING', { when: onlyForRule('monitoring', 'inova5') }),
       F.st('connexion', 'Connexion', 'ETAT4'),
-      F.tx('poidsFormule', 'Poids formulé', { placeholder: 'ex. 12,45 kg' }),
+      F.tx('poidsFormule', 'Poids formulé', { unit: 'kg', placeholder: 'ex. 12,45' }),
       F.st('vdl', 'VDL', 'ETAT4'),
       F.st('filtres', 'Filtres', 'ETAT4'),
       F.st('echantillon', 'Échantillon', 'ECH'),
@@ -4188,7 +4199,7 @@ function normField(f, lineId, v) {
     case 'datetime': return normDateTime(v);
     case 'lot': return str(v, 40).toUpperCase().trim();
     case 'textarea': return str(v, 5000);
-    default: return str(v, 200);
+    default: return f.unit === 'kg' ? normKg(str(v, 200)) : str(v, 200);
   }
 }
 const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -4816,6 +4827,21 @@ function textCtl({ id, get, set, upper = false, mono = false, placeholder, maxle
   });
   return { el: input, sync() { const v = get() ?? ''; if (input.value !== v) input.value = v; } };
 }
+/** Champ poids : nombre saisi, suffixe « kg » affiché dans le champ, valeur enregistrée « 118 kg » (normalisée à la sortie). */
+function kgCtl({ id, get, set, placeholder }) {
+  const input = h('input', { type: 'text', class: 'input input--kg', id, placeholder, maxlength: 60, autocomplete: 'off', inputmode: 'decimal' });
+  const unit = h('span', { class: 'kg-unit', 'aria-hidden': 'true', text: 'kg' });
+  const view = v => { const m = KG_RE.exec(String(v || '').trim()); return m ? m[1].replace('.', ',') : String(v || ''); };
+  input.addEventListener('input', () => { const raw = input.value; set(KG_RE.test(raw.trim()) ? normKg(raw) : raw); });
+  input.addEventListener('blur', () => { const n = normKg(get()); if (n !== (get() || '')) set(n); sync(); });
+  function sync() {
+    const v = get() || '';
+    const numeric = !v || KG_RE.test(v.trim());
+    unit.hidden = !numeric;
+    if (document.activeElement !== input && input.value !== view(v)) input.value = view(v);
+  }
+  return { el: h('div', { class: 'kg' }, input, unit), sync };
+}
 const FIELD_SIZING = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('field-sizing', 'content');
 function autogrow(ta) {
   if (FIELD_SIZING || !ta.offsetParent) return;
@@ -4884,7 +4910,8 @@ function buildCardField(f, line, get, set, id, band) {
       : toneSelect({ id, list: f.list, steps: SEQUENCES.has(f.list), get: val, set: v => set(f.key, v) }); break;
     case 'datetime': ctl = dateTimeCtl({ id, get: val, set: v => set(f.key, v) }); break;
     case 'textarea': ctl = textareaCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: 'Remarques, consignes pour l’équipe suivante…', rows: 2 }); break;
-    default: ctl = textCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: f.placeholder, maxlength: 120 });
+    default: ctl = f.unit === 'kg' ? kgCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: f.placeholder })
+      : textCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: f.placeholder, maxlength: 120 });
   }
   const note = h('div', { class: 'na-note', hidden: true });
   const box = h('div', { class: 'field__box' }, ctl.el, note);
@@ -5585,7 +5612,7 @@ function detailModel(b, l, c, at) {
       else steps.push({ kind: 'date', r: rank(f.key, i), label, value: fmtDM(d), tone: 'neutral' });
       return;
     }
-    if ((v || '').trim()) steps.push({ kind: 'text', r: rank(f.key, i), label, value: v.trim(), tone: 'neutral' });
+    if ((v || '').trim()) steps.push({ kind: 'text', r: rank(f.key, i), label, value: f.unit === 'kg' ? normKg(v) : v.trim(), tone: 'neutral' });
   });
   steps.sort((x, y) => x.r - y.r);
   return { steps, st: steps, dates, texts: [], notes, rest: '' };
