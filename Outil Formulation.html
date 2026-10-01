@@ -2081,7 +2081,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .rs-vs__em{font-style:normal;color:var(--rs-mut)}
 .mod-rapport .rs-vs li.is-now{padding-bottom:.375rem;font-size:.875rem;font-weight:700;color:var(--lk)}
 .mod-rapport .rs-vs li.is-now::before{top:1.0625rem}
-.mod-rapport .rs-vs li.is-now>i{left:-.0625rem;top:.15625rem;width:.9375rem;height:.9375rem;border-color:var(--lc);background:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb,var(--lc) 24%,transparent)}
+.mod-rapport .rs-vs li.is-now>i{left:-.0625rem;top:.15625rem;width:.9375rem;height:.9375rem;border-color:var(--lk);background:var(--lk);box-shadow:0 0 0 3px color-mix(in srgb,var(--lk) 24%,transparent)}
 .mod-rapport .rs-vs__man{font-size:.6875rem;font-weight:600;color:var(--rs-mut)}
 .mod-rapport .rs-vs__d{display:flex;flex-wrap:wrap;align-items:center;gap:.1875rem .25rem;margin-top:.1875rem;font-size:.75rem;font-weight:500;color:var(--rs-mut)}
 .mod-rapport .rs-vs li.is-ok .rs-vs__d,.mod-rapport .rs-vs li.is-todo .rs-vs__d{margin-top:.125rem}
@@ -2102,8 +2102,10 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .rs-ech__h{display:inline-flex;align-items:center;gap:.375rem;margin:0;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
 .mod-rapport .rs-ech__h .icon{width:1rem;height:1rem}
 .mod-rapport .rs-ech__h span{font-weight:700}
-.mod-rapport .rs-ech__l{display:flex;flex:1;flex-wrap:wrap;gap:.375rem 1.25rem;margin:0;padding:0;list-style:none;min-width:0}
+.mod-rapport .rs-ech__l{display:flex;flex:1 1 16rem;flex-wrap:wrap;gap:.375rem 1.25rem;margin:0;padding:0;list-style:none;min-width:0}
 .mod-rapport .rs-ech__i{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;font-size:.8125rem}
+.mod-rapport .rs-ech__i{min-width:0;max-width:100%}
+.mod-rapport .rs-ech__i .rs-mt{white-space:normal}
 .mod-rapport .rs-ech__i .rs-pill{font-size:.6875rem}
 .mod-rapport .rs-ech__done{min-height:2rem}
 .mod-rapport .pvs .rs-ech{margin-top:0}
@@ -2118,7 +2120,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .fs-dot{position:absolute;left:0;top:.3125rem;box-sizing:border-box;width:1rem;height:1rem;border-radius:50%;border:2px solid var(--fs-todoDot);background:var(--surface)}
 .mod-rapport .fs-step.is-ok .fs-dot{border-color:var(--fs-okDot);background:var(--fs-okDot)}
 .mod-rapport .fs-step.is-ok .fs-dot::after{content:"";position:absolute;left:.25rem;top:.0938rem;width:.1875rem;height:.4375rem;border:solid #FFFFFF;border-width:0 2px 2px 0;transform:rotate(45deg)}
-.mod-rapport .fs-step.is-now .fs-dot{left:-.0625rem;top:.25rem;width:1.125rem;height:1.125rem;border-color:var(--lc);background:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb,var(--lc) 24%,transparent)}
+.mod-rapport .fs-step.is-now .fs-dot{left:-.0625rem;top:.25rem;width:1.125rem;height:1.125rem;border-color:var(--lk);background:var(--lk);box-shadow:0 0 0 3px color-mix(in srgb,var(--lk) 24%,transparent)}
 .mod-rapport .fs-head{display:flex;align-items:flex-start;gap:.5rem;min-width:0}
 .mod-rapport .fs-tog{display:flex;flex:1;flex-wrap:nowrap;align-items:baseline;gap:.125rem .5rem;min-width:0;min-height:1.625rem;margin:0;padding:.125rem .25rem;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;text-align:left;cursor:pointer}
 .mod-rapport .fs-tog:disabled{cursor:default;color:inherit}
@@ -2145,7 +2147,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .fs-notes{padding-top:.75rem;border-top:1px solid var(--border)}
 .mod-rapport .fs-manual{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;margin:0;padding:.375rem .625rem;border-radius:8px;background:var(--tint);font-size:.8125rem;color:var(--text)}
 .mod-rapport .fs-manual[hidden]{display:none}
-.mod-rapport .linefilter__all{flex:none}
+.mod-rapport .linefilter__all{flex:none;margin-left:auto;align-self:center}
 .mod-rapport .linefilter__all[aria-pressed="true"]{background:var(--t--nn-navy, var(--nn-navy));border-color:var(--t--nn-navy, var(--nn-navy));color:#FFFFFF}
 /* holding time de la saisie : « ✓ Fait », arrêté (respecté / dépassé), « Rouvrir » */
 .mod-rapport .derived__done{margin-left:auto;min-height:1.875rem;padding:.125rem .625rem}
@@ -2157,7 +2159,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .adv-open{margin:.25rem 0;padding:.5rem .75rem;border-radius:10px;background:var(--wip-bg);color:var(--wip-fg)}
 .mod-rapport .adv-open__t{display:flex;align-items:center;gap:.375rem;margin:0 0 .25rem;font-weight:700}
 .mod-rapport .adv-open ul{margin:0;padding-left:1.375rem}
-.mod-rapport .adv-ech{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem}
+.mod-rapport .adv-ech .icon{width:1rem;height:1rem;margin-right:.375rem;vertical-align:-.15em}
 @media (max-width:559.98px){
   .mod-rapport .fs-step{padding-left:1.375rem}
   .mod-rapport .rs-ech__l{flex-direction:column}
@@ -5678,7 +5680,8 @@ function buildLineFilter() {
     for (const v of views) if (v.card) v.sync();
     autogrowIn($('#bands'));
   });
-  root.append(h('div', { class: 'linefilter__in' }, h('span', { class: 'field__label linefilter__lbl', text: 'Afficher' }), pg.el, allBtn));
+  root.append(h('div', { class: 'linefilter__in' }, h('span', { class: 'field__label linefilter__lbl', text: 'Afficher' }), pg.el));
+  $('#rp-detail').append(allBtn);
   pg.sync();
   syncLineFilter = () => pg.sync();
   apply();
@@ -6737,10 +6740,13 @@ function rsLotLayout(m, col, w, maxH = 999) {
   /* compact : étapes voisines faites (ou à venir) sans rien à montrer regroupées sur une ligne « Cuves › Pesée › Formulation » */
   const vsRows = [];
   for (const st of m.empty ? [] : m.vs) {
-    const plain = st.state !== 'now' && !st.items.length && !st.when;
+    /* étapes faites : regroupées avec leur heure et leurs valeurs entre parenthèses ; à venir : regroupées si rien à montrer */
+    const okEm = st.state === 'ok' ? [st.when, ...st.items.filter(x => x.kind !== 'status').map(x => `${x.label} ${x.value}`)].filter(Boolean).join(' · ') : '';
+    const plain = st.state === 'ok' ? !st.items.some(x => x.kind === 'status') : st.state === 'todo' && !st.items.length;
+    const nom = okEm ? `${st.nom} (${okEm})` : st.nom;
     const last = vsRows[vsRows.length - 1];
-    if (plain && last && last.plain && last.state === st.state) { last.nom += ' › ' + st.nom; continue; }
-    vsRows.push({ ...st, plain });
+    if (plain && last && last.plain && last.state === st.state) { last.nom += ' › ' + nom; continue; }
+    vsRows.push(plain && st.state === 'ok' ? { ...st, nom, items: [], when: '', plain } : { ...st, plain });
   }
   for (const st of vsRows) {
     const now = st.state === 'now', ok = st.state === 'ok';
@@ -6805,12 +6811,17 @@ function rsLotLayout(m, col, w, maxH = 999) {
     if (ht.stopped) {
       /* v5 : holding time arrêté : bandeau vert « Respecté · fait à … » ou rouge « Dépassé de … » */
       const okH = ht.respected, rt = okH ? 'Respecté' : `+${fmtDur(ht.remaining)}`, rw = P.width(rt, 8.6, 'B');
-      const name = P.fit(htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : ''), iw - rw - 6, 7.6, 'B');
-      units.push({ h: 9.2, draw: (doc, ix, oy) => {
-        doc.rect(ix, oy + 0.5, iw, 8.2, { fill: okH ? RS.grnT : RS.redT, r: 1.6 });
-        doc.text(ix + 1.8, oy + 3.9, name, { size: 7.6, font: 'B', color: RS.ink });
-        doc.text(ix + 1.8, oy + 7.3, P.fit(ht.rest, iw - 4, 6.6), { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX });
-        doc.text(ix + iw - 1.8, oy + 5.6, rt, { size: 8.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' });
+      const nm0 = htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : '');
+      const restW = P.width(ht.rest, 6.6, 'B'), nmW = P.width(nm0, 7.6, 'B');
+      const one = nmW + restW + 6 <= iw; /* une seule ligne quand la place le permet (compact) */
+      const name = P.fit(nm0, one ? nmW + 1 : iw - rw - 6, 7.6, 'B');
+      const bh = one ? 5 : 7.8;
+      units.push({ h: bh + 1, draw: (doc, ix, oy) => {
+        doc.rect(ix, oy + 0.5, iw, bh, { fill: okH ? RS.grnT : RS.redT, r: 1.6 });
+        doc.text(ix + 1.8, oy + 3.85, name, { size: 7.6, font: 'B', color: RS.ink });
+        if (one) { doc.text(ix + iw - 1.8, oy + 3.8, ht.rest, { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' }); return; }
+        doc.text(ix + 1.8, oy + 7, P.fit(ht.rest, iw - 4, 6.6), { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX });
+        doc.text(ix + iw - 1.8, oy + 5.2, rt, { size: 8.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' });
       } });
       continue;
     }
