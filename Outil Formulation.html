@@ -1346,6 +1346,31 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .pvs-kpi.kpi--red{background:#FDE7E5;box-shadow:inset 1.6mm 0 0 #E5352B} .mod-rapport .pvs-kpi.kpi--red .pvs-kpi__n{color:#B3261E}
 .mod-rapport .pvs-kpi.kpi--orange{background:#FFF0D9;box-shadow:inset 1.6mm 0 0 #F29900} .mod-rapport .pvs-kpi.kpi--orange .pvs-kpi__n{color:#8A4B00}
 .mod-rapport .pvs-kpi.kpi--green{background:#E3F4E8;box-shadow:inset 1.6mm 0 0 #22A653} .mod-rapport .pvs-kpi.kpi--green .pvs-kpi__n{color:#0E6128}
+.mod-rapport .pvs-verdict{display:flex;align-items:flex-start;gap:4mm;padding:3mm 4mm;border:.25mm solid #E1E6EE;border-radius:2.6mm}
+.mod-rapport .pvs-verdict__ico{display:grid;place-items:center;flex:none;width:12mm;height:12mm;border-radius:50%;border:.8mm solid currentColor}
+.mod-rapport .pvs-verdict__ico .icon{width:6mm;height:6mm}
+.mod-rapport .pvs-verdict.verdict--red .pvs-verdict__ico{color:#D93025;background:#FDECEA} .mod-rapport .pvs-verdict.verdict--orange .pvs-verdict__ico{color:#E08600;background:#FFF3E0} .mod-rapport .pvs-verdict.verdict--green .pvs-verdict__ico{color:#1E9E4A;background:#E7F6EC}
+.mod-rapport .pvs-verdict__w{font-size:17pt;font-weight:800;line-height:1.1}
+.mod-rapport .pvs-verdict.verdict--red .pvs-verdict__w{color:#B3261E} .mod-rapport .pvs-verdict.verdict--orange .pvs-verdict__w{color:#8A4B00} .mod-rapport .pvs-verdict.verdict--green .pvs-verdict__w{color:#0E6128}
+.mod-rapport .pvs-verdict__s{margin-top:1mm;font-size:9.4pt;line-height:1.4;color:#2B3552}
+.mod-rapport .pvs-kpis{grid-template-columns:repeat(4,minmax(0,1fr));gap:3mm}
+.mod-rapport .pvs-kpi{flex-direction:column;align-items:flex-start;justify-content:center;gap:.4mm;height:auto;padding:2mm 4mm;background:#fff !important;box-shadow:inset 0 0 0 .25mm #E1E6EE !important;border-radius:2.2mm}
+.mod-rapport .pvs-kpi .kpi__l{font-size:7pt;font-weight:700;color:var(--muted)}
+.mod-rapport .pvs-kpi .kpi__n{font-size:20pt;font-weight:800;line-height:1}
+.mod-rapport .pvs-kpi .kpi__n small{font-size:9pt}
+.mod-rapport .pvs-kpi .kpi__s{font-size:7pt;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.mod-rapport .pvs-kpi.kpi--grey .kpi__n{color:#A9B0C0} .mod-rapport .pvs-kpi.kpi--green .kpi__n{color:#0E6128} .mod-rapport .pvs-kpi.kpi--red .kpi__n{color:#C8231A} .mod-rapport .pvs-kpi.kpi--blue .kpi__n{color:#1F5FD1}
+.mod-rapport .pvs-kpi.kpi--red{background:#FFF8F7 !important;box-shadow:inset 0 0 0 .25mm #F5C2BD !important}
+.mod-rapport .pvs-dash{zoom:.6;gap:6mm}
+.mod-rapport .pvs-dash .dtile{box-shadow:none;cursor:default}
+.mod-rapport .pvs-htr{grid-template-columns:minmax(0,1fr) 30mm 40mm;min-height:8.6mm}
+.mod-rapport .pvs-htr__w{text-align:right;font-size:8.4pt}
+.mod-rapport .pvs-htr.ht--over .pvs-htr__w{color:#B3261E} .mod-rapport .pvs-htr.ht--soon .pvs-htr__w{color:#A24E00} .mod-rapport .pvs-htr.ht--mid .pvs-htr__w{color:#7A5800} .mod-rapport .pvs-htr.ht--ok .pvs-htr__w{color:#0E6128}
+.mod-rapport .pvs-row{grid-template-columns:150mm minmax(0,1fr)}
+.mod-rapport .pvs-fr{display:flex;align-items:center;gap:1.4mm;padding:1mm 2mm;border-radius:1.4mm;background:var(--cold-bg);color:var(--cold-fg);font-size:7.4pt}
+.mod-rapport .pvs-mbox:nth-child(2){background:var(--bg)} .mod-rapport .pvs-mbox:nth-child(2) dt{color:var(--muted)} .mod-rapport .pvs-mbox:nth-child(2) dd{color:var(--text)}
+.mod-rapport .pvs-title{text-transform:none;letter-spacing:0}
+.mod-rapport .pvs-head{border-bottom:.3mm solid var(--border)}
 /* =========================================================================
    3 bis. Onglet « Paramètres » (préfixe .mod-params)
    ========================================================================= */
@@ -5541,7 +5566,7 @@ const HT_PRINT_MAX = 6, CHG_PRINT_MAX = 5, PIN_PRINT_MAX = 2;
 function buildSynth(m) {
   const syn = m.syn;
   const pins = syn.pins.slice(0, PIN_PRINT_MAX), morePins = syn.pins.length - pins.length;
-  const lims = syn.limits.slice(0, 4), moreLims = syn.limits.length - lims.length;
+  const lims = syn.limits.slice(0, 3), moreLims = syn.limits.length - lims.length;
   const chg = m.changes.slice(0, CHG_PRINT_MAX), moreChg = m.changes.length - chg.length;
   const box = (k, v) => h('div', { class: 'pvs-mbox' }, h('dt', { text: k }), h('dd', { text: v }));
   return h('section', { class: 'pv pvs' },
@@ -6638,6 +6663,8 @@ async function closeShift() {
       rows.pdf.extra.replaceChildren(h('span', { class: 'cs-path' }, icon('folder', 'icon icon--sm'), `${Disk.info().name || 'Dossier principal'} › ${pdf.folder} › ${pdf.file}`));
       parts.push(`PDF rangé dans ${pdf.folder}`);
     } else { set('pdf', 'fail', 'PDF non créé (annulé).'); parts.push('PDF non créé'); }
+    /* l'instantané du PDF (historique) est ajouté après l'enregistrement : il part aussi sur N: */
+    if (pdf && saved === true && Sauvegarde.status() === 'dirty') await Sauvegarde.save();
     set('mail', 'run', 'Ouverture du mail…');
     const name = pdf ? pdf.file : `${base}.pdf`;
     const opened = prepareMail(name, { quiet: true });
@@ -9037,7 +9064,8 @@ const ParamsView = (() => {
           if (existing) pp.rapport.custom = pp.rapport.custom.map(c => (c.id === existing.id ? item : c));
           else pp.rapport.custom.push(item);
         }, null, `pm-cu-${item.id}-edit`);
-        toast(existing ? `Holding time « ${n} » modifié` : `Holding time « ${n} » ajouté : champ « ${n} » dans ${x.lines.map(l => LINE[l].name).join(', ')}`);
+        const stl = item.start ? (Params.HT_STARTS.find(st => st.key === item.start) || { label: item.start }).label : '';
+        toast(existing ? `Holding time « ${n} » modifié` : item.start ? `Holding time « ${n} » ajouté : échéance sous « ${stl} » (${x.lines.map(l => LINE[l].name).join(', ')})` : `Holding time « ${n} » ajouté : champ « ${n} » dans ${x.lines.map(l => LINE[l].name).join(', ')}`);
         return true;
       } }],
       onOpen: () => nom.focus(),
