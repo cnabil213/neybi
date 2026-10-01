@@ -1148,6 +1148,59 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-params .pm-dir__actions{display:flex;flex-wrap:wrap;gap:.5rem}
 .mod-params .pm-src__actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 .mod-params .pm-src__actions .btn{white-space:normal;text-align:left;max-width:100%}
+/* v5 : parcours, fin des holding times, indicateur « modifié », rétablir par section */
+.mod-params .pm-mod{display:inline-flex;align-items:center;margin-left:.375rem;padding:.0625rem .5rem;border-radius:999px;background:var(--wip-bg);color:var(--wip-fg);font-size:.6875rem;font-weight:700;letter-spacing:.02em;text-transform:none}
+.mod-params .pm-dotmod{display:inline-block;width:.4375rem;height:.4375rem;margin-left:.375rem;border-radius:50%;background:var(--wip-dot, #D99A00);vertical-align:middle}
+.mod-params .pm-card__foot{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.mod-params .pm-item-reset{margin-left:auto}
+.mod-params .pm-fin{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .5rem;margin:.375rem .875rem 0;padding:.5rem .75rem;border:1px dashed var(--border-strong);border-radius:var(--radius-sm);background:var(--surface-2)}
+.mod-params .pm-fin__l{font-size:.8125rem;font-weight:700;color:var(--text)}
+.mod-params .pm-fin .select.select--sm{width:auto;max-width:100%}
+.mod-params .pm-fin__eq{font-weight:700;color:var(--muted)}
+.mod-params .pm-fin__hint{flex-basis:100%;margin:0}
+.mod-params .pm-form .pm-fin{margin:0}
+.mod-params .pm-pcbar{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;padding:.625rem .875rem 0}
+.mod-params .pm-pcbar .select.select--sm{width:auto}
+.mod-params .pm-pss{list-style:none;margin:0;padding:.625rem .875rem .25rem;display:flex;flex-direction:column}
+.mod-params .pm-ps{position:relative;padding:0 0 .625rem 1.625rem}
+.mod-params .pm-ps::before{content:"";position:absolute;left:.4375rem;top:1.5rem;bottom:0;width:2px;background:var(--border)}
+.mod-params .pm-ps.is-last{padding-bottom:0}
+.mod-params .pm-ps.is-last::before{display:none}
+.mod-params .pm-ps__dot{position:absolute;left:0;top:.6875rem;box-sizing:border-box;width:1rem;height:1rem;border-radius:50%;border:2px solid var(--line-strong);background:var(--b-ffffff, #FFFFFF)}
+.mod-params .pm-ps__row{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem .5rem}
+.mod-params .pm-ps__row .input{flex:1 1 12rem;width:auto;min-height:2.25rem;padding-block:.25rem;font-weight:700}
+.mod-params .pm-ps__lock{font-size:.75rem;color:var(--muted)}
+.mod-params .pm-ps__det{margin-top:.25rem}
+.mod-params .pm-ps__sum{display:flex;align-items:center;gap:.375rem;min-height:2rem;padding:.125rem .375rem;border-radius:6px;font-size:.8125rem;color:var(--muted);cursor:pointer;list-style:none}
+.mod-params .pm-ps__sum::-webkit-details-marker{display:none}
+.mod-params .pm-ps__sum:hover{background:var(--surface-2);color:var(--text)}
+.mod-params .pm-ps__sum:focus-visible{box-shadow:var(--focus)}
+.mod-params .pm-ps__chev{flex:none;width:.875rem;height:.875rem;transform:rotate(-90deg);transition:transform .15s}
+.mod-params .pm-ps__det[open] .pm-ps__chev{transform:none}
+.mod-params .pm-ps__body{display:flex;flex-direction:column;gap:.5rem;margin:.25rem 0 .25rem .375rem;padding:.625rem .75rem;border-left:3px solid var(--line-soft);background:var(--surface-2);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.mod-params .pm-ps__f{display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:.375rem .625rem;align-items:start}
+.mod-params .pm-ps__l{padding-top:.4375rem;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.mod-params .pm-toks,.mod-params .pm-conds{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;min-width:0}
+.mod-params .pm-conds{flex-direction:column;align-items:flex-start}
+.mod-params .pm-tok{display:inline-flex;align-items:center;gap:.125rem;min-height:2rem;padding:0 .125rem 0 .625rem;border:1px solid var(--border-strong);border-radius:999px;background:var(--b-ffffff, #FFFFFF);color:var(--text);font-size:.8125rem;font-weight:600}
+.mod-params .pm-tok__x{display:grid;place-items:center;width:1.75rem;height:1.75rem;border:0;border-radius:50%;background:transparent;color:var(--muted);cursor:pointer}
+.mod-params .pm-tok__x:hover{background:var(--b-fbe9e7, #FBE9E7);color:var(--t-b3261e, #B3261E)}
+.mod-params .pm-tok__x:focus-visible{box-shadow:var(--focus)}
+.mod-params .pm-tok__x .icon{width:.875rem;height:.875rem}
+.mod-params .select.select--sm.pm-addsel{width:auto;max-width:100%}
+.mod-params .pm-cond{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;max-width:100%}
+.mod-params .pm-cond .select.select--sm{width:auto;max-width:100%}
+.mod-params .pm-cond .pm-chip{min-height:2rem;font-size:.8125rem}
+.mod-params .pm-pc__rest{margin:0 .875rem}
+.mod-params .pm-vdl{display:flex;flex-direction:column;gap:.375rem;margin:0 .875rem .875rem;padding:.625rem .75rem;border-radius:var(--radius-sm);background:var(--line-faint)}
+.mod-params .pm-vdl .pm-ps__l{padding:0}
+.mod-params .pm-vdl .pm-hint{margin:0}
+.mod-params .pm-sec__reset{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;padding-top:.75rem;border-top:1px solid var(--border)}
+@media (max-width:559.98px){
+  .mod-params .pm-ps__f{grid-template-columns:minmax(0,1fr)}
+  .mod-params .pm-ps__l{padding-top:0}
+  .mod-params .pm-fin,.mod-params .pm-pcbar,.mod-params .pm-pss{margin-inline:.5rem;padding-inline:.5rem}
+}
 /* sections repliables */
 .mod-params .pm-sections{display:flex;flex-direction:column;gap:.75rem}
 .mod-params .pm-sec{background:var(--b-ffffff, #FFFFFF);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0}
@@ -2067,22 +2120,20 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .fs-step.is-ok .fs-dot::after{content:"";position:absolute;left:.25rem;top:.0938rem;width:.1875rem;height:.4375rem;border:solid #FFFFFF;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .mod-rapport .fs-step.is-now .fs-dot{left:-.0625rem;top:.25rem;width:1.125rem;height:1.125rem;border-color:var(--lc);background:var(--lc);box-shadow:0 0 0 3px color-mix(in srgb,var(--lc) 24%,transparent)}
 .mod-rapport .fs-head{display:flex;align-items:flex-start;gap:.5rem;min-width:0}
-.mod-rapport .fs-tog{display:flex;flex:1;flex-wrap:wrap;align-items:baseline;gap:.125rem .5rem;min-width:0;min-height:1.625rem;margin:0;padding:.125rem .25rem;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;text-align:left;cursor:pointer}
+.mod-rapport .fs-tog{display:flex;flex:1;flex-wrap:nowrap;align-items:baseline;gap:.125rem .5rem;min-width:0;min-height:1.625rem;margin:0;padding:.125rem .25rem;border:0;border-radius:6px;background:transparent;color:var(--text);font:inherit;text-align:left;cursor:pointer}
 .mod-rapport .fs-tog:disabled{cursor:default;color:inherit}
 .mod-rapport .fs-tog:not(:disabled):hover{background:var(--tint)}
 .mod-rapport .fs-tog:focus-visible{outline:3px solid var(--nn-blue);outline-offset:1px}
-.mod-rapport .fs-name{font-size:.875rem;font-weight:700;letter-spacing:.005em}
-.mod-rapport .fs-step.is-now .fs-name{font-size:1rem;color:var(--lk)}
+.mod-rapport .fs-name{flex:none;max-width:100%;font-size:.875rem;font-weight:700;letter-spacing:.005em}
+.mod-rapport .fs-step.is-now .fs-name{font-size:1rem;color:color-mix(in srgb,var(--lk) 80%,var(--text))}
 .mod-rapport .fs-step.is-todo .fs-name{color:var(--muted)}
 .mod-rapport .fs-step.is-todo .fs-tog:disabled .fs-name{color:var(--muted)}
 .mod-rapport .fs-sum{flex:1 1 8rem;min-width:0;font-size:.8125rem;color:var(--muted);overflow-wrap:anywhere}
 .mod-rapport .fs-chev{align-self:center;flex:none;width:1rem;height:1rem;margin-left:auto;color:var(--muted);transition:transform .15s var(--ease)}
 .mod-rapport .fs-step:not(.is-closed) .fs-chev{transform:rotate(180deg)}
-.mod-rapport .fs-here{flex:none;min-height:1.625rem;margin-top:.0625rem;padding:.125rem .5rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted);font:inherit;font-size:.75rem;font-weight:600;cursor:pointer;opacity:0;transition:opacity .12s}
-.mod-rapport .fs-step:hover .fs-here,.mod-rapport .fs-here:focus-visible{opacity:1}
+.mod-rapport .fs-here{flex:none;min-height:1.625rem;margin-top:.0625rem;padding:.125rem .5rem;border:1px solid var(--border);border-radius:999px;background:var(--surface);color:var(--muted);font:inherit;font-size:.75rem;font-weight:600;cursor:pointer}
 .mod-rapport .fs-here:hover{border-color:var(--lc);color:var(--text)}
 .mod-rapport .fs-here:focus-visible{outline:3px solid var(--nn-blue);outline-offset:1px}
-@media (hover:none){ .mod-rapport .fs-here{opacity:1} }
 .mod-rapport .fs-flds{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,21rem),1fr));gap:.875rem 1.25rem;margin-top:.5rem;min-width:0}
 .mod-rapport .fs-flds[hidden]{display:none}
 .mod-rapport .fs-go{grid-column:1/-1;justify-content:center;flex-wrap:wrap;width:100%;min-height:3rem;font-size:1rem;font-weight:700;border-radius:12px}
@@ -5535,7 +5586,7 @@ function buildCard(b, l) {
       const has = groups[i].length > 0 || (sp.id === 'vdl' && !!vdlGo);
       const tog = h('button', { type: 'button', class: 'fs-tog', id: `${fid}-t`, 'aria-controls': has ? flds.id : null, 'aria-expanded': has ? 'true' : null, disabled: has ? null : true },
         h('span', { class: 'fs-name', text: sp.nom }), h('span', { class: 'fs-state sr-only' }), sum, has ? icon('chevron', 'icon fs-chev') : null);
-      const here = h('button', { type: 'button', class: 'fs-here', id: `${fid}-here`, title: 'Le lot est à cette étape (l’emporte jusqu’au prochain changement de statut)', onclick: () => chooseStep(b, l, sp.id) }, 'Étape actuelle ?');
+      const here = h('button', { type: 'button', class: 'fs-here', id: `${fid}-here`, title: 'Le lot est à cette étape (l’emporte jusqu’au prochain changement de statut)', 'aria-label': `Placer le lot à l’étape ${sp.nom}`, onclick: () => chooseStep(b, l, sp.id) }, 'Placer ici');
       const li = h('li', { class: 'fs-step', 'data-step': sp.id }, h('i', { class: 'fs-dot', 'aria-hidden': 'true' }), h('div', { class: 'fs-head' }, tog, here), flds);
       tog.addEventListener('click', () => {
         const k = `${b.id}.${l.id}.${sp.id}.${li.dataset.state}`;
@@ -5559,7 +5610,7 @@ function buildCard(b, l) {
     const all = !!prefs.allSteps;
     items.forEach((x, i) => {
       const s = st.state(i);
-      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? s !== 'ok');
+      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? (s !== 'ok' || (st.allDone && i === st.cur)));
       x.li.dataset.state = s;
       x.li.className = `fs-step is-${s}${x.has && !open ? ' is-closed' : ''}${i === st.cur && st.manual ? ' is-manual' : ''}`;
       if (x.has) x.tog.setAttribute('aria-expanded', String(open));
@@ -6680,38 +6731,51 @@ function rsLotLayout(m, col, w, maxH = 999) {
     }
   } });
   /* en-tête de carte : titre + parcours vertical (étapes faites en vert, actuelle à la couleur de la machine avec ses statuts, à venir en gris) */
-  const TAG_H = 3.9, TAG_S = 6.6, IND = 4.6;
+  const TAG_H = 3.7, TAG_S = 6.5, IND = 4.6;
   const rows = [];
-  let y = m.empty ? 5.6 : 6.4;
-  if (!m.empty) for (const st of m.vs) {
+  let y = m.empty ? 5.6 : 6.1;
+  /* compact : étapes voisines faites (ou à venir) sans rien à montrer regroupées sur une ligne « Cuves › Pesée › Formulation » */
+  const vsRows = [];
+  for (const st of m.empty ? [] : m.vs) {
+    const plain = st.state !== 'now' && !st.items.length && !st.when;
+    const last = vsRows[vsRows.length - 1];
+    if (plain && last && last.plain && last.state === st.state) { last.nom += ' › ' + st.nom; continue; }
+    vsRows.push({ ...st, plain });
+  }
+  for (const st of vsRows) {
     const now = st.state === 'now', ok = st.state === 'ok';
-    const rowH = now ? 4.5 : 3.6;
+    const nsz0 = now ? 8.6 : 7.4;
+    st.lines = P.wrap(st.nom, iw - IND, nsz0, now ? 'B' : 'R');
+    const rowH = (now ? 4.1 : 3.25) * st.lines.length;
     const em = ok ? [st.when, ...st.items.filter(x => x.kind !== 'status').map(x => `${x.label} ${x.value}`)].filter(Boolean).join(' · ') : '';
     const tagItems = ok ? st.items.filter(x => x.kind === 'status') : st.items;
     const tags = [];
-    let tx = 0, ty = rowH + 0.3;
+    /* les étiquettes commencent sur la ligne du nom quand la place le permet (compact), puis passent à la ligne */
+    const lh1 = rowH / st.lines.length;
+    const nameW = P.width(st.lines[st.lines.length - 1], nsz0, now ? 'B' : 'R') + (em ? P.width(` · ${em}`, 6.8) : 0);
+    let tx = em ? iw : nameW + 1.8, ty = rowH - lh1 + (lh1 - TAG_H) / 2 - 0.15, inline = true;
     for (const it of tagItems) {
       const tw = Math.min(iw - IND, rsPillW(`${it.label}`, it.value, TAG_S, it.cold ? 'snow' : null));
-      if (tx && tx + tw > iw - IND) { tx = 0; ty += TAG_H + 0.7; }
+      if (tx && tx + tw > iw - IND) { tx = 0; ty = inline ? rowH + 0.3 : ty + TAG_H + 0.55; inline = false; }
       tags.push({ x: tx, y: ty, w: tw, it });
       tx += tw + 1;
     }
-    const h0 = rowH + (tags.length ? ty - rowH + TAG_H + 0.6 : 0.15);
-    rows.push({ st, y, rowH, h: h0, em, tags, now, ok });
+    const h0 = rowH + (tags.length && !inline ? ty - rowH + TAG_H + 0.6 : 0.15);
+    rows.push({ st, y, rowH, lh: rowH / st.lines.length, h: h0, em, tags, now, ok });
     y += h0;
   }
-  if (!m.empty) y += 1.4;
+  if (!m.empty) y += 1.1;
   const lh0 = lhUnit(false);
   const head = { h: y, draw: (doc, ix, oy) => {
     lh0.draw(doc, ix, oy);
     const dx = ix + 1.6;
     rows.forEach((r, k) => {
-      const cy = oy + r.y + r.rowH / 2 - 0.15;
+      const cy = oy + r.y + r.lh / 2 - 0.15;
       const nx = rows[k + 1];
-      if (nx) doc.line(dx, cy, dx, oy + nx.y + nx.rowH / 2 - 0.15, { color: r.ok ? '#16A34A' : RS.track, lw: 0.5 });
+      if (nx) doc.line(dx, cy, dx, oy + nx.y + nx.lh / 2 - 0.15, { color: r.ok ? '#16A34A' : RS.track, lw: 0.5 });
     });
     rows.forEach(r => {
-      const cy = oy + r.y + r.rowH / 2 - 0.15;
+      const cy = oy + r.y + r.lh / 2 - 0.15;
       if (r.ok) {
         doc.circle(dx, cy, 1.3, { fill: '#16A34A' });
         doc.poly([[dx - 0.6, cy + 0.05], [dx - 0.15, cy + 0.5], [dx + 0.65, cy - 0.45]], { stroke: '#FFFFFF', lw: 0.35, open: true });
@@ -6719,19 +6783,19 @@ function rsLotLayout(m, col, w, maxH = 999) {
         doc.circle(dx, cy, 2.05, { fill: col.sh.tint });
         doc.circle(dx, cy, 1.45, { fill: col.sh.head });
       } else doc.circle(dx, cy, 1.05, { fill: RS.card, stroke: '#B9C2D3', lw: 0.4 });
-      const nx0 = ix + IND, base = oy + r.y + r.rowH * 0.74;
+      const nx0 = ix + IND, base = oy + r.y + r.lh * 0.74;
       const nsz = r.now ? 8.6 : 7.4, nfont = r.now ? 'B' : 'R';
-      const nm = P.fit(r.st.nom, iw - IND, nsz, nfont);
-      const nw = doc.text(nx0, base, nm, { size: nsz, font: nfont, color: r.now ? col.sh.head : r.ok ? RS.ink : RS.soft });
-      if (r.em && iw - IND - nw > 8) doc.text(nx0 + nw, base, P.fit(` · ${r.em}`, iw - IND - nw, 6.8), { size: 6.8, color: RS.mut });
+      let nw = 0;
+      r.st.lines.forEach((t, j) => { nw = doc.text(nx0, base + j * r.lh, t, { size: nsz, font: nfont, color: r.now ? col.sh.head : r.ok ? RS.ink : RS.soft }); });
+      if (r.em && iw - IND - nw > 8) doc.text(nx0 + nw, base + (r.st.lines.length - 1) * r.lh, P.fit(` · ${r.em}`, iw - IND - nw, 6.8), { size: 6.8, color: RS.mut });
       for (const t of r.tags) {
         const py = oy + r.y + t.y, px = nx0 + t.x, it = t.it;
         const [bg, fg] = it.cold ? RS.pill.cold : it.kind === 'status' ? RS.pill[it.tone] || RS.pill.neutral : RS.pill.neutral;
         doc.rect(px, py, t.w, TAG_H, { fill: bg, r: TAG_H / 2 });
         let ttx = px + 2.1;
         if (it.cold) { pdfIcon(doc, 'snow', ttx + 1.3, py + TAG_H / 2, 2.6, fg); ttx += 3.4; }
-        ttx += doc.text(ttx, py + 2.75, it.label, { size: TAG_S, color: fg }) + 1.1;
-        doc.text(ttx, py + 2.75, P.fit(it.value, Math.max(3, t.w - (ttx - px) - 1.6), TAG_S, 'B'), { size: TAG_S, font: 'B', color: fg });
+        ttx += doc.text(ttx, py + 2.62, it.label, { size: TAG_S, color: fg }) + 1.1;
+        doc.text(ttx, py + 2.62, P.fit(it.value, Math.max(3, t.w - (ttx - px) - 1.6), TAG_S, 'B'), { size: TAG_S, font: 'B', color: fg });
       }
     });
   } };
@@ -7816,8 +7880,23 @@ function init() {
 }
 /* Accès pour le dépannage et les tests (fonctions pures : shifts, dates, noms de fichiers, dossiers mensuels, mail, PDF) */
 const test = Object.freeze({ htList: (o) => htList(state.report, new Date(), o), autoShift, shiftStart, reportDate, fileBase, monthFolder, parseMonthFolder, monthDir, buildMail: (pdf) => buildMail(state.report, state.author, new Date(), pdf),
-  renderPdf: () => renderPdf(state.report, liveOpts()), lineStatuses: () => lineStatuses(state.report, new Date()), changes: () => currentChanges().items.map(changeText) });
-return { init, show, hide, onKey, print: () => exportPdf(), beforePrint, afterPrint, menuItems, summary, updateUndoUI, mailSettings, setMailSettings, closeShift, test, get author() { return state.author; } };
+  renderPdf: () => renderPdf(state.report, liveOpts()), lineStatuses: () => lineStatuses(state.report, new Date()), changes: () => currentChanges().items.map(changeText),
+  /* v5 : parcours d'une carte, rapport courant */
+  parcours: (bandId, lineId) => { const st = parcoursState(bandById(bandId), LINES.find(l => l.id === lineId), state.report.bands[bandId][lineId]); return { steps: st.steps.map(x => x.nom), ids: st.steps.map(x => x.id), cur: st.cur, now: st.allDone ? null : st.steps[st.cur].nom, allDone: st.allDone, manual: st.manual, key: st.key }; },
+  report: () => clone(state.report), alerts: () => { const a = computeAlerts(state.report, new Date()); return { limits: a.limits.map(x => [x.id, x.line.id, x.band.id]), done: a.done.map(x => ({ id: x.id, line: x.line.id, band: x.band.id, respected: x.respected, rest: x.rest })) }; } });
+/** v5 : champs d'une machine (toutes bandes, ou celles demandées) pour l'onglet Paramètres : { key, label, type, values, bands }. */
+function fieldCatalog(lineId, bandIds = BANDS.map(b => b.id)) {
+  const out = new Map();
+  for (const b of BANDS.filter(x => bandIds.includes(x.id))) for (const f of fieldsFor(b, lineId)) {
+    if (['lot', 'product', 'textarea'].includes(f.type)) continue;
+    const label = String(typeof f.label === 'function' ? f.label({ produit: '' }) : f.label).replace(/\s*\(.*\)$/, '');
+    const x = out.get(f.key) || { key: f.key, label, type: f.type, values: f.type === 'status' ? LISTS[f.list].map(o => o.value).filter(v => v !== 'N/A') : [], bands: [] };
+    x.bands.push(b.id);
+    out.set(f.key, x);
+  }
+  return [...out.values()];
+}
+return { init, show, hide, onKey, print: () => exportPdf(), beforePrint, afterPrint, menuItems, summary, updateUndoUI, mailSettings, setMailSettings, closeShift, test, fieldCatalog, get author() { return state.author; } };
 })();
 
 /* #########################################################################
@@ -9794,6 +9873,8 @@ const ParamsView = (() => {
     for (const r of Params.RULES) if (r.line === lineId) p.rapport.rules[r.id] = p.rapport.rules[r.id].map(n => (n === from ? to : n));
     for (const t of Params.HT_TABLES) if (t.line === lineId) for (const row of p.rapport.ht[t.id].rows) if (row.p === from) row.p = to;
     for (const c of p.rapport.custom) if (c.lines.includes(lineId)) c.produits = c.produits.map(n => (n === from ? to : n));
+    const v = p.rapport.parcours[lineId].variants;
+    if (v[from]) { v[to] = v[from]; delete v[from]; if (pcSel[lineId] === from) pcSel[lineId] = to; }
   }
   const usedBy = (lineId, name) => {
     const p = P(), out = [];
@@ -9801,6 +9882,37 @@ const ParamsView = (() => {
     for (const t of Params.HT_TABLES) if (t.line === lineId && p.rapport.ht[t.id].rows.some(x => x.p === name)) out.push(t.title);
     return out;
   };
+
+  /* ---------- v5 : outils communs (fin d'un holding time, indicateur « modifié ») ---------- */
+  const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const modBadge = id => h('span', { class: 'pm-mod', id, title: 'Différent de la valeur par défaut' }, 'modifié');
+  const FIN_TYPES = [{ value: 'statut', label: 'Un statut prend une valeur' }, { value: 'date', label: 'Un champ date est rempli' }, { value: 'manuel', label: 'Manuel (bouton « ✓ Fait »)' }];
+  /** « S'arrête quand » : statut = valeur(s) de la même carte, champ date, ou manuel. */
+  function finCtl({ pre, fin, line, lines, bands, exclude = [], label, onChange }) {
+    const cat = (lines || [line]).flatMap(l => Rapport.fieldCatalog(l, bands)).filter((x, i, a) => a.findIndex(y => y.key === x.key) === i && !exclude.includes(x.key));
+    const st = cat.filter(x => x.type === 'status'), dt = cat.filter(x => x.type === 'datetime');
+    const type = h('select', { class: 'select select--sm', id: `${pre}-fin`, 'aria-label': `${label} — s’arrête quand` }, FIN_TYPES.map(o => { const e = h('option', { value: o.value, text: o.label }); e.selected = o.value === fin.type; if ((o.value === 'statut' && !st.length) || (o.value === 'date' && !dt.length)) e.disabled = true; return e; }));
+    type.addEventListener('change', () => {
+      const v = type.value;
+      if (v === 'manuel') onChange({ type: 'manuel', k: '', v: [] }, type.id);
+      else if (v === 'date') onChange({ type: 'date', k: dt[0].key, v: [] }, type.id);
+      else { const f = st.find(x => x.key === 'connexion') || st[0]; onChange({ type: 'statut', k: f.key, v: [f.values.includes('FAIT') ? 'FAIT' : f.values[f.values.length - 1]] }, type.id); }
+    });
+    const parts = [h('label', { class: 'pm-fin__l', for: type.id, text: 'S’arrête quand' }), type];
+    if (fin.type !== 'manuel') {
+      const list = fin.type === 'date' ? dt : st;
+      const kSel = h('select', { class: 'select select--sm', id: `${pre}-fin-k`, 'aria-label': `${label} — champ de fin` }, list.map(x => { const e = h('option', { value: x.key, text: x.label }); e.selected = x.key === fin.k; return e; }));
+      kSel.addEventListener('change', () => { const f = list.find(x => x.key === kSel.value); onChange(fin.type === 'date' ? { type: 'date', k: f.key, v: [] } : { type: 'statut', k: f.key, v: [f.values.includes('FAIT') ? 'FAIT' : f.values[0]] }, kSel.id); });
+      parts.push(kSel);
+      if (fin.type === 'statut') {
+        const f = st.find(x => x.key === fin.k);
+        if (f) parts.push(h('span', { class: 'pm-fin__eq', 'aria-hidden': 'true', text: '=' }), chips({ id: `${pre}-fin-v`, label: `${label} — valeurs de fin`, items: f.values.map(v => ({ value: v, label: v })), selected: fin.v,
+          onToggle: (v, on, cid) => { const vs = on ? [...new Set([...fin.v, v])] : fin.v.filter(x => x !== v); if (!vs.length) { warn('Gardez au moins une valeur (ou choisissez « Manuel »).'); render(); return; } onChange({ ...fin, v: vs }, cid); } }));
+      }
+    }
+    return h('div', { class: 'pm-fin' }, ...parts,
+      h('p', { class: 'pm-hint pm-fin__hint', text: fin.type === 'manuel' ? 'Arrêté par le bouton « ✓ Fait » de la saisie (heure modifiable).' : fin.type === 'date' ? 'Arrêté à la date saisie dans ce champ (aussi par « ✓ Fait »).' : 'Arrêté à l’heure où le statut prend cette valeur (aussi par « ✓ Fait »).' }));
+  }
 
   /* ---------- Section : Holding times ---------- */
   function htTable(t) {
@@ -9831,13 +9943,20 @@ const ParamsView = (() => {
       if (!v) return 'Le nom affiché ne peut pas être vide.';
       update(p => { p.rapport.htNames = { ...(p.rapport.htNames || {}), [t.id]: v }; }, null, `${pre}-nom`); toast(`Nom affiché : « ${v} »`); return null;
     } });
+    const D = Params.DEFAULTS.rapport;
+    const modified = !same(tb, D.ht[t.id]) || Params.htName(t.id) !== D.htNames[t.id] || !same(Params.htFinOf(t.id), D.htFin[t.id]);
     return h('article', { class: 'pm-card', 'data-line': t.line, id: pre },
       h('header', { class: 'pm-card__head' },
-        h('span', { class: 'pm-card__eyebrow' }, lineDot(t.line), `${LINE[t.line].name} · ${t.band}`),
+        h('span', { class: 'pm-card__eyebrow' }, lineDot(t.line), `${LINE[t.line].name} · ${t.band}`, modified ? modBadge(`${pre}-mod`) : null),
         h('h4', { class: 'pm-card__title', text: t.title }),
         h('span', { class: 'pm-card__sub', text: `À partir du champ « ${t.field} »` }),
         h('label', { class: 'pm-htname-l', for: `${pre}-nom` }, h('span', { text: 'Nom affiché' }), nom)),
-      rows, h('div', { class: 'pm-card__foot' }, add));
+      rows,
+      finCtl({ pre, fin: Params.htFinOf(t.id), line: t.line, bands: t.bands, exclude: [], label: t.title, onChange: (f, fid) => update(p => { p.rapport.htFin = { ...(p.rapport.htFin || {}), [t.id]: f }; }, null, fid) }),
+      h('div', { class: 'pm-card__foot' }, add,
+        modified ? h('button', { type: 'button', class: 'btn btn-quiet btn-sm pm-item-reset', id: `${pre}-reset`, onclick: () => withUndo(`« ${Params.htName(t.id)} » rétabli par défaut`, p => {
+          p.rapport.ht[t.id] = JSON.parse(JSON.stringify(D.ht[t.id])); p.rapport.htNames = { ...(p.rapport.htNames || {}), [t.id]: D.htNames[t.id] }; p.rapport.htFin = { ...(p.rapport.htFin || {}), [t.id]: JSON.parse(JSON.stringify(D.htFin[t.id])) };
+        }) }, icon('reset'), 'Rétablir') : null));
   }
   function customDialog(existing) {
     const p = P();
@@ -9864,16 +9983,28 @@ const ParamsView = (() => {
       startSel.value = opts.some(st => st.key === keep) ? keep : '';
     };
     renderStarts();
+    x.fin = x.fin || { type: 'manuel', k: '', v: [] };
+    const finBox = h('div');
+    const renderFin = () => {
+      const keep = document.activeElement && finBox.contains(document.activeElement) ? document.activeElement.id : null;
+      if (!x.lines.length) { finBox.replaceChildren(h('p', { class: 'pm-hint', text: 'Choisissez d’abord la ou les lignes.' })); return; }
+      const start = startSel.value;
+      if (x.fin.k === start) x.fin = { type: 'manuel', k: '', v: [] };
+      finBox.replaceChildren(finCtl({ pre: 'pm-cu', fin: x.fin, lines: x.lines, bands: x.bands, exclude: start ? [start] : [], label: 'Holding time', onChange: (f, fid) => { x.fin = f; renderFin(); const e = document.getElementById(fid); if (e) e.focus(); } }));
+      if (keep) { const e = document.getElementById(keep); if (e) e.focus(); }
+    };
+    startSel.addEventListener('change', renderFin);
     const soon = h('input', { type: 'text', class: 'input input--num', id: 'pm-cu-soon', value: x.soon != null ? fmtH(x.soon) : '', inputmode: 'decimal', maxlength: 7, placeholder: fmtH(P().rapport.soonHours) });
     const body = h('div', { class: 'pm-form' },
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-cu-nom', text: 'Nom de l’échéance' }), nom,
         h('p', { class: 'pm-hint', text: 'Un champ « date et heure » portant ce nom est ajouté dans les cartes choisies ; l’échéance (date + durée) apparaît dans la vigilance, le PDF, l’accueil et le mail.' })),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Ligne(s)' }),
-        chips({ id: 'pm-cu-l', label: 'Lignes', items: Params.LINES.map(l => ({ value: l.id, label: l.name })), selected: x.lines, onToggle: (v, on) => { x.lines = on ? [...x.lines, v] : x.lines.filter(n => n !== v); renderProds(); renderStarts(); } })),
+        chips({ id: 'pm-cu-l', label: 'Lignes', items: Params.LINES.map(l => ({ value: l.id, label: l.name })), selected: x.lines, onToggle: (v, on) => { x.lines = on ? [...x.lines, v] : x.lines.filter(n => n !== v); renderProds(); renderStarts(); renderFin(); } })),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Bande(s)' }),
-        chips({ id: 'pm-cu-b', label: 'Bandes', items: Params.BANDS.map(b => ({ value: b.id, label: b.name })), selected: x.bands, onToggle: (v, on) => { x.bands = on ? [...x.bands, v] : x.bands.filter(n => n !== v); renderStarts(); } })),
+        chips({ id: 'pm-cu-b', label: 'Bandes', items: Params.BANDS.map(b => ({ value: b.id, label: b.name })), selected: x.bands, onToggle: (v, on) => { x.bands = on ? [...x.bands, v] : x.bands.filter(n => n !== v); renderStarts(); renderFin(); } })),
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-cu-start', text: 'Événement de départ' }), startSel,
         h('p', { class: 'pm-hint', text: 'Champ existant : l’échéance s’affiche sous ce champ (ex. « Sortie frigo » + 48 h). Nouveau champ : une date à saisir dans la carte.' })),
+      h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Fin (s’arrête quand)' }), finBox),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Produit(s) concernés' }), prodBox,
         h('p', { class: 'pm-hint', text: 'Aucun produit coché : l’échéance vaut pour tous les produits.' })),
       h('div', { class: 'pm-form__row' },
@@ -9881,6 +10012,7 @@ const ParamsView = (() => {
         h('div', { class: 'field field--hours' }, h('label', { class: 'field__label', for: 'pm-cu-soon', text: 'Alerte (orange) quand il reste moins de' }), h('span', { class: 'unit-input' }, soon, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h')),
           h('p', { class: 'pm-hint', text: `Vide : seuil de l’outil (${fmtH(P().rapport.soonHours)} h).` }))),
       err);
+    renderFin();
     const d = openDialog({
       title: existing ? 'Modifier le holding time' : 'Ajouter un holding time', icon: 'clock', body,
       actions: [{ label: 'Annuler', value: false }, { label: existing ? 'Enregistrer' : 'Ajouter', value: true, cls: 'btn-primary', run: () => {
@@ -9896,7 +10028,7 @@ const ParamsView = (() => {
         const sv = soon.value.trim() ? parseHours(soon.value) : { value: null };
         const msg2 = msg || sv.error || (sv.value != null && r.value != null && sv.value >= r.value ? 'Le seuil d’alerte doit être plus petit que la durée.' : null);
         if (msg2) { err.textContent = Core.typo(msg2); err.hidden = false; return false; }
-        const item = { id: existing ? existing.id : Core.uid().slice(-8).replace(/[^a-z0-9]/gi, 'x'), nom: n, lines: x.lines, bands: x.bands, produits: x.produits, h: r.value, start: startSel.value, soon: sv.value };
+        const item = { id: existing ? existing.id : Core.uid().slice(-8).replace(/[^a-z0-9]/gi, 'x'), nom: n, lines: x.lines, bands: x.bands, produits: x.produits, h: r.value, start: startSel.value, soon: sv.value, fin: x.fin };
         update(pp => {
           if (existing) pp.rapport.custom = pp.rapport.custom.map(c => (c.id === existing.id ? item : c));
           else pp.rapport.custom.push(item);
@@ -9909,6 +10041,11 @@ const ParamsView = (() => {
     });
     return d;
   }
+  function finText(fin, lines) {
+    if (!fin || fin.type === 'manuel') return 'manuelle (« ✓ Fait »)';
+    const f = lines.flatMap(l => Rapport.fieldCatalog(l)).find(x => x.key === fin.k);
+    return fin.type === 'date' ? `date « ${f ? f.label : fin.k} »` : `${f ? f.label : fin.k} = ${fin.v.join(' ou ')}`;
+  }
   function customList() {
     const list = P().rapport.custom;
     const bandName = id => Params.BANDS.find(b => b.id === id).name.toLowerCase();
@@ -9920,7 +10057,7 @@ const ParamsView = (() => {
         h('span', { class: 'pm-cu__main' },
           h('b', { text: c.nom }), h('span', { class: 'pm-cu__h', text: `${fmtH(c.h)} h` }),
           h('small', { text: `${c.lines.map(l => LINE[l].name).join(', ')} · ${c.bands.map(bandName).join(', ')} · ${c.produits.length ? c.produits.join(', ') : 'tous les produits'}` }),
-          h('small', { class: 'pm-cu__start', text: `Départ : ${c.start ? (Params.HT_STARTS.find(st => st.key === c.start) || { label: c.start }).label : 'champ dédié'} · alerte ${fmtH(c.soon ?? P().rapport.soonHours)} h avant${c.soon == null ? ' (seuil de l’outil)' : ''}` })),
+          h('small', { class: 'pm-cu__start', text: `Départ : ${c.start ? (Params.HT_STARTS.find(st => st.key === c.start) || { label: c.start }).label : 'champ dédié'} · alerte ${fmtH(c.soon ?? P().rapport.soonHours)} h avant${c.soon == null ? ' (seuil de l’outil)' : ''} · fin : ${finText(c.fin, c.lines)}` })),
         h('span', { class: 'pm-cu__act' },
           h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `pm-cu-${c.id}-edit`, onclick: () => customDialog(c) }, 'Modifier'),
           iconBtn('trash', `Supprimer le holding time ${c.nom}`, () => withUndo(`Holding time « ${c.nom} » supprimé`, p => { p.rapport.custom = p.rapport.custom.filter(x => x.id !== c.id); }), { id: `pm-cu-${c.id}-del`, danger: true })))))
@@ -9937,6 +10074,130 @@ const ParamsView = (() => {
         hoursInput({ id: 'pm-soon', value: soon, label: 'Seuil d’alerte bientôt', onCommit: v => { if (v > 72) return warn('Le seuil d’alerte ne peut pas dépasser 72 h.'); update(p => { p.rapport.soonHours = v; }, null, 'pm-soon'); } })),
       h('div', { class: 'pm-grid pm-grid--ht' }, Params.HT_TABLES.map(htTable)),
       customList(),
+    ];
+  }
+
+  /* ---------- v5 : Section « Rapport — Parcours (étapes) » : par machine et par produit ---------- */
+  const pcSel = {};               /* parcours affiché par machine : '' (tous les produits) ou nom du produit (variante) */
+  const pcOpen = new Set();       /* étapes dépliées (session) */
+  const EFFETS = [{ value: 'atteinte', label: 'Atteinte quand' }, { value: 'franchie', label: 'Franchie quand' }];
+  function pcSteps(p, lineId) { const pc = p.rapport.parcours[lineId], k = pcSel[lineId]; return k && pc.variants[k] ? pc.variants[k] : pc.def; }
+  function pcDefault(lineId, k) { const d = Params.DEFAULTS.rapport.parcours[lineId]; return k ? d.variants[k] || null : d.def; }
+  function stepCard(lineId, steps, i, cat, last) {
+    const sp = steps[i], pre = `pm-pc-${lineId}-${i}`;
+    const upd = (fn, fid, detail) => update(p => fn(pcSteps(p, lineId), p), detail, fid);
+    const name = textInput({ id: `${pre}-n`, value: sp.nom, label: `Nom de l’étape ${i + 1} (${LINE[lineId].name})`, maxLength: 40, onCommit: v => {
+      if (!v) return 'Le nom de l’étape ne peut pas être vide.';
+      upd(st => { st[i].nom = v; }, `${pre}-n`); return null;
+    } });
+    const fieldOf = k => cat.find(x => x.key === k);
+    const where = k => { const j = steps.findIndex(x => x.champs.includes(k)); return j < 0 ? 'hors parcours' : steps[j].nom; };
+    /* champs rangés sous l'étape (un champ n'est que sous une étape : l'ajouter ici le retire de l'autre) */
+    const tokens = sp.champs.filter(fieldOf).map((k, j) => h('span', { class: 'pm-tok' }, fieldOf(k).label,
+      h('button', { type: 'button', class: 'pm-tok__x', id: `${pre}-f${j}-del`, 'aria-label': `Retirer ${fieldOf(k).label} de l’étape ${sp.nom}`, title: 'Retirer (hors parcours)', onclick: () => upd(st => { st[i].champs = st[i].champs.filter(x => x !== k); }, `${pre}-fadd`) }, icon('x'))));
+    const addF = h('select', { class: 'select select--sm pm-addsel', id: `${pre}-fadd`, 'aria-label': `Ajouter un champ à l’étape ${sp.nom}` },
+      h('option', { value: '', text: '+ Ajouter un champ…' }), cat.filter(x => !sp.champs.includes(x.key)).map(x => h('option', { value: x.key, text: `${x.label} (${where(x.key)})` })));
+    addF.addEventListener('change', () => { const k = addF.value; if (!k) return; upd(st => { for (const x of st) x.champs = x.champs.filter(y => y !== k); st[i].champs.push(k); }, `${pre}-fadd`); });
+    /* statuts qui font avancer : atteinte (l'un) / franchie (tous) */
+    const stCat = cat.filter(x => x.type === 'status');
+    const conds = [...sp.atteinte.map((c, j) => ({ c, j, e: 'atteinte' })), ...sp.franchie.map((c, j) => ({ c, j, e: 'franchie' }))];
+    const condRows = conds.map(({ c, j, e }, n) => {
+      const cid = `${pre}-c${n}`;
+      const eff = h('select', { class: 'select select--sm', id: `${cid}-e`, 'aria-label': 'Effet' }, EFFETS.map(o => { const x = h('option', { value: o.value, text: o.label }); x.selected = o.value === e; return x; }));
+      eff.addEventListener('change', () => upd(st => { const [cc] = st[i][e].splice(j, 1); st[i][eff.value].push(cc); }, `${cid}-e`));
+      const fs = h('select', { class: 'select select--sm', id: `${cid}-k`, 'aria-label': 'Statut' }, stCat.map(x => { const o = h('option', { value: x.key, text: x.label }); o.selected = x.key === c.k; return o; }));
+      fs.addEventListener('change', () => upd(st => { const f = stCat.find(x => x.key === fs.value); st[i][e][j] = { k: f.key, v: [f.values.includes('FAIT') ? 'FAIT' : f.values[0]] }; }, `${cid}-k`));
+      const f = stCat.find(x => x.key === c.k);
+      return h('div', { class: 'pm-cond' }, eff, fs, h('span', { class: 'pm-fin__eq', 'aria-hidden': 'true', text: '=' }),
+        f ? chips({ id: `${cid}-v`, label: `${f.label} — valeurs`, items: f.values.map(v => ({ value: v, label: v })), selected: c.v,
+          onToggle: (v, on, chid) => { const vs = on ? [...new Set([...c.v, v])] : c.v.filter(x => x !== v); if (!vs.length) { warn('Gardez au moins une valeur, ou supprimez la condition.'); render(); return; } upd(st => { st[i][e][j].v = vs; }, chid); } })
+          : h('span', { class: 'pm-hint', text: `Statut inconnu : ${c.k}` }),
+        iconBtn('trash', `Supprimer la condition ${f ? f.label : c.k}`, () => upd(st => { st[i][e].splice(j, 1); }, `${pre}-cadd`), { id: `${cid}-del`, danger: true }));
+    });
+    const addC = h('button', { type: 'button', class: 'btn btn-quiet btn-sm', id: `${pre}-cadd`, disabled: !stCat.length }, icon('plus'), 'Condition');
+    addC.addEventListener('click', () => { const f = stCat.find(x => sp.champs.includes(x.key)) || stCat[0]; upd(st => { st[i].franchie.push({ k: f.key, v: [f.values.includes('FAIT') ? 'FAIT' : f.values[0]] }); }, `${pre}-c${conds.length}-k`); pcOpen.add(`${lineId}.${pcSel[lineId] || ''}.${sp.id}`); });
+    const condTxt = conds.length ? conds.map(({ c, e }) => `${e === 'atteinte' ? 'atteinte' : 'franchie'} : ${(fieldOf(c.k) || { label: c.k }).label} ${c.v.join('/')}`).join(' ; ') : 'au clic';
+    const det = h('details', { class: 'pm-ps__det', id: `${pre}-det` },
+      h('summary', { class: 'pm-ps__sum' }, icon('chevron', 'icon pm-ps__chev'), h('span', {}, `${plural(sp.champs.filter(fieldOf).length, 'champ')} · avance ${condTxt}`)),
+      h('div', { class: 'pm-ps__body' },
+        h('div', { class: 'pm-ps__f' }, h('span', { class: 'pm-ps__l', text: 'Champs' }), h('div', { class: 'pm-toks' }, tokens.length ? tokens : h('span', { class: 'pm-hint', text: 'Aucun champ.' }), addF)),
+        h('div', { class: 'pm-ps__f' }, h('span', { class: 'pm-ps__l', text: 'Avance' }), h('div', { class: 'pm-conds' }, condRows.length ? condRows : h('span', { class: 'pm-hint', text: 'Aucun statut relié : l’étape avance au clic de l’opérateur.' }), addC))));
+    const key = `${lineId}.${pcSel[lineId] || ''}.${sp.id}`;
+    if (pcOpen.has(key)) det.open = true;
+    det.addEventListener('toggle', () => { if (det.open) pcOpen.add(key); else pcOpen.delete(key); });
+    const moves = h('span', { class: 'pm-prod__act' },
+      iconBtn('up', `Monter ${sp.nom}`, () => upd(st => { [st[i - 1], st[i]] = [st[i], st[i - 1]]; }, i - 1 > 0 ? `pm-pc-${lineId}-${i - 1}-up` : `pm-pc-${lineId}-${i - 1}-down`), { id: `${pre}-up`, disabled: i === 0 || last }),
+      iconBtn('down', `Descendre ${sp.nom}`, () => upd(st => { [st[i + 1], st[i]] = [st[i], st[i + 1]]; }, `pm-pc-${lineId}-${i + 1}-up`), { id: `${pre}-down`, disabled: last || i >= steps.length - 2 }),
+      iconBtn('trash', `Supprimer l’étape ${sp.nom}`, () => withUndo(`Étape « ${sp.nom} » supprimée (${LINE[lineId].name}) : ses champs passent hors parcours`, p => { pcSteps(p, lineId).splice(i, 1); }), { id: `${pre}-del`, danger: true, disabled: last || steps.length <= 2 }));
+    return h('li', { class: `pm-ps${last ? ' is-last' : ''}`, id: pre, 'data-step': sp.id },
+      h('span', { class: 'pm-ps__dot', 'aria-hidden': 'true' }),
+      h('div', { class: 'pm-ps__row' }, name, last ? h('span', { class: 'pm-ps__lock', title: 'Le parcours se termine toujours par le vide de ligne' }, 'toujours en dernier') : null, moves),
+      det);
+  }
+  function parcoursCard(lineId) {
+    const pc = P().rapport.parcours[lineId];
+    if (pcSel[lineId] && !pc.variants[pcSel[lineId]]) pcSel[lineId] = '';
+    const k = pcSel[lineId] || '', steps = k ? pc.variants[k] : pc.def;
+    const pre = `pm-pc-${lineId}`;
+    const cat = Rapport.fieldCatalog(lineId);
+    const def = pcDefault(lineId, k);
+    const modified = !def || !same(steps, def);
+    const names = Params.productNames(lineId);
+    const usedBy = n => names.filter(x => Params.parcoursKey(lineId, x) === n);
+    const tabs = h('div', { class: 'pm-seg pm-pctabs', role: 'radiogroup', 'aria-label': `Parcours ${LINE[lineId].name}` },
+      ['', ...Object.keys(pc.variants)].map(v => {
+        const id = `${pre}-t-${idOf(v || 'def')}`;
+        const r = h('input', { type: 'radio', name: `${pre}-t`, id, class: 'pm-seg__in' });
+        r.checked = v === k;
+        r.addEventListener('change', () => { if (r.checked) { pcSel[lineId] = v; focusAfter = id; render(); } });
+        const dmod = v ? !pcDefault(lineId, v) || !same(pc.variants[v], pcDefault(lineId, v)) : !same(pc.def, pcDefault(lineId, ''));
+        return h('label', { class: 'pm-seg__opt', for: id }, r, h('span', {}, v ? v : 'Par défaut', dmod ? h('i', { class: 'pm-dotmod', title: 'modifié', 'aria-label': ' (modifié)' }) : null));
+      }));
+    const free = names.filter(n => !pc.variants[n]);
+    const addSel = h('select', { class: 'select select--sm', id: `${pre}-vadd`, 'aria-label': `Variante pour un produit (${LINE[lineId].name})` },
+      h('option', { value: '', text: '+ Variante pour un produit…' }), free.map(n => h('option', { value: n, text: n })));
+    addSel.addEventListener('change', () => {
+      const n = addSel.value; if (!n) return;
+      pcSel[lineId] = n;
+      update(p => { const P0 = p.rapport.parcours[lineId]; P0.variants[n] = JSON.parse(JSON.stringify(Params.parcoursFor(lineId, n))); }, null, `${pre}-t-${idOf(n)}`);
+      toast(`Variante créée pour ${n} (copie du parcours qu’il suivait)`);
+    });
+    const applies = k ? usedBy(k) : names.filter(n => !Params.parcoursKey(lineId, n));
+    const steps2 = h('ol', { class: 'pm-pss' }, steps.map((_, i) => stepCard(lineId, steps, i, cat, i === steps.length - 1)));
+    const addStep = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, disabled: steps.length >= 15 }, icon('plus'), 'Ajouter une étape');
+    addStep.addEventListener('click', () => {
+      const id = `e${Core.uid().slice(-6).replace(/[^a-z0-9]/gi, 'x')}`;
+      update(p => { const st = pcSteps(p, lineId); st.splice(st.length - 1, 0, { id, nom: 'Nouvelle étape', champs: [], atteinte: [], franchie: [] }); }, null, `${pre}-${steps.length - 1}-n`);
+      toast('Étape ajoutée avant « Vide de ligne » : renommez-la et rangez-y des champs');
+    });
+    /* vide de ligne : champs du lot en cours remis à N/A */
+    const vdlCat = Rapport.fieldCatalog(lineId, ['enCours']).filter(x => x.type === 'status' && !Params.VDL_KEEP.includes(x.key));
+    const vdl = P().rapport.vdlReset[lineId];
+    const vdlMod = !same(vdl, Params.DEFAULTS.rapport.vdlReset[lineId]);
+    const unused = cat.filter(x => !steps.some(s => s.champs.includes(x.key)));
+    return h('article', { class: 'pm-card pm-pc', 'data-line': lineId, id: pre },
+      h('header', { class: 'pm-card__head' },
+        h('h4', { class: 'pm-card__title' }, lineDot(lineId), LINE[lineId].name, modified ? modBadge(`${pre}-mod`) : null),
+        h('span', { class: 'pm-card__sub', text: k ? `Variante ${k} · ${applies.length > 1 ? `aussi pour ${applies.filter(x => x !== k).join(', ')} (« comme »)` : 'ce produit seulement'}` : `Tous les produits sans variante : ${applies.join(', ') || '—'}` })),
+      h('div', { class: 'pm-pcbar' }, tabs, free.length ? addSel : null),
+      steps2,
+      unused.length ? h('p', { class: 'pm-hint pm-pc__rest' }, h('b', { text: 'Hors parcours : ' }), unused.map(x => x.label).join(', '), ' (affichés sous l’étape actuelle dans la synthèse, dans « Hors parcours » à la saisie).') : null,
+      h('div', { class: 'pm-card__foot pm-pc__foot' }, addStep,
+        modified && def ? h('button', { type: 'button', class: 'btn btn-quiet btn-sm pm-item-reset', id: `${pre}-reset`, onclick: () => withUndo(`Parcours ${LINE[lineId].name}${k ? ` (${k})` : ''} rétabli par défaut`, p => {
+          const P0 = p.rapport.parcours[lineId]; if (k) P0.variants[k] = JSON.parse(JSON.stringify(def)); else P0.def = JSON.parse(JSON.stringify(def));
+        }) }, icon('reset'), 'Rétablir') : null,
+        k ? h('button', { type: 'button', class: 'btn btn-quiet btn-sm pm-del', id: `${pre}-vdel`, onclick: () => { pcSel[lineId] = ''; withUndo(`Variante ${k} supprimée : ${k} suit le parcours ${Params.parcoursKey(lineId, k) ? '' : 'par défaut de '}${LINE[lineId].name}`, p => { delete p.rapport.parcours[lineId].variants[k]; }); } }, icon('trash'), 'Supprimer la variante') : null),
+      h('div', { class: 'pm-vdl' },
+        h('span', { class: 'pm-ps__l' }, 'Au vide de ligne, remis à N/A', vdlMod ? modBadge(`${pre}-vdl-mod`) : null),
+        chips({ id: `${pre}-vdl`, label: `Champs remis à N/A au vide de ligne (${LINE[lineId].name})`, items: vdlCat.map(x => ({ value: x.key, label: x.label })), selected: vdl,
+          onToggle: (v, on, cid) => update(p => { const l = p.rapport.vdlReset[lineId]; p.rapport.vdlReset[lineId] = on ? [...new Set([...l, v])] : l.filter(n => n !== v); }, null, cid) }),
+        h('p', { class: 'pm-hint', text: 'Toujours gardés : Échantillon, Remarques, VDL, lot et produit.' })));
+  }
+  function secParcours() {
+    return [
+      h('p', { class: 'pm-hint pm-lead' }, 'Étapes du procédé de chaque machine, du début (en haut) à la fin (en bas). Chaque champ du rapport est rangé sous une étape. Une étape est ',
+        h('b', { text: 'atteinte' }), ' quand l’un des statuts reliés a l’une des valeurs, ', h('b', { text: 'franchie' }), ' quand tous les statuts reliés renseignés les ont ; sans statut relié, elle avance au clic. Le clic de l’opérateur l’emporte jusqu’au prochain changement de statut. Les variantes par produit suivent la règle « se comporte comme ».'),
+      h('div', { class: 'pm-stack' }, Params.LINES.map(l => parcoursCard(l.id))),
     ];
   }
 
@@ -10451,9 +10712,50 @@ const ParamsView = (() => {
     fr.readAsText(file);
   }
 
+  /* ---------- v5 : « Rétablir cette section par défaut » (confirmation, puis « Annuler ») ---------- */
+  let NDEF = null;
+  const ndef = () => (NDEF || (NDEF = Params.normalize(JSON.parse(JSON.stringify(Params.DEFAULTS)))));
+  const SEC_RESET = {
+    'pm-ht': { keys: ['soonHours', 'ht', 'htNames', 'htFin', 'custom'], what: 'Durées, noms affichés, fins, seuil d’alerte ; les holding times personnalisés sont supprimés.' },
+    'pm-parcours': { keys: ['parcours', 'vdlReset'], what: 'Étapes, champs rangés, statuts reliés, variantes par produit et champs remis à N/A au vide de ligne.' },
+    'pm-prod': { keys: ['products'], what: 'Listes de produits et règles « comme ». Les produits retirés restent dans les cartes (« hors liste »).' },
+    'pm-rules': { keys: ['rules'], what: 'Cases cochées des règles d’applicabilité.' },
+    'pm-colors': { keys: ['colors'], what: 'Couleurs des trois lignes.' },
+    'pm-mail': { keys: ['mail'], mail: true, what: 'Destinataires (ceux de l’équipe), ouverture dans Outlook Web et adresse.' },
+    'pm-et': { et: true, what: 'Planche, épaisseur du texte, produits, modèles et listes des étiquettes.' },
+  };
+  function secIsDefault(id) {
+    const r = SEC_RESET[id], d = ndef();
+    if (r.et) return same(P().etiquettes, d.etiquettes);
+    const m = Rapport.mailSettings();
+    return r.keys.every(k => same(P().rapport[k], d.rapport[k])) && (!r.mail || (!m.mailCc && m.mailTo === d.rapport.mail.to));
+  }
+  function secResetEl(sec) {
+    if (!SEC_RESET[sec.id]) return null;
+    const isDef = secIsDefault(sec.id);
+    return h('div', { class: 'pm-sec__reset' },
+      h('button', { type: 'button', class: 'btn btn-quiet btn-sm', id: `${sec.id}-reset`, disabled: isDef ? true : null, onclick: () => resetSection(sec) }, icon('reset'), 'Rétablir cette section par défaut'),
+      isDef ? h('span', { class: 'pm-hint', text: 'Valeurs par défaut' }) : null);
+  }
+  async function resetSection(sec) {
+    const r = SEC_RESET[sec.id];
+    const ok = await Core.confirmDialog({ title: `Rétablir « ${sec.title} » par défaut ?`, className: 'mod-params', confirmLabel: 'Rétablir', danger: true,
+      message: `${r.what} Les autres sections ne changent pas. Vous pourrez annuler.` });
+    if (!ok) return;
+    const snap = Params.snapshot(), mail = Rapport.mailSettings(), d = ndef();
+    focusAfter = `${sec.id}-reset`;
+    Params.update(p => {
+      if (r.et) p.etiquettes = JSON.parse(JSON.stringify(d.etiquettes));
+      else for (const k of r.keys) p.rapport[k] = JSON.parse(JSON.stringify(d.rapport[k]));
+    });
+    if (r.mail) Rapport.setMailSettings('', '');
+    toast(`« ${sec.title} » rétabli par défaut`, { action: 'Annuler', onAction: () => { Params.restore(snap); if (r.mail) Rapport.setMailSettings(mail.mailTo, mail.mailCc); Core.emit('params-mail'); toast('Modification annulée', { icon: 'reset' }); } });
+  }
+
   /* ---------- Rendu ---------- */
   const SECTIONS = [
     { id: 'pm-ht', icon: 'clock', title: 'Rapport — Holding times', sub: () => { const p = P().rapport; return `${Params.HT_TABLES.length} règles · ${plural(p.custom.length, 'échéance personnalisée', 'échéances personnalisées')} · alerte ${fmtH(p.soonHours)} h avant`; }, body: secHT },
+    { id: 'pm-parcours', icon: 'route', title: 'Rapport — Parcours (étapes)', sub: () => Params.LINES.map(l => { const pc = P().rapport.parcours[l.id]; const nv = Object.keys(pc.variants).length; return `${l.name} ${pc.def.length} étapes${nv ? ` + ${nv} variante${nv > 1 ? 's' : ''}` : ''}`; }).join(' · '), body: secParcours },
     { id: 'pm-prod', icon: 'list', title: 'Rapport — Produits', sub: () => Params.LINES.map(l => `${l.name} ${Params.products(l.id).length}`).join(' · '), body: secProducts },
     { id: 'pm-rules', icon: 'check', title: 'Rapport — Règles d’applicabilité', sub: () => `${Params.RULES.length} champs conditionnels`, body: secRules },
     { id: 'pm-colors', icon: 'palette', title: 'Rapport — Couleurs des lignes', sub: () => 'Groninger · Inova 5 · Inova 4', body: secColors, swatches: true },
@@ -10484,7 +10786,7 @@ const ParamsView = (() => {
           h('span', { class: 'pm-sec__txt' }, h('span', { class: 'pm-sec__title', text: sec.title }), h('span', { class: 'pm-sec__sub', text: sec.sub() })),
           sec.swatches ? h('span', { class: 'pm-sec__sw', 'aria-hidden': 'true' }, Params.LINES.map(l => lineDot(l.id))) : null,
           icon('chevron', 'icon pm-sec__chev')),
-        h('div', { class: 'pm-sec__body' }, sec.body()));
+        h('div', { class: 'pm-sec__body' }, sec.body(), secResetEl(sec)));
       if (open.has(sec.id)) d.open = true;
       d.addEventListener('toggle', () => { if (d.open) open.add(sec.id); else open.delete(sec.id); });
       return d;
