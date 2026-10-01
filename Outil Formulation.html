@@ -326,11 +326,6 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .tile__lots dd.is-num{font-family:var(--font);letter-spacing:0}
 .tile__meta{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;font-size:.875rem;color:var(--muted)}
 .tile__meta b{color:var(--text);font-weight:600}
-.tile__n{display:flex;align-items:flex-start;gap:.5rem;margin:0;font-size:.875rem;font-weight:600;line-height:1.4;color:var(--nn-navy)}
-.tile__n>.icon{flex:none;width:1.0625rem;height:1.0625rem;margin-top:.1rem;color:var(--nn-blue)}
-.tile__n>span{display:flex;flex-direction:column;gap:.25rem}
-.tile__n.is-local{font-weight:500;color:var(--muted)}
-.tile__n.is-local>.icon{color:var(--muted)}
 .tile__n-warn{display:inline-flex;align-items:center;gap:.4rem;align-self:flex-start;padding:.125rem .5rem;border-radius:999px;background:var(--wip-bg);color:var(--wip-fg);font-size:.8125rem}
 .tile__foot-note{display:flex;align-items:center;gap:.375rem;margin-top:auto;font-size:.8125rem;color:var(--muted)}
 .tile__foot-note .icon{width:.9375rem;height:.9375rem}
@@ -7230,13 +7225,14 @@ const ParamsView = (() => {
 
   /* ---------- Rendu ---------- */
   const SECTIONS = [
-    { id: 'pm-dir', icon: 'link', title: 'Dossier principal (ce PC)', sub: dirSub, body: secDir },
     { id: 'pm-ht', icon: 'clock', title: 'Rapport — Holding times', sub: () => { const p = P().rapport; return `${Params.HT_TABLES.length} règles · ${plural(p.custom.length, 'échéance personnalisée', 'échéances personnalisées')} · alerte ${fmtH(p.soonHours)} h avant`; }, body: secHT },
     { id: 'pm-prod', icon: 'list', title: 'Rapport — Produits', sub: () => Params.LINES.map(l => `${l.name} ${Params.products(l.id).length}`).join(' · '), body: secProducts },
     { id: 'pm-rules', icon: 'check', title: 'Rapport — Règles d’applicabilité', sub: () => `${Params.RULES.length} champs conditionnels`, body: secRules },
     { id: 'pm-colors', icon: 'palette', title: 'Rapport — Couleurs des lignes', sub: () => 'Groninger · Inova 5 · Inova 4', body: secColors, swatches: true },
     { id: 'pm-mail', icon: 'mail', title: 'Rapport — Mail', sub: () => { const m = Rapport.mailSettings(); return m.mailTo ? m.mailTo : 'aucun destinataire'; }, body: secMail },
     { id: 'pm-et', icon: 'tag', title: 'Étiquettes', sub: () => { const e = P().etiquettes; return `${e.preset === 'PAPIER' ? 'Papier normal' : 'Fiducial 115294'} · texte ${{ normal: 'normal', renforce: 'renforcé', gras: 'gras' }[e.epaisseur]} · ${e.produits.map(x => x.name).join(', ')}`; }, body: secEtiquettes },
+    /* propre à ce PC (jamais dans la sauvegarde) : après les paramètres de l'équipe */
+    { id: 'pm-dir', icon: 'link', title: 'Dossier principal (ce PC)', sub: dirSub, body: secDir },
   ];
   function render() {
     if (rendering) { dirty = true; return; }
