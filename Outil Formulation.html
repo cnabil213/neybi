@@ -319,6 +319,17 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .tile__lots>div[data-line]{background:var(--line-faint);border-color:var(--line);box-shadow:inset 3px 0 0 var(--line-strong)}
 .tile__lots>div[data-line] dt{display:flex;align-items:center;gap:.375rem;color:var(--line-ink)}
 .home__link{color:var(--nn-blue);font-weight:600;text-underline-offset:2px}
+.tile__pins{display:flex;flex-direction:column;gap:.375rem;margin:0;padding:0;list-style:none}
+.tpin{display:flex;align-items:center;gap:.5rem;min-width:0;padding:.4375rem .75rem;border-radius:10px;background:#E7F0FF;color:#0A2A6B;font-size:.875rem}
+.tpin .icon{flex:none}
+.tpin b{flex:none;font-size:.6875rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.tpin span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.tpin--critique{background:#D93025;color:#fff}
+.tpin--attention{background:#FFB12A;color:#1F1300}
+.tfeu{margin-left:auto;padding:0 .4375rem;border-radius:999px;font-size:.625rem;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+.tfeu--red{background:#FDE1DF;color:#B3261E} .tfeu--orange{background:#FFEFD2;color:#8A4B00} .tfeu--green{background:#DDF3E4;color:#0E6128}
+.tile__lots>div[data-feu="red"]{box-shadow:inset 3px 0 0 #E5352B}
+.tile__lots dt{flex-wrap:wrap}
 .home__link:hover{color:var(--nn-navy)}
 .tile__lots dt{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tile__lots dd{margin:0;overflow:hidden;font-family:var(--mono);font-size:.875rem;font-weight:600;letter-spacing:.03em;text-overflow:ellipsis;white-space:nowrap}
@@ -688,6 +699,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .sec-ico .icon{width:1.125rem;height:1.125rem}
 .mod-rapport .sec-title{font-size:1.125rem;font-weight:800;color:var(--nn-navy);letter-spacing:-.005em}
 .mod-rapport .sec-sub{font-size:.8125rem;color:var(--muted)}
+.mod-rapport .sec-sub--block{flex:1 0 100%;padding-left:2.625rem;margin-top:-.25rem}
 .mod-rapport .count-badge{display:inline-grid;place-items:center;min-width:1.75rem;height:1.75rem;padding:0 .5rem;border-radius:999px;background:var(--nn-navy);color:#fff;font-size:.8125rem;font-weight:800}
 .mod-rapport .legend{display:inline-flex;flex-wrap:wrap;gap:.25rem .75rem;font-size:.75rem;font-weight:600;color:var(--muted)}
 .mod-rapport .lg{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
@@ -948,6 +960,39 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
   .mod-rapport .cm-levels{grid-template-columns:minmax(0,1fr)}
   .mod-rapport .sec-head .btn{width:100%}
 }
+/* en-tête compact (itération 2) : ligne 1 date + Clôturer ; ligne 2 panneau shift + auteur */
+.mod-rapport .rp-hero{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"id act" "ctl ctl";gap:1rem 1.5rem;padding:1.25rem 1.5rem 1.125rem}
+.mod-rapport .rp-hero__id{grid-area:id} .mod-rapport .rp-hero__act{grid-area:act}
+.mod-rapport .rp-hero__ctl{grid-area:ctl;display:flex;flex-wrap:wrap;align-items:flex-end;gap:.75rem 2rem;padding:.75rem 1rem;border-radius:14px;background:rgba(255,255,255,.07);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.mod-rapport .rp-hero__shift{flex:1 1 34rem;min-width:0}
+.mod-rapport .rp-hero__author{flex:0 1 16rem;min-width:12rem}
+.mod-rapport .rp-hero__title{font-size:1.875rem}
+.mod-rapport .rp-hero .pills{display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;border-radius:12px;background:rgba(0,0,0,.18);align-self:flex-start;max-width:100%}
+.mod-rapport .rp-hero .pill{border:0;background:transparent;border-radius:9px;min-height:2.25rem}
+.mod-rapport .rp-hero .pill:not([aria-checked="true"]) .pill__dot{display:none}
+@media (max-width:1279.98px){ .mod-rapport .rp-hero__shift{grid-column:auto;grid-row:auto} }
+@media (max-width:959.98px){ .mod-rapport .rp-hero__author{grid-column:auto;grid-row:auto} }
+@media (max-width:759.98px){
+  .mod-rapport .rp-hero{grid-template-columns:minmax(0,1fr);grid-template-areas:"id" "ctl" "act"}
+  .mod-rapport .rp-hero__title{font-size:1.375rem}
+  .mod-rapport .rp-hero__ctl{padding:.625rem}
+  .mod-rapport .rp-hero__shift,.mod-rapport .rp-hero__author{flex:1 1 100%}
+}
+/* cartes de saisie allégées : statuts en contrôles segmentés, N/A discret, moins de bordures */
+.mod-rapport .card,.mod-rapport .panel{border-color:transparent;box-shadow:0 1px 2px rgba(11,21,53,.05),0 4px 16px rgba(11,21,53,.06);border-radius:14px}
+.mod-rapport .card[data-line] .card__head{border-radius:12px 12px 0 0}
+.mod-rapport .card__body .pills,.mod-rapport .s5-row .pills,.mod-rapport .sd-row .pills{gap:2px;padding:3px;border-radius:11px;background:#EEF1F6}
+.mod-rapport .card__body .pill,.mod-rapport .s5-row .pill,.mod-rapport .sd-row .pill{min-height:2.25rem;border:0;border-radius:8px;background:transparent;color:#6B7489}
+.mod-rapport .card__body .pill:not(:disabled):hover,.mod-rapport .s5-row .pill:not(:disabled):hover,.mod-rapport .sd-row .pill:not(:disabled):hover{background:rgba(255,255,255,.7);border:0}
+.mod-rapport .card__body .pill .pill__dot,.mod-rapport .s5-row .pill .pill__dot,.mod-rapport .sd-row .pill .pill__dot{display:none}
+.mod-rapport .card__body .pill[aria-checked="true"] .pill__dot,.mod-rapport .s5-row .pill[aria-checked="true"] .pill__dot,.mod-rapport .sd-row .pill[aria-checked="true"] .pill__dot{display:inline-block}
+.mod-rapport .card__body .pill[aria-checked="true"],.mod-rapport .s5-row .pill[aria-checked="true"],.mod-rapport .sd-row .pill[aria-checked="true"]{box-shadow:0 1px 3px rgba(11,21,53,.14)}
+.mod-rapport .card__body .pill.tone-na[aria-checked="true"],.mod-rapport .s5-row .pill.tone-na[aria-checked="true"],.mod-rapport .sd-row .pill.tone-na[aria-checked="true"]{background:#fff;color:#8A93A8}
+.mod-rapport .card__body .pill.tone-na[aria-checked="true"] .pill__dot{background:#C9D0DE}
+.mod-rapport .card__body .input:placeholder-shown:not(:focus),.mod-rapport .card__body .select.is-empty:not(:focus){border-color:#DCE1EA;background:#FBFCFE}
+.mod-rapport .tsel.tone-na .select{background-color:#FBFCFE;border-color:#DCE1EA;color:#6B7489}
+.mod-rapport .na-note{border-style:solid;border-color:#E3E7EE;background:#F6F7FA;color:#8A93A8;font-weight:500}
+.mod-rapport .card__body{gap:.875rem 1.25rem}
 /* =========================================================================
    Vue d'impression (rendu dédié, généré depuis l'état)
    ========================================================================= */
@@ -1128,6 +1173,74 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .pv-cm__lvl{padding:.3mm 1.2mm;border-radius:.8mm;background:#2F6FDB;color:#fff;font-size:5.8pt;text-transform:uppercase;letter-spacing:.04em;text-align:center}
 .mod-rapport .pv-cm--critique .pv-cm__lvl{background:#A8170F} .mod-rapport .pv-cm--attention .pv-cm__lvl{background:#E08600}
 .mod-rapport .pv-cm small{font-size:6.2pt;color:var(--muted);white-space:nowrap}
+/* ---------- PDF page 2 : détail en cartes (pastilles, frises de dates) — plus de grille de tableur ---------- */
+.mod-rapport .pv--detail{gap:2mm}
+.mod-rapport .pv-card.pvd{border:0;border-radius:2.2mm;background:var(--line-faint);box-shadow:inset 0 0 0 .25mm var(--line)}
+.mod-rapport .pvd .pv-cap{padding:1.1mm 2.4mm 1.1mm 3.2mm;border-radius:2.2mm 2.2mm 0 0;border-bottom:0}
+.mod-rapport .pvd-body{display:flex;flex-direction:column;gap:1.3mm;padding:1.8mm 2.4mm 2mm 2.6mm}
+.mod-rapport .pvd-chips,.mod-rapport .pva-5s{display:flex;flex-wrap:wrap;gap:1mm}
+.mod-rapport .pvd-chip{display:inline-flex;align-items:baseline;gap:1mm;padding:.55mm 1.8mm;border-radius:3mm;background:#fff;box-shadow:inset 0 0 0 .2mm var(--border);color:var(--text);line-height:1.15;white-space:nowrap}
+.mod-rapport .pvd-chip small{font-size:5.9pt;font-weight:600;opacity:.8}
+.mod-rapport .pvd-chip b{font-size:7pt;font-weight:800}
+.mod-rapport .pvd-chip em{font-style:normal;font-size:6pt;opacity:.85}
+.mod-rapport .pvd-chip.t-ok{background:var(--ok-bg);color:var(--ok-fg);box-shadow:none}
+.mod-rapport .pvd-chip.t-wip{background:var(--wip-bg);color:var(--wip-fg);box-shadow:none}
+.mod-rapport .pvd-chip.t-todo{background:var(--todo-bg);color:var(--todo-fg);box-shadow:none}
+.mod-rapport .pvd-chip.t-cold{background:var(--cold-bg);color:var(--cold-fg);box-shadow:none}
+.mod-rapport .pvd-chip.t-na{background:transparent;color:var(--muted)}
+.mod-rapport .pvd-chip .pv-snow{width:2.6mm;height:2.6mm;align-self:center}
+.mod-rapport .pvd-date{display:flex;flex-direction:column;gap:.6mm;padding:1mm 1.6mm;border-radius:1.6mm;background:#fff}
+.mod-rapport .pvd-date__s{display:inline-flex;align-items:center;gap:1.2mm;font-size:7pt}
+.mod-rapport .pvd-date__s .icon{width:2.8mm;height:2.8mm;color:var(--line-strong)}
+.mod-rapport .pvd-date small,.mod-rapport .pvd-texts small{font-size:6pt;font-weight:600;color:var(--muted)}
+.mod-rapport .pvd-date b{font-weight:800}
+.mod-rapport .pvd-lim{display:grid;grid-template-columns:14mm auto auto 1fr;align-items:center;gap:1.4mm;font-size:6.8pt}
+.mod-rapport .pvd-lim em{font-style:normal;font-weight:700;text-align:right;color:var(--ok-fg)}
+.mod-rapport .pvd-bar{position:relative;display:block;height:1.6mm;border-radius:1mm;background:#E1E6EE;overflow:hidden}
+.mod-rapport .pvd-bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ht-ok);border-radius:1mm}
+.mod-rapport .pvd-lim.ht--mid .pvd-bar i{background:var(--ht-mid)} .mod-rapport .pvd-lim.ht--mid em{color:#6E4A00}
+.mod-rapport .pvd-lim.ht--soon .pvd-bar i{background:var(--ht-soon)} .mod-rapport .pvd-lim.ht--soon em{color:#9A4A00}
+.mod-rapport .pvd-lim.ht--over .pvd-bar i{background:var(--ht-over)} .mod-rapport .pvd-lim.ht--over em{color:#B3261E}
+.mod-rapport .pvd-texts{display:flex;flex-wrap:wrap;gap:.6mm 3mm;font-size:7pt}
+.mod-rapport .pvd-texts span{display:inline-flex;gap:1mm;align-items:baseline}
+.mod-rapport .pvd-note{padding:.6mm 0 .6mm 2mm;border-left:.6mm solid var(--line-strong);font-size:7pt;line-height:1.3;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--text)}
+.mod-rapport .pvd-blank{font-size:7pt;color:var(--muted)}
+.mod-rapport .pvd-rest{margin-top:auto;font-size:5.9pt;color:#7A8399}
+.mod-rapport .pv-annex .pv-box{border:0;border-radius:2mm;background:#F6F8FB;box-shadow:inset 0 0 0 .2mm var(--border)}
+.mod-rapport .pv-annex .pv-box h3,.mod-rapport .pv-cms h3,.mod-rapport .pv-points h3{background:transparent;border-bottom:0;padding:1.2mm 2.4mm .4mm}
+.mod-rapport .pva-list{margin:0;padding:.6mm 2.4mm 1.6mm;list-style:none;display:flex;flex-direction:column;gap:.8mm;font-size:7pt}
+.mod-rapport .pva-list li{display:flex;flex-wrap:wrap;align-items:center;gap:1.2mm}
+.mod-rapport .pva-5s{padding:.6mm 2.4mm 1.8mm}
+.mod-rapport .pv-annex .pv-none{padding:.6mm 2.4mm 1.8mm}
+.mod-rapport .pv-cms,.mod-rapport .pv-points{border:0;border-radius:2mm;background:#F6F8FB;box-shadow:inset 0 0 0 .2mm var(--border)}
+.mod-rapport .pv-band__title{background:transparent !important;color:var(--nn-navy) !important;padding-left:0;font-size:7.6pt}
+.mod-rapport .pv-band--enCours .pv-band__n{background:var(--nn-navy);color:#fff}
+.mod-rapport .pv-watch__i{border-radius:3mm;border:0}
+/* Chiffres clés */
+.mod-rapport .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-bottom:1rem}
+.mod-rapport .kpi{position:relative;display:flex;align-items:center;gap:.875rem;min-width:0;padding:.875rem 1rem .875rem 1.25rem;border-radius:16px;background:#E8EDF7;overflow:hidden}
+.mod-rapport .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--nn-navy)}
+.mod-rapport .kpi__n{flex:none;font-size:2.75rem;font-weight:800;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--nn-navy)}
+.mod-rapport .kpi__n small{font-size:1.125rem;font-weight:700;letter-spacing:0;opacity:.75}
+.mod-rapport .kpi__t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.mod-rapport .kpi__t b{font-size:.9375rem;font-weight:800;color:var(--text)}
+.mod-rapport .kpi__t small{font-size:.8125rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mod-rapport .kpi--red{background:#FDE7E5} .mod-rapport .kpi--red::before{background:var(--feu-red)} .mod-rapport .kpi--red .kpi__n{color:#B3261E}
+.mod-rapport .kpi--orange{background:#FFF0D9} .mod-rapport .kpi--orange::before{background:var(--feu-orange)} .mod-rapport .kpi--orange .kpi__n{color:#8A4B00}
+.mod-rapport .kpi--green{background:#E3F4E8} .mod-rapport .kpi--green::before{background:var(--feu-green)} .mod-rapport .kpi--green .kpi__n{color:#0E6128}
+@media (max-width:1099.98px){ .mod-rapport .kpis{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:479.98px){ .mod-rapport .kpis{gap:.5rem} .mod-rapport .kpi{flex-direction:column;align-items:flex-start;gap:.25rem;padding:.75rem .75rem .75rem 1rem} .mod-rapport .kpi__n{font-size:2.25rem} .mod-rapport .kpi__t small{white-space:normal} }
+/* impression : chiffres clés */
+.mod-rapport .pvs-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4mm}
+.mod-rapport .pvs-kpi{display:flex;align-items:center;gap:3mm;height:17mm;padding:0 2.5mm 0 5mm;border-radius:2.2mm;background:#E8EDF7;box-shadow:inset 1.6mm 0 0 var(--nn-navy)}
+.mod-rapport .pvs-kpi__n{font-size:26pt;font-weight:800;line-height:1;color:var(--nn-navy)}
+.mod-rapport .pvs-kpi__n small{font-size:10pt}
+.mod-rapport .pvs-kpi__t{display:flex;flex-direction:column;min-width:0;line-height:1.25}
+.mod-rapport .pvs-kpi__t b{font-size:8.6pt;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mod-rapport .pvs-kpi__t small{font-size:7pt;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mod-rapport .pvs-kpi.kpi--red{background:#FDE7E5;box-shadow:inset 1.6mm 0 0 #E5352B} .mod-rapport .pvs-kpi.kpi--red .pvs-kpi__n{color:#B3261E}
+.mod-rapport .pvs-kpi.kpi--orange{background:#FFF0D9;box-shadow:inset 1.6mm 0 0 #F29900} .mod-rapport .pvs-kpi.kpi--orange .pvs-kpi__n{color:#8A4B00}
+.mod-rapport .pvs-kpi.kpi--green{background:#E3F4E8;box-shadow:inset 1.6mm 0 0 #22A653} .mod-rapport .pvs-kpi.kpi--green .pvs-kpi__n{color:#0E6128}
 /* =========================================================================
    3 bis. Onglet « Paramètres » (préfixe .mod-params)
    ========================================================================= */
@@ -1371,6 +1484,10 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-params .pm-note .btn-link{min-height:2rem}
 /* dialogue « pour toute l'équipe », holding time personnalisé */
 .mod-params .pm-form{display:flex;flex-direction:column;gap:1rem}
+.mod-params .pm-form__row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:1rem}
+.mod-params .pm-httop{display:flex;flex-wrap:wrap;align-items:center;gap:.75rem 1.25rem;margin-bottom:1rem;padding:1rem 1.125rem;border-radius:14px;background:linear-gradient(110deg,#EEF3FF,#F7F9FE);box-shadow:inset 0 0 0 1px #D5E1F8}
+.mod-params .pm-httop .pm-hint{flex:1 1 20rem;margin:0}
+.mod-params .pm-cu__start{display:block;color:var(--nn-blue) !important}
 .mod-params .pm-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.875rem}
 .mod-params .pm-step{display:grid;grid-template-columns:2rem minmax(0,1fr);gap:.75rem;align-items:start}
 .mod-params .pm-step__n{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;background:var(--nn-navy);color:#fff;font-weight:700}
@@ -1906,6 +2023,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
         <p class="rp-hero__title" id="rp-date"></p>
         <div class="rp-hero__sub"><span class="clock"><span class="clock__date" id="clock-date"></span><span class="clock__time" id="clock-time"></span></span><span class="meta__upd" id="meta-upd"></span></div>
       </div>
+      <div class="rp-hero__ctl">
       <div class="rp-hero__shift meta__shift">
         <span class="field__label" id="shift-lbl">Shift</span>
         <div id="shift-slot"></div>
@@ -1914,6 +2032,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
       <div class="rp-hero__author meta__author">
         <label class="field__label" for="author">Rédigé par</label>
         <input class="input" id="author" type="text" autocomplete="name" maxlength="60" placeholder="Votre nom" title="Mémorisé sur ce poste">
+      </div>
       </div>
       <div class="rp-hero__act">
         <button type="button" class="btn btn-primary btn-lg btn-close-shift" id="btn-close-shift"><span data-icon="flag"></span><span>Clôturer le shift</span></button>
@@ -4973,7 +5092,7 @@ function renderDash(now, alerts) {
   const st = lineStatuses(state.report, now, alerts);
   const frigo = alerts.frigo;
   const view = st.map(s => [s.line.id, s.feu, s.reason && s.reason.text, s.reason && s.reason.detail, s.more, s.lot, s.produit, s.next && [s.next.label, +s.next.due, s.next.rest], s.nextLot, s.nextProduit]);
-  if (!sectionChanged('dash', [view, frigo.map(x => [whereOf(x), x.band.id])])) return;
+  if (!sectionChanged('dash', [view, frigo.map(x => [whereOf(x), x.band.id]), alerts.limits.map(l => l.level), currentChanges(now).items.length])) return;
   const frigoEl = frigo.length
     ? h('div', { class: 'frigo is-alert', role: 'status' }, icon('snow'), h('b', { text: 'Frigo' }),
         h('span', { text: `${plural(frigo.length, 'échantillon')} : ${frigo.map(x => `${whereOf(x)} (${x.band.short})`).join(' · ')}` }))
@@ -4984,6 +5103,9 @@ function renderDash(now, alerts) {
         h('h2', { class: 'sec-title', id: 'dash-title', text: 'Tableau de bord' }),
         h('span', { class: 'sec-sub legend' }, h('span', { class: 'lg lg--red', text: 'Alerte' }), h('span', { class: 'lg lg--orange', text: 'À surveiller' }), h('span', { class: 'lg lg--green', text: 'En ordre' }))),
       frigoEl),
+    h('div', { class: 'kpis' }, kpisOf(st, alerts, currentChanges(now).items.length).map(k => h('div', { class: `kpi kpi--${k.tone}`, 'data-kpi': k.k },
+      h('span', { class: 'kpi__n' }, k.n, k.of ? h('small', { text: ` ${k.of}` }) : null),
+      h('span', { class: 'kpi__t' }, h('b', { text: k.label }), h('small', { text: k.sub }))))),
     h('div', { class: 'dash__grid' }, st.map(s => {
       const why = s.reason ? s.reason.text : 'Aucun point bloquant';
       const el = h('article', { class: `dtile dtile--${s.feu}`, 'data-line': s.line.id, 'data-feu': s.feu, tabindex: '0', role: 'button',
@@ -5057,13 +5179,14 @@ function renderChanges(now) {
   $('#changes').replaceChildren(
     h('div', { class: 'sec-head' },
       h('div', { class: 'sec-head__t' }, h('span', { class: 'sec-ico', 'aria-hidden': 'true' }, icon('spark')),
-        h('h2', { class: 'sec-title', text: 'Changements depuis le dernier shift' }), h('span', { class: 'sec-sub', text: sub })),
-      ch.items.length ? h('span', { class: 'count-badge', text: String(ch.items.length) }) : null),
+        h('h2', { class: 'sec-title', text: 'Changements depuis le dernier shift' }),
+        ch.items.length ? h('span', { class: 'count-badge', text: String(ch.items.length) }) : null,
+        h('span', { class: 'sec-sub sec-sub--block', text: sub }))),
     ch.items.length
       ? h('ul', { class: 'chg-list' }, shown.map(chgView))
       : h('p', { class: 'chg-empty', text: ref ? 'Aucun changement pour l’instant : les modifications de ce shift apparaîtront ici (badge « Nouveau » sur les champs).'
         : 'Pas encore de version enregistrée sur N: à comparer. Les changements apparaîtront après le premier enregistrement (Ctrl+S).' }),
-    more > 0 || chgAll ? h('button', { type: 'button', class: 'btn-link chg-more', onclick: () => { chgAll = !chgAll; renderChanges(new Date()); } }, chgAll ? 'Réduire la liste' : `Afficher les ${more} autres changements`) : null);
+    more > 0 || chgAll ? h('button', { type: 'button', class: 'btn-link chg-more', onclick: () => { chgAll = !chgAll; renderChanges(new Date()); } }, chgAll ? 'Réduire la liste' : more > 1 ? `Afficher les ${more} autres changements` : 'Afficher l’autre changement') : null);
 }
 
 /* =========================================================================
@@ -5112,8 +5235,19 @@ function synthModel(report, { at, author, changes, ref }) {
   return {
     at, author, shift, rdate: reportDate(shift, at), base: fileBase(shift, at),
     pins: pinnedComments(report, at), lines: lineStatuses(report, at, alerts), limits: alerts.limits, frigo: alerts.frigo,
-    changes: changes || [], ref: ref || null,
+    changes: changes || [], ref: ref || null, kpis: kpisOf(lineStatuses(report, at, alerts), alerts, (changes || []).length),
   };
+}
+/** Chiffres clés (gros chiffres en tête : écran, PDF). */
+function kpisOf(lines, alerts, nChanges) {
+  const red = lines.filter(s => s.feu === 'red').length, orange = lines.filter(s => s.feu === 'orange').length;
+  const over = alerts.limits.filter(l => l.level === 'over').length, soon = alerts.limits.filter(l => l.level === 'soon').length;
+  return [
+    { k: 'lines', n: `${red}`, of: '/ 3', label: red > 1 ? 'lignes en alerte' : 'ligne en alerte', sub: orange ? `${orange} à surveiller` : 'aucune à surveiller', tone: red ? 'red' : orange ? 'orange' : 'green' },
+    { k: 'over', n: `${over}`, label: over > 1 ? 'holding times dépassés' : 'holding time dépassé', sub: soon ? `${soon} sous le seuil d’alerte` : `${alerts.limits.length} en cours`, tone: over ? 'red' : soon ? 'orange' : 'green' },
+    { k: 'frigo', n: `${alerts.frigo.length}`, label: alerts.frigo.length > 1 ? 'échantillons au frigo' : 'échantillon au frigo', sub: alerts.frigo.length ? alerts.frigo.map(x => x.line.name).join(', ') : 'rien en attente', tone: alerts.frigo.length ? 'red' : 'green' },
+    { k: 'chg', n: `${nChanges}`, label: nChanges > 1 ? 'changements' : 'changement', sub: 'depuis le dernier shift', tone: 'navy' },
+  ];
 }
 const frigoText = m => `${plural(m.frigo.length, 'échantillon')} au frigo : ${m.frigo.map(x => `${whereOf(x)} (${x.band.short})`).join(' · ')}`;
 
@@ -5153,20 +5287,46 @@ function cardModel(b, l, c, at) {
   if (cells.length % 2) cells.push({ label: '', value: '', cls: 'is-fill' });
   return { cells: cells.concat(timed), notes };
 }
-function printCard(b, l, c, at) {
-  const { cells, notes } = cardModel(b, l, c, at);
-  const kv = h('div', { class: 'pv-kv' });
-  for (const cell of cells) {
-    kv.append(h('div', { class: `pv-l${cell.cls === 'is-fill' ? ' is-fill' : ''}`, text: cell.label }),
-      h('div', { class: `pv-v ${cell.cls || ''}` }, cell.cold ? icon('snow', 'icon pv-snow') : null,
-        cell.sub ? [h('span', { text: cell.value }), h('small', { text: cell.sub })] : cell.value));
+/** Détail d'une carte, lisible d'un coup d'œil : statuts renseignés (pastilles), dates et échéances (frises),
+    textes, remarques ; les champs à N/A, vides ou non applicables sont seulement comptés. */
+function detailModel(b, l, c, at) {
+  const st = [], dates = [], texts = [];
+  let notes = '', na = 0, off = 0, empty = 0;
+  for (const f of fieldsFor(b, l.id)) {
+    if (f.type === 'lot' || f.type === 'product') continue;
+    if (f.type === 'textarea') { notes = (c[f.key] || '').trim(); continue; }
+    if (naReason(f, c)) { off++; continue; }
+    const label = printLabelOf(f, c), v = c[f.key];
+    if (f.type === 'status') { if (v === 'N/A') na++; else st.push({ label, value: v, tone: toneOf(f.list, v), cold: v === 'AU FRIGO' }); continue; }
+    if (f.type === 'datetime') {
+      const d = parseLocal(v);
+      if (!d) { empty++; continue; }
+      dates.push({ label, value: fmtDM(d), lims: limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone })) });
+      continue;
+    }
+    if ((v || '').trim()) texts.push({ label, value: v.trim() }); else empty++;
   }
-  if (notes) kv.append(h('div', { class: 'pv-l', text: 'Remarques' }), h('div', { class: 'pv-v pv-note', text: notes }));
-  return h('div', { class: `pv-card${notes.length > PV_FLOW_CHARS ? ' pv-flow' : ''}`, 'data-line': l.id },
+  const rest = [na ? `${na} à N/A` : '', off ? `${off} non applicable${off > 1 ? 's' : ''}` : '', empty ? `${empty} vide${empty > 1 ? 's' : ''}` : ''].filter(Boolean).join(' · ');
+  return { st, dates, texts, notes, rest: rest ? `Autres champs : ${rest}` : '' };
+}
+function printCard(b, l, c, at) {
+  const m = detailModel(b, l, c, at);
+  const blank = !m.st.length && !m.dates.length && !m.texts.length && !m.notes;
+  return h('div', { class: `pv-card pvd${m.notes.length > PV_FLOW_CHARS ? ' pv-flow' : ''}`, 'data-line': l.id },
     h('div', { class: 'pv-cap' }, h('b', { text: l.name.toUpperCase() }),
       h('span', { class: `pv-lot${c.lot ? '' : ' pv-empty'}`, text: c.lot || 'Lot —', title: c.lot || null }),
       h('span', { class: `pv-prod${c.produit ? '' : ' pv-empty'}`, text: c.produit || '—' })),
-    kv);
+    h('div', { class: 'pvd-body' },
+      m.st.length ? h('div', { class: 'pvd-chips' }, m.st.map(x => h('span', { class: `pvd-chip t-${x.tone}` },
+        h('small', { text: x.label }), x.cold ? icon('snow', 'icon pv-snow') : null, h('b', { text: x.value })))) : null,
+      m.dates.map(d => h('div', { class: 'pvd-date' },
+        h('span', { class: 'pvd-date__s' }, icon('clock'), h('small', { text: d.label }), h('b', { text: d.value })),
+        d.lims.map(x => h('span', { class: `pvd-lim ht--${x.level}` }, h('span', { class: 'pvd-bar' }, h('i', { style: `width:${Math.min(100, Math.round(x.pct * 100))}%` })),
+          h('small', { text: x.label }), h('b', { text: x.due }), h('em', { text: x.rest }))))),
+      m.texts.length ? h('div', { class: 'pvd-texts' }, m.texts.map(t => h('span', {}, h('small', { text: t.label }), h('b', { text: t.value })))) : null,
+      m.notes ? h('p', { class: 'pvd-note', text: m.notes }) : null,
+      blank ? h('p', { class: 'pvd-blank', text: 'Rien de renseigné' }) : null,
+      m.rest ? h('p', { class: 'pvd-rest', text: m.rest }) : null));
 }
 
 /* ---------- Page 1 : synthèse ---------- */
@@ -5193,6 +5353,9 @@ function buildSynth(m) {
         h('span', { class: 'pvs-pin__txt', text: cm.text }),
         h('span', { class: 'pvs-pin__meta', text: `${cm.line ? lineName(cm.line) : 'Général'} · ${cm.author || '—'} · ${fmtDM(new Date(cm.at))}` }));
     }), morePins > 0 ? h('p', { class: 'pvs-more', text: `+${morePins} autre${morePins > 1 ? 's' : ''} commentaire${morePins > 1 ? 's' : ''} épinglé${morePins > 1 ? 's' : ''} — voir le détail` }) : null) : null,
+    h('div', { class: 'pvs-kpis' }, m.kpis.map(k => h('div', { class: `pvs-kpi kpi--${k.tone}` },
+      h('b', { class: 'pvs-kpi__n' }, k.n, k.of ? h('small', { text: ` ${k.of}` }) : null),
+      h('span', { class: 'pvs-kpi__t' }, h('b', { text: k.label }), h('small', { text: k.sub }))))),
     h('div', { class: 'pvs-dash' }, m.lines.map(s => h('div', { class: `pvs-tile pvs-tile--${s.feu}`, 'data-line': s.line.id },
       h('div', { class: 'pvs-tile__head' }, h('b', { text: s.line.name.toUpperCase() }),
         h('span', { class: 'pvs-feu' }, feuEl(s.feu), h('span', { class: 'pvs-feu__w', text: s.word }))),
@@ -5259,18 +5422,16 @@ function buildDetail(report, { at, author }) {
       h('div', { class: 'pv-grid' }, LINES.map(l => printCard(b, l, report.bands[b.id][l.id], at))))),
     h('div', { class: 'pv-annex' },
       h('div', { class: 'pv-box' }, h('h3', { text: 'Filling breakdown' }), fb.length
-        ? h('table', { class: 'pv-table' }, h('thead', {}, h('tr', {}, FB_FIELDS.map(fd => h('th', { text: fd.label })))),
-            h('tbody', {}, fb.map(x => h('tr', {}, FB_FIELDS.map(fd => h('td', { class: fd.lot ? 'mono' : null, text: x[fd.key] || '—' }))))))
+        ? h('ul', { class: 'pva-list' }, fb.map(x => h('li', {}, h('b', { class: 'mono', text: x.lotConcerne || '—' }),
+            h('span', { text: [x.poids && `Poids ${x.poids}`, x.lotSuivant && `→ ${x.lotSuivant}`, x.holdingTime && `HT ${x.holdingTime}`].filter(Boolean).join(' · ') || '—' }))))
         : h('div', { class: 'pv-none', text: 'Aucun arrêt signalé' })),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Vérification 5S' }),
-        h('table', { class: 'pv-table pv-5s' },
-          h('thead', {}, h('tr', {}, S5.map(k => h('th', { text: k })))),
-          h('tbody', {},
-            h('tr', {}, S5.map(k => h('td', { class: tone(report.verif5S[k].statut), text: report.verif5S[k].statut }))),
-            S5.some(k => report.verif5S[k].note) ? h('tr', {}, S5.map(k => h('td', { class: 'pv-5s__note', text: report.verif5S[k].note || '' }))) : null))),
+        h('div', { class: 'pva-5s' }, S5.map(k => h('span', { class: `pvd-chip ${tone(report.verif5S[k].statut)}` }, h('small', { text: k }), h('b', { text: report.verif5S[k].statut }),
+          report.verif5S[k].note ? h('em', { text: report.verif5S[k].note }) : null)))),
       h('div', { class: 'pv-box' }, h('h3', { text: 'Suivi dossier' }), sd.length
-        ? h('table', { class: 'pv-table' }, h('thead', {}, h('tr', {}, h('th', { text: 'Lot' }), h('th', { text: 'Scan + transfert' }), h('th', { text: 'Check' }))),
-            h('tbody', {}, sd.map(x => h('tr', {}, h('td', { class: 'mono', text: x.lot || '—' }), h('td', { class: tone(x.scan), text: x.scan }), h('td', { class: tone(x.check), text: x.check })))))
+        ? h('ul', { class: 'pva-list' }, sd.map(x => h('li', {}, h('b', { class: 'mono', text: x.lot || '—' }),
+            h('span', { class: `pvd-chip ${tone(x.scan)}` }, h('small', { text: 'Scan + transfert' }), h('b', { text: x.scan })),
+            h('span', { class: `pvd-chip ${tone(x.check)}` }, h('small', { text: 'Check' }), h('b', { text: x.check })))))
         : h('div', { class: 'pv-none', text: 'Aucun dossier à suivre' }))),
     cms.length ? h('section', { class: 'pv-cms' }, h('h3', { text: 'Commentaires' }),
       h('ul', {}, cms.map(cm => h('li', { class: `pv-cm pv-cm--${cm.level}` },
@@ -5640,6 +5801,19 @@ function pdfSynth(doc, m) {
   }
   if (m.pins.length > pins.length) { const k = m.pins.length - pins.length; doc.text(X0 + 1, y + 2, `+${k} autre${k > 1 ? 's' : ''} commentaire${k > 1 ? 's' : ''} épinglé${k > 1 ? 's' : ''} — voir le détail`, { size: 7, color: C.muted }); y += 4; }
   if (pins.length) y += 1.4;
+  /* chiffres clés */
+  const KT = { red: { fg: '#B3261E', bg: '#FDE7E5', bar: '#E5352B' }, orange: { fg: '#8A4B00', bg: '#FFF0D9', bar: '#F29900' }, green: { fg: '#0E6128', bg: '#E3F4E8', bar: '#22A653' }, navy: { fg: C.navy, bg: '#E8EDF7', bar: C.navy } };
+  const kw = (W - 12) / 4, kh = 17;
+  m.kpis.forEach((k, i) => {
+    const kx = X0 + i * (kw + 4), t = KT[k.tone];
+    doc.clip(kx, y, kw, kh, 2.2, () => { doc.rect(kx, y, kw, kh, { fill: t.bg }); doc.rect(kx, y, 1.6, kh, { fill: t.bar }); });
+    const nw = doc.text(kx + 5, y + 12.6, k.n, { size: 26, font: 'B', color: t.fg });
+    if (k.of) doc.text(kx + 5 + nw + 1, y + 12.6, k.of, { size: 10, font: 'B', color: t.fg });
+    const tx = kx + 5 + nw + (k.of ? P.width(k.of, 10, 'B') + 4 : 3.5);
+    doc.text(tx, y + 7.6, P.fit(k.label, kw - (tx - kx) - 2.5, 8.6, 'B'), { size: 8.6, font: 'B', color: C.text });
+    doc.text(tx, y + 11.8, P.fit(k.sub, kw - (tx - kx) - 2.5, 7, 'R'), { size: 7, color: C.muted });
+  });
+  y += kh + 4;
   /* tableau de bord : 3 tuiles */
   const tw = (W - 8) / 3, th = 42;
   m.lines.forEach((s, i) => {
@@ -5734,7 +5908,81 @@ function pdfSynth(doc, m) {
   }
   if (i < m.changes.length) { const k = m.changes.length - i; doc.text(sx + 3.2, cy + 0.6, `+${k} autre${k > 1 ? 's' : ''} changement${k > 1 ? 's' : ''}`, { size: 6.8, font: 'B', color: C.muted }); }
 }
-/** Pages de détail : bandes × lignes, annexes, commentaires, points à suivre (continue sur les pages suivantes si besoin). */
+/** Mise en page d'une carte de détail (pastilles, frises de dates, textes, remarques) : mesure puis dessin. */
+function pdfCardLayout(md, w) {
+  const P = PdfGen, iw = w - 5, ops = [];
+  let y = 7.4;
+  const chipW = x => P.width(x.label, 5.8, 'R') + P.width(x.value, 7, 'B') + (x.cold ? 3.2 : 0) + 5.6;
+  if (md.st.length) {
+    let cx = 0;
+    for (const x of md.st) {
+      const cw = Math.min(chipW(x), iw);
+      if (cx && cx + cw > iw) { cx = 0; y += 5.9; }
+      ops.push({ t: 'chip', x: cx, y, w: cw, it: x });
+      cx += cw + 1.2;
+    }
+    y += 5.9 + 0.8;
+  }
+  for (const d of md.dates) {
+    const hh = 4.6 + d.lims.length * 4.1 + 0.8;
+    ops.push({ t: 'date', y, h: hh, d });
+    y += hh + 1.2;
+  }
+  if (md.texts.length) { for (const t of md.texts) { ops.push({ t: 'text', y, it: t }); y += 3.6; } y += 0.8; }
+  if (md.noteLines.length) { ops.push({ t: 'note', y, lines: md.noteLines }); y += md.noteLines.length * 2.95 + 1.4; }
+  if (!md.st.length && !md.dates.length && !md.texts.length && !md.noteLines.length) { ops.push({ t: 'blank', y }); y += 4; }
+  if (md.rest) { ops.push({ t: 'rest', y }); y += 3.4; }
+  return { h: y + 1.4, ops };
+}
+function pdfDrawCard(doc, md, lay, x, y, w, hh, nav) {
+  const P = PdfGen, sh = lineShade(md.l.id), ix = x + 2.6;
+  doc.clip(x, y, w, hh, 2, () => {
+    doc.rect(x, y, w, hh, { fill: sh.faint });
+    doc.rect(x, y, w, 5.8, { fill: sh.base });
+  });
+  doc.rect(x, y, w, hh, { stroke: sh.base, lw: 0.3, r: 2 });
+  doc.text(x + 2.8, y + 4, md.l.name.toUpperCase(), { size: 7.6, font: 'B', color: sh.ink });
+  const nameW = P.width(md.l.name.toUpperCase(), 7.6, 'B');
+  const prodW = doc.text(x + w - 2.4, y + 4, md.c.produit || '—', { size: 7.2, font: 'B', color: md.c.produit ? C.navy : C.muted, align: 'right' });
+  const lot = P.fit(md.c.lot || 'Lot —', w - nameW - prodW - 12, 7.4, md.c.lot ? 'M' : 'R');
+  const lotW = P.width(lot, 7.4, md.c.lot ? 'M' : 'R');
+  doc.rect(x + 2.8 + nameW + 2, y + 1.2, lotW + 2.4, 3.6, { fill: C.white, r: 0.8 });
+  doc.text(x + 2.8 + nameW + 3.2, y + 3.95, lot, { size: 7.4, font: md.c.lot ? 'M' : 'R', color: md.c.lot ? C.text : C.muted });
+  for (const o of lay.ops) {
+    const oy = y + o.y;
+    if (o.t === 'chip') {
+      const tn = C.tone[o.it.tone] || C.tone.neutral, cx = ix + o.x;
+      doc.rect(cx, oy, o.w, 4.8, { fill: o.it.tone === 'na' ? C.white : tn.bg, r: 2.4 });
+      let tx = cx + 2.2;
+      tx += doc.text(tx, oy + 3.3, o.it.label, { size: 5.8, color: tn.fg }) + 1;
+      if (o.it.cold) { pdfIcon(doc, 'snow', tx + 1.2, oy + 2.4, 2.6, tn.dot); tx += 3.2; }
+      doc.text(tx, oy + 3.4, P.fit(o.it.value, o.w - (tx - cx) - 1.2, 7, 'B'), { size: 7, font: 'B', color: tn.fg });
+    } else if (o.t === 'date') {
+      const dw = w - 5;
+      doc.rect(ix, oy, dw, o.h, { fill: C.white, r: 1.4 });
+      pdfIcon(doc, 'clock', ix + 2.2, oy + 2.4, 2.8, sh.strong);
+      const lw2 = doc.text(ix + 4.4, oy + 3.3, o.d.label, { size: 6, color: C.muted });
+      doc.text(ix + 4.4 + lw2 + 1.4, oy + 3.4, o.d.value, { size: 7.2, font: 'B', color: C.text });
+      o.d.lims.forEach((l, k) => {
+        const ly = oy + 4.6 + k * 4.1, c = C.ht[l.level];
+        doc.rect(ix + 2, ly + 0.9, 13, 1.7, { fill: '#E1E6EE', r: 0.85 });
+        if (l.pct > 0) doc.rect(ix + 2, ly + 0.9, Math.max(1.7, 13 * Math.min(1, l.pct)), 1.7, { fill: c.bar, r: 0.85 });
+        let tx = ix + 17;
+        tx += doc.text(tx, ly + 2.7, l.label, { size: 6, color: C.muted }) + 1.2;
+        doc.text(tx, ly + 2.8, l.due, { size: 7, font: 'B', color: C.text });
+        doc.text(ix + dw - 1.6, ly + 2.8, l.rest, { size: 6.6, font: 'B', color: c.fg, align: 'right' });
+      });
+    } else if (o.t === 'text') {
+      const lw2 = doc.text(ix, oy + 2.6, `${o.it.label}`, { size: 6, color: C.muted });
+      doc.text(ix + lw2 + 1.4, oy + 2.7, P.fit(o.it.value, w - 5 - lw2 - 1.6, 7, 'B'), { size: 7, font: 'B', color: C.text });
+    } else if (o.t === 'note') {
+      doc.rect(ix, oy, 0.6, o.lines.length * 2.95 + 0.4, { fill: sh.strong });
+      o.lines.forEach((t, k) => doc.text(ix + 2, oy + 2.4 + k * 2.95, t, { size: 6.9, color: C.text }));
+    } else if (o.t === 'blank') doc.text(ix, oy + 2.8, 'Rien de renseigné', { size: 7, color: C.muted });
+    else if (o.t === 'rest') doc.text(ix, oy + 2.4, md.rest, { size: 5.8, color: '#7A8399' });
+  }
+}
+/** Pages de détail : cartes par ligne, annexes en pastilles, commentaires, points à suivre (suite sur les pages suivantes). */
 function pdfDetail(doc, report, m) {
   const P = PdfGen, W = X1 - X0;
   let y = 0;
@@ -5743,182 +5991,127 @@ function pdfDetail(doc, report, m) {
     const lh = 8.2, lw = doc.logo ? lh * doc.logo.ratio : 0;
     doc.image(X0, 8.4, lw, lh);
     const tx = X0 + lw + 3.5;
-    doc.text(tx, 12.6, `RAPPORT DE FORMULATION — DÉTAIL${cont ? ' (suite)' : ''}`, { size: 10.5, font: 'B', color: C.navy });
-    doc.text(tx, 16.6, `Date du rapport : ${wdDate(m.rdate)} · Shift : ${m.shift || '—'} · Rédigé par : ${m.author || '—'} · Édité le ${fmtDate(m.at)} à ${fmtTime(m.at)}`, { size: 7, color: C.muted });
+    doc.text(tx, 12.6, `Détail des lignes${cont ? ' (suite)' : ''}`, { size: 12, font: 'B', color: C.navy });
+    doc.text(tx, 16.8, `Rapport de formulation · ${wdDate(m.rdate)} · ${m.shift || '—'} · rédigé par ${m.author || '—'}`, { size: 7.2, color: C.muted });
     const ft = m.frigo.length ? `FRIGO — ${plural(m.frigo.length, 'échantillon')} au frigo` : 'FRIGO — rien en attente';
     const fw = P.width(ft, 7.4, 'B') + 12;
-    doc.rect(X1 - fw, 9, fw, 7, { fill: m.frigo.length ? '#D93025' : C.tone.na.bg, r: 1.4 });
+    doc.rect(X1 - fw, 9, fw, 7, { fill: m.frigo.length ? '#D93025' : C.tone.na.bg, r: 3.5 });
     pdfIcon(doc, 'snow', X1 - fw + 4, 12.5, 3.8, m.frigo.length ? C.white : C.tone.na.dot);
     doc.text(X1 - fw + 7.4, 13.6, ft, { size: 7.4, font: 'B', color: m.frigo.length ? C.white : C.muted });
-    doc.rect(X0, 19.2, W, 0.6, { fill: C.navy });
-    y = 22.4;
+    doc.rect(X0, 19.6, W, 0.35, { fill: C.border2 });
+    y = 23;
   };
   head(false);
-  const cw3 = (W - 2 * 3) / 3;
-  const LW = cw3 * 21 / 91, VW = cw3 * 24.5 / 91;
-  const NOTE_SIZE = 6.9, NOTE_LH = 2.9;
+  const cw3 = (W - 2 * 4) / 3;
   BANDS.forEach((b, bi) => {
-    const models = LINES.map(l => ({ l, c: report.bands[b.id][l.id], ...cardModel(b, l, report.bands[b.id][l.id], m.at) }));
-    for (const md of models) {
-      md.rows = [];
-      for (let k = 0; k < md.cells.length; k += 2) { const a = md.cells[k], z = md.cells[k + 1]; md.rows.push({ a, z, h: a.sub || (z && z.sub) ? 5.8 : 4.3 }); }
-      md.noteLines = md.notes ? P.wrap(md.notes, cw3 - LW - 2.4, NOTE_SIZE) : [];
-      md.h = 5.6 + md.rows.reduce((s, r) => s + r.h, 0) + (md.noteLines.length ? md.noteLines.length * NOTE_LH + 1.6 : 0);
-    }
-    let bh = Math.max(...models.map(md => md.h));
-    if (y + 6.4 + bh > YMAX) head(true);
-    const avail = YMAX - y - 6.4;
-    if (bh > avail) { /* carte plus haute qu'une page : remarques raccourcies */
+    const models = LINES.map(l => {
+      const c = report.bands[b.id][l.id];
+      const md = { l, c, ...detailModel(b, l, c, m.at) };
+      md.noteLines = md.notes ? P.wrap(md.notes, cw3 - 7.6, 6.9) : [];
+      md.lay = pdfCardLayout(md, cw3);
+      return md;
+    });
+    let bh = Math.max(...models.map(md => md.lay.h));
+    if (y + 7 + bh > YMAX) head(true);
+    const avail = YMAX - y - 7;
+    if (bh > avail) {
       for (const md of models) {
-        const over = md.h - avail;
-        if (over > 0 && md.noteLines.length) {
-          const keep = Math.max(1, md.noteLines.length - Math.ceil(over / NOTE_LH) - 1);
-          md.noteLines = [...md.noteLines.slice(0, keep - 1), P.fit(`${md.noteLines[keep - 1]} … (suite tronquée)`, cw3 - LW - 2.4, NOTE_SIZE)];
-          md.h = 5.6 + md.rows.reduce((s, r) => s + r.h, 0) + md.noteLines.length * NOTE_LH + 1.6;
+        while (md.lay.h > avail && md.noteLines.length > 1) {
+          md.noteLines = [...md.noteLines.slice(0, -2), P.fit(`${md.noteLines[md.noteLines.length - 2]} … (suite tronquée)`, cw3 - 7.6, 6.9)];
+          md.lay = pdfCardLayout(md, cw3);
         }
       }
-      bh = Math.min(avail, Math.max(...models.map(md => md.h)));
+      bh = Math.min(avail, Math.max(...models.map(md => md.lay.h)));
     }
-    /* titre de bande */
     const nav = b.id === 'enCours';
-    doc.rect(X0, y, W, 5, { fill: nav ? C.navy : b.id === 'suivant2' ? '#EEF1F7' : C.tint, r: 1 });
-    doc.circle(X0 + 3.4, y + 2.5, 1.75, { fill: C.white, stroke: nav ? null : C.navy, lw: 0.3 });
-    doc.text(X0 + 3.4, y + 3.55, String(bi + 1), { size: 6.4, font: 'B', color: C.navy, align: 'center' });
-    doc.text(X0 + 6.8, y + 3.6, b.title.toUpperCase(), { size: 7, font: 'B', color: nav ? C.white : C.navy });
-    y += 6.4;
-    models.forEach((md, i) => {
-      const x = X0 + i * (cw3 + 3), sh = lineShade(md.l.id);
-      doc.clip(x, y, cw3, bh, 1.4, () => {
-        doc.rect(x, y, cw3, bh, { fill: sh.faint });
-        doc.rect(x, y, cw3, 5.6, { fill: sh.base });
-        doc.rect(x, y, 1.2, 5.6, { fill: sh.strong });
-        let ry = y + 5.6;
-        const cell = (cx, w, hh, cl, isLabel) => {
-          if (isLabel) {
-            doc.rect(cx + 0.12, ry + 0.12, w - 0.24, hh - 0.24, { fill: cl.cls === 'is-fill' ? sh.faint : sh.soft });
-            if (cl.label) doc.text(cx + 1, ry + hh / 2 + 1, P.fit(cl.label, w - 1.6, 6.1, 'B'), { size: 6.1, font: 'B', color: sh.ink });
-            return;
-          }
-          const tn = cl.tone && C.tone[cl.tone];
-          const st = /pv-st/.test(cl.cls || '');
-          const off = /is-off/.test(cl.cls || ''), fill = /is-fill/.test(cl.cls || '');
-          doc.rect(cx + 0.12, ry + 0.12, w - 0.24, hh - 0.24, { fill: fill || off ? sh.faint : st && tn && cl.tone !== 'na' ? tn.bg : cl.sub && tn && cl.tone !== 'neutral' ? tn.bg : C.white });
-          if (!cl.value) return;
-          const color = off ? '#A9B0C0' : st && tn ? (cl.tone === 'na' ? '#8A93A8' : tn.fg) : cl.sub && tn && cl.tone !== 'neutral' ? tn.fg : C.text;
-          let vx = cx + 1;
-          if (cl.cold) { pdfIcon(doc, 'snow', vx + 1.3, ry + hh / 2, 2.6, tn ? tn.dot : C.navy); vx += 3; }
-          const fnt = off || (st && cl.tone === 'na') ? 'R' : 'B';
-          if (cl.sub) {
-            doc.text(vx, ry + 2.7, P.fit(cl.value, w - 1.6, 7, 'B'), { size: 7, font: 'B', color });
-            doc.text(vx, ry + 5.1, P.fit(cl.sub, w - 1.6, 5.6, 'B'), { size: 5.6, font: 'B', color });
-          } else doc.text(vx, ry + hh / 2 + 1.05, P.fit(cl.value, w - (vx - cx) - 0.6, st ? 6.8 : 7, fnt), { size: st ? 6.8 : 7, font: fnt, color });
-        };
-        for (const r of md.rows) {
-          doc.rect(x, ry, cw3, r.h, { fill: sh.base });
-          cell(x, LW, r.h, r.a, true); cell(x + LW, VW, r.h, r.a, false);
-          if (r.z) { cell(x + LW + VW, LW, r.h, r.z, true); cell(x + 2 * LW + VW, VW, r.h, r.z, false); }
-          ry += r.h;
-        }
-        if (md.noteLines.length) {
-          const nh = md.noteLines.length * NOTE_LH + 1.6;
-          doc.rect(x, ry, cw3, nh, { fill: sh.base });
-          doc.rect(x + 0.12, ry + 0.12, LW - 0.24, nh - 0.24, { fill: sh.soft });
-          doc.text(x + 1, ry + 3, 'Remarques', { size: 6.1, font: 'B', color: sh.ink });
-          doc.rect(x + LW + 0.12, ry + 0.12, cw3 - LW - 0.24, nh - 0.24, { fill: C.white });
-          md.noteLines.forEach((t, k) => doc.text(x + LW + 1.1, ry + 2.8 + k * NOTE_LH, t, { size: NOTE_SIZE, color: C.text }));
-        }
-      });
-      doc.rect(x, y, cw3, bh, { stroke: sh.strong, lw: nav ? 0.35 : 0.25, r: 1.4 });
-      doc.text(x + 3, y + 3.9, md.l.name.toUpperCase(), { size: 7.6, font: 'B', color: sh.ink });
-      const nameW = P.width(md.l.name.toUpperCase(), 7.6, 'B');
-      const prod = md.c.produit || '—';
-      const prodW = doc.text(x + cw3 - 2.2, y + 3.9, prod, { size: 7.2, font: 'B', color: md.c.produit ? C.navy : C.muted, align: 'right' });
-      const lot = P.fit(md.c.lot || 'Lot —', cw3 - nameW - prodW - 12, 7.4, md.c.lot ? 'M' : 'R');
-      const lotW = P.width(lot, 7.4, md.c.lot ? 'M' : 'R');
-      doc.rect(x + 3 + nameW + 2, y + 1.1, lotW + 2.4, 3.6, { fill: '#FFFFFF', r: 0.8 });
-      doc.text(x + 3 + nameW + 3.2, y + 3.85, lot, { size: 7.4, font: md.c.lot ? 'M' : 'R', color: md.c.lot ? C.text : C.muted });
-    });
-    y += bh + 3;
+    doc.circle(X0 + 2.4, y + 2.6, 2.2, { fill: nav ? C.navy : C.white, stroke: C.navy, lw: 0.3 });
+    doc.text(X0 + 2.4, y + 3.75, String(bi + 1), { size: 6.8, font: 'B', color: nav ? C.white : C.navy, align: 'center' });
+    doc.text(X0 + 6.4, y + 3.9, b.title.toUpperCase(), { size: 8, font: 'B', color: C.navy });
+    y += 7;
+    models.forEach((md, i) => pdfDrawCard(doc, md, md.lay, X0 + i * (cw3 + 4), y, cw3, bh, nav));
+    y += bh + 4;
   });
-  /* annexes : filling breakdown · 5S · suivi dossier */
+  /* annexes en pastilles */
   const fb = report.fillingBreakdown.filter(x => x.lotConcerne || x.poids || x.lotSuivant || x.holdingTime);
   const sd = report.suiviDossier.filter(x => x.lot || x.scan !== 'N/A' || x.check !== 'N/A');
-  const has5n = S5.some(k => report.verif5S[k].note);
-  const RH = 4.1;
-  const ah = 5 + RH + Math.max(fb.length || 1, (has5n ? 2 : 1), sd.length || 1) * RH + 1;
-  if (y + ah > YMAX) head(true);
-  const aw = [1.3, 1, 1].map(f => (W - 6) * f / 3.3);
-  let ax = X0;
-  const boxHead = (bx, bw, title) => {
-    doc.clip(bx, y, bw, ah, 1.3, () => { doc.rect(bx, y, bw, ah, { fill: C.white }); doc.rect(bx, y, bw, 4.6, { fill: C.tint }); });
-    doc.rect(bx, y, bw, ah, { stroke: '#9FAAC2', lw: 0.25, r: 1.3 });
-    doc.text(bx + 1.8, y + 3.3, title.toUpperCase(), { size: 6.6, font: 'B', color: C.navy });
-  };
-  const table = (bx, bw, cols, rows, empty) => {
-    const cw = bw / cols.length;
-    let ty = y + 5;
-    cols.forEach((c, i) => doc.text(bx + i * cw + 1.4, ty + 2.9, c, { size: 6, font: 'B', color: C.muted }));
-    ty += RH;
-    if (!rows.length) { doc.text(bx + 1.8, ty + 2.9, empty, { size: 7, color: '#A9B0C0' }); return; }
-    for (const r of rows) {
-      r.forEach((cell, i) => {
-        const tn = cell.tone && C.tone[cell.tone];
-        if (tn && cell.tone !== 'na') doc.rect(bx + i * cw + 0.2, ty, cw - 0.4, RH - 0.25, { fill: tn.bg });
-        doc.text(bx + i * cw + 1.4, ty + 2.9, P.fit(cell.v, cw - 2, 6.9, cell.mono ? 'M' : 'B'), { size: 6.9, font: cell.mono ? 'M' : cell.tone === 'na' ? 'R' : 'B', color: tn ? (cell.tone === 'na' ? '#8A93A8' : tn.fg) : C.text });
-      });
-      doc.line(bx + 0.6, ty + RH - 0.1, bx + bw - 0.6, ty + RH - 0.1, { color: C.border, lw: 0.15 });
-      ty += RH;
-    }
-  };
   const t3 = v => toneOf('AFAIRE3', v);
-  boxHead(ax, aw[0], 'Filling breakdown');
-  table(ax, aw[0], FB_FIELDS.map(f => f.label), fb.map(x => FB_FIELDS.map(f => ({ v: x[f.key] || '—', mono: !!f.lot }))), 'Aucun arrêt signalé');
-  ax += aw[0] + 3;
-  boxHead(ax, aw[1], 'Vérification 5S');
-  table(ax, aw[1], S5, [S5.map(k => ({ v: report.verif5S[k].statut, tone: t3(report.verif5S[k].statut) })), ...(has5n ? [S5.map(k => ({ v: report.verif5S[k].note || '' }))] : [])], '');
-  ax += aw[1] + 3;
-  boxHead(ax, aw[2], 'Suivi dossier');
-  table(ax, aw[2], ['Lot', 'Scan + transfert', 'Check'], sd.map(x => [{ v: x.lot || '—', mono: true }, { v: x.scan, tone: t3(x.scan) }, { v: x.check, tone: t3(x.check) }]), 'Aucun dossier à suivre');
-  y += ah + 3;
-  /* commentaires (tous) */
+  const RH = 5.6;
+  const ah = 7 + Math.max(fb.length || 1, 1, sd.length || 1) * RH + 1.2;
+  if (y + ah > YMAX) head(true);
+  const aw = [1.15, 1, 1.25].map(f => (W - 8) * f / 3.4);
+  let ax = X0;
+  const box = (bw, title) => {
+    doc.rect(ax, y, bw, ah, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
+    doc.text(ax + 2.4, y + 4.2, title.toUpperCase(), { size: 6.8, font: 'B', color: C.navy });
+  };
+  const chip = (cx, cy, label, value, tone) => {
+    const tn = C.tone[tone] || C.tone.neutral;
+    const w = P.width(label, 5.8) + P.width(value, 7, 'B') + 5;
+    doc.rect(cx, cy, w, 4.6, { fill: tone === 'na' ? C.white : tn.bg, r: 2.3 });
+    const lw2 = doc.text(cx + 2.2, cy + 3.2, label, { size: 5.8, color: tn.fg });
+    doc.text(cx + 2.2 + lw2 + 0.8, cy + 3.3, value, { size: 7, font: 'B', color: tn.fg });
+    return w;
+  };
+  box(aw[0], 'Filling breakdown');
+  if (!fb.length) doc.text(ax + 2.4, y + 10, 'Aucun arrêt signalé', { size: 7, color: '#A9B0C0' });
+  fb.forEach((x, k) => {
+    const lw2 = doc.text(ax + 2.4, y + 10 + k * RH, x.lotConcerne || '—', { size: 7.2, font: 'M', color: C.text });
+    doc.text(ax + 4 + lw2, y + 10 + k * RH, P.fit([x.poids && `Poids ${x.poids}`, x.lotSuivant && `→ ${x.lotSuivant}`, x.holdingTime && `HT ${x.holdingTime}`].filter(Boolean).join(' · ') || '—', aw[0] - lw2 - 7, 6.8), { size: 6.8, color: C.text });
+  });
+  ax += aw[0] + 4;
+  box(aw[1], 'Vérification 5S');
+  let cx = ax + 2.4;
+  for (const k of S5) cx += chip(cx, y + 6.6, k, report.verif5S[k].statut, t3(report.verif5S[k].statut)) + 1.2;
+  const notes = S5.filter(k => report.verif5S[k].note).map(k => `${k} : ${report.verif5S[k].note}`).join(' · ');
+  if (notes) doc.text(ax + 2.4, y + 15, P.fit(notes, aw[1] - 4.8, 6.4), { size: 6.4, color: C.muted });
+  ax += aw[1] + 4;
+  box(aw[2], 'Suivi dossier');
+  if (!sd.length) doc.text(ax + 2.4, y + 10, 'Aucun dossier à suivre', { size: 7, color: '#A9B0C0' });
+  sd.forEach((x, k) => {
+    const ry = y + 6.4 + k * RH;
+    let sx = ax + 2.4 + Math.max(16, P.width(x.lot || '—', 7.2, 'M') + 2);
+    doc.text(ax + 2.4, ry + 3.3, x.lot || '—', { size: 7.2, font: 'M', color: C.text });
+    sx += chip(sx, ry, 'Scan + transfert', x.scan, t3(x.scan)) + 1.2;
+    chip(sx, ry, 'Check', x.check, t3(x.check));
+  });
+  y += ah + 4;
+  /* commentaires */
   const cms = [...pinnedComments(report, m.at), ...otherComments(report, m.at)];
   if (cms.length) {
-    const items = cms.map(cm => ({ cm, lines: P.clamp(cm.text, W - 60, 7.2, 'R', 3) }));
-    const chH = 5.4 + items.reduce((s, it) => s + it.lines.length * 3.2 + 1.6, 0) + 0.6;
+    const items = cms.map(cm => ({ cm, lines: P.clamp(cm.text, W - 92, 7.2, 'R', 3) }));
+    const chH = 7 + items.reduce((s, it) => s + it.lines.length * 3.2 + 1.8, 0);
     if (y + Math.min(chH, 30) > YMAX) head(true);
     const hgt = Math.min(chH, YMAX - y);
-    doc.clip(X0, y, W, hgt, 1.3, () => { doc.rect(X0, y, W, hgt, { fill: C.white }); doc.rect(X0, y, W, 4.6, { fill: C.tint }); });
-    doc.rect(X0, y, W, hgt, { stroke: '#9FAAC2', lw: 0.25, r: 1.3 });
-    doc.text(X0 + 1.8, y + 3.3, 'COMMENTAIRES', { size: 6.6, font: 'B', color: C.navy });
-    let cy = y + 5.6;
+    doc.rect(X0, y, W, hgt, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
+    doc.text(X0 + 2.4, y + 4.2, 'COMMENTAIRES', { size: 6.8, font: 'B', color: C.navy });
+    let cy = y + 6.4;
     for (const it of items) {
-      const need = it.lines.length * 3.2 + 1.6;
+      const need = it.lines.length * 3.2 + 1.8;
       if (cy + need > y + hgt) break;
       const lv = levelOf(it.cm.level), c = C.pin[lv.id];
       const tag = `${lv.label.toUpperCase()}${cmPinned(it.cm, m.at) ? ' · ÉPINGLÉ' : ''}`;
-      doc.rect(X0 + 1.6, cy + 0.2, 30, 3.4, { fill: c.ico, r: 0.8 });
-      doc.text(X0 + 1.6 + 15, cy + 2.6, tag, { size: 5.8, font: 'B', color: C.white, align: 'center' });
-      it.lines.forEach((t, k) => doc.text(X0 + 34, cy + 2.6 + k * 3.2, t, { size: 7.2, color: C.text }));
-      doc.text(X1 - 2, cy + 2.6, P.fit(`${it.cm.line ? lineName(it.cm.line) : 'Général'} · ${cmMeta(it.cm, m.at)}`, 52, 6.2), { size: 6.2, color: C.muted, align: 'right' });
+      doc.rect(X0 + 2.4, cy, 30, 3.8, { fill: c.ico, r: 1.9 });
+      doc.text(X0 + 2.4 + 15, cy + 2.7, tag, { size: 5.8, font: 'B', color: C.white, align: 'center' });
+      it.lines.forEach((t, k) => doc.text(X0 + 35, cy + 2.8 + k * 3.2, t, { size: 7.2, font: k ? 'R' : 'R', color: C.text }));
+      doc.text(X1 - 2.4, cy + 2.8, P.fit(`${it.cm.line ? lineName(it.cm.line) : 'Général'} · ${cmMeta(it.cm, m.at)}`, 52, 6.2), { size: 6.2, color: C.muted, align: 'right' });
       cy += need;
     }
-    y += hgt + 3;
+    y += hgt + 4;
   }
-  /* points à suivre : peut continuer sur la page suivante */
-  const pts = report.pointsASuivre.trim() || '—';
-  let lines = P.wrap(pts, W - 6, 7.6);
+  /* points à suivre (peut continuer sur la page suivante) */
+  let lines = P.wrap(report.pointsASuivre.trim() || '—', W - 8, 7.6);
   let first = true;
   while (lines.length) {
-    if (y + 10 > YMAX) head(true);
-    const room = Math.max(1, Math.floor((YMAX - y - 6.6) / 3.4));
+    if (y + 12 > YMAX) head(true);
+    const room = Math.max(1, Math.floor((YMAX - y - 8) / 3.4));
     const part = lines.slice(0, room);
     lines = lines.slice(room);
-    const hgt = 6.4 + part.length * 3.4;
-    doc.clip(X0, y, W, hgt, 1.3, () => { doc.rect(X0, y, W, hgt, { fill: C.white }); doc.rect(X0, y, W, 4.6, { fill: C.tint }); doc.rect(X0, y, 1, hgt, { fill: C.navy }); });
-    doc.rect(X0, y, W, hgt, { stroke: '#9FAAC2', lw: 0.25, r: 1.3 });
-    doc.text(X0 + 2.8, y + 3.3, first ? 'POINTS À SUIVRE' : 'POINTS À SUIVRE (SUITE)', { size: 6.6, font: 'B', color: C.navy });
-    part.forEach((t, k) => doc.text(X0 + 2.8, y + 7.8 + k * 3.4, t, { size: 7.6, color: C.text }));
-    y += hgt + 3;
+    const hgt = 8 + part.length * 3.4;
+    doc.rect(X0, y, W, hgt, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
+    doc.rect(X0 + 1.2, y + 2, 0.8, hgt - 4, { fill: C.navy, r: 0.4 });
+    doc.text(X0 + 3.6, y + 4.2, first ? 'POINTS À SUIVRE' : 'POINTS À SUIVRE (SUITE)', { size: 6.8, font: 'B', color: C.navy });
+    part.forEach((t, k) => doc.text(X0 + 3.6, y + 8.4 + k * 3.4, t, { size: 7.6, color: C.text }));
+    y += hgt + 4;
     first = false;
   }
 }
@@ -8157,6 +8350,7 @@ async function showPrintHelp(beforePrint) {
   const body = h('div', { class: 'help-body' },
     h('p', null, h('b', null, 'Laissez les réglages d\'impression par défaut.'), ' La page impose déjà le format A4 et des marges nulles ; vérifiez seulement que rien n\'a été changé :'),
     h('ul', { class: 'help-list' },
+      h('li', null, h('span', { class: 'k' }, 'Imprimante'), h('span', { class: 'v' }, h('b', null, 'le copieur'), ' ', h('small', null, '(pas « Enregistrer au format PDF », utilisé pour le rapport de shift)'))),
       h('li', null, h('span', { class: 'k' }, 'Papier'), h('span', { class: 'v' }, h('b', null, 'A4'), ' ', h('small', null, '(« Plus de paramètres » › Format du papier — surtout pas « Lettre » : tout serait réduit à 94 % et remonterait)'))),
       h('li', null, h('span', { class: 'k' }, 'Marges'), h('span', { class: 'v' }, 'Par défaut ', h('small', null, '(ou Aucune)'))),
       h('li', null, h('span', { class: 'k' }, 'Échelle'), h('span', { class: 'v' }, '100 % ', h('small', null, '(jamais « Ajuster à la page »)'))),
@@ -8549,7 +8743,7 @@ const ParamsView = (() => {
   }
   function customDialog(existing) {
     const p = P();
-    const x = existing ? JSON.parse(JSON.stringify(existing)) : { nom: '', lines: [], bands: ['enCours'], produits: [], h: 24 };
+    const x = existing ? JSON.parse(JSON.stringify(existing)) : { nom: '', lines: [], bands: ['enCours'], produits: [], h: 24, start: '', soon: null };
     const nom = h('input', { type: 'text', class: 'input', id: 'pm-cu-nom', value: x.nom, maxlength: 40, placeholder: 'ex. HT décongélation', autocomplete: 'off' });
     const hrs = h('input', { type: 'text', class: 'input input--num', id: 'pm-cu-h', value: fmtH(x.h), inputmode: 'decimal', maxlength: 7 });
     const err = h('p', { class: 'pm-err', role: 'alert', hidden: true });
@@ -8562,16 +8756,32 @@ const ParamsView = (() => {
         : h('p', { class: 'pm-hint', text: 'Choisissez d’abord la ou les lignes.' }));
     };
     renderProds();
+    /* départ : nouveau champ dédié, ou champ date existant des cartes choisies */
+    const startSel = h('select', { class: 'select', id: 'pm-cu-start' });
+    const renderStarts = () => {
+      const keep = startSel.value || x.start || '';
+      const opts = Params.HT_STARTS.filter(st => st.lines.some(l => x.lines.includes(l)) && st.bands.some(b => x.bands.includes(b)));
+      startSel.replaceChildren(h('option', { value: '', text: 'Nouveau champ date (portant le nom de l’échéance)' }),
+        ...opts.map(st => h('option', { value: st.key, text: `Champ existant : ${st.label} (${st.lines.map(l => LINE[l].name).join(', ')})` })));
+      startSel.value = opts.some(st => st.key === keep) ? keep : '';
+    };
+    renderStarts();
+    const soon = h('input', { type: 'text', class: 'input input--num', id: 'pm-cu-soon', value: x.soon != null ? fmtH(x.soon) : '', inputmode: 'decimal', maxlength: 7, placeholder: fmtH(P().rapport.soonHours) });
     const body = h('div', { class: 'pm-form' },
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-cu-nom', text: 'Nom de l’échéance' }), nom,
         h('p', { class: 'pm-hint', text: 'Un champ « date et heure » portant ce nom est ajouté dans les cartes choisies ; l’échéance (date + durée) apparaît dans la vigilance, le PDF, l’accueil et le mail.' })),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Ligne(s)' }),
-        chips({ id: 'pm-cu-l', label: 'Lignes', items: Params.LINES.map(l => ({ value: l.id, label: l.name })), selected: x.lines, onToggle: (v, on) => { x.lines = on ? [...x.lines, v] : x.lines.filter(n => n !== v); renderProds(); } })),
+        chips({ id: 'pm-cu-l', label: 'Lignes', items: Params.LINES.map(l => ({ value: l.id, label: l.name })), selected: x.lines, onToggle: (v, on) => { x.lines = on ? [...x.lines, v] : x.lines.filter(n => n !== v); renderProds(); renderStarts(); } })),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Bande(s)' }),
-        chips({ id: 'pm-cu-b', label: 'Bandes', items: Params.BANDS.map(b => ({ value: b.id, label: b.name })), selected: x.bands, onToggle: (v, on) => { x.bands = on ? [...x.bands, v] : x.bands.filter(n => n !== v); } })),
+        chips({ id: 'pm-cu-b', label: 'Bandes', items: Params.BANDS.map(b => ({ value: b.id, label: b.name })), selected: x.bands, onToggle: (v, on) => { x.bands = on ? [...x.bands, v] : x.bands.filter(n => n !== v); renderStarts(); } })),
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-cu-start', text: 'Événement de départ' }), startSel,
+        h('p', { class: 'pm-hint', text: 'Champ existant : l’échéance s’affiche sous ce champ (ex. « Sortie frigo » + 48 h). Nouveau champ : une date à saisir dans la carte.' })),
       h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Produit(s) concernés' }), prodBox,
         h('p', { class: 'pm-hint', text: 'Aucun produit coché : l’échéance vaut pour tous les produits.' })),
-      h('div', { class: 'field field--hours' }, h('label', { class: 'field__label', for: 'pm-cu-h', text: 'Durée' }), h('span', { class: 'unit-input' }, hrs, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h'))),
+      h('div', { class: 'pm-form__row' },
+        h('div', { class: 'field field--hours' }, h('label', { class: 'field__label', for: 'pm-cu-h', text: 'Durée (jusqu’à 1000 h)' }), h('span', { class: 'unit-input' }, hrs, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h'))),
+        h('div', { class: 'field field--hours' }, h('label', { class: 'field__label', for: 'pm-cu-soon', text: 'Alerte (orange) quand il reste moins de' }), h('span', { class: 'unit-input' }, soon, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h')),
+          h('p', { class: 'pm-hint', text: `Vide : seuil de l’outil (${fmtH(P().rapport.soonHours)} h).` }))),
       err);
     const d = openDialog({
       title: existing ? 'Modifier le holding time' : 'Ajouter un holding time', icon: 'clock', body,
@@ -8585,8 +8795,10 @@ const ParamsView = (() => {
           : !x.lines.length ? 'Choisissez au moins une ligne.'
           : !x.bands.length ? 'Choisissez au moins une bande.'
           : r.error || null;
-        if (msg) { err.textContent = Core.typo(msg); err.hidden = false; return false; }
-        const item = { id: existing ? existing.id : Core.uid().slice(-8).replace(/[^a-z0-9]/gi, 'x'), nom: n, lines: x.lines, bands: x.bands, produits: x.produits, h: r.value };
+        const sv = soon.value.trim() ? parseHours(soon.value) : { value: null };
+        const msg2 = msg || sv.error || (sv.value != null && r.value != null && sv.value >= r.value ? 'Le seuil d’alerte doit être plus petit que la durée.' : null);
+        if (msg2) { err.textContent = Core.typo(msg2); err.hidden = false; return false; }
+        const item = { id: existing ? existing.id : Core.uid().slice(-8).replace(/[^a-z0-9]/gi, 'x'), nom: n, lines: x.lines, bands: x.bands, produits: x.produits, h: r.value, start: startSel.value, soon: sv.value };
         update(pp => {
           if (existing) pp.rapport.custom = pp.rapport.custom.map(c => (c.id === existing.id ? item : c));
           else pp.rapport.custom.push(item);
@@ -8608,18 +8820,21 @@ const ParamsView = (() => {
         h('span', { class: 'pm-cu__dots', 'aria-hidden': 'true' }, c.lines.map(lineDot)),
         h('span', { class: 'pm-cu__main' },
           h('b', { text: c.nom }), h('span', { class: 'pm-cu__h', text: `${fmtH(c.h)} h` }),
-          h('small', { text: `${c.lines.map(l => LINE[l].name).join(', ')} · ${c.bands.map(bandName).join(', ')} · ${c.produits.length ? c.produits.join(', ') : 'tous les produits'}` })),
+          h('small', { text: `${c.lines.map(l => LINE[l].name).join(', ')} · ${c.bands.map(bandName).join(', ')} · ${c.produits.length ? c.produits.join(', ') : 'tous les produits'}` }),
+          h('small', { class: 'pm-cu__start', text: `Départ : ${c.start ? (Params.HT_STARTS.find(st => st.key === c.start) || { label: c.start }).label : 'champ dédié'} · alerte ${fmtH(c.soon ?? P().rapport.soonHours)} h avant${c.soon == null ? ' (seuil de l’outil)' : ''}` })),
         h('span', { class: 'pm-cu__act' },
           h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `pm-cu-${c.id}-edit`, onclick: () => customDialog(c) }, 'Modifier'),
           iconBtn('trash', `Supprimer le holding time ${c.nom}`, () => withUndo(`Holding time « ${c.nom} » supprimé`, p => { p.rapport.custom = p.rapport.custom.filter(x => x.id !== c.id); }), { id: `pm-cu-${c.id}-del`, danger: true })))))
-        : h('p', { class: 'pm-empty', text: 'Aucun holding time personnalisé.' }),
-      h('button', { type: 'button', class: 'btn btn-primary', id: 'pm-cu-add', onclick: () => customDialog(null) }, icon('plus'), 'Ajouter un holding time'));
+        : h('p', { class: 'pm-empty', text: 'Aucun holding time personnalisé : « + Ajouter un holding time » en haut de la section.' }));
   }
   function secHT() {
     const soon = P().rapport.soonHours;
     return [
+      h('div', { class: 'pm-httop' },
+        h('button', { type: 'button', class: 'btn btn-primary btn-lg', id: 'pm-cu-add', onclick: () => customDialog(null) }, icon('plus'), 'Ajouter un holding time'),
+        h('p', { class: 'pm-hint', text: 'Une échéance de plus : départ sur un champ date existant (ex. Sortie frigo) ou sur un nouveau champ, durée jusqu’à 1000 h, seuil d’alerte propre, lignes, bandes et produits.' })),
       h('div', { class: 'pm-inline' },
-        h('label', { class: 'pm-inline__l', for: 'pm-soon' }, 'Alerte « bientôt » (jaune) quand il reste moins de'),
+        h('label', { class: 'pm-inline__l', for: 'pm-soon' }, 'Alerte « bientôt » (orange) quand il reste moins de'),
         hoursInput({ id: 'pm-soon', value: soon, label: 'Seuil d’alerte bientôt', onCommit: v => { if (v > 72) return warn('Le seuil d’alerte ne peut pas dépasser 72 h.'); update(p => { p.rapport.soonHours = v; }, null, 'pm-soon'); } })),
       h('div', { class: 'pm-grid pm-grid--ht' }, Params.HT_TABLES.map(htTable)),
       customList(),
@@ -8740,8 +8955,20 @@ const ParamsView = (() => {
       return h('div', { class: 'field' }, h('label', { class: 'field__label', for: el.id, text: label }), el);
     };
     return [
-      h('p', { class: 'pm-hint pm-lead', text: 'Destinataires utilisés par « Préparer le mail » (rapport de shift). Séparez plusieurs adresses par des points-virgules.' }),
-      h('div', { class: 'pm-grid pm-grid--2' }, mk('to', 'Destinataires (À)', 'ex. formulation@exemple.com'), mk('cc', 'Copie (Cc)', 'facultatif')),
+      h('p', { class: 'pm-hint pm-lead', text: 'Destinataires utilisés par « Préparer le mail » et « Clôturer le shift ». Séparez plusieurs adresses par des points-virgules.' }),
+      h('div', { class: 'pm-grid pm-grid--2' }, mk('to', 'Destinataires (À)', 'GSTBRUMFGFormulation@catalent.com'), mk('cc', 'Copie (Cc)', 'facultatif')),
+      h('div', { class: 'pm-grid pm-grid--2' },
+        h('div', { class: 'field' }, h('span', { class: 'field__label', text: 'Ouvrir le mail dans' }),
+          seg({ name: 'pm-mail-open', value: P().rapport.mail.open, label: 'Ouvrir le mail dans', options: [{ value: 'web', label: 'Outlook Web (recommandé)' }, { value: 'mailto', label: 'Application Outlook (mailto)' }],
+            onChange: v => update(p => { p.rapport.mail.open = v; }) })),
+        h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-mail-web', text: 'Adresse Outlook Web' }),
+          textInput({ id: 'pm-mail-web', value: P().rapport.mail.web, label: 'Adresse Outlook Web', maxLength: 200, onCommit: v => {
+            const t = v.replace(/\/+$/, '');
+            if (!/^https:\/\/[a-z0-9.-]+(:\d+)?(\/[^\s?#]*)?$/i.test(t)) return 'Adresse attendue : https://… (ex. https://outlook.office.com).';
+            update(p => { p.rapport.mail.web = t; }, null, 'pm-mail-web'); toast('Adresse Outlook Web enregistrée'); return null;
+          } }),
+          h('p', { class: 'pm-hint', text: 'Par défaut https://outlook.office.com (compte Microsoft 365 de l’entreprise). Ex. https://outlook.office365.com.' }))),
+      h('p', { class: 'pm-hint' }, 'Objet du mail = nom du PDF (ex. « Rapport formulation 01-10-2026 Matin »). La pièce jointe ne peut pas être ajoutée automatiquement : l’outil rappelle le nom exact du PDF à joindre.'),
       h('p', { class: 'pm-hint', text: 'Enregistrés avec le rapport (aussi accessibles depuis Rapport › ⋯ › Paramètres). S’ils sont vides, ceux des paramètres de l’équipe sont utilisés.' }),
     ];
   }
@@ -8758,7 +8985,7 @@ const ParamsView = (() => {
     const btn = (id, cls, ic, text, run) => h('button', { type: 'button', class: `btn ${cls} btn-sm`, id, onclick: run }, icon(ic), text);
     return [
       h('p', { class: 'pm-hint pm-lead' }, 'Le dossier principal est celui qui contient ', h('b', { text: d.file }), ' sur le disque N: : la sauvegarde de tout l’outil (',
-        h('span', { class: 'mono', text: 'sauvegarde.js' }), ') y est écrite, et plus tard les PDF du rapport, rangés par mois. Il se choisit une fois par PC (session Windows).'),
+        h('span', { class: 'mono', text: 'sauvegarde.js' }), ') y est écrite, ainsi que les PDF du rapport, rangés par mois (« Octobre 26 »…). Il se choisit une fois par PC (session Windows).'),
       h('dl', { class: 'pm-kv' },
         h('dt', { text: 'Dossier lié' }), h('dd', { id: 'pm-dir-name', text: d.name ? `« ${d.name} »` : '—' }),
         h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `pm-badge tone-${tone}`, id: 'pm-dir-state', text: label })),
@@ -9128,7 +9355,7 @@ const ParamsView = (() => {
     { id: 'pm-prod', icon: 'list', title: 'Rapport — Produits', sub: () => Params.LINES.map(l => `${l.name} ${Params.products(l.id).length}`).join(' · '), body: secProducts },
     { id: 'pm-rules', icon: 'check', title: 'Rapport — Règles d’applicabilité', sub: () => `${Params.RULES.length} champs conditionnels`, body: secRules },
     { id: 'pm-colors', icon: 'palette', title: 'Rapport — Couleurs des lignes', sub: () => 'Groninger · Inova 5 · Inova 4', body: secColors, swatches: true },
-    { id: 'pm-mail', icon: 'mail', title: 'Rapport — Mail', sub: () => { const m = Rapport.mailSettings(); return m.mailTo ? m.mailTo : 'aucun destinataire'; }, body: secMail },
+    { id: 'pm-mail', icon: 'mail', title: 'Rapport — Mail', sub: () => { const m = Rapport.mailSettings(); return `${m.mailTo || 'aucun destinataire'} · ${P().rapport.mail.open === 'mailto' ? 'application Outlook' : 'Outlook Web'}`; }, body: secMail },
     { id: 'pm-et', icon: 'tag', title: 'Étiquettes', sub: () => { const e = P().etiquettes; return `${e.preset === 'PAPIER' ? 'Papier normal' : 'Fiducial 115294'} · texte ${{ normal: 'normal', renforce: 'renforcé', gras: 'gras' }[e.epaisseur]} · ${e.produits.map(x => x.name).join(', ')}`; }, body: secEtiquettes },
     /* propre à ce PC (jamais dans la sauvegarde) : après les paramètres de l'équipe */
     { id: 'pm-dir', icon: 'link', title: 'Dossier principal (ce PC)', sub: dirSub, body: secDir },
@@ -9248,9 +9475,16 @@ const Accueil = (() => {
     if (!pills.length) pills.push(pill('ok', 'Aucune alerte frigo ni holding time'));
     box.replaceChildren(
       h('p', { class: 'tile__line' }, icon('clock'), upd, s.shift ? h('span', { class: 'hpill hpill--navy', text: `Shift ${s.shift}` }) : null),
+      s.pins.length ? h('ul', { class: 'tile__pins', 'aria-label': 'Commentaires épinglés' }, s.pins.slice(0, 3).map(p => h('li', { class: `tpin tpin--${p.level}` },
+        icon(p.icon), h('b', { text: p.label }), h('span', { text: p.text })))) : null,
       h('div', { class: 'tile__pills' }, pills),
       h('dl', { class: 'tile__lots', 'aria-label': 'Lots en cours de remplissage' },
-        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))));
+        s.lots.map(l => {
+          const f = s.feux.find(x => x.id === l.id);
+          return h('div', { 'data-line': l.id, 'data-feu': f ? f.feu : null, title: f ? `${f.word}${f.reason ? ` — ${f.reason}` : ''}` : null },
+            h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line, f ? h('span', { class: `tfeu tfeu--${f.feu}`, text: f.word }) : null),
+            h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null }));
+        })));
   }
   function renderEtiquettes(s, now) {
     const box = $('#tile-etiquettes-status');
