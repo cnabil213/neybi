@@ -127,7 +127,7 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .btn-aa .aa-b{font-size:.8em;margin-left:1px}
 .btn-aa[aria-pressed="true"],.btn-aa[aria-pressed="true"]:not(:disabled):hover{background:var(--cold-bg);color:var(--nn-navy)}
 
-/* Indicateur d'enregistrement (un par module, affiché selon le module actif) */
+/* Indicateur d'enregistrement (un seul pour tout l'outil : état de la sauvegarde sur le disque N:) */
 .save-state{display:inline-flex;align-items:center;justify-content:flex-end;gap:.375rem;flex:none;min-height:2rem;padding:0 .625rem;border-radius:999px;color:var(--muted);font-size:.8125rem;white-space:nowrap}
 .app-header:not(.a1) .save-state{min-width:9.5rem}   /* largeur stable : « Enregistrement… » ↔ « Enregistré 14:32 » */
 .app-header.a1:not(.nar) .save-state{min-width:4.75rem}
@@ -137,18 +137,19 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .save-state.is-error{background:var(--todo-bg);color:var(--todo-fg);font-weight:600}
 .save-state .ss-time{font-variant-numeric:tabular-nums}
 .save-state .ss-short{display:none}
-/* Rapport : état du disque partagé N: (enregistré / modifications non enregistrées / ce PC seulement) */
+/* États : enregistré sur N: / modifications non enregistrées / sur ce PC seulement */
 .save-state.is-ok{color:var(--ok-fg)}
 .save-state.is-dirty{justify-content:center;background:var(--wip-bg);color:var(--wip-fg);font-weight:600}
 /* largeur stable quel que soit l'état (pas de saut de l'en-tête à la 1re frappe) : celle de la phrase la plus longue */
-.app-header:not(.a1) .save-state[data-for="rapport"]{min-width:19.25rem}
-.app-header.a1:not(.nar) .save-state[data-for="rapport"]{min-width:10.5rem}
+.app-header:not(.a1) #save-state{min-width:15.5rem}
+.app-header.a1:not(.nar) #save-state{min-width:8.5rem}
 .save-state.is-local .ss-main .icon{color:var(--muted)}
 .ss-dot{display:inline-block;flex:none;width:.5625rem;height:.5625rem;border-radius:50%;background:var(--wip-dot)}
-.btn-save-n{position:relative}
-.btn-save-n .icon{width:1.125rem;height:1.125rem}
-.btn-save-n.is-dirty::after{content:"";position:absolute;top:.3125rem;right:.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:#FFB300;box-shadow:0 0 0 2px var(--nn-navy)}
-.btn-save-n:disabled{opacity:.7;cursor:progress}
+/* Bouton « Enregistrer » (tous les onglets) : pastille ambre tant que des modifications ne sont pas sur N: */
+.btn-save{position:relative}
+.btn-save .icon{width:1.125rem;height:1.125rem}
+.btn-save.is-dirty::after{content:"";position:absolute;top:.3125rem;right:.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:#FFB300;box-shadow:0 0 0 2px var(--nn-navy)}
+.btn-save:disabled{opacity:.7;cursor:progress}
 
 /* Compactage progressif de l'en-tête (classes posées par le script tant que la ligne déborde).
    Niveaux communs aux trois vues — le logo et les onglets ne bougent pas d'un module à l'autre :
@@ -156,7 +157,7 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
      · c4 onglet « Paramètres » réduit à l'engrenage.
    Puis niveaux propres au module affiché — les libellés d'action ne disparaissent qu'en dernier :
      a1 libellé court de l'indicateur · a2 « Annuler » · a3 « Préparer le mail » · a4 « Exporter en » et « Nouveau lot »
-     · a5 indicateur réduit au pictogramme (+ heure) · a6 PDF en icône · a7 pictogramme de « Enregistrer sur N: » retiré.
+     · a5 indicateur réduit au pictogramme (+ heure) · a6 PDF en icône · a7 pictogramme de « Enregistrer » retiré.
    Enfin « nar » (petit écran) : onglets sur une 2ᵉ ligne, actions dans le menu « ⋯ ». */
 .app-header.c1 .brand__sub{display:none}
 .app-header.c2 .tab__long{display:none}
@@ -173,11 +174,11 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .app-header.a2 #btn-undo .lbl-opt,.app-header.a3 #btn-mail .lbl-opt,.app-header.a4 .hdr-actions .lbl-opt{display:none}
 .app-header.a2 #btn-undo,.app-header.a3 #btn-mail,.app-header.a4 #btn-new{width:2.5rem;padding:0}
 .app-header.a5 .save-state:not(.is-error) .ss-short,.app-header.a5 .save-state:not(.is-error) .ss-word,.app-header.a5 .save-state .ss-time{display:none}
-.app-header.a5:not(.nar) .save-state,.app-header.a5:not(.nar) .save-state[data-for="rapport"]{min-width:0;padding:0 .5rem}
+.app-header.a5:not(.nar) #save-state{min-width:0;padding:0 .5rem}
 .app-header.a6 #btn-pdf .lbl{display:none}
 .app-header.a6 #btn-pdf{width:2.5rem;padding:0}
-.app-header.a7 #btn-save-n{padding:0 .75rem}
-.app-header.a7 #btn-save-n .icon{display:none}
+.app-header.a7 #btn-save{padding:0 .75rem}
+.app-header.a7 #btn-save .icon{display:none}
 /* Petit écran (nar) : onglets sur une 2ᵉ ligne, actions dans le menu « ⋯ » */
 .app-header.nar .app-header__in{flex-wrap:wrap;padding:0 var(--gutter);gap:.5rem;row-gap:0}
 .app-header.nar .brand{min-height:3.5rem;gap:.625rem}
@@ -191,6 +192,8 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 @media (min-width:560px){ .app-header.nar .tab{font-size:.9375rem;gap:.5rem} .app-header.nar .tab .icon{width:1.25rem;height:1.25rem} }
 .app-header.nar .hdr-actions,.app-header.nar .hdr-sep,.app-header.nar #btn-aa{display:none}
 .app-header.nar .save-state{padding:0 .375rem}
+.app-header.nar #btn-save{width:2.5rem;padding:0}
+.app-header.nar #btn-save .lbl{display:none}
 .app-header.nar .save-state .ss-word,.app-header.nar .save-state .ss-shared span{display:none}
 .app-header:not(.nar) .menu [data-narrow]{display:none}
 /* Très petit écran : 1ʳᵉ ligne resserrée par étapes (n1 : titre plus petit, n2 : heure d'enregistrement masquée,
@@ -336,6 +339,14 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .tile__cta .icon{transition:transform .15s var(--ease)}
 .tile:hover .tile__cta{background:var(--nn-navy-600)}
 .tile:hover .tile__cta .icon{transform:translateX(2px)}
+/* Accueil : « Dernière sauvegarde : aujourd'hui 14:32 par NB » */
+.home__save{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .75rem;margin:0;padding:.75rem 1rem;border:1px solid var(--border);border-radius:var(--radius);background:#fff;font-size:.9375rem;color:var(--nn-navy)}
+.home__save>.icon{flex:none;color:var(--nn-blue)}
+.home__save b{font-weight:700}
+.home__save.is-local{color:var(--muted)}
+.home__save.is-local>.icon{color:var(--muted)}
+.home__save .tile__n-warn{align-self:center}
+.home__save .home__save-hint{color:var(--muted);font-size:.875rem}
 .home__warn{display:flex;align-items:flex-start;gap:.625rem;margin:0;padding:.875rem 1rem;border:1px solid #F3B4AE;border-radius:var(--radius);background:var(--todo-bg);color:var(--todo-fg);font-size:.9375rem}
 .home__warn .icon{margin-top:.125rem}
 .home__help{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem 1.75rem;margin:0;padding:0 1rem;font-size:.875rem;color:var(--muted)}
@@ -575,6 +586,12 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-rapport .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.25rem 1rem;font-size:.9375rem}
 .mod-rapport .kv dt{color:var(--muted)}
 .mod-rapport .kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+/* Panneau « Sauvegarde sur le disque N: » : contenu de la sauvegarde, module par module */
+.mod-rapport .sv-mods{display:flex;flex-direction:column;gap:.25rem;margin:0;padding:0;list-style:none}
+.mod-rapport .sv-mods li{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .5rem}
+.mod-rapport .sv-mods .icon{width:1rem;height:1rem;color:var(--ok-dot)}
+.mod-rapport .sv-mods__st{color:var(--muted);font-size:.8125rem;font-weight:500}
+.mod-rapport .sv-mods li.is-dirty .sv-mods__st{color:var(--wip-fg);font-weight:600}
 .mod-rapport .badge{display:inline-flex;align-items:center;gap:.375rem;padding:.125rem .625rem;border-radius:999px;background:var(--t-bg);color:var(--t-fg);font-size:.8125rem;font-weight:700}
 .mod-rapport .badge::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:var(--t-dot)}
 .mod-rapport .form-grid{display:flex;flex-direction:column;gap:.875rem}
@@ -751,6 +768,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .mod-params .pm-src__note{display:flex;align-items:flex-start;gap:.375rem;font-size:.8125rem;color:var(--ok-fg)}
 .mod-params .pm-src__note .icon{width:1rem;height:1rem;margin-top:.1rem}
 .mod-params .pm-src__note.is-warn{color:var(--wip-fg);font-weight:600}
+.mod-params #pm-save-note{color:var(--muted)}
 .mod-params .pm-src__actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
 .mod-params .pm-src__actions .btn{white-space:normal;text-align:left;max-width:100%}
 /* sections repliables */
@@ -1412,17 +1430,16 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <a class="tab" href="#parametres" data-route="parametres" aria-label="Paramètres" title="Paramètres de l'outil (holding times, produits, couleurs, étiquettes)"><span data-icon="gear"></span><span class="tab__long">Paramètres</span><span class="tab__short">Paramètres</span></a>
     </nav>
     <div class="hdr-right">
-      <div class="save-state" id="save-state" data-for="rapport" hidden></div>
-      <div class="save-state" id="etq-save-state" data-for="etiquettes" role="status" hidden></div>
+      <div class="save-state" id="save-state" role="status"></div>
       <div class="hdr-actions" data-for="rapport" hidden>
         <button type="button" class="btn btn-quiet btn-collapse" id="btn-undo" title="Annuler la dernière modification (Ctrl+Z)" aria-label="Annuler la dernière modification"><span data-icon="undo"></span><span class="lbl lbl-opt">Annuler</span></button>
         <button type="button" class="btn btn-secondary btn-collapse" id="btn-mail" title="Préparer le mail au groupe formulation" aria-label="Préparer le mail"><span data-icon="mail"></span><span class="lbl lbl-opt">Préparer le mail</span></button>
         <button type="button" class="btn btn-secondary" id="btn-pdf" title="Exporter le rapport en PDF (Ctrl+P)"><span data-icon="pdf"></span><span class="lbl"><span class="lbl-opt">Exporter en </span>PDF</span></button>
-        <button type="button" class="btn btn-primary btn-save-n" id="btn-save-n" title="Enregistrer le rapport sur le disque partagé N: pour toute l'équipe (Ctrl+S)"><span data-icon="save"></span><span class="lbl">Enregistrer sur N:</span></button>
       </div>
       <div class="hdr-actions" data-for="etiquettes" hidden>
         <button type="button" class="btn btn-secondary btn-collapse" id="btn-new" title="Vider le lot, la date et les contenants (poches, bidons), et remettre les autres échantillons à la liste par défaut (produit, visa, noms, gabarit et calibration sont conservés)" aria-label="Nouveau lot"><span data-icon="newdoc"></span><span class="lbl lbl-opt">Nouveau lot</span></button>
       </div>
+      <button type="button" class="btn btn-primary btn-save" id="btn-save" title="Enregistrer tout (rapport, étiquettes, paramètres) sur le disque N: (Ctrl+S)" aria-label="Enregistrer sur le disque N:"><span data-icon="save"></span><span class="lbl">Enregistrer</span></button>
       <span class="hdr-sep" aria-hidden="true"></span>
       <button type="button" class="btn btn-quiet btn-icon btn-aa" id="btn-aa" aria-pressed="false" title="Taille du texte : normal / grand" aria-label="Texte plus grand"><span aria-hidden="true"><span class="aa-a">A</span><span class="aa-b">a</span></span></button>
       <div class="menu-wrap">
@@ -1446,7 +1463,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
         <p class="hero__sub">Rapport de shift et étiquettes d'échantillons — équipe formulation</p>
       </div>
     </section>
-    <p class="home__warn" id="home-storage" role="alert" hidden><span data-icon="alert"></span><span><b>Enregistrement impossible sur ce PC :</b> la mémoire locale du navigateur est bloquée ou pleine. L'outil fonctionne, mais le rapport et les étiquettes ne seront pas conservés après fermeture (pensez à exporter une sauvegarde du rapport).</span></p>
+    <p class="home__save" id="home-save" role="status"></p>
+    <p class="home__warn" id="home-storage" role="alert" hidden><span data-icon="alert"></span><span><b>Enregistrement impossible sur ce PC :</b> la mémoire locale du navigateur est bloquée ou pleine. L'outil fonctionne, mais le rapport et les étiquettes ne seront pas conservés après fermeture : enregistrez sur le disque N: (bouton « Enregistrer » ou Ctrl+S).</span></p>
     <div class="tiles">
       <a class="tile" href="#rapport" id="tile-rapport" aria-describedby="tile-rapport-desc tile-rapport-status">
         <div class="tile__head">
@@ -1467,7 +1485,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
     </div>
     <p class="home__help">
       <span><span data-icon="info"></span>Raccourcis :</span>
-      <span><kbd>Ctrl</kbd>+<kbd>S</kbd> enregistrer le rapport sur N:</span>
+      <span><kbd>Ctrl</kbd>+<kbd>S</kbd> enregistrer tout sur N:</span>
       <span><kbd>Ctrl</kbd>+<kbd>Z</kbd> annuler (rapport)</span>
       <span><kbd>Ctrl</kbd>+<kbd>P</kbd> imprimer / exporter le PDF</span>
       <span>PDF du rapport : bouton « Exporter en PDF » en haut à droite (menu ⋯ sur petit écran)</span>
@@ -1481,7 +1499,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 <main class="view mod-rapport" id="view-rapport" tabindex="-1" aria-labelledby="rp-h1" hidden>
   <h1 class="sr-only" id="rp-h1">Rapport de shift</h1>
   <div class="banner banner--danger" id="banner-storage" role="alert" hidden>
-    <div class="banner__in"><span data-icon="alert"></span><span class="banner__txt"><b>Enregistrement impossible sur ce PC :</b> vos saisies ne seront pas conservées à la fermeture. Enregistrez sur N: ou exportez une sauvegarde (menu ⋯ › Disque N: &amp; sauvegarde).</span><button type="button" class="btn btn-secondary btn-sm" id="btn-banner-export"><span data-icon="download"></span>Exporter une sauvegarde</button></div>
+    <div class="banner__in"><span data-icon="alert"></span><span class="banner__txt"><b>Enregistrement impossible sur ce PC :</b> vos saisies ne seront pas conservées à la fermeture. Enregistrez sur le disque N: (bouton « Enregistrer » ou Ctrl+S) ou exportez une sauvegarde du rapport.</span><button type="button" class="btn btn-secondary btn-sm" id="btn-banner-export"><span data-icon="download"></span>Exporter une sauvegarde</button></div>
   </div>
   <div class="page" id="rp-main">
     <section class="panel meta" aria-label="Informations du rapport">
@@ -1582,10 +1600,9 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 
 <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
 
-<!-- Paramètres de l'équipe : fichier « parametres-outil.js » posé à côté de l'outil (facultatif ; absent = valeurs d'origine) -->
-<script src="parametres-outil.js"></script>
-<!-- Dernier rapport de shift enregistré sur le disque partagé : fichier « donnees-rapport.js » posé à côté de l'outil (facultatif ; relu toutes les 60 s) -->
-<script src="donnees-rapport.js"></script>
+<!-- Sauvegarde de tout l'outil (rapport, étiquettes, paramètres) : fichier « sauvegarde.js » posé à côté de l'outil sur N:
+     (facultatif ; lu ici avant l'affichage, puis relu toutes les 60 s et au retour sur l'onglet) -->
+<script src="sauvegarde.js"></script>
 <script>
 (() => {
 'use strict';
@@ -1841,18 +1858,723 @@ const Core = (() => {
 })();
 
 /* #########################################################################
+   SAUVEGARDE SUR LE DISQUE N: — UN SEUL fichier « sauvegarde.js » posé à côté de l'outil, pour TOUT l'outil.
+   Comme un classeur Excel partagé : Ctrl+S (ou « Enregistrer », dans l'en-tête de chaque onglet) écrit l'état
+   partageable de chaque module ; à l'ouverture, sur n'importe quel PC, l'outil applique ce fichier tout seul
+   (balise <script> de la page, sans clic), puis le relit au retour sur l'onglet et toutes les 60 s.
+
+   Registre extensible : chaque module se déclare avec
+     Sauvegarde.register({ id, label, schema, exportState, importState, normalize, key?, pristine?, mergeOnSave?, onKeepMine? })
+     · exportState()          → état partageable du module (objet JSON, forme canonique) ;
+     · normalize(data)        → données lues dans le fichier → même forme canonique (lève une erreur si illisible) ;
+     · importState(data, meta)→ applique ces données (meta = { savedAt, savedBy }) ;
+     · key(data)              → chaîne de comparaison (par défaut JSON.stringify) : sert à savoir si le module a changé ;
+     · pristine()             → vrai si ce PC n'a rien saisi dans ce module (1re ouverture de cette version) ;
+     · mergeOnSave(remote)    → fusion avant écriture (ex. historique du rapport) ; onKeepMine(remote) → « Garder la mienne ».
+   Un futur module n'a qu'à s'enregistrer : il est sauvegardé, rechargé et comparé comme les autres.
+
+   Format : window.__NN_OUTIL_SAUVEGARDE__ = { app, schema, savedAt, savedBy, modules: { rapport: { schema, … }, … } };
+   Restent sur ce PC (jamais dans le fichier) : calibration de l'imprimante, taille du texte, dernier onglet, zoom…
+   Écriture : File System Access API (Edge / Chrome), emplacement mémorisé dans IndexedDB ; sinon téléchargement.
+   Migration : sans sauvegarde.js, les anciens fichiers « donnees-rapport.js » et « parametres-outil.js » sont lus
+   et tout est regroupé dans sauvegarde.js au premier enregistrement.
+   L'enregistrement automatique de chaque module sur ce PC (localStorage) reste le filet de sécurité.
+   ######################################################################### */
+const Sauvegarde = (() => {
+  const { h, icon, ls, pad2, fmtTime } = Core;
+  const FILE = 'sauvegarde.js';
+  const GLOBAL = '__NN_OUTIL_SAUVEGARDE__';
+  const APP = 'outil-formulation';
+  const SCHEMA = 1;
+  const PREFS_KEY = 'nn-formu-sauvegarde-v1';
+  const POLL_MS = 60000;
+  const IDB_NAME = 'nn-formu-outil', IDB_KEY = 'sauvegarde';
+  const TYPES = [{ description: 'Sauvegarde de l’Outil Formulation (sauvegarde.js)', accept: { 'text/javascript': ['.js'] } }];
+  /* Fichiers d'une version précédente (un fichier par module) : lus seulement si sauvegarde.js est absent */
+  const LEGACY = [
+    { id: 'rapport', file: 'donnees-rapport.js', global: '__NN_RAPPORT_DATA__', data: raw => raw },
+    { id: 'parametres', file: 'parametres-outil.js', global: '__NN_OUTIL_PARAMS__', data: raw => (isObj(raw.params) ? raw.params : raw) },
+  ];
+  const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
+  const validIso = v => (typeof v === 'string' && v && !isNaN(Date.parse(v)) ? new Date(v).toISOString() : null);
+  const str = (v, max) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, max) : '');
+  const fmtDate = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
+  const fmtDM = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)} ${fmtTime(d)}`;
+  const isToday = d => new Date().toDateString() === d.toDateString();
+  const tick = () => new Promise(r => setTimeout(r, 0));
+
+  const mods = [];                          /* modules enregistrés, dans l'ordre d'application (paramètres d'abord) */
+  const S = {
+    canWrite: typeof window.showSaveFilePicker === 'function',
+    handle: null, perm: 'none',
+    known: null,       /* version du fichier sur laquelle repose ce PC { savedAt, savedBy } */
+    base: {},          /* id → empreinte du module dans cette version (ou de son dernier état « propre ») */
+    dirty: new Set(),  /* modules modifiés depuis (pas encore enregistrés sur N:) */
+    disk: null,        /* dernière lecture du fichier { savedAt, savedBy, legacy } ; null = absent */
+    extra: {},         /* modules du fichier inconnus de cette version : recopiés tels quels à l'enregistrement */
+    frozen: new Set(), /* modules écrits par une version plus récente de l'outil : jamais écrasés */
+    lastSync: null, busy: false, writing: false, conflictOpen: false, lastCheck: 0, loading: {}, pending: null,
+    started: false, timers: {}, onchange: null, warnedNewer: false,
+  };
+  let authorOf = () => '';
+
+  /* ---------- Empreintes (comparaison rapide sans garder de copie) ---------- */
+  function hash(s) {
+    let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+    for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); h1 = Math.imul(h1 ^ c, 2654435761); h2 = Math.imul(h2 ^ c, 1597334677); }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return (h2 >>> 0).toString(36) + (h1 >>> 0).toString(36);
+  }
+  const sigOf = (m, data) => hash(m.key ? m.key(data) : JSON.stringify(data));
+  const localSig = m => sigOf(m, m.exportState());
+  const modById = id => mods.find(m => m.id === id);
+  const labels = ids => mods.filter(m => ids.includes(m.id)).map(m => m.label);
+
+  /* ---------- Préférences de ce PC (version connue, empreintes) ---------- */
+  function loadPrefs() {
+    const p = ls.json(PREFS_KEY);
+    if (!isObj(p)) return false;
+    const at = validIso(p.knownSavedAt);
+    S.known = at ? { savedAt: at, savedBy: str(p.knownBy, 80) } : null;
+    S.base = isObj(p.base) ? Object.fromEntries(Object.entries(p.base).filter(([, v]) => typeof v === 'string' || v === null)) : {};
+    return true;
+  }
+  const savePrefs = () => ls.set(PREFS_KEY, JSON.stringify({ knownSavedAt: S.known ? S.known.savedAt : null, knownBy: S.known ? S.known.savedBy : '', base: S.base }));
+
+  /* ---------- Registre ---------- */
+  function register(def) {
+    if (modById(def.id)) throw new Error(`module « ${def.id} » déjà enregistré`);
+    mods.push({ order: 100, schema: 1, label: def.id, ...def });
+    mods.sort((a, b) => a.order - b.order);
+    if (S.started) { if (!(def.id in S.base)) S.base[def.id] = def.pristine && !def.pristine() ? null : localSig(modById(def.id)); recheck(def.id); }
+  }
+  /** Un module a changé : l'état « modifications non enregistrées » est recalculé (anti-rebond). */
+  function changed(id) {
+    if (!S.started) return;
+    clearTimeout(S.timers[id]);
+    S.timers[id] = setTimeout(() => recheck(id), 150);
+  }
+  function recheck(id) {
+    const m = modById(id);
+    if (!m) return;
+    clearTimeout(S.timers[id]);
+    const was = S.dirty.has(id);
+    const now = localSig(m) !== S.base[id];
+    if (now) S.dirty.add(id); else S.dirty.delete(id);
+    if (was !== now) render();
+  }
+  const recheckAll = () => mods.forEach(m => recheck(m.id));
+  function setBase(m, sig) { S.base[m.id] = sig; S.dirty.delete(m.id); }
+
+  /* ---------- Format du fichier : du JavaScript (lisible par <script src> en file://), jamais exécuté à la relecture ---------- */
+  const oneLine = s => String(s || '').replace(/[\r\n]+/g, ' ').replace(/\*\//g, '* /');
+  function fileText(data) {
+    const d = new Date(data.savedAt);
+    return `/* Sauvegarde de l'Outil Formulation (${mods.map(m => m.label).join(', ')}). Enregistrée le ${fmtDate(d)} à ${fmtTime(d)}${data.savedBy ? ` par ${oneLine(data.savedBy)}` : ''}.\n` +
+      `   Lue automatiquement par « Outil Formulation.html » posé dans le même dossier. Ne pas modifier à la main. */\n` +
+      `window.${GLOBAL} = ${JSON.stringify(data)};\n`;
+  }
+  /** Objet déclaré par le fichier → { savedAt, savedBy, modules } ; null si ce n'est pas une sauvegarde de l'outil. */
+  function readFile(raw) {
+    if (!isObj(raw) || raw.app !== APP || !isObj(raw.modules)) return null;
+    return { savedAt: validIso(raw.savedAt), savedBy: str(raw.savedBy, 80), modules: raw.modules, legacy: false };
+  }
+  function parseText(text) {
+    let t = String(text || '').replace(/^\uFEFF/, '').trim().replace(/^\/\*[\s\S]*?\*\/\s*/, '');
+    const m = /^window\.__NN_OUTIL_SAUVEGARDE__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
+    if (m) t = m[1];
+    const d = readFile(JSON.parse(t));
+    if (!d) throw new Error('format');
+    return d;
+  }
+  /** Anciens fichiers (un par module) → une sauvegarde « virtuelle » (même traitement que sauvegarde.js). */
+  function fromLegacy(parts) {
+    const modules = {};
+    let savedAt = null, savedBy = '';
+    for (const { L, raw } of parts) {
+      if (!isObj(raw)) continue;
+      const data = L.data(raw);
+      if (!isObj(data)) continue;
+      modules[L.id] = data;
+      const at = validIso(raw.savedAt);
+      if (at && (!savedAt || at > savedAt)) { savedAt = at; savedBy = str(raw.savedBy, 80); }
+    }
+    return Object.keys(modules).length ? { savedAt, savedBy, modules, legacy: true } : null;
+  }
+
+  /* ---------- Lecture automatique (balise <script> voisine, « ?t=… » pour ne jamais lire une copie en cache) ---------- */
+  let seq = 0;
+  /** Charge un fichier voisin : undefined = absent ; sinon l'objet qu'il déclare (ou null). */
+  function loadScript(file, global) {
+    if (S.loading[file]) return S.loading[file];
+    S.loading[file] = new Promise(resolve => {
+      try { delete window[global]; } catch { window[global] = undefined; }
+      const s = document.createElement('script');
+      let done = false, timer = 0;
+      const fin = ok => {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        s.remove();
+        let raw;
+        if (ok) { try { raw = window[global] ?? null; } catch { raw = null; } }
+        S.loading[file] = null;
+        resolve(raw);
+      };
+      s.onload = () => fin(true);
+      s.onerror = () => fin(false);
+      timer = setTimeout(() => fin(false), 20000);
+      s.src = `${file}?t=${Date.now().toString(36)}${(++seq).toString(36)}`;
+      document.head.append(s);
+    });
+    return S.loading[file];
+  }
+  async function readLegacy() {
+    return fromLegacy(await Promise.all(LEGACY.map(async L => ({ L, raw: await loadScript(L.file, L.global) }))));
+  }
+  async function readDisk() {
+    const raw = await loadScript(FILE, GLOBAL);
+    return raw === undefined ? readLegacy() : readFile(raw);
+  }
+
+  /* ---------- Application d'une version du fichier ---------- */
+  const isNewer = d => !!d.savedAt && (!S.known || d.savedAt > S.known.savedAt);
+  const whoOf = d => d.savedBy || 'un collègue';
+  const loadedMsg = d => `Sauvegarde du ${d.savedAt ? fmtDM(new Date(d.savedAt)) : '?'} enregistrée par ${whoOf(d)} chargée`;
+  /** Données d'un module lues dans le fichier → forme canonique ; null si illisible ou écrite par une version plus récente. */
+  function prepare(m, raw) {
+    if (!isObj(raw)) return null;
+    if (Number.isInteger(raw.schema) && raw.schema > m.schema) {
+      S.frozen.add(m.id);
+      if (!S.warnedNewer) {
+        S.warnedNewer = true;
+        Core.toast(`La sauvegarde de N: vient d’une version plus récente de l’outil (${m.label}) : ouvrez la dernière version d’« Outil Formulation.html ».`, { tone: 'warn', timeout: 12000 });
+      }
+      return null;
+    }
+    S.frozen.delete(m.id);
+    const { schema, ...data } = raw;
+    try { return m.normalize(data, schema); } catch { return null; }
+  }
+  const metaOf = d => ({ savedAt: d.savedAt, savedBy: d.savedBy });
+  function apply(m, data, d, snaps) {
+    snaps.push({ m, data: m.exportState() });
+    m.importState(data, metaOf(d));
+    setBase(m, localSig(m));
+  }
+  function undoLoad(snaps) {
+    for (const { m, data } of snaps) m.importState(data, null);
+    recheckAll();
+    Core.toast('Chargement annulé : vos données sont rétablies (non enregistrées sur N:).', { icon: 'reset' });
+  }
+  function setKnown(d) { S.known = { savedAt: d.savedAt, savedBy: d.savedBy }; savePrefs(); }
+  /** Version lue sur N: (démarrage, retour sur l'onglet, toutes les 60 s) : modules non modifiés ici → appliqués ;
+      modules modifiés ici ET dans une version plus récente → question. */
+  async function onDisk(d, { initial = false } = {}) {
+    S.disk = d ? { savedAt: d.savedAt, savedBy: d.savedBy, legacy: !!d.legacy } : null;
+    if (!d) { render(); return; }
+    if (!d.legacy) S.extra = Object.fromEntries(Object.entries(d.modules).filter(([id]) => !modById(id)));
+    /* fichier téléchargé (navigateur sans écriture directe) puis déposé sur N: : c'est bien notre version */
+    if (S.pending && d.savedAt === S.pending.savedAt) {
+      for (const m of mods) if (m.id in S.pending.sigs) S.base[m.id] = S.pending.sigs[m.id];
+      S.pending = null;
+      setKnown(d);
+      S.lastSync = new Date();
+      recheckAll();
+    }
+    const newer = isNewer(d);
+    const takeable = newer || !S.known || d.savedAt === S.known.savedAt;
+    const wasDirty = new Set(S.dirty);
+    const snaps = [], conflicts = [];
+    for (const m of mods) {
+      if (!(m.id in d.modules)) continue;
+      const data = prepare(m, d.modules[m.id]);
+      if (!data) continue;
+      const rs = sigOf(m, data);
+      if (rs === localSig(m)) { setBase(m, rs); continue; }
+      if (!wasDirty.has(m.id)) { if (takeable) apply(m, data, d, snaps); }
+      else if (newer) conflicts.push(m);
+      /* modifié ici, fichier non plus récent : ce sont nos modifications pas encore enregistrées */
+    }
+    /* un module resté inchangé ici peut avoir été recalculé par le chargement (ex. nouveaux paramètres) : il reste « propre » */
+    if (snaps.length) for (const m of mods) if (!wasDirty.has(m.id)) setBase(m, localSig(m));
+    if (conflicts.length) {
+      if (initial) await tick(); /* après le routage du démarrage (qui referme les dialogues ouverts) */
+      if (S.conflictOpen || document.querySelector('dialog[open]')) { savePrefs(); render(); return; } /* question reposée à la prochaine relecture */
+      S.conflictOpen = true;
+      const choice = await conflictOnOpen(d, conflicts);
+      S.conflictOpen = false;
+      if (choice === 'theirs') {
+        for (const m of conflicts) { const data = prepare(m, d.modules[m.id]); if (data) apply(m, data, d, snaps); }
+      } else {
+        for (const m of conflicts) { const data = prepare(m, d.modules[m.id]); if (data && m.onKeepMine) m.onKeepMine(data); }
+        Core.toast('Votre version est conservée. Cliquez sur « Enregistrer » (Ctrl+S) pour la partager.', { icon: 'info', timeout: 7000 });
+      }
+    }
+    if (newer || !S.known) setKnown(d); else savePrefs();
+    if (snaps.length) {
+      S.lastSync = new Date();
+      Core.toast(loadedMsg(d), initial ? { icon: 'cloud', timeout: 6000 } : { icon: 'cloud', action: 'Annuler', onAction: () => undoLoad(snaps), timeout: 8000 });
+    }
+    recheckAll();
+    render();
+  }
+  function conflictOnOpen(d, conflicts) {
+    const at = d.savedAt ? new Date(d.savedAt) : null;
+    return Core.openDialog({
+      title: 'Une version plus récente est sur le disque N:', icon: 'cloud', tone: 'warn', className: 'dlg-n',
+      body: [
+        h('p', {}, h('b', { text: whoOf(d) }), ` a enregistré sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}.`),
+        h('p', {}, 'Vous avez aussi des modifications sur ce PC qui ', h('b', { text: 'ne sont pas enregistrées sur N:' }), ` (${labels(conflicts.map(m => m.id)).join(', ')}).`),
+        h('p', { class: 'muted', text: 'En général, on prend la version du disque N: pour repartir du travail de l’équipe. Vous pourrez annuler.' }),
+      ],
+      actions: [
+        { label: 'Garder la mienne', value: 'mine', cls: 'btn-secondary' },
+        { label: 'Prendre la version du disque N:', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
+      ],
+    }).result;
+  }
+  /** Relit le fichier de N: (retour sur l'onglet, toutes les 60 s, bouton « Relire »). */
+  async function check({ force = false } = {}) {
+    if (!S.started || (!force && performance.now() - S.lastCheck < 3000)) return;
+    if (S.busy || S.conflictOpen) return;
+    S.lastCheck = performance.now();
+    await onDisk(await readDisk());
+  }
+
+  /* ---------- Enregistrement (Ctrl+S, bouton « Enregistrer ») ---------- */
+  /** Dossier de l'outil, tel que Windows l'affiche (N:\MFG\…), d'après l'adresse de la page. */
+  function toolFolder() {
+    try {
+      if (location.protocol !== 'file:') return '';
+      const p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, '');
+      if (/^\/[A-Za-z]:/.test(p)) return p.slice(1).replace(/\//g, '\\');
+      if (location.host) return `\\\\${location.host}${p.replace(/\//g, '\\')}`;
+      return p || '/';
+    } catch { return ''; }
+  }
+  function idbOpen() {
+    return new Promise((resolve, reject) => {
+      try {
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = () => req.result.createObjectStore('kv');
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      } catch (e) { reject(e); }
+    });
+  }
+  async function idbDo(mode, fn) {
+    const db = await idbOpen();
+    try {
+      return await new Promise((resolve, reject) => {
+        const tx = db.transaction('kv', mode);
+        const req = fn(tx.objectStore('kv'));
+        tx.oncomplete = () => resolve(req?.result);
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(tx.error);
+      });
+    } finally { db.close(); }
+  }
+  const idbGet = k => idbDo('readonly', s => s.get(k));
+  const idbSet = (k, v) => idbDo('readwrite', s => s.put(v, k));
+  const idbDel = k => idbDo('readwrite', s => s.delete(k));
+
+  function folderSchema() {
+    const folder = toolFolder() || 'N:\\MFG\\Formulation\\Outil formulation';
+    const row = (name, ic, cls = '') => h('div', { class: `nsch__file ${cls}`.trim() }, h('span', { class: `nsch__ico nsch__ico--${ic}`, 'aria-hidden': 'true' }), name);
+    return h('figure', { class: 'nsch', 'aria-label': 'Schéma de la fenêtre « Enregistrer sous »' },
+      h('div', { class: 'nsch__bar' }, h('span', { class: 'nsch__step', text: '1' }), h('span', { class: 'nsch__path', text: folder })),
+      h('div', { class: 'nsch__files' }, row('Outil Formulation.html', 'html'), row(FILE, 'js', 'is-target')),
+      h('div', { class: 'nsch__foot' },
+        h('span', { class: 'nsch__lbl', text: 'Nom du fichier :' }), h('span', { class: 'nsch__name', text: FILE }),
+        h('span', { class: 'nsch__step', text: '2' }), h('span', { class: 'nsch__btn', text: 'Enregistrer' }),
+        h('span', { class: 'nsch__step', text: '3' }), h('span', { class: 'nsch__btn', text: 'Oui' })),
+      h('figcaption', { class: 'muted', text: '1 : le dossier de l’outil · 2 : Enregistrer · 3 : « Oui » pour remplacer le fichier existant' }));
+  }
+  function helpBeforePicker() {
+    const folder = toolFolder();
+    return Core.openDialog({
+      title: 'Enregistrer sur le disque N:', icon: 'save', className: 'dlg-n dlg--wide',
+      body: [
+        h('p', {}, 'Tout l’outil (', mods.map(m => m.label).join(', ').toLowerCase(), ') est enregistré dans ', h('b', { text: 'un seul fichier' }), ', ',
+          h('b', { class: 'mono', text: FILE }), ', à côté de l’outil : sur n’importe quel PC, l’outil le rouvre tout seul.'),
+        h('p', {}, 'La fenêtre Windows « Enregistrer sous » va s’ouvrir, avec le nom ', h('b', { class: 'mono', text: FILE }), ' déjà rempli. ',
+          'Choisissez le dossier où se trouve ', h('b', { text: 'Outil Formulation.html' }),
+          folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et cliquez ', h('b', { text: 'Enregistrer' }), ', puis ', h('b', { text: 'Oui' }), ' pour remplacer.'),
+        folderSchema(),
+        h('p', { class: 'muted', text: 'À faire une seule fois sur ce PC : ensuite, Ctrl+S (ou « Enregistrer ») écrit directement dans ce fichier.' }),
+      ],
+      actions: [
+        { label: 'Annuler', value: false },
+        { label: 'Choisir l’emplacement…', value: true, cls: 'btn-primary', icon: 'save', autofocus: true },
+      ],
+    }).result;
+  }
+  async function forgetHandle() {
+    S.handle = null;
+    S.perm = 'none';
+    try { await idbDel(IDB_KEY); } catch { /* rien à oublier */ }
+  }
+  /** Fenêtre « Enregistrer sous » (après l'aide) ; renvoie le fichier choisi, ou null. */
+  async function pickFile() {
+    for (;;) {
+      if ((await helpBeforePicker()) !== true) return null;
+      let handle;
+      try { handle = await window.showSaveFilePicker({ id: 'outil-formulation', suggestedName: FILE, types: TYPES }); }
+      catch (e) {
+        if (!e || e.name !== 'AbortError') Core.toast('La fenêtre « Enregistrer sous » n’a pas pu s’ouvrir.', { tone: 'warn' });
+        return null;
+      }
+      if ((handle.name || '').toLowerCase() === FILE) return handle;
+      const again = await Core.openDialog({
+        title: 'Nom de fichier à corriger', icon: 'alert', tone: 'warn', className: 'dlg-n',
+        body: [
+          h('p', {}, 'Le fichier choisi s’appelle ', h('b', { class: 'mono', text: handle.name || '?' }), '. Pour que les collègues retrouvent tout, il doit s’appeler exactement ',
+            h('b', { class: 'mono', text: FILE }), ' et être dans le dossier de l’outil.'),
+          h('p', { class: 'muted', text: 'Rien n’a été écrit dans ce fichier.' }),
+        ],
+        actions: [{ label: 'Annuler', value: false }, { label: 'Choisir à nouveau…', value: true, cls: 'btn-primary', autofocus: true }],
+      }).result;
+      if (again !== true) return null;
+    }
+  }
+  async function ensurePerm(handle) {
+    try { if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return 'granted'; } catch { /* on demande */ }
+    try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'denied'; }
+    catch { return 'denied'; }
+  }
+  function errorText(e) {
+    if (e && e.name === 'NotAllowedError') return 'Windows n’a pas autorisé l’écriture sur N:.';
+    if (e && e.name === 'NotFoundError') return 'Le fichier ou le dossier N: est introuvable (déplacé, supprimé, ou disque N: déconnecté ?).';
+    return 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs.';
+  }
+  function conflictOnSave(remote, conflicts) {
+    const at = remote.savedAt ? new Date(remote.savedAt) : null;
+    return Core.openDialog({
+      title: 'Quelqu’un a enregistré entre-temps', icon: 'users', tone: 'warn', className: 'dlg-n',
+      body: [
+        h('p', {}, h('b', { text: whoOf(remote) }), ` a enregistré une version plus récente sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}, après celle que vous avez ouverte`,
+          ` (${labels(conflicts.map(m => m.id)).join(', ')}).`),
+        h('p', {}, h('b', { text: 'Charger sa version' }), ' remplace vos modifications par les siennes (vous pourrez annuler). ',
+          h('b', { text: 'Écraser avec la mienne' }), ' remplace la sienne sur N:.'),
+      ],
+      actions: [
+        { label: 'Annuler', value: false },
+        { label: 'Écraser avec la mienne', value: 'mine', cls: 'btn-secondary' },
+        { label: 'Charger sa version', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
+      ],
+    }).result;
+  }
+  /** Contenu à écrire : tous les modules de cette version + ceux d'une autre version de l'outil (recopiés tels quels). */
+  function build(remote) {
+    const modules = {};
+    const keep = remote && !remote.legacy ? remote.modules : null;
+    const extra = keep ? Object.fromEntries(Object.entries(keep).filter(([id]) => !modById(id))) : S.extra;
+    Object.assign(modules, extra);
+    for (const m of mods) {
+      if (S.frozen.has(m.id) && keep && isObj(keep[m.id])) { modules[m.id] = keep[m.id]; continue; }
+      modules[m.id] = { schema: m.schema, ...m.exportState() };
+    }
+    return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(authorOf(), 60), modules };
+  }
+  /** Relit le fichier, fusionne, puis l'écrit (écriture atomique : fichier temporaire remplacé à close()). */
+  async function writeTo(handle) {
+    let remote = null;
+    try {
+      const txt = await (await handle.getFile()).text();
+      if (txt.trim()) { try { remote = parseText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
+    } catch (e) { if (!e || e.name !== 'NotFoundError') throw e; }
+    if (remote && isNewer(remote)) {
+      /* quelqu'un a enregistré depuis la version de ce PC : ses modules non modifiés ici sont repris, les autres → question */
+      const takes = [], conflicts = [];
+      for (const m of mods) {
+        if (!(m.id in remote.modules)) continue;
+        const data = prepare(m, remote.modules[m.id]);
+        if (!data || sigOf(m, data) === localSig(m)) continue;
+        (S.dirty.has(m.id) ? conflicts : takes).push(m);
+      }
+      if (conflicts.length) {
+        const choice = await conflictOnSave(remote, conflicts);
+        if (choice === 'theirs') {
+          const snaps = [];
+          for (const m of [...takes, ...conflicts].sort((a, b) => a.order - b.order)) { const data = prepare(m, remote.modules[m.id]); if (data) apply(m, data, remote, snaps); }
+          setKnown(remote);
+          S.disk = { savedAt: remote.savedAt, savedBy: remote.savedBy, legacy: false };
+          S.lastSync = new Date();
+          recheckAll();
+          Core.toast(loadedMsg(remote), { icon: 'cloud', action: 'Annuler', onAction: () => undoLoad(snaps), timeout: 8000 });
+          return false;
+        }
+        if (choice !== 'mine') { Core.toast('Enregistrement sur N: annulé', { icon: 'info' }); return false; }
+      }
+      const snaps = [];
+      for (const m of takes) { const data = prepare(m, remote.modules[m.id]); if (data) apply(m, data, remote, snaps); }
+    }
+    if (remote) for (const m of mods) if (m.mergeOnSave && m.id in remote.modules) { const data = prepare(m, remote.modules[m.id]); if (data) m.mergeOnSave(data); }
+    for (const m of mods) if (m.flush) m.flush();
+    const data = build(remote);
+    S.writing = true;
+    render();
+    try {
+      const w = await handle.createWritable();
+      try { await w.write(fileText(data)); await w.close(); }
+      catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
+    } finally { S.writing = false; }
+    for (const m of mods) setBase(m, localSig(m));
+    setKnown(data);
+    S.disk = { savedAt: data.savedAt, savedBy: data.savedBy, legacy: false };
+    S.extra = Object.fromEntries(Object.entries(data.modules).filter(([id]) => !modById(id)));
+    S.lastSync = new Date();
+    S.pending = null;
+    recheckAll();
+    return data;
+  }
+  /** Bouton « Enregistrer » / Ctrl+S, depuis n'importe quel onglet. */
+  async function save() {
+    for (const m of mods) if (m.flush) m.flush();
+    recheckAll();
+    if (S.busy) return;
+    if (!S.canWrite) { downloadFile(); return; }
+    S.busy = true;
+    render();
+    let fresh = false;
+    try {
+      let handle = S.handle;
+      if (handle) {
+        S.perm = await ensurePerm(handle);
+        if (S.perm !== 'granted') {
+          Core.toast('Autorisation refusée : rien n’a été enregistré sur N:.', { tone: 'warn', action: 'Réessayer', onAction: save, timeout: 10000 });
+          return;
+        }
+      } else {
+        handle = await pickFile();
+        if (!handle) return;
+        fresh = true;
+      }
+      let data;
+      try { data = await writeTo(handle); }
+      catch (e) {
+        if (!fresh && e && e.name === 'NotFoundError') await forgetHandle();
+        await Core.openDialog({
+          title: 'Non enregistré sur N:', icon: 'alert', tone: 'warn', className: 'dlg-n',
+          body: [h('p', { text: errorText(e) }), h('p', { class: 'muted', text: 'Tout reste enregistré sur ce PC. Réessayez dans un instant, ou choisissez de nouveau l’emplacement.' })],
+          actions: [{ label: 'Fermer', value: false, cls: 'btn-primary', autofocus: true }],
+        }).result;
+        return;
+      }
+      if (fresh) {
+        S.handle = handle;
+        S.perm = 'granted';
+        try { await idbSet(IDB_KEY, handle); } catch { /* emplacement non mémorisable : redemandé la prochaine fois */ }
+      }
+      if (!data) return;
+      Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}`, { icon: 'check' });
+      if (fresh) verifyLocation(data.savedAt);
+    } finally {
+      S.busy = false;
+      render();
+    }
+  }
+  /** 1er enregistrement : l'outil retrouve-t-il bien le fichier à côté de lui ? (sinon, mauvais dossier) */
+  async function verifyLocation(savedAt) {
+    for (const wait of [300, 2000, 5000]) {
+      await new Promise(r => setTimeout(r, wait));
+      const raw = await loadScript(FILE, GLOBAL);
+      if (raw && raw.savedAt === savedAt) { S.disk = { savedAt, savedBy: str(raw.savedBy, 80), legacy: false }; render(); return; }
+    }
+    /* pas à côté de l'outil : ce n'est pas « sur N: » pour les collègues → emplacement oublié, tout est à enregistrer */
+    await forgetHandle();
+    for (const m of mods) S.base[m.id] = null;
+    S.known = null;
+    savePrefs();
+    recheckAll();
+    S.disk = null;
+    render();
+    check({ force: true });
+    const choice = await Core.openDialog({
+      title: 'Enregistré dans un autre dossier ?', icon: 'alert', tone: 'warn', className: 'dlg-n dlg--wide',
+      body: [
+        h('p', {}, 'Le fichier a été écrit, mais l’outil ne le retrouve pas à côté de ', h('b', { text: 'Outil Formulation.html' }), '. Les collègues ne verront donc pas cette sauvegarde.'),
+        h('p', {}, 'Choisissez le dossier où se trouve l’outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
+      ],
+      actions: [{ label: 'Plus tard', value: false }, { label: 'Choisir le bon dossier…', value: true, cls: 'btn-primary', autofocus: true }],
+    }).result;
+    if (choice === true) save();
+  }
+  /** Navigateur sans écriture directe (Firefox…) : téléchargement du fichier + consigne. */
+  function downloadFile() {
+    const data = build(null);
+    const url = URL.createObjectURL(new Blob([fileText(data)], { type: 'text/javascript' }));
+    const a = h('a', { href: url, download: FILE });
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+    S.pending = { savedAt: data.savedAt, sigs: Object.fromEntries(mods.map(m => [m.id, localSig(m)])) };
+    const folder = toolFolder();
+    Core.openDialog({
+      title: 'Déposez le fichier sur N:', icon: 'download', className: 'dlg-n',
+      body: [
+        h('p', {}, 'Ce navigateur ne peut pas écrire directement sur N:. Le fichier ', h('b', { class: 'mono', text: FILE }), ' vient d’être ', h('b', { text: 'téléchargé' }), ' (dossier Téléchargements).'),
+        h('p', {}, 'Déplacez-le dans le dossier de l’outil', folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et acceptez de ', h('b', { text: 'remplacer' }), ' l’ancien fichier.'),
+        h('p', { class: 'muted', text: 'Astuce : avec Microsoft Edge, l’enregistrement sur N: se fait en un clic (Ctrl+S).' }),
+      ],
+      actions: [{ label: 'Compris', value: true, cls: 'btn-primary', autofocus: true }],
+    });
+  }
+
+  /* ---------- État affiché : indicateur de l'en-tête, bouton « Enregistrer », accueil ---------- */
+  /** 'ok' (✓ Enregistré 14:32) · 'dirty' (● Modifications non enregistrées) · 'local' (Sur ce PC seulement) · 'busy' · 'error' */
+  function status() {
+    if (!ls.probe()) return 'error';
+    if (S.writing) return 'busy';
+    if (S.disk && S.disk.legacy) return 'dirty'; /* anciens fichiers sur N: : à regrouper dans sauvegarde.js */
+    if (S.known && !S.dirty.size) return 'ok';
+    if (S.known || S.disk) return 'dirty';
+    return 'local';
+  }
+  const whenShort = d => (isToday(d) ? fmtTime(d) : fmtDM(d));
+  function render() {
+    const el = document.getElementById('save-state');
+    if (el) {
+      const st = status();
+      const known = S.known ? new Date(S.known.savedAt) : null;
+      const dirtyList = labels([...S.dirty]).join(', ');
+      let ic, long, short, time = '', cls, tip;
+      if (st === 'error') { ic = 'alert'; long = short = 'Non enregistré'; cls = 'is-error'; tip = 'La mémoire locale du navigateur est indisponible : enregistrez sur le disque N: (Ctrl+S) pour ne rien perdre.'; }
+      else if (st === 'busy') { ic = 'clock'; long = 'Enregistrement…'; short = 'N:…'; cls = 'is-saving'; tip = 'Enregistrement sur le disque N: en cours'; }
+      else if (st === 'ok') {
+        ic = 'check'; long = short = 'Enregistré'; time = whenShort(known); cls = 'is-ok';
+        tip = `Tout est enregistré sur le disque N: (le ${fmtDate(known)} à ${fmtTime(known)}${S.known.savedBy ? ` par ${S.known.savedBy}` : ''}).`;
+      } else if (st === 'dirty') {
+        ic = 'dot'; long = 'Modifications non enregistrées'; short = 'Non enregistré'; cls = 'is-dirty';
+        tip = S.disk && S.disk.legacy && !dirtyList
+          ? `Le disque N: contient encore les anciens fichiers (donnees-rapport.js, parametres-outil.js) : cliquez sur « Enregistrer » (Ctrl+S) pour tout regrouper dans ${FILE}.`
+          : `Modifications gardées sur ce PC, mais pas encore sur le disque N:${dirtyList ? ` (${dirtyList})` : ''} : cliquez sur « Enregistrer » (Ctrl+S).`;
+      } else {
+        ic = 'pc'; long = 'Sur ce PC seulement'; short = 'Ce PC'; cls = 'is-local';
+        tip = 'Rien n’est encore enregistré sur le disque N: : tout est gardé sur ce PC. Cliquez sur « Enregistrer » (Ctrl+S) pour que toute l’équipe le retrouve.';
+      }
+      el.className = `save-state ${cls}${time ? ' has-time' : ''}`;
+      el.dataset.state = st;
+      el.title = tip;
+      el.replaceChildren(h('span', { class: 'ss-main' }, ic === 'dot' ? h('span', { class: 'ss-dot', 'aria-hidden': 'true' }) : icon(ic),
+        h('span', { class: 'ss-word', text: long }), h('span', { class: 'ss-short', text: short }), time ? h('span', { class: 'ss-time', text: time }) : null));
+      const btn = document.getElementById('btn-save');
+      if (btn) { btn.classList.toggle('is-dirty', st === 'dirty' || st === 'local'); btn.disabled = S.busy; }
+    }
+    Core.emit('save-state');
+    if (S.onchange) S.onchange();
+  }
+  /** Résumé pour l'accueil et le panneau : état, dernière sauvegarde sur N:, modules non enregistrés. */
+  function info() {
+    const v = S.disk && S.disk.savedAt ? S.disk : S.known;
+    return { state: status(), savedAt: v && v.savedAt ? new Date(v.savedAt) : null, savedBy: v ? v.savedBy : '', dirty: labels([...S.dirty]), legacy: !!(S.disk && S.disk.legacy) };
+  }
+
+  /* ---------- Panneau « Sauvegarde sur le disque N: » (menu ⋯, tous les onglets) ---------- */
+  function openPanel() {
+    const body = h('div', { class: 'form-grid' });
+    let dref = null;
+    const draw = () => {
+      const st = status(), folder = toolFolder();
+      const disk = S.disk && S.disk.savedAt ? new Date(S.disk.savedAt) : null;
+      const badge = { ok: ['ok', 'À jour sur N:'], dirty: ['wip', 'Modifications non enregistrées'], local: ['na', 'Sur ce PC seulement'], busy: ['wip', 'Enregistrement…'], error: ['todo', 'Mémoire locale indisponible'] }[st];
+      const modsList = h('ul', { class: 'sv-mods' }, mods.map(m => h('li', { class: S.dirty.has(m.id) ? 'is-dirty' : '' },
+        S.dirty.has(m.id) ? h('span', { class: 'ss-dot', 'aria-hidden': 'true' }) : icon('check'), h('span', { text: m.label }),
+        h('span', { class: 'sv-mods__st', text: S.dirty.has(m.id) ? 'modifié, non enregistré' : S.known ? 'enregistré' : 'sur ce PC' }))));
+      body.replaceChildren(
+        h('section', { class: 'sect' }, h('h3', { text: 'Disque partagé N: (toute l’équipe)' }),
+          h('p', {}, 'Comme un fichier Excel partagé : Ctrl+S (ou « Enregistrer ») écrit tout l’outil dans ', h('b', { class: 'mono', text: FILE }),
+            ', à côté de l’outil. Sur n’importe quel PC, l’outil le rouvre tout seul.'),
+          h('dl', { class: 'kv' },
+            h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `badge tone-${badge[0]}`, text: badge[1] })),
+            h('dt', { text: 'Sur N:' }), h('dd', { text: disk ? `${S.disk.legacy ? 'Anciens fichiers (donnees-rapport.js, parametres-outil.js) du' : 'Sauvegarde du'} ${fmtDate(disk)} à ${fmtTime(disk)}${S.disk.savedBy ? ` par ${S.disk.savedBy}` : ''}` : 'Aucune sauvegarde pour l’instant' }),
+            h('dt', { text: 'Contenu' }), h('dd', {}, modsList),
+            folder ? [h('dt', { text: 'Dossier' }), h('dd', { class: 'mono', text: folder })] : null,
+            S.canWrite ? [h('dt', { text: 'Ce PC' }), h('dd', { text: S.handle ? `Emplacement mémorisé (« ${S.handle.name} »)` : 'Emplacement pas encore choisi : il sera demandé au 1er enregistrement' })] : null),
+          S.canWrite ? null : h('p', { class: 'muted', text: 'Ce navigateur ne peut pas écrire sur N: : « Enregistrer » télécharge le fichier, à déposer dans le dossier de l’outil. La lecture automatique fonctionne.' }),
+          h('div', { class: 'sect__actions' },
+            h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => { dref?.close(); save(); } }, icon('save'), 'Enregistrer'),
+            S.canWrite && S.handle ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { dref?.close(); await forgetHandle(); save(); } }, icon('link'), 'Changer d’emplacement…') : null,
+            h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { await check({ force: true }); Core.toast(S.disk ? 'Disque N: relu' : 'Aucune sauvegarde sur N: pour l’instant', { icon: 'info' }); } }, icon('reset'), 'Relire N: maintenant'))),
+        h('section', { class: 'sect' }, h('h3', { text: 'Sur ce PC (automatique)' }),
+          h('p', { text: 'Chaque modification est aussi gardée automatiquement dans ce navigateur : rien n’est perdu si l’on ferme sans enregistrer sur N:.' }),
+          h('p', { class: 'muted', text: 'Restent propres à ce PC (jamais dans la sauvegarde) : la calibration de l’imprimante (décalage X / Y, échelle), la taille du texte et le dernier onglet ouvert.' })));
+    };
+    draw();
+    S.onchange = draw;
+    dref = Core.openDialog({ title: 'Sauvegarde sur le disque N:', icon: 'cloud', className: 'mod-rapport dlg-n dlg--wide', body, actions: [{ label: 'Fermer', value: false }] });
+    dref.result.then(() => { if (S.onchange === draw) S.onchange = null; });
+  }
+
+  /* ---------- Démarrage ---------- */
+  /** Après l'initialisation des modules, avant l'affichage : la sauvegarde chargée par la balise <script> est appliquée. */
+  function start() {
+    const hadPrefs = loadPrefs();
+    for (const m of mods) {
+      if (hadPrefs && m.id in S.base) continue;
+      /* 1re ouverture de cette version (ou nouveau module) : ce qui a été saisi sur ce PC est protégé (jamais écrasé en silence) */
+      S.base[m.id] = m.pristine && !m.pristine() ? null : localSig(m);
+    }
+    S.started = true;
+    recheckAll();
+    S.lastCheck = performance.now();
+    let raw;
+    try { raw = window[GLOBAL]; } catch { raw = undefined; }
+    if (raw !== undefined) onDisk(readFile(raw), { initial: true });
+    else readLegacy().then(d => onDisk(d, { initial: true }));
+    savePrefs();
+    render();
+    if (S.canWrite) {
+      idbGet(IDB_KEY).then(async handle => {
+        if (!handle || typeof handle.queryPermission !== 'function') return;
+        S.handle = handle;
+        try { S.perm = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; } catch { S.perm = 'prompt'; }
+        render();
+      }).catch(() => {});
+      /* emplacement de l'ancien fichier donnees-rapport.js : abandonné (le nom du fichier a changé) */
+      try { indexedDB.deleteDatabase('nn-formu-rapport'); } catch { /* rien à nettoyer */ }
+    }
+    setInterval(() => { if (document.visibilityState !== 'hidden') check({ force: true }); }, POLL_MS);
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'hidden') check(); });
+    window.addEventListener('focus', () => check());
+    /* rappel (fenêtre du navigateur) si l'on quitte avec des modifications non enregistrées sur N: */
+    window.addEventListener('beforeunload', e => {
+      for (const m of mods) if (m.flush) m.flush();
+      recheckAll();
+      if (!S.dirty.size || !(S.known || S.disk)) return;
+      e.preventDefault();
+      e.returnValue = '';
+    });
+    /* outil ouvert dans deux onglets de ce PC : version connue et empreintes partagées */
+    window.addEventListener('storage', e => {
+      if (e.key !== PREFS_KEY || !e.newValue) return;
+      loadPrefs();
+      setTimeout(() => { recheckAll(); render(); }, 500);
+    });
+  }
+
+  return {
+    register, changed, start, save, check, openPanel, info, status, toolFolder,
+    setAuthor(fn) { authorOf = fn; },
+    FILE, GLOBAL, APP,
+  };
+})();
+
+/* #########################################################################
    PARAMÈTRES DE L'OUTIL — règles modifiables sans toucher au code
    (holding times, produits, applicabilité, couleurs des lignes, étiquettes).
-   Priorité : paramètres modifiés sur ce PC > fichier d'équipe « parametres-outil.js » posé
-   à côté de l'outil > valeurs d'origine. Les modules lisent toujours Params.get().
+   Priorité : paramètres modifiés sur ce PC (pas encore enregistrés) > paramètres de l'équipe (module « parametres »
+   de la sauvegarde sur N:, gardés aussi sur ce PC) > valeurs d'origine. Les modules lisent toujours Params.get().
    ######################################################################### */
 const Params = (() => {
   const { ls } = Core;
-  const LOCAL_KEY = 'nn-formu-parametres-v1';
+  const LOCAL_KEY = 'nn-formu-parametres-v1';          /* modifications de ce PC, pas encore enregistrées sur N: */
+  const TEAM_KEY = 'nn-formu-parametres-equipe-v1';    /* copie des paramètres de la dernière sauvegarde lue ou écrite */
   const APP = 'outil-formulation-parametres';
   const SCHEMA = 1;
-  const FILE_NAME = 'parametres-outil.js';
-  const GLOBAL = '__NN_OUTIL_PARAMS__';
   const HOURS_MAX = 1000;
   const clone = o => JSON.parse(JSON.stringify(o));
   const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -1957,9 +2679,11 @@ const Params = (() => {
       modele: JSON.parse(JSON.stringify(ET_MODELE)), modeleAutres: JSON.parse(JSON.stringify(ET_MODELE_AUTRES)),
     });
   }
-  /** Produits apparus dans une version de l'outil : ajoutés une fois aux paramètres d'une version précédente. */
-  const ET_VERSION = 2;
+  /** Produits apparus dans une version de l'outil : ajoutés une fois aux paramètres d'une version précédente.
+      v3 : modèle d'origine CT-P17 = noms « CTP17- » (1 mL) / « leg- » (2 mL) et liste « Endo-Bottom » / « Endo-Bottom-Backup ». */
+  const ET_VERSION = 3;
   const ET_NEW_IN_V2 = ['CT-P17'];
+  const CTP17_V2 = { noms: ['Ech ID', 'Ech REF'] };
   const DEFAULTS = {
     rapport: {
       soonHours: 4,
@@ -1992,7 +2716,7 @@ const Params = (() => {
         etBase('SB5', 'Poche', 'ID_Bag', 'Leg_Bag', true),
         etBase('SB5B', 'Poche', 'ID_Bag', 'Leg_Bag'),
         etBase('SB16', 'Poche', 'Ech ID', 'Ech REF'),
-        etBase('CT-P17', 'Bidon', 'Ech ID', 'Ech REF'),
+        etBase('CT-P17', 'Bidon', 'CTP17-', 'leg-'),
       ],
       /* listes d'origine des « autres échantillons » (quantités SB16 corrigées par rapport à l'Excel) */
       listes: {
@@ -2005,7 +2729,7 @@ const Params = (() => {
           ['Step5_pH_Osmo', '50mL'], ['Step8_pH_Osmo', '50mL'], ['Step8_SoloVPE', '2mL'], ['Step8_BB', '100mL'], ['Step8_Endo', '3mL'],
           ...seq6('Step8_BB_Val', '250mL'), ['Step8_Endo_Val', '3mL'],
         ],
-        'CT-P17': [],
+        'CT-P17': [['Endo-Bottom', '3mL'], ['Endo-Bottom-Backup', '3mL']],
       },
       v: ET_VERSION,
     },
@@ -2117,6 +2841,7 @@ const Params = (() => {
     if (isObj(R.colors)) for (const l of LINES) if (hexOk(R.colors[l.id])) d.rapport.colors[l.id] = R.colors[l.id].trim().toUpperCase();
     if (isObj(R.mail)) d.rapport.mail = { to: str(R.mail.to, 1000), cc: str(R.mail.cc, 1000) };
     const E = isObj(raw.etiquettes) ? raw.etiquettes : {};
+    const ev = Number.isInteger(E.v) ? E.v : 1;
     if (ET_PRESETS.includes(E.preset)) d.etiquettes.preset = E.preset;
     if (EPAISSEURS.includes(E.epaisseur)) d.etiquettes.epaisseur = E.epaisseur;
     if (Array.isArray(E.produits)) {
@@ -2130,53 +2855,60 @@ const Params = (() => {
       }
       if (out.length) {
         /* paramètres d'une version précédente de l'outil : les produits apparus depuis (CT-P17) sont ajoutés une fois */
-        if (E.v !== ET_VERSION) for (const n of ET_NEW_IN_V2) if (!seen.has(n) && out.length < 12) out.push(etOrigin(n));
+        if (ev < 2) for (const n of ET_NEW_IN_V2) if (!seen.has(n) && out.length < 12) out.push(etOrigin(n));
+        /* v2 → v3 : CT-P17 encore sur son ancien modèle d'origine (noms « Ech ID » / « Ech REF ») → nouveaux noms d'origine */
+        const ct = ev < 3 && out.find(p => p.name === 'CT-P17');
+        if (ct && ct.ech.length === 2 && ct.ech.every((e, i) => e.nom === CTP17_V2.noms[i])) {
+          const o = etOrigin('CT-P17');
+          ct.ech.forEach((e, i) => { e.nom = o.ech[i].nom; });
+          ct.nom1mL = ct.ech[0].nom; ct.nom2mL = ct.ech[1].nom;
+        }
         d.etiquettes.produits = out.slice(0, 12);
       }
     }
     const listes = {};
     for (const p of d.etiquettes.produits) {
-      const src = isObj(E.listes) && Array.isArray(E.listes[p.name]) ? E.listes[p.name] : DEFAULTS.etiquettes.listes[p.name] || [];
+      let src = isObj(E.listes) && Array.isArray(E.listes[p.name]) ? E.listes[p.name] : DEFAULTS.etiquettes.listes[p.name] || [];
+      /* v2 → v3 : liste CT-P17 encore vide (ancienne liste d'origine) → nouvelle liste d'origine */
+      if (p.name === 'CT-P17' && ev < 3 && !src.length) src = DEFAULTS.etiquettes.listes['CT-P17'];
       listes[p.name] = src.filter(x => Array.isArray(x) && str(x[0], 60)).slice(0, 300).map(x => [str(x[0], 60), str(x[1], 20)]);
     }
     d.etiquettes.listes = listes;
     return d;
   }
 
-  /* ---------- Sources : fichier d'équipe (balise <script> voisine), paramètres de ce PC ---------- */
-  let team = null;   /* { params, savedAt, savedBy } */
-  let local = null;  /* { params, modifiedAt, exportedAt } */
+  /* ---------- Sources : paramètres de l'équipe (sauvegarde sur N:), modifications de ce PC ---------- */
+  let team = null;   /* { params, savedAt, savedBy } : module « parametres » de la dernière sauvegarde lue ou écrite */
+  let local = null;  /* { params, modifiedAt } : modifications de ce PC */
   let cur = null;
+  const iso = x => (typeof x === 'string' && !isNaN(Date.parse(x)) ? x : null);
   function readTeam() {
-    let raw = null;
-    try { raw = window[GLOBAL]; } catch { raw = null; }
-    if (!isObj(raw)) return null;
-    const p = isObj(raw.params) ? raw.params : raw;
-    if (!isObj(p.rapport) && !isObj(p.etiquettes)) return null;
-    const at = typeof raw.savedAt === 'string' && !isNaN(Date.parse(raw.savedAt)) ? raw.savedAt : null;
-    return { params: normalize(p), savedAt: at, savedBy: str(raw.savedBy, 60) };
+    const v = ls.json(TEAM_KEY);
+    if (!isObj(v) || !isObj(v.params)) return null;
+    return { params: normalize(v.params), savedAt: iso(v.savedAt), savedBy: str(v.savedBy, 60) };
   }
   function readLocal() {
     const v = ls.json(LOCAL_KEY);
     if (!isObj(v) || !isObj(v.params)) return null;
-    const iso = x => (typeof x === 'string' && !isNaN(Date.parse(x)) ? x : null);
-    return { params: normalize(v.params), modifiedAt: iso(v.modifiedAt), exportedAt: iso(v.exportedAt) };
+    return { params: normalize(v.params), modifiedAt: iso(v.modifiedAt) };
   }
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   function writeLocal() {
     if (!local) return ls.remove(LOCAL_KEY);
     return ls.set(LOCAL_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...local }));
   }
+  const writeTeam = () => (team ? ls.set(TEAM_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...team })) : ls.remove(TEAM_KEY));
   function recompute() { cur = local ? local.params : team ? team.params : clone(DEFAULTS); }
   function init() {
     team = readTeam();
     local = readLocal();
-    /* les paramètres de ce PC sont identiques au fichier d'équipe (ex. fichier enregistré depuis ce PC puis posé sur N:) :
-       on repasse sur le fichier d'équipe, pour suivre ses prochaines mises à jour */
+    /* les paramètres de ce PC sont identiques à ceux de l'équipe : on repasse sur ceux de l'équipe */
     if (local && team && same(local.params, team.params)) { local = null; writeLocal(); }
     recompute();
     applyColors();
   }
+  /** Toute modification des paramètres : à enregistrer sur N: (indicateur « Modifications non enregistrées »). */
+  function changed(detail) { Core.emit('params', detail || {}); Sauvegarde.changed('parametres'); }
 
   /* ---------- Couleurs des lignes → variables CSS (écran et PDF) ---------- */
   const hex2rgb = hx => [1, 3, 5].map(i => parseInt(hx.slice(i, i + 2), 16));
@@ -2225,12 +2957,12 @@ const Params = (() => {
   function commit(next, detail) {
     detail = detail || {};
     const n = normalize(next);
-    local = { params: n, modifiedAt: new Date().toISOString(), exportedAt: null };
+    local = { params: n, modifiedAt: new Date().toISOString() };
     const ok = writeLocal();
     recompute();
     applyColors();
     lastRenames = detail.renames || [];
-    Core.emit('params', { renames: lastRenames, ...detail });
+    changed({ renames: lastRenames, ...detail });
     return ok;
   }
   /** Applique une modification : mutate(copie) ; renvoie false si le stockage local est indisponible. */
@@ -2240,38 +2972,44 @@ const Params = (() => {
     mutate(next);
     return commit(next, detail);
   }
-  function revertToTeam() { local = null; writeLocal(); recompute(); applyColors(); Core.emit('params', {}); }
+  function revertToTeam() { local = null; writeLocal(); recompute(); applyColors(); changed(); }
   function resetDefaults() {
     if (team) return commit(clone(DEFAULTS));
-    local = null; writeLocal(); recompute(); applyColors(); Core.emit('params', {});
+    local = null; writeLocal(); recompute(); applyColors(); changed();
     return true;
   }
   function restore(snapshot) {
     local = snapshot.local ? clone(snapshot.local) : null;
-    writeLocal(); recompute(); applyColors(); Core.emit('params', {});
+    writeLocal(); recompute(); applyColors(); changed();
   }
   const snapshot = () => ({ local: local ? clone(local) : null });
   function source() {
     const kind = local ? 'local' : team ? 'team' : 'default';
-    const teamNewer = !!(local && team && team.savedAt && local.modifiedAt && Date.parse(team.savedAt) > Date.parse(local.modifiedAt));
-    return { kind, team: team ? { savedAt: team.savedAt, savedBy: team.savedBy } : null, local: local ? { modifiedAt: local.modifiedAt, exportedAt: local.exportedAt } : null, teamNewer, isDefault: same(cur, DEFAULTS) };
+    return { kind, team: team ? { savedAt: team.savedAt, savedBy: team.savedBy } : null, local: local ? { modifiedAt: local.modifiedAt } : null, isDefault: same(cur, DEFAULTS) };
   }
 
-  /* ---------- Fichier d'équipe, export / import ---------- */
-  function payload(savedBy, mail) {
-    const params = clone(cur);
-    if (mail) params.rapport.mail = { to: str(mail.to, 1000), cc: str(mail.cc, 1000) };
-    return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(savedBy, 60), params };
+  /* ---------- Sauvegarde sur N: (module « parametres » du fichier sauvegarde.js) ---------- */
+  Sauvegarde.register({
+    id: 'parametres', label: 'Paramètres', schema: SCHEMA, order: 10,
+    exportState: () => clone(cur),
+    normalize: data => { if (!isObj(data.rapport) && !isObj(data.etiquettes)) throw new Error('format'); return normalize(data); },
+    /* meta = version lue ou écrite sur N: → paramètres de l'équipe ; sans meta (« Annuler » un chargement) → modification de ce PC */
+    importState(data, meta) {
+      if (!meta) { commit(data); return; }
+      team = { params: normalize(data), savedAt: meta.savedAt, savedBy: str(meta.savedBy, 60) };
+      writeTeam();
+      local = null; writeLocal();
+      recompute(); applyColors();
+      changed();
+    },
+    pristine: () => !local,
+  });
+
+  /* ---------- Export / import (fichier .json) ---------- */
+  function payload(savedBy) {
+    return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(savedBy, 60), params: clone(cur) };
   }
-  function teamFileText(savedBy, mail) {
-    const p = payload(savedBy, mail);
-    return `/* Paramètres de l'Outil Formulation — enregistrés le ${fmtStamp(new Date(p.savedAt))}${p.savedBy ? ` par ${p.savedBy}` : ''}.\n` +
-      `   Placez ce fichier à côté de « Outil Formulation.html » (même dossier) : l'outil le charge automatiquement.\n` +
-      `   Ne pas modifier à la main : utilisez l'onglet Paramètres de l'outil. */\n` +
-      `window.${GLOBAL} = ${JSON.stringify(p, null, 2)};\n`;
-  }
-  const jsonText = (savedBy, mail) => JSON.stringify(payload(savedBy, mail), null, 2);
-  function markExported() { if (local) { local.exportedAt = new Date().toISOString(); writeLocal(); } }
+  const jsonText = savedBy => JSON.stringify(payload(savedBy), null, 2);
   /** Lit un fichier de paramètres (.json exporté ou parametres-outil.js) sans jamais l'exécuter. */
   function parseText(text) {
     let t = String(text || '').replace(/^﻿/, '').trim();
@@ -2313,9 +3051,9 @@ const Params = (() => {
   const fmtHours = v => String(v).replace('.', ',');
 
   init();
-  return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, teamFileText, jsonText, markExported, importText, parseText,
+  return { get, update, commit, revertToTeam, resetDefaults, restore, snapshot, source, jsonText, importText, parseText,
     products, productNames, baseOf, ruleHas, htHours, fmtHours, shades, lum, normalize, canon,
-    DEFAULTS, LINES, BANDS, HT_TABLES, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, FILE_NAME, fmtStamp,
+    DEFAULTS, LINES, BANDS, HT_TABLES, RULES, ET_PRESETS, EPAISSEURS, HOURS_MAX, fmtStamp,
     ET_VARS, ET_CHAMPS, parseLine, etOrigin, normEtProduct };
 })();
 
@@ -2750,7 +3488,9 @@ function undo() {
 /* =========================================================================
    6. Stockage local (localStorage, toujours sous try/catch)
    ========================================================================= */
-const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false, sharedKnownSavedAt: null, sharedKnownBy: '', sharedDirty: false };
+const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false };
+/* anciennes préférences du partage sur N: (version précédente) : lues une fois, pour la migration vers sauvegarde.js */
+let legacyShared = { knownSavedAt: null, dirty: false };
 function loadPrefs() {
   try {
     const p = JSON.parse(ls.get(KEYS.prefs) || '{}');
@@ -2758,9 +3498,7 @@ function loadPrefs() {
       prefs.collapsed = isObj(p.collapsed) ? p.collapsed : {};
       prefs.lineFilter = ['all', ...LINES.map(l => l.id)].includes(p.lineFilter) ? p.lineFilter : 'all';
       prefs.printHelpSeen = p.printHelpSeen === true;
-      prefs.sharedKnownSavedAt = validIso(p.sharedKnownSavedAt);
-      prefs.sharedKnownBy = str(p.sharedKnownBy, 80);
-      prefs.sharedDirty = p.sharedDirty === true;
+      legacyShared = { knownSavedAt: validIso(p.sharedKnownSavedAt), dirty: p.sharedDirty === true };
     }
   } catch { /* préférences illisibles : valeurs par défaut */ }
 }
@@ -2772,10 +3510,9 @@ function currentData() {
 }
 function schedulePersist() {
   persist.state = 'saving';
-  renderSaveState();
   clearTimeout(persist.timer);
   persist.timer = setTimeout(saveLocalNow, 400);
-  markSharedDirty();
+  Sauvegarde.changed('rapport');
 }
 function saveLocalNow() {
   clearTimeout(persist.timer);
@@ -2783,7 +3520,6 @@ function saveLocalNow() {
   const ok = persist.ok && ls.set(KEYS.data, JSON.stringify(currentData()));
   persist.state = ok ? 'saved' : 'error';
   if (ok) persist.at = new Date();
-  renderSaveState();
   storageFailed(!ok);
   return ok;
 }
@@ -2795,452 +3531,43 @@ function storageFailed(failed) {
   Core.emit('storage-error', 'rapport');
   if (persist.failNotified || !persist.ok) return; /* stockage absent dès le démarrage : bandeau déjà affiché */
   persist.failNotified = true;
-  toast('Enregistrement impossible sur ce PC : exportez une sauvegarde pour ne pas perdre le rapport.', { tone: 'warn', action: 'Exporter une sauvegarde', onAction: exportJson, timeout: 15000 });
+  toast('Enregistrement impossible sur ce PC : enregistrez sur N: (Ctrl+S) ou exportez une sauvegarde du rapport.', { tone: 'warn', action: 'Exporter une sauvegarde', onAction: exportJson, timeout: 15000 });
 }
-/* Ctrl+S et bouton « Enregistrer sur N: » : copie locale immédiate, puis enregistrement sur le disque partagé */
-function forceSave() { saveToN(); }
+/** Toute modification du rapport hors saisie (instantané PDF, paramètres du mail…) : à enregistrer sur N:. */
+const markChanged = () => Sauvegarde.changed('rapport');
 
 /* =========================================================================
-   7. Disque partagé N: — fichier « donnees-rapport.js » posé à côté de l'outil
-      Fonctionne comme un Excel partagé : le dernier rapport enregistré sur N: est chargé tout seul à l'ouverture
-      (balise <script> voisine, relue au retour sur l'onglet et toutes les 60 s) ; l'enregistrement sur N: est
-      explicite (bouton « Enregistrer sur N: », Ctrl+S) et écrase le fichier précédent.
-      Écriture : File System Access API (Edge / Chrome), emplacement mémorisé dans IndexedDB ;
-      sinon téléchargement du fichier, à déposer dans le dossier de l'outil.
-      L'enregistrement automatique sur ce PC (localStorage) reste le filet de sécurité.
+   7. Sauvegarde sur N: — module « rapport » du fichier sauvegarde.js (voir SAUVEGARDE SUR LE DISQUE N:)
+      Partagé : rapport en cours, historique (instantanés des PDF), destinataires du mail.
+      Propre à ce PC : sections repliées, filtre de ligne, aide d'impression, auteur (« Rédigé par »).
    ========================================================================= */
-const N_FILE = 'donnees-rapport.js';
-const N_GLOBAL = '__NN_RAPPORT_DATA__';
-const N_POLL_MS = 60000;
-const N_IDB_KEY = 'nHandle';
-const N_TYPES = [{ description: 'Données du rapport partagé (donnees-rapport.js)', accept: { 'text/javascript': ['.js'] } }];
-const shared = {
-  canWrite: typeof window.showSaveFilePicker === 'function',
-  handle: null, perm: 'none',
-  knownSavedAt: null, knownBy: '', /* version du disque N: sur laquelle repose ce rapport (chargée ou enregistrée ici) */
-  dirty: false,                    /* modifications pas encore enregistrées sur N: */
-  rev: 0,                          /* compteur de modifications (fichier téléchargé puis déposé à la main) */
-  disk: null,                      /* dernière version lue sur N: { savedAt, savedBy } ; null = fichier absent */
-  lastSync: null, busy: false, writing: false, conflictOpen: false, lastCheck: 0, loading: null, verify: null, pendingDownload: null,
-  onchange: null,
-};
-
-function idbOpen() {
-  return new Promise((resolve, reject) => {
-    try {
-      const req = indexedDB.open('nn-formu-rapport', 1);
-      req.onupgradeneeded = () => req.result.createObjectStore('kv');
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
-    } catch (e) { reject(e); }
-  });
-}
-async function idbDo(mode, fn) {
-  const db = await idbOpen();
-  try {
-    return await new Promise((resolve, reject) => {
-      const tx = db.transaction('kv', mode);
-      const req = fn(tx.objectStore('kv'));
-      tx.oncomplete = () => resolve(req?.result);
-      tx.onerror = () => reject(tx.error);
-      tx.onabort = () => reject(tx.error);
-    });
-  } finally { db.close(); }
-}
-const idbGet = k => idbDo('readonly', s => s.get(k));
-const idbSet = (k, v) => idbDo('readwrite', s => s.put(v, k));
-const idbDel = k => idbDo('readwrite', s => s.delete(k));
-
-/** Dossier de l'outil, tel que Windows l'affiche (N:\MFG\…), d'après l'adresse de la page. */
-function toolFolder() {
-  try {
-    if (location.protocol !== 'file:') return '';
-    let p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, '');
-    if (/^\/[A-Za-z]:/.test(p)) return p.slice(1).replace(/\//g, '\\');
-    if (location.host) return `\\\\${location.host}${p.replace(/\//g, '\\')}`;
-    return p || '/';
-  } catch { return ''; }
-}
-const isToday = d => fmtISODate(d) === fmtISODate(new Date());
-/** « 14:32 » aujourd'hui, sinon « 01/10 14:32 ». */
-const fmtWhenShort = d => (isToday(d) ? fmtTime(d) : fmtDM(d));
-
-function sharedChanged() {
-  renderSaveState();
-  Core.emit('data', 'rapport');
-  if (shared.onchange) shared.onchange();
-}
-function setSharedDirty(v) {
-  shared.dirty = v;
-  if (prefs.sharedDirty !== v) { prefs.sharedDirty = v; savePrefs(); }
-}
-function setKnown(savedAt, savedBy = '') {
-  shared.knownSavedAt = savedAt || null;
-  shared.knownBy = savedBy || '';
-  prefs.sharedKnownSavedAt = shared.knownSavedAt;
-  prefs.sharedKnownBy = shared.knownBy;
-  savePrefs();
-}
-/** Toute modification du rapport (saisie, instantané PDF, paramètres du mail…) : à enregistrer sur N:. */
-function markSharedDirty() {
-  shared.rev += 1;
-  if (!shared.dirty) { setSharedDirty(true); renderSaveState(); }
-}
-
-/* ---------- Format du fichier : du JavaScript (lisible par <script src> en file://), jamais exécuté à la relecture ---------- */
-const oneLine = s => String(s || '').replace(/[\r\n]+/g, ' ').replace(/\*\//g, '* /');
-function nFileText(data) {
-  const d = new Date(data.savedAt);
-  return `/* Rapport de shift — Outil Formulation. Enregistré le ${fmtDate(d)} à ${fmtTime(d)}${data.savedBy ? ` par ${oneLine(data.savedBy)}` : ''}.\n` +
-    `   Lu automatiquement par « Outil Formulation.html » posé dans le même dossier. Ne pas modifier à la main. */\n` +
-    `window.${N_GLOBAL} = ${JSON.stringify(data)};\n`;
-}
-/** Contenu du fichier → données normalisées (lève une erreur si illisible). */
-function parseNText(text) {
-  let t = String(text || '').replace(/^\uFEFF/, '').trim();
-  t = t.replace(/^\/\*[\s\S]*?\*\/\s*/, '');
-  const m = /^window\.__NN_RAPPORT_DATA__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
-  if (m) t = m[1];
-  return normalizeData(JSON.parse(t));
-}
-
-/* ---------- Lecture automatique (balise <script> voisine) ---------- */
-let loadSeq = 0;
-/** Recharge donnees-rapport.js : undefined = fichier absent ; sinon l'objet déclaré par le fichier (ou null). */
-function loadDiskScript() {
-  if (shared.loading) return shared.loading;
-  shared.loading = new Promise(resolve => {
-    try { delete window[N_GLOBAL]; } catch { window[N_GLOBAL] = undefined; }
-    const s = document.createElement('script');
-    let done = false, timer = 0;
-    const fin = ok => {
-      if (done) return;
-      done = true;
-      clearTimeout(timer);
-      s.remove();
-      let raw;
-      if (ok) { try { raw = window[N_GLOBAL] ?? null; } catch { raw = null; } }
-      shared.loading = null;
-      resolve(raw);
-    };
-    s.onload = () => fin(true);
-    s.onerror = () => fin(false);
-    timer = setTimeout(() => fin(false), 20000);
-    s.src = `${N_FILE}?t=${Date.now().toString(36)}${(++loadSeq).toString(36)}`;
-    document.head.append(s);
-  });
-  return shared.loading;
-}
-const sansStamp = r => JSON.stringify({ ...r, updatedAt: null, updatedBy: '' });
-const isNewer = d => !!d.savedAt && (!shared.knownSavedAt || d.savedAt > shared.knownSavedAt);
-const whoOf = d => d.savedBy || 'un collègue';
-const loadedMsg = d => {
-  const at = d.savedAt ? new Date(d.savedAt) : null;
-  return `Rapport du ${at ? fmtDM(at) : '?'} enregistré par ${whoOf(d)} chargé`;
-};
-function applyLoadedData(d) {
+/** Comparaison : le rapport sans son horodatage de modification, l'historique par identifiants, le mail. */
+const shareKey = d => JSON.stringify({ report: { ...d.report, updatedAt: null, updatedBy: '' }, history: d.history.map(e => e.id), settings: d.settings });
+function exportShared() { return clone({ report: state.report, history: state.history, settings: state.settings }); }
+function importShared(d, meta) {
   pushUndo();
   undoMeta = { key: null, t: 0 };
-  state.report = d.report;
-  state.history = mergeHistory(d.history, state.history);
-  if (d.settings.mailTo || d.settings.mailCc) state.settings = d.settings;
-  setKnown(d.savedAt, d.savedBy);
-  setSharedDirty(false);
-  shared.disk = { savedAt: d.savedAt, savedBy: d.savedBy };
-  shared.lastSync = new Date();
+  state.report = clone(d.report);
+  /* chargement depuis N: : l'historique est fusionné (rien ne se perd) ; « Annuler » : rétabli tel quel */
+  state.history = meta ? mergeHistory(d.history, state.history) : clone(d.history);
+  if (!meta || d.settings.mailTo || d.settings.mailCc) state.settings = clone(d.settings);
   saveLocalNow();
   schedulePrint();
   refresh();
 }
-/** Données lues sur N: (automatiquement). */
-async function onDiskData(raw, { initial = false } = {}) {
-  if (raw === undefined || raw === null) { shared.disk = null; sharedChanged(); return; }
-  let d;
-  try { d = normalizeData(raw); } catch { shared.disk = null; sharedChanged(); return; }
-  shared.disk = { savedAt: d.savedAt, savedBy: d.savedBy };
-  /* fichier téléchargé (navigateur sans écriture directe) puis déposé sur N: : c'est bien notre version */
-  const pd = shared.pendingDownload;
-  if (pd && d.savedAt === pd.savedAt) {
-    shared.pendingDownload = null;
-    setKnown(d.savedAt, d.savedBy);
-    if (shared.rev === pd.rev) setSharedDirty(false);
-    shared.lastSync = new Date();
-  }
-  if (isNewer(d)) {
-    if (!shared.dirty || sansStamp(d.report) === sansStamp(state.report)) {
-      applyLoadedData(d);
-      /* à l'ouverture, rien à annuler (le rapport de ce PC était déjà sur N:) */
-      toast(loadedMsg(d), initial ? { icon: 'cloud', timeout: 6000 } : { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 });
-    } else if (document.body.dataset.route === 'rapport') await conflictOnOpen(d);
-    /* sinon (étiquettes, paramètres…) : la question attend le retour sur le Rapport de shift (voir show()) */
-  }
-  sharedChanged();
-}
-async function conflictOnOpen(d) {
-  if (shared.conflictOpen) return;
-  shared.conflictOpen = true;
-  const at = d.savedAt ? new Date(d.savedAt) : null;
-  const choice = await openDialog({
-    title: 'Une version plus récente est sur le disque N:', icon: 'cloud', tone: 'warn', className: 'dlg-n',
-    body: [
-      h('p', {}, h('b', { text: whoOf(d) }), ` a enregistré le rapport sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}.`),
-      h('p', {}, 'Vous avez aussi des modifications sur ce PC qui ', h('b', { text: 'ne sont pas enregistrées sur N:' }), '.'),
-      h('p', { class: 'muted', text: 'En général, on prend la version du disque N: pour repartir du dernier rapport de l’équipe. Vous pourrez annuler.' }),
-    ],
-    actions: [
-      { label: 'Garder la mienne', value: 'mine', cls: 'btn-secondary' },
-      { label: 'Prendre la version du disque N:', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
-    ],
-  }).result;
-  shared.conflictOpen = false;
-  if (choice === 'theirs') {
-    applyLoadedData(d);
-    toast(loadedMsg(d), { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 });
-  } else {
-    /* la mienne : on note la version vue (pas de nouvelle question pour elle) et on garde son historique ;
-       le prochain « Enregistrer sur N: » l'écrasera */
-    state.history = mergeHistory(state.history, d.history);
-    setKnown(d.savedAt, d.savedBy);
-    saveLocalNow();
-    toast('Votre version est conservée. Cliquez sur « Enregistrer sur N: » pour la partager.', { icon: 'info', timeout: 7000 });
-  }
-}
-/** Relit le fichier de N: (démarrage, retour sur l'onglet, toutes les 60 s). */
-async function checkDisk({ force = false } = {}) {
-  if (!force && performance.now() - shared.lastCheck < 3000) return;
-  if (shared.busy || shared.conflictOpen) return;
-  shared.lastCheck = performance.now();
-  await onDiskData(await loadDiskScript());
-}
-
-/* ---------- Enregistrement explicite sur N: ---------- */
-function folderSchema() {
-  const folder = toolFolder() || 'N:\\MFG\\Formulation\\Outil formulation';
-  const row = (name, ic, cls = '') => h('div', { class: `nsch__file ${cls}`.trim() }, h('span', { class: `nsch__ico nsch__ico--${ic}`, 'aria-hidden': 'true' }), name);
-  return h('figure', { class: 'nsch', 'aria-label': 'Schéma de la fenêtre « Enregistrer sous »' },
-    h('div', { class: 'nsch__bar' }, h('span', { class: 'nsch__step', text: '1' }), h('span', { class: 'nsch__path', text: folder })),
-    h('div', { class: 'nsch__files' }, row('Outil Formulation.html', 'html'), row(N_FILE, 'js', 'is-target')),
-    h('div', { class: 'nsch__foot' },
-      h('span', { class: 'nsch__lbl', text: 'Nom du fichier :' }), h('span', { class: 'nsch__name', text: N_FILE }),
-      h('span', { class: 'nsch__step', text: '2' }), h('span', { class: 'nsch__btn', text: 'Enregistrer' }),
-      h('span', { class: 'nsch__step', text: '3' }), h('span', { class: 'nsch__btn', text: 'Oui' })),
-    h('figcaption', { class: 'muted', text: '1 : le dossier de l’outil · 2 : Enregistrer · 3 : « Oui » pour remplacer le fichier existant' }));
-}
-async function helpBeforePicker() {
-  const folder = toolFolder();
-  return openDialog({
-    title: 'Enregistrer sur le disque N:', icon: 'save', className: 'dlg-n dlg--wide',
-    body: [
-      h('p', {}, 'La fenêtre Windows « Enregistrer sous » va s’ouvrir, avec le nom ', h('b', { class: 'mono', text: N_FILE }), ' déjà rempli. ',
-        'Choisissez le dossier où se trouve ', h('b', { text: 'Outil Formulation.html' }),
-        folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et cliquez ', h('b', { text: 'Enregistrer' }), ', puis ', h('b', { text: 'Oui' }), ' pour remplacer.'),
-      folderSchema(),
-      h('p', { class: 'muted', text: 'À faire une seule fois sur ce PC : ensuite, « Enregistrer sur N: » écrit directement dans ce fichier.' }),
-    ],
-    actions: [
-      { label: 'Annuler', value: false },
-      { label: 'Choisir l’emplacement…', value: true, cls: 'btn-primary', icon: 'save', autofocus: true },
-    ],
-  }).result;
-}
-async function forgetHandle() {
-  shared.handle = null;
-  shared.perm = 'none';
-  try { await idbDel(N_IDB_KEY); } catch { /* rien à oublier */ }
-}
-/** Fenêtre « Enregistrer sous » (après l'aide) ; renvoie le handle choisi, ou null. */
-async function pickNFile() {
-  for (;;) {
-    if ((await helpBeforePicker()) !== true) return null;
-    let handle;
-    try { handle = await window.showSaveFilePicker({ id: 'outil-formulation', suggestedName: N_FILE, types: N_TYPES }); }
-    catch (e) {
-      if (!e || e.name !== 'AbortError') toast('La fenêtre « Enregistrer sous » n’a pas pu s’ouvrir.', { tone: 'warn' });
-      return null;
-    }
-    if ((handle.name || '').toLowerCase() === N_FILE) return handle;
-    const again = await openDialog({
-      title: 'Nom de fichier à corriger', icon: 'alert', tone: 'warn', className: 'dlg-n',
-      body: [
-        h('p', {}, 'Le fichier choisi s’appelle ', h('b', { class: 'mono', text: handle.name || '?' }), '. Pour que les collègues retrouvent le rapport, il doit s’appeler exactement ',
-          h('b', { class: 'mono', text: N_FILE }), ' et être dans le dossier de l’outil.'),
-        h('p', { class: 'muted', text: 'Rien n’a été écrit dans ce fichier.' }),
-      ],
-      actions: [{ label: 'Annuler', value: false }, { label: 'Choisir à nouveau…', value: true, cls: 'btn-primary', autofocus: true }],
-    }).result;
-    if (again !== true) return null;
-  }
-}
-async function ensurePerm(handle) {
-  try { if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return 'granted'; } catch { /* on demande */ }
-  try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'denied'; }
-  catch { return 'denied'; }
-}
-function nErrorText(e) {
-  if (e && e.name === 'NotAllowedError') return 'Windows n’a pas autorisé l’écriture sur N:.';
-  if (e && e.name === 'NotFoundError') return 'Le fichier ou le dossier N: est introuvable (déplacé, supprimé, ou disque N: déconnecté ?).';
-  return 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs.';
-}
-async function conflictOnSave(remote) {
-  const at = remote.savedAt ? new Date(remote.savedAt) : null;
-  return openDialog({
-    title: 'Quelqu’un a enregistré entre-temps', icon: 'users', tone: 'warn', className: 'dlg-n',
-    body: [
-      h('p', {}, h('b', { text: whoOf(remote) }), ` a enregistré une version plus récente sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}, après celle que vous avez ouverte.`),
-      h('p', {}, h('b', { text: 'Charger sa version' }), ' remplace votre rapport par le sien (vous pourrez annuler). ',
-        h('b', { text: 'Écraser avec la mienne' }), ' remplace le sien sur N:.'),
-    ],
-    actions: [
-      { label: 'Annuler', value: false },
-      { label: 'Écraser avec la mienne', value: 'mine', cls: 'btn-secondary' },
-      { label: 'Charger sa version', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
-    ],
-  }).result;
-}
-/** Relit puis écrit le fichier (écriture atomique : fichier temporaire remplacé à close()). */
-async function writeToHandle(handle) {
-  let remote = null;
-  try {
-    const txt = await (await handle.getFile()).text();
-    if (txt.trim()) { try { remote = parseNText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
-  } catch (e) { if (!e || e.name !== 'NotFoundError') throw e; }
-  if (remote && isNewer(remote) && sansStamp(remote.report) !== sansStamp(state.report)) {
-    const choice = await conflictOnSave(remote);
-    if (choice === 'theirs') { applyLoadedData(remote); toast(loadedMsg(remote), { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 }); return false; }
-    if (choice !== 'mine') { toast('Enregistrement sur N: annulé', { icon: 'info' }); return false; }
-  }
-  if (remote) state.history = mergeHistory(state.history, remote.history);
-  const data = currentData();
-  shared.writing = true;
-  renderSaveState();
-  try {
-    const w = await handle.createWritable();
-    try { await w.write(nFileText(data)); await w.close(); }
-    catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
-  } finally { shared.writing = false; }
-  saveLocalNow();
-  setKnown(data.savedAt, data.savedBy);
-  setSharedDirty(false);
-  shared.disk = { savedAt: data.savedAt, savedBy: data.savedBy };
-  shared.lastSync = new Date();
-  shared.pendingDownload = null;
-  return data;
-}
-/** Bouton « Enregistrer sur N: » / Ctrl+S. */
-async function saveToN() {
-  saveLocalNow();
-  if (shared.busy) return;
-  if (!shared.canWrite) { downloadNFile(); return; }
-  shared.busy = true;
-  renderSaveState();
-  let fresh = false;
-  try {
-    let handle = shared.handle;
-    if (handle) {
-      shared.perm = await ensurePerm(handle);
-      if (shared.perm !== 'granted') {
-        toast('Autorisation refusée : le rapport n’a pas été enregistré sur N:.', { tone: 'warn', action: 'Réessayer', onAction: saveToN, timeout: 10000 });
-        return;
-      }
-    } else {
-      handle = await pickNFile();
-      if (!handle) return;
-      fresh = true;
-    }
-    let data;
-    try { data = await writeToHandle(handle); }
-    catch (e) {
-      if (!fresh && e && e.name === 'NotFoundError') await forgetHandle();
-      await openDialog({
-        title: 'Rapport non enregistré sur N:', icon: 'alert', tone: 'warn', className: 'dlg-n',
-        body: [h('p', { text: nErrorText(e) }), h('p', { class: 'muted', text: 'Le rapport reste enregistré sur ce PC. Réessayez dans un instant, ou choisissez de nouveau l’emplacement.' })],
-        actions: [{ label: 'Fermer', value: false, cls: 'btn-primary', autofocus: true }],
-      }).result;
-      return;
-    }
-    if (fresh) {
-      shared.handle = handle;
-      shared.perm = 'granted';
-      try { await idbSet(N_IDB_KEY, handle); } catch { /* emplacement non mémorisable : redemandé la prochaine fois */ }
-    }
-    if (!data) return;
-    toast(`Enregistré sur N: à ${fmtTime(new Date())}`, { icon: 'check' });
-    if (fresh) verifyLocation(data.savedAt);
-  } finally {
-    shared.busy = false;
-    sharedChanged();
-  }
-}
-/** 1er enregistrement : l'outil retrouve-t-il bien le fichier à côté de lui ? (sinon, mauvais dossier) */
-async function verifyLocation(savedAt) {
-  for (const wait of [300, 2000, 5000]) {
-    await new Promise(r => setTimeout(r, wait));
-    const raw = await loadDiskScript();
-    if (raw && raw.savedAt === savedAt) { shared.disk = { savedAt, savedBy: raw.savedBy || '' }; sharedChanged(); return; }
-  }
-  /* pas à côté de l'outil : ce n'est pas « sur N: » pour les collègues → emplacement oublié, rapport à enregistrer */
-  await forgetHandle();
-  setSharedDirty(true);
-  shared.disk = null;
-  sharedChanged();
-  checkDisk({ force: true });
-  const choice = await openDialog({
-    title: 'Enregistré dans un autre dossier ?', icon: 'alert', tone: 'warn', className: 'dlg-n dlg--wide',
-    body: [
-      h('p', {}, 'Le fichier a été écrit, mais l’outil ne le retrouve pas à côté de ', h('b', { text: 'Outil Formulation.html' }), '. Les collègues ne verront donc pas ce rapport.'),
-      h('p', {}, 'Choisissez le dossier où se trouve l’outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
-    ],
-    actions: [{ label: 'Plus tard', value: false }, { label: 'Choisir le bon dossier…', value: true, cls: 'btn-primary', autofocus: true }],
-  }).result;
-  if (choice === true) saveToN();
-}
-/** Navigateur sans écriture directe (Firefox…) : téléchargement du fichier + consigne. */
-function downloadNFile() {
-  const data = currentData();
-  const blob = new Blob([nFileText(data)], { type: 'text/javascript' });
-  const url = URL.createObjectURL(blob);
-  const a = h('a', { href: url, download: N_FILE });
-  document.body.append(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
-  shared.pendingDownload = { savedAt: data.savedAt, rev: shared.rev };
-  const folder = toolFolder();
-  openDialog({
-    title: 'Déposez le fichier sur N:', icon: 'download', className: 'dlg-n',
-    body: [
-      h('p', {}, 'Ce navigateur ne peut pas écrire directement sur N:. Le fichier ', h('b', { class: 'mono', text: N_FILE }), ' vient d’être ', h('b', { text: 'téléchargé' }), ' (dossier Téléchargements).'),
-      h('p', {}, 'Déplacez-le dans le dossier de l’outil', folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et acceptez de ', h('b', { text: 'remplacer' }), ' l’ancien fichier.'),
-      h('p', { class: 'muted', text: 'Astuce : avec Microsoft Edge, l’enregistrement sur N: se fait en un clic.' }),
-    ],
-    actions: [{ label: 'Compris', value: true, cls: 'btn-primary', autofocus: true }],
-  });
-}
-/** Démarrage : version locale, emplacement mémorisé, puis lecture du fichier N: chargé par la balise <script> de la page. */
-async function initShared() {
-  shared.knownSavedAt = prefs.sharedKnownSavedAt;
-  shared.knownBy = prefs.sharedKnownBy;
-  /* rapport de ce PC jamais confronté à N: (1re ouverture de cette version) : ses saisies sont protégées */
-  shared.dirty = prefs.sharedDirty || (!shared.knownSavedAt && !!state.report.updatedAt);
-  let raw;
-  try { raw = window[N_GLOBAL]; } catch { raw = undefined; }
-  shared.lastCheck = performance.now();
-  /* après le démarrage de l'en-tête et du routage (qui referme les dialogues ouverts) */
-  await new Promise(r => setTimeout(r, 0));
-  await onDiskData(raw, { initial: true });
-  if (shared.canWrite) {
-    let handle = null;
-    try { handle = await idbGet(N_IDB_KEY); } catch { handle = null; }
-    if (handle && typeof handle.queryPermission === 'function') {
-      shared.handle = handle;
-      try { shared.perm = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; }
-      catch { shared.perm = 'prompt'; }
-    }
-    try { await idbDel('sharedHandle'); } catch { /* ancien fichier lié (.json Teams/OneDrive) : abandonné */ }
-  }
-  sharedChanged();
-  setInterval(() => { if (document.visibilityState !== 'hidden') checkDisk({ force: true }); }, N_POLL_MS);
-}
+Sauvegarde.register({
+  id: 'rapport', label: 'Rapport de shift', schema: SCHEMA_VERSION, order: 20,
+  exportState: exportShared,
+  normalize: (data, schema) => { const d = normalizeData({ ...data, app: null, schema }); return { report: d.report, history: d.history, settings: d.settings }; },
+  key: shareKey,
+  importState: importShared,
+  /* rien de saisi sur ce PC, ou rapport déjà sur N: sans modification depuis (version précédente de l'outil) */
+  pristine: () => !state.report.updatedAt || (!!legacyShared.knownSavedAt && !legacyShared.dirty),
+  /* l'historique n'est jamais perdu : celui de N: est fusionné avant d'écrire, ou quand on garde sa version */
+  mergeOnSave: d => { state.history = mergeHistory(state.history, d.history); },
+  onKeepMine: d => { state.history = mergeHistory(state.history, d.history); saveLocalNow(); },
+  flush: () => { if (persist.timer) saveLocalNow(); },
+});
 
 /* =========================================================================
    8. Composants UI génériques
@@ -3659,47 +3986,6 @@ function renderMeta() {
       h('button', { type: 'button', class: 'btn-link', onclick: () => change(x => { x.meta.shift = cur; }) }, `Passer en ${cur}`));
   }
 }
-/** État d'enregistrement du rapport, centré sur le disque partagé N: :
-    « ✓ Enregistré sur N: 14:32 » · « ● Modifications non enregistrées sur N: » (orange) · « Enregistré sur ce PC seulement ».
-    Le libellé court (.ss-short) remplace le long quand l'en-tête manque de place. */
-function nState() {
-  if (!persist.ok || persist.state === 'error') return 'error';
-  if (shared.writing) return 'busy';
-  if (shared.knownSavedAt && !shared.dirty) return 'ok';
-  if (shared.knownSavedAt || shared.disk) return 'dirty';
-  return 'local';
-}
-function renderSaveState() {
-  const el = $('#save-state');
-  if (!el) return;
-  const st = nState();
-  const known = shared.knownSavedAt ? new Date(shared.knownSavedAt) : null;
-  let ic, long, short, time = '', cls, tip;
-  if (st === 'error') { ic = 'alert'; long = short = 'Non enregistré'; cls = 'is-error'; tip = 'Le stockage local est indisponible : enregistrez sur N: ou exportez une sauvegarde (menu ⋯ › Disque N: & sauvegarde).'; }
-  else if (st === 'busy') { ic = 'clock'; long = 'Enregistrement sur N:…'; short = 'N:…'; cls = 'is-saving'; tip = 'Enregistrement sur le disque N: en cours'; }
-  else if (st === 'ok') {
-    ic = 'check'; long = 'Enregistré sur N:'; short = 'Sur N:'; time = fmtWhenShort(known); cls = 'is-ok';
-    tip = `Version du disque N: enregistrée le ${fmtDate(known)} à ${fmtTime(known)}${shared.knownBy ? ` par ${shared.knownBy}` : ''}. Une copie est aussi gardée sur ce PC.`;
-  } else if (st === 'dirty') {
-    ic = 'dot'; long = 'Modifications non enregistrées sur N:'; short = 'Non enregistré sur N:'; cls = 'is-dirty';
-    tip = 'Vos modifications sont gardées sur ce PC, mais pas encore sur le disque N: : cliquez sur « Enregistrer sur N: » (Ctrl+S).';
-  } else {
-    ic = 'pc'; long = 'Enregistré sur ce PC seulement'; short = 'Ce PC seulement'; cls = 'is-local';
-    tip = 'Le rapport est gardé sur ce PC. Pour que les collègues le retrouvent, cliquez sur « Enregistrer sur N: ».';
-  }
-  el.className = `save-state ${cls}${time ? ' has-time' : ''}`;
-  el.dataset.state = st;
-  el.title = tip;
-  el.setAttribute('role', 'status');
-  const main = h('span', { class: 'ss-main' }, ic === 'dot' ? h('span', { class: 'ss-dot', 'aria-hidden': 'true' }) : icon(ic),
-    h('span', { class: 'ss-word', text: long }), h('span', { class: 'ss-short', text: short }), time ? h('span', { class: 'ss-time', text: time }) : null);
-  el.replaceChildren(main);
-  const btn = $('#btn-save-n');
-  if (btn) {
-    btn.classList.toggle('is-dirty', st === 'dirty' || st === 'local');
-    btn.disabled = shared.busy;
-  }
-}
 function updateUndoUI() {
   const none = undoStack.length === 0;
   $('#btn-undo').disabled = none;
@@ -3885,9 +4171,12 @@ async function exportPdf() {
   saveLocalNow();
   printSheet(state.report, { at, author: state.author });
   /* le PDF est fait : on propose d'enregistrer aussi sur N: (instantané de l'historique compris) */
-  if (shared.dirty) {
-    toast('Pensez à enregistrer aussi le rapport sur N: pour l’équipe.', { icon: 'save', action: 'Enregistrer sur N:', onAction: saveToN, timeout: 12000 });
-  }
+  markChanged();
+  setTimeout(() => {
+    if (Sauvegarde.status() === 'dirty' || Sauvegarde.status() === 'local') {
+      toast('Pensez à enregistrer aussi sur N: pour l’équipe (Ctrl+S).', { icon: 'save', action: 'Enregistrer', onAction: Sauvegarde.save, timeout: 12000 });
+    }
+  }, 200);
 }
 function openPreview(entry = null) {
   const report = entry ? entry.report : state.report;
@@ -4003,7 +4292,7 @@ async function confirmAdvance(l) {
 function addSnapshot(at) {
   state.history.unshift({ id: uid(), at: at.toISOString(), shift: state.report.meta.shift, author: state.author, report: clone(state.report) });
   if (state.history.length > HISTORY_MAX) state.history.length = HISTORY_MAX;
-  markSharedDirty();
+  markChanged();
 }
 const lotsSummary = rep => LINES.map(l => `${l.name} ${rep.bands.enCours[l.id].lot || '—'}`).join(' · ');
 function openHistory() {
@@ -4066,44 +4355,6 @@ async function importJsonFile(file) {
   replaceReport(d.report);
   toast('Sauvegarde importée', { action: 'Annuler', onAction: undo });
 }
-function openShare() {
-  const body = h('div', { class: 'form-grid' });
-  let dref = null;
-  const render = () => {
-    const st = nState();
-    const folder = toolFolder();
-    const disk = shared.disk && shared.disk.savedAt ? new Date(shared.disk.savedAt) : null;
-    const status = { ok: ['ok', 'À jour sur N:'], dirty: ['wip', 'Modifications non enregistrées sur N:'], local: ['na', 'Enregistré sur ce PC seulement'],
-      busy: ['wip', 'Enregistrement…'], error: ['todo', 'Stockage local indisponible'] }[st];
-    const secN = h('section', { class: 'sect' }, h('h3', { text: 'Disque partagé N: (toute l’équipe)' }),
-      h('p', {}, 'Comme un fichier Excel partagé : « Enregistrer sur N: » écrit le rapport dans ', h('b', { class: 'mono', text: N_FILE }),
-        ', à côté de l’outil. Sur n’importe quel PC, l’outil charge tout seul le dernier rapport enregistré.'),
-      h('dl', { class: 'kv' },
-        h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `badge tone-${status[0]}`, text: status[1] })),
-        h('dt', { text: 'Sur N:' }), h('dd', { text: disk ? `Enregistré le ${fmtDate(disk)} à ${fmtTime(disk)}${shared.disk.savedBy ? ` par ${shared.disk.savedBy}` : ''}` : 'Aucun rapport enregistré pour l’instant' }),
-        folder ? [h('dt', { text: 'Dossier' }), h('dd', { class: 'mono', text: folder })] : null,
-        shared.canWrite ? [h('dt', { text: 'Ce PC' }), h('dd', { text: shared.handle ? `Emplacement mémorisé (« ${shared.handle.name} »)` : 'Emplacement pas encore choisi : il sera demandé au 1er enregistrement' })] : null),
-      shared.canWrite ? null : h('p', { class: 'muted', text: 'Ce navigateur ne peut pas écrire sur N: : « Enregistrer sur N: » télécharge le fichier, à déposer dans le dossier de l’outil. La lecture automatique fonctionne.' }),
-      h('div', { class: 'sect__actions' },
-        h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => { dref?.close(); saveToN(); } }, icon('save'), 'Enregistrer sur N:'),
-        shared.canWrite && shared.handle ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { dref?.close(); await forgetHandle(); saveToN(); } }, icon('link'), 'Changer d’emplacement…') : null,
-        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { shared.lastCheck = 0; await checkDisk({ force: true }); toast(shared.disk ? 'Disque N: relu' : 'Aucun fichier sur N: pour l’instant', { icon: 'info' }); } }, icon('reset'), 'Relire N: maintenant')));
-    const secLocal = h('section', { class: 'sect' }, h('h3', { text: 'Sur ce PC (automatique)' }),
-      h('p', { text: persist.ok
-        ? `Chaque modification est aussi enregistrée automatiquement dans ce navigateur${persist.at ? ` (dernier enregistrement à ${fmtTime(persist.at)})` : ''} : rien n’est perdu si l’on ferme sans enregistrer sur N:.`
-        : 'Le stockage local est indisponible dans ce navigateur : enregistrez sur N: ou exportez une sauvegarde pour ne rien perdre.' }));
-    const secFile = h('section', { class: 'sect' }, h('h3', { text: 'Sauvegarde manuelle (.json)' }),
-      h('p', { class: 'muted', text: 'Solution de secours : exportez le rapport dans un fichier, puis importez-le sur un autre poste.' }),
-      h('div', { class: 'sect__actions' },
-        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: exportJson }, icon('download'), 'Exporter une sauvegarde'),
-        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: () => { dref?.close(); $('#file-import').click(); } }, icon('upload'), 'Importer une sauvegarde…')));
-    body.replaceChildren(secN, secLocal, secFile);
-  };
-  render();
-  shared.onchange = render;
-  dref = openDialog({ title: 'Disque N: & sauvegarde', icon: 'cloud', className: 'dlg--wide', body, actions: [{ label: 'Fermer', value: false }] });
-  dref.result.then(() => { if (shared.onchange === render) shared.onchange = null; });
-}
 function openSettings() {
   let dref = null;
   const ms = mailSettings();
@@ -4115,7 +4366,7 @@ function openSettings() {
       h('p', { class: 'muted', text: 'Destinataires utilisés par « Préparer le mail ». Séparez plusieurs adresses par des points-virgules.' }),
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'set-to', text: 'Destinataires (À)' }), to),
       h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'set-cc', text: 'Copie (Cc)' }), cc),
-      h('p', { class: 'hint', text: 'Ces paramètres sont enregistrés avec le rapport (et donc partagés avec l’équipe si un fichier partagé est lié).' }),
+      h('p', { class: 'hint', text: 'Ces paramètres sont enregistrés avec le rapport (et donc partagés avec l’équipe à chaque enregistrement sur N:).' }),
       h('p', { class: 'hint' }, 'Holding times, produits, couleurs des lignes… : ',
         h('a', { href: '#parametres', class: 'btn-link', onclick: () => { if (dref) dref.close(false); } }, 'onglet Paramètres'), '.')),
     actions: [
@@ -4147,14 +4398,14 @@ async function confirmReset() {
 /* Entrées du menu « ⋯ » (les entrées « narrow » ne s'affichent que sur petit écran) */
 function menuItems() {
   return [
-    { label: 'Enregistrer sur N:', icon: 'save', run: saveToN, narrow: true },
     { label: 'Exporter en PDF', icon: 'pdf', run: exportPdf, narrow: true },
     { label: 'Préparer le mail', icon: 'mail', run: prepareMail, narrow: true },
     { id: 'mi-undo', label: 'Annuler la dernière action', icon: 'undo', run: undo, narrow: true, disabled: undoStack.length === 0 },
     { sep: true, narrow: true },
     { label: 'Aperçu impression', icon: 'eye', run: () => openPreview() },
     { label: 'Historique', icon: 'history', run: openHistory },
-    { label: 'Disque N: & sauvegarde', icon: 'cloud', run: openShare },
+    { label: 'Exporter le rapport (.json)', icon: 'download', run: exportJson },
+    { label: 'Importer un rapport (.json)…', icon: 'upload', run: () => $('#file-import').click() },
     { label: 'Paramètres', icon: 'sliders', run: openSettings },
     { sep: true, narrow: true },
     { aa: true },
@@ -4189,7 +4440,6 @@ function bindGlobal() {
   $('#btn-undo').addEventListener('click', undo);
   $('#btn-mail').addEventListener('click', prepareMail);
   $('#btn-pdf').addEventListener('click', exportPdf);
-  $('#btn-save-n').addEventListener('click', saveToN);
   $('#btn-banner-export').addEventListener('click', exportJson);
   $('#file-import').addEventListener('change', e => {
     const f = e.target.files && e.target.files[0];
@@ -4197,19 +4447,7 @@ function bindGlobal() {
     if (f) importJsonFile(f);
   });
   window.addEventListener('pagehide', () => { if (persist.timer) saveLocalNow(); });
-  /* retour sur l'onglet ou sur la fenêtre : relecture du disque N: */
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') { if (persist.timer) saveLocalNow(); }
-    else checkDisk();
-  });
-  window.addEventListener('focus', () => checkDisk());
-  /* rappel doux (fenêtre du navigateur) si l'on quitte avec des modifications non enregistrées sur N: */
-  window.addEventListener('beforeunload', e => {
-    if (persist.timer) saveLocalNow();
-    if (!shared.dirty || !(shared.knownSavedAt || shared.disk)) return;
-    e.preventDefault();
-    e.returnValue = '';
-  });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && persist.timer) saveLocalNow(); });
   window.addEventListener('storage', e => {
     // Modification faite dans un autre onglet de ce poste : on la reprend si rien n'est en attente ici.
     if (e.key !== KEYS.data || !e.newValue || persist.timer) return;
@@ -4217,13 +4455,7 @@ function bindGlobal() {
       const d = normalizeData(JSON.parse(e.newValue));
       state.report = d.report; state.history = d.history; state.settings = d.settings;
       persist.at = new Date(); persist.state = 'saved';
-      try {
-        const p = JSON.parse(ls.get(KEYS.prefs) || '{}');
-        prefs.sharedKnownSavedAt = shared.knownSavedAt = validIso(p.sharedKnownSavedAt);
-        prefs.sharedKnownBy = shared.knownBy = str(p.sharedKnownBy, 80);
-        prefs.sharedDirty = shared.dirty = p.sharedDirty === true;
-      } catch { /* préférences illisibles : état N: inchangé */ }
-      refresh(); schedulePrint(); renderSaveState();
+      refresh(); schedulePrint(); markChanged();
       toast('Rapport mis à jour depuis un autre onglet');
     } catch { /* ignoré */ }
   });
@@ -4231,14 +4463,13 @@ function bindGlobal() {
   window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => autogrowIn(document), 150); });
   Core.on('textsize', () => requestAnimationFrame(() => autogrowIn(document)));
 }
-/* Raccourcis clavier du module (Ctrl+S enregistrer, Ctrl+Z annuler ; Ctrl+P est aiguillé vers exportPdf) */
+/* Raccourci clavier du module (Ctrl+Z annuler ; Ctrl+S est global, Ctrl+P est aiguillé vers exportPdf) */
 const isTextEditing = el => !!el && ((el.tagName === 'INPUT' && /^(text|search|email|tel|url|number)$/.test(el.type)) || el.tagName === 'TEXTAREA' || el.isContentEditable);
 function onKey(e) {
   const mod = e.ctrlKey || e.metaKey;
   if (!mod || e.altKey) return;
   const k = e.key.toLowerCase();
-  if (k === 's') { e.preventDefault(); forceSave(); }
-  else if (k === 'z' && !e.shiftKey && !isTextEditing(e.target) && !document.querySelector('dialog[open]')) { e.preventDefault(); undo(); }
+  if (k === 'z' && !e.shiftKey && !isTextEditing(e.target) && !document.querySelector('dialog[open]')) { e.preventDefault(); undo(); }
 }
 /* Impression lancée par le navigateur (menu, Ctrl+P hors raccourci…) : vue à jour + @page paysage */
 function beforePrint() {
@@ -4249,8 +4480,6 @@ function afterPrint() { Core.Print.clear(); }
 /* Affichage / masquage du module (onglets) */
 function show() {
   refresh();
-  renderSaveState();
-  checkDisk({ force: true });
   requestAnimationFrame(() => autogrowIn(document));
 }
 function hide() { /* rien à faire : l'enregistrement reste automatique */ }
@@ -4263,11 +4492,6 @@ function summary(now = new Date()) {
     frigo: frigo.length, overdue: limits.filter(l => l.tone === 'todo').length, soon: limits.filter(l => l.tone === 'wip').length,
     lots: LINES.map(l => ({ id: l.id, line: l.name, lot: r.bands.enCours[l.id].lot, produit: r.bands.enCours[l.id].produit })),
     soonHours: Params.get().rapport.soonHours,
-    n: {
-      state: nState(),
-      savedAt: shared.disk && shared.disk.savedAt ? new Date(shared.disk.savedAt) : shared.knownSavedAt ? new Date(shared.knownSavedAt) : null,
-      savedBy: shared.disk && shared.disk.savedAt ? shared.disk.savedBy : shared.knownBy,
-    },
   };
 }
 /* Paramètres modifiés (onglet Paramètres, fichier d'équipe…) : cartes reconstruites, calculs et PDF à jour */
@@ -4303,7 +4527,6 @@ function tick() {
   renderMeta();
   renderWatch();
   for (const v of views) v.sync();
-  renderSaveState();
   if (!printingSnapshot) schedulePrint();
 }
 function init() {
@@ -4315,11 +4538,9 @@ function init() {
   $('#banner-storage').hidden = persist.ok;
   bindGlobal();
   refresh();
-  renderSaveState();
   renderPrintRoot();
   requestAnimationFrame(() => autogrowIn(document));
   setInterval(tick, 15000);
-  initShared();
   if (problem) toast('Les données enregistrées étaient illisibles : rapport vierge.', { tone: 'warn', timeout: 8000 });
 }
 return { init, show, hide, onKey, print: exportPdf, beforePrint, afterPrint, menuItems, summary, updateUndoUI, mailSettings, setMailSettings, get author() { return state.author; } };
@@ -5836,31 +6057,67 @@ const store = {
   read() { return Core.ls.json(STORAGE_KEY); },
   write(obj) { return Core.ls.set(STORAGE_KEY, JSON.stringify(obj)); },
 };
-let saveKind = 'saved', saveAt = null;
+/* Enregistrement automatique sur ce PC (filet de sécurité) ; l'indicateur de l'en-tête montre la sauvegarde sur N: */
+let saveKind = 'saved', saveAt = null, hadLocal = false;
 function setSaveState(kind, when) {
   saveKind = kind;
   if (kind === 'saved') saveAt = when || new Date();
-  renderSaveState();
-}
-function renderSaveState() {
-  const el = $('#etq-save-state');
-  const t = saveAt ? Core.fmtTime(saveAt) : '';
-  let ic, word, cls;
-  if (saveKind === 'error') { ic = 'alert'; word = 'Non enregistré'; cls = 'is-error'; el.title = 'Le navigateur bloque l\'enregistrement local'; }
-  else if (saveKind === 'saving') { ic = 'clock'; word = 'Enregistrement…'; cls = 'is-saving'; el.title = 'Enregistrement en cours'; }
-  else if (saveKind === 'idle') { ic = 'check'; word = 'Enregistrement auto.'; cls = 'is-idle'; el.title = 'Chaque modification est enregistrée automatiquement sur ce PC.'; }
-  else { ic = 'check'; word = 'Enregistré'; cls = 'is-ok'; el.title = t ? `Enregistré sur ce PC à ${t}` : 'Enregistrement automatique sur ce PC'; }
-  el.className = `save-state ${cls}${saveKind === 'saved' && t ? ' has-time' : ''}`;
-  el.replaceChildren(h('span', { class: 'ss-main' }, Core.icon(ic), h('span', { class: 'ss-word', text: word }), saveKind === 'saved' && t ? h('span', { class: 'ss-time', text: t }) : null));
 }
 function saveNow() {
   const ok = store.write({ app: 'etiquettes', schema: SCHEMA_VERSION, savedAt: new Date().toISOString(), state });
   setSaveState(ok ? 'saved' : 'error');
   if (!ok) { $('#storage-warning').hidden = false; Core.emit('storage-error', 'etiquettes'); }
+  Sauvegarde.changed('etiquettes');
   return ok;
 }
 const saveDebounced = debounce(saveNow, 400);
-function scheduleSave() { if (store.ok) setSaveState('saving'); saveDebounced(); }
+function scheduleSave() { if (store.ok) setSaveState('saving'); saveDebounced(); Sauvegarde.changed('etiquettes'); }
+
+/* Sauvegarde sur N: — module « etiquettes » du fichier sauvegarde.js (voir SAUVEGARDE SUR LE DISQUE N:).
+   Partagé : produit, lot, date, visa, noms, lots de contenants, plage, autres échantillons, listes, gabarit et options
+   d'impression. Propre à ce PC : calibration de l'imprimante (décalage X / Y, échelle) et affichage (onglet, zoom, aides). */
+const CALIB_KEYS = ['decalX', 'decalY', 'echelle'];
+function sharedOf(s) {
+  const { ui, reglages, ...rest } = s;
+  const regl = { ...reglages };
+  for (const k of CALIB_KEYS) delete regl[k];
+  return clone({ ...rest, reglages: regl });
+}
+/** Données partagées → état complet, avec la calibration et l'affichage de ce PC. */
+function withLocal(d) {
+  const s = normalizeState({ ...d, reglages: { ...(d.reglages || {}) } });
+  for (const k of CALIB_KEYS) s.reglages[k] = state.reglages[k];
+  s.ui = clone(state.ui);
+  return s;
+}
+/** Comparaison sans les identifiants internes ; liste « autres » du produit affiché créée à la demande = liste par défaut. */
+function shareKey(d) {
+  const strip = l => (Array.isArray(l) ? l.map(({ id, ...x }) => x) : l);
+  const autres = Object.fromEntries(Object.entries(d.autres || {}).map(([p, l]) => [p, strip(l)]));
+  if (!autres[d.produit]) {
+    const lp = (d.listesPerso || {})[d.produit];
+    autres[d.produit] = lp ? lp.map(({ imprimer, nom, quantite }) => ({ imprimer, nom, quantite })) : ORIGIN_LISTS[d.produit].map(([nom, quantite]) => ({ imprimer: true, nom, quantite }));
+  }
+  return JSON.stringify({ ...d, poches: strip(d.poches), autres });
+}
+Sauvegarde.register({
+  id: 'etiquettes', label: 'Étiquettes', schema: SCHEMA_VERSION, order: 30,
+  exportState: () => sharedOf(state),
+  normalize: d => sharedOf(normalizeState(d)),
+  key: shareKey,
+  importState(d) {
+    state = withLocal(d);
+    autresList();
+    if (undoToast) { undoToast.dismiss(); undoToast = null; }
+    fitCache.clear();
+    renderForm();
+    renderPreview();
+    saveNow();
+    Core.emit('data', 'etiquettes');
+  },
+  pristine: () => !hadLocal,
+  flush: () => { if (saveDebounced.pending()) saveDebounced.flush(); },
+});
 
 /* =====================================================================
    11. Impression
@@ -6040,6 +6297,7 @@ function init() {
   initHeader();
   if (store.probe()) {
     const saved = store.read();
+    hadLocal = !!(saved && saved.state);
     state = normalizeState(saved && saved.state);
     if (saved && saved.savedAt) setSaveState('saved', new Date(saved.savedAt)); else setSaveState('idle');
   } else {
@@ -6090,19 +6348,12 @@ function init() {
   window.addEventListener('pagehide', flush);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
 }
-/* Raccourcis clavier du module (Ctrl+S enregistrer ; Ctrl+P est aiguillé vers print()) */
-function onKey(e) {
-  if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 's') {
-    e.preventDefault(); saveDebounced.flush(); if (saveNow()) toast('Enregistré sur ce PC', { icon: 'check' });
-  }
-}
 /* Ctrl+P : même parcours que le bouton « Imprimer les étiquettes poches » (ou les autres si aucune poche) */
 function print() {
   computeDerived();
   requestPrint(derived.poches.pages.length || !derived.autres.pages.length ? 'poches' : 'autres');
 }
 function show() {
-  renderSaveState();
   requestAnimationFrame(() => { applyZoom(); });
   if (state.ui.migrationV3) {
     /* donnée d'une version précédente : bascule faite une fois (gabarit Fiducial, calibration remise à zéro) — on le dit une fois */
@@ -6172,12 +6423,12 @@ function previewLabels(def, kind, opts = {}) {
   return { row: mk(labels), one: first ? mk([first]) : null, texts: labels.map(l => (l ? l.lines.map(ln => ln.segs.map(sg => (sg.b != null ? '_'.repeat(Math.round(sg.b / 2)) : sg.t)).join('')) : null)) };
 }
 
-return { init, show, hide, onKey, print, beforePrint, afterPrint, menuItems, summary, previewLabels, contWords, nameLabels };
+return { init, show, hide, print, beforePrint, afterPrint, menuItems, summary, previewLabels, contWords, nameLabels, get visa() { return state.visa.trim().toUpperCase(); } };
 })();
 
 /* #########################################################################
    ONGLET « PARAMÈTRES » — édition des règles (holding times, produits, applicabilité, couleurs,
-   mail, étiquettes), partage avec l'équipe par un fichier « parametres-outil.js » posé à côté de l'outil.
+   mail, étiquettes), partagées avec l'équipe dans la sauvegarde sur N: (bouton « Enregistrer » ou Ctrl+S).
    Toute modification passe par Params.update() : elle s'applique en direct aux modules.
    ######################################################################### */
 const ParamsView = (() => {
@@ -6764,40 +7015,36 @@ const ParamsView = (() => {
     ];
   }
 
-  /* ---------- Source des paramètres, partage avec l'équipe ---------- */
+  /* ---------- Source des paramètres (enregistrés sur N: avec tout le reste : bouton « Enregistrer » ou Ctrl+S) ---------- */
   const shortDate = iso => { const d = new Date(iso); return `${Core.pad2(d.getDate())}/${Core.pad2(d.getMonth() + 1)}`; };
   function renderSource() {
     const s = Params.source();
     let ic, title, detail, tone;
     if (s.kind === 'team') {
       ic = 'users'; tone = 'ok'; title = 'Paramètres de l’équipe';
-      detail = `fichier du ${s.team.savedAt ? shortDate(s.team.savedAt) : '—'}${s.team.savedBy ? ` par ${s.team.savedBy}` : ''}`;
+      detail = `enregistrés sur N: le ${s.team.savedAt ? shortDate(s.team.savedAt) : '—'}${s.team.savedBy ? ` par ${s.team.savedBy}` : ''}`;
     } else if (s.kind === 'local') {
       ic = 'pc'; tone = 'wip'; title = 'Modifiés sur ce PC';
       detail = s.local.modifiedAt ? `le ${Params.fmtStamp(new Date(s.local.modifiedAt))}` : '';
     } else {
       ic = 'info'; tone = 'na'; title = 'Valeurs d’origine';
-      detail = 'aucun fichier de paramètres de l’équipe à côté de l’outil';
+      detail = 'aucun paramètre de l’équipe enregistré sur N:';
     }
-    const extra = [];
-    if (s.kind === 'local' && s.local.exportedAt) extra.push(h('p', { class: 'pm-src__note' }, icon('check'), `Fichier d’équipe enregistré le ${Params.fmtStamp(new Date(s.local.exportedAt))} : placez « ${Params.FILE_NAME} » à côté de « Outil Formulation.html » sur N:.`));
-    if (s.teamNewer) extra.push(h('p', { class: 'pm-src__note is-warn' }, icon('alert'), `Le fichier de l’équipe est plus récent que vos modifications (${shortDate(s.team.savedAt)}${s.team.savedBy ? `, ${s.team.savedBy}` : ''}).`));
     $('#pm-source').replaceChildren(
       h('div', { class: `pm-src__state tone-${tone}` },
         h('span', { class: 'pm-src__ico', 'aria-hidden': 'true' }, icon(ic)),
         h('div', { class: 'pm-src__txt' },
           h('p', { class: 'pm-src__title' }, h('b', { text: title }), detail ? h('span', { text: ` (${detail})` }) : null),
-          s.kind === 'local' && s.team ? h('button', { type: 'button', class: 'btn-link', id: 'pm-revert', onclick: revertTeam }, 'Revenir aux paramètres de l’équipe') : null,
-          extra)),
+          h('p', { class: 'pm-src__note', id: 'pm-save-note' }, icon('save'), 'Les paramètres sont enregistrés avec tout le reste : bouton Enregistrer ou Ctrl+S.'),
+          s.kind === 'local' && s.team ? h('button', { type: 'button', class: 'btn-link', id: 'pm-revert', onclick: revertTeam }, 'Revenir aux paramètres de l’équipe') : null)),
       h('div', { class: 'pm-src__actions' },
-        h('button', { type: 'button', class: 'btn btn-primary', id: 'pm-save-team', onclick: saveForTeam }, icon('users'), 'Enregistrer les paramètres pour toute l’équipe'),
         h('button', { type: 'button', class: 'btn btn-secondary', id: 'pm-export', onclick: exportJson }, icon('download'), 'Exporter'),
         h('button', { type: 'button', class: 'btn btn-secondary', id: 'pm-import', onclick: () => $('#pm-file').click() }, icon('upload'), 'Importer…'),
         h('button', { type: 'button', class: 'btn btn-quiet', id: 'pm-reset', disabled: s.isDefault && s.kind !== 'local' ? true : null, onclick: resetDefaults }, icon('reset'), 'Rétablir les valeurs d’origine')));
   }
   async function revertTeam() {
     const ok = await Core.confirmDialog({ title: 'Revenir aux paramètres de l’équipe ?', className: 'mod-params', confirmLabel: 'Revenir aux paramètres de l’équipe',
-      message: 'Les modifications faites sur ce PC seront remplacées par celles du fichier de l’équipe. Vous pourrez annuler.' });
+      message: 'Les modifications faites sur ce PC seront remplacées par les paramètres de l’équipe enregistrés sur N:. Vous pourrez annuler.' });
     if (!ok) return;
     const snap = Params.snapshot();
     Params.revertToTeam();
@@ -6835,35 +7082,10 @@ const ParamsView = (() => {
     download(name, text, type);
     return name;
   }
-  function saveForTeam() {
-    const who = h('input', { type: 'text', class: 'input', id: 'pm-team-by', value: (Rapport.author || '').trim(), maxlength: 60, placeholder: 'ex. NB', autocomplete: 'name' });
-    const step = (n, ...kids) => h('li', { class: 'pm-step' }, h('span', { class: 'pm-step__n', text: String(n) }), h('div', {}, ...kids));
-    const body = h('div', { class: 'pm-form' },
-      h('ol', { class: 'pm-steps' },
-        step(1, h('b', { text: `Enregistrez le fichier « ${Params.FILE_NAME} ».` }), h('p', { class: 'pm-hint', text: 'Il contient tous les paramètres affichés ici (et les destinataires du mail).' })),
-        step(2, h('b', { text: 'Placez ce fichier à côté de « Outil Formulation.html » sur N:' }), h('p', { class: 'pm-hint', text: 'Dans le même dossier, en remplaçant l’ancien fichier s’il existe.' })),
-        step(3, h('b', { text: 'Chacun rouvre l’outil : les paramètres de l’équipe s’appliquent.' }), h('p', { class: 'pm-hint', text: 'Sauf sur un PC où des paramètres ont été modifiés : il garde les siens et affiche « Revenir aux paramètres de l’équipe ».' }))),
-      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'pm-team-by', text: 'Enregistré par' }), who));
-    openDialog({ title: 'Enregistrer les paramètres pour toute l’équipe', icon: 'users', body, className: 'dlg--wide',
-      actions: [{ label: 'Annuler', value: false }, { label: `Enregistrer « ${Params.FILE_NAME} »…`, value: true, cls: 'btn-primary', icon: 'download', run: async () => {
-        const ms = Rapport.mailSettings();
-        const text = Params.teamFileText(who.value.trim(), { to: ms.mailTo, cc: ms.mailCc });
-        const name = await writeFile(Params.FILE_NAME, text, 'text/javascript', 'Paramètres de l’Outil Formulation', '.js');
-        if (!name) return false;
-        if (Params.source().kind !== 'local') Params.commit(Params.get());
-        Params.markExported();
-        render();
-        toast(`« ${name} » enregistré : placez-le à côté de Outil Formulation.html sur N:`, { timeout: 12000 });
-        return true;
-      } }],
-      onOpen: () => who.focus(),
-    });
-  }
   async function exportJson() {
     const d = new Date();
     const name = `parametres-outil-${d.getFullYear()}-${Core.pad2(d.getMonth() + 1)}-${Core.pad2(d.getDate())}.json`;
-    const ms = Rapport.mailSettings();
-    const r = await writeFile(name, Params.jsonText(Rapport.author || '', { to: ms.mailTo, cc: ms.mailCc }), 'application/json', 'Paramètres (JSON)', '.json');
+    const r = await writeFile(name, Params.jsonText(Rapport.author || ''), 'application/json', 'Paramètres (JSON)', '.json');
     if (r) toast(`Paramètres exportés : « ${r} »`);
   }
   function importFile(file) {
@@ -6944,7 +7166,6 @@ const ParamsView = (() => {
     show() { visible = true; if (dirty) render(); else renderSource(); },
     hide() { visible = false; },
     menuItems: () => [
-      { label: 'Enregistrer pour toute l’équipe…', icon: 'users', run: saveForTeam, narrow: true },
       { label: 'Exporter les paramètres (JSON)', icon: 'download', run: exportJson },
       { label: 'Importer des paramètres…', icon: 'upload', run: () => $('#pm-file').click() },
       { sep: true },
@@ -6973,23 +7194,32 @@ const Accueil = (() => {
   }
   const pill = (tone, text, ic) => h('span', { class: `hpill hpill--${tone}${ic ? ' has-icon' : ''}` }, ic ? icon(ic) : null, text);
 
-  /* Disque partagé N: : « Dernier rapport enregistré sur N: aujourd'hui à 14:32 par NB » */
-  function nLine(n, now) {
-    if (!n) return null;
-    if (n.savedAt) {
-      return h('p', { class: `tile__n${n.state === 'dirty' ? ' is-dirty' : ''}`, id: 'tile-rapport-n' }, icon('cloud'),
-        h('span', {}, `Dernier rapport enregistré sur N: ${when(n.savedAt, now)}${n.savedBy ? ` par ${n.savedBy}` : ''}`,
-          n.state === 'dirty' ? h('span', { class: 'tile__n-warn' }, h('span', { class: 'ss-dot', 'aria-hidden': 'true' }), 'Modifications non enregistrées sur N:') : null));
+  /* Sauvegarde sur N: : « Dernière sauvegarde : aujourd'hui 14:32 par NB » (tout l'outil) */
+  function whenShort(d, now) {
+    const y = new Date(now); y.setDate(y.getDate() - 1);
+    if (sameDay(d, now)) return `aujourd'hui ${fmtTime(d)}`;
+    if (sameDay(d, y)) return `hier ${fmtTime(d)}`;
+    return `le ${Core.pad2(d.getDate())}/${Core.pad2(d.getMonth() + 1)} ${fmtTime(d)}`;
+  }
+  function renderSave(now) {
+    const el = $('#home-save'), i = Sauvegarde.info();
+    const dirty = i.state === 'dirty' ? h('span', { class: 'tile__n-warn' }, h('span', { class: 'ss-dot', 'aria-hidden': 'true' }), 'Modifications non enregistrées') : null;
+    if (i.savedAt) {
+      el.className = 'home__save';
+      el.replaceChildren(icon('cloud'), h('span', {}, 'Dernière sauvegarde : ', h('b', { text: `${whenShort(i.savedAt, now)}${i.savedBy ? ` par ${i.savedBy}` : ''}` })), dirty,
+        h('span', { class: 'home__save-hint', text: 'Tout l’outil est enregistré sur N: avec Ctrl+S ou « Enregistrer ».' }));
+    } else {
+      el.className = 'home__save is-local';
+      el.replaceChildren(icon('pc'), h('span', { text: 'Aucune sauvegarde sur le disque N: pour l’instant : tout est gardé sur ce PC.' }),
+        h('span', { class: 'home__save-hint', text: 'Ctrl+S ou « Enregistrer » pour que toute l’équipe le retrouve.' }));
     }
-    return h('p', { class: 'tile__n is-local', id: 'tile-rapport-n' }, icon('pc'), h('span', { text: 'Enregistré sur ce PC seulement (pas encore sur N:)' }));
   }
   function renderRapport(s, now) {
     const box = $('#tile-rapport-status');
     const hasLots = s.lots.some(l => l.lot);
     if (!s.updatedAt && !hasLots) {
       box.replaceChildren(h('p', { class: 'tile__line is-empty' }, icon('info'), 'Aucun rapport en cours'),
-        h('p', { class: 'tile__desc', text: 'Le rapport démarre vide : renseignez les lots en cours, les statuts et les points à suivre.' }),
-        s.n && s.n.savedAt ? nLine(s.n, now) : null);
+        h('p', { class: 'tile__desc', text: 'Le rapport démarre vide : renseignez les lots en cours, les statuts et les points à suivre.' }));
       return;
     }
     const upd = s.updatedAt ? `Mis à jour ${when(s.updatedAt, now)}${s.updatedBy ? ` par ${s.updatedBy}` : ''}` : 'Rapport en cours';
@@ -7002,8 +7232,7 @@ const Accueil = (() => {
       h('p', { class: 'tile__line' }, icon('clock'), upd, s.shift ? h('span', { class: 'hpill hpill--navy', text: `Shift ${s.shift}` }) : null),
       h('div', { class: 'tile__pills' }, pills),
       h('dl', { class: 'tile__lots', 'aria-label': 'Lots en cours de remplissage' },
-        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))),
-      nLine(s.n, now));
+        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))));
   }
   function renderEtiquettes(s, now) {
     const box = $('#tile-etiquettes-status');
@@ -7028,6 +7257,7 @@ const Accueil = (() => {
     $('#home-hello').textContent = greeting(now);
     /* « · 14:32 » ne se coupe jamais : il passe à la ligne d'un bloc */
     $('#home-date').replaceChildren(capitalize(LONG_DATE.format(now)), ' ', h('span', { class: 'hero__time', text: `·\u00a0${fmtTime(now)}` }));
+    renderSave(now);
     renderRapport(Rapport.summary(now), now);
     renderEtiquettes(Etiquettes.summary(), now);
   }
@@ -7037,6 +7267,7 @@ const Accueil = (() => {
     pending = requestAnimationFrame(render);
   }
   Core.on('data', refreshSoon);
+  Core.on('save-state', refreshSoon);
   Core.on('storage-error', () => { $('#home-storage').hidden = false; });
   return {
     init() { $('#home-storage').hidden = Core.ls.probe(); },
@@ -7048,8 +7279,9 @@ const Accueil = (() => {
 
 /* #########################################################################
    EN-TÊTE COMMUN ET NAVIGATION
-   Routage par hash (#accueil, #rapport, #etiquettes), dernier module mémorisé,
-   onglets, actions du module actif, menu « ⋯ », raccourcis, impression.
+   Routage par hash (#accueil, #rapport, #etiquettes, #parametres), dernier module mémorisé, onglets, actions du
+   module actif, indicateur et bouton « Enregistrer » communs (sauvegarde sur N:), menu « ⋯ », raccourcis, impression.
+   Application d'une seule page : on change d'onglet sans jamais recharger la page.
    ######################################################################### */
 const Shell = (() => {
   const { $, h, icon } = Core;
@@ -7066,7 +7298,12 @@ const Shell = (() => {
   /* ---------- Menu « ⋯ » (entrées fournies par le module actif) ---------- */
   const menu = { btn: null, el: null, hasWide: false };
   function buildMenu(id) {
-    const items = ROUTES[id].mod.menuItems ? ROUTES[id].mod.menuItems() : [];
+    const items = [
+      /* commun à tous les onglets : la sauvegarde sur N: concerne tout l'outil */
+      { label: 'Sauvegarde sur le disque N:…', icon: 'cloud', run: Sauvegarde.openPanel },
+      { sep: true },
+      ...(ROUTES[id].mod.menuItems ? ROUTES[id].mod.menuItems() : []),
+    ];
     if (!items.some(it => it.aa)) items.push({ sep: true, narrow: true }, { aa: true });
     menu.el.replaceChildren();
     menu.hasWide = items.some(it => !it.sep && !it.aa && !it.narrow);
@@ -7144,22 +7381,18 @@ const Shell = (() => {
   let fitRaf = 0;
   const COMMON_MAX = 4, ACTION_MAX = 7;
   /* ordre de compactage (niveau commun, niveau d'action) : niveaux communs d'abord, puis libellé court de l'indicateur
-     (a1) et libellés d'action ; enfin (a5…a7,
-     rapport) indicateur réduit à son pictogramme, PDF en icône, pictogramme du bouton « Enregistrer sur N: » retiré
+     (a1) et libellés d'action ; enfin (a5…a7) indicateur réduit à son pictogramme, PDF en icône (rapport),
+     pictogramme du bouton « Enregistrer » retiré
      (son libellé reste toujours écrit en entier) */
   const STEPS = [[1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]];
   const setClasses = (hdr, prefix, n, max) => { for (let k = 1; k <= max; k++) hdr.classList.toggle(`${prefix}${k}`, k <= n); };
   function fitHeader() {
     const hdr = $('#app-header'), inner = $('#app-header-in');
-    const brand = $('.brand'), right = $('.hdr-right'), menuWrap = $('#btn-menu').closest('.menu-wrap'), sep = $('.hdr-sep');
+    const brand = $('.brand'), right = $('.hdr-right'), menuWrap = $('#btn-menu').closest('.menu-wrap');
     const groups = [...document.querySelectorAll('.app-header [data-for]')];
     const wasOpen = !menu.el.hidden;
     const views = Object.keys(ROUTES), active = current || 'accueil';
-    const showRoute = (id, narrow) => {
-      groups.forEach(g => { g.hidden = g.dataset.for !== id; });
-      sep.hidden = id === 'accueil';
-      menuWrap.hidden = !narrow && id === 'accueil';
-    };
+    const showRoute = id => { groups.forEach(g => { g.hidden = g.dataset.for !== id; }); };
     const over = () => inner.scrollWidth > inner.clientWidth;
     const setLevels = (c, a) => { setClasses(hdr, 'c', c, COMMON_MAX); setClasses(hdr, 'a', a, ACTION_MAX); };
     const rowWraps = () => right.offsetTop > brand.offsetTop + brand.offsetHeight / 2;
@@ -7202,8 +7435,7 @@ const Shell = (() => {
     showRoute(active, narrow);
     hdr.toggleAttribute('data-narrow', narrow);
     hdr.dataset.fit = narrow ? `nar${['n1', 'n2', 'n3'].filter(k => hdr.classList.contains(k)).length}` : `c${c}a${a}`;
-    // bouton « ⋯ » : masqué sur grand écran quand le module n'a pas d'entrée propre (accueil)
-    menuWrap.hidden = !narrow && !menu.hasWide;
+    menuWrap.hidden = false;
     document.documentElement.style.setProperty('--hdr-h', `${hdr.offsetHeight}px`);
     if (wasOpen) { tidySeparators(); placeMenu(); }
   }
@@ -7244,9 +7476,16 @@ const Shell = (() => {
     if (prev) window.scrollTo(0, scrollPos[id] || 0);
   }
 
-  /* ---------- Raccourcis clavier (actifs seulement dans leur module) ---------- */
+  /* ---------- Raccourcis clavier : Ctrl+S (tout l'outil, depuis n'importe quel onglet), Ctrl+P, puis ceux du module ---------- */
   function onKeydown(e) {
     const m = active();
+    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 's') {
+      e.preventDefault(); /* jamais « Enregistrer la page sous… » du navigateur */
+      if (e.repeat || document.querySelector('dialog[open]')) return;
+      closeMenu(false);
+      Sauvegarde.save();
+      return;
+    }
     if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 'p') {
       e.preventDefault();
       if (document.querySelector('dialog[open]')) return;
@@ -7255,12 +7494,7 @@ const Shell = (() => {
       else Core.toast('Ouvrez le Rapport de shift ou les Étiquettes pour imprimer.', { icon: 'info' });
       return;
     }
-    if (m && m.onKey) { m.onKey(e); return; }
-    /* Ctrl+S hors module (accueil) : pas de « Enregistrer la page sous… » du navigateur */
-    if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 's') {
-      e.preventDefault();
-      Core.toast('Tout est gardé automatiquement sur ce PC. Pour enregistrer le rapport sur N:, ouvrez le Rapport de shift.', { icon: 'check' });
-    }
+    if (m && m.onKey) m.onKey(e);
   }
 
   /* ---------- Focus jamais caché sous les barres collantes ----------
@@ -7294,6 +7528,10 @@ const Shell = (() => {
     Etiquettes.init();
     ParamsView.init();
     Accueil.init();
+    /* sauvegarde sur N: appliquée avant le premier affichage (fichier chargé par la balise <script> de la page) */
+    Sauvegarde.setAuthor(() => Rapport.author || Etiquettes.visa);
+    Sauvegarde.start();
+    $('#btn-save').addEventListener('click', () => Sauvegarde.save());
     window.addEventListener('hashchange', applyRoute);
     window.addEventListener('resize', fitSoon);
     Core.on('textsize', fitSoon);
