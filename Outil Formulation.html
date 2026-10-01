@@ -136,16 +136,27 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .save-state.is-saving .ss-main .icon{color:var(--wip-dot)}
 .save-state.is-error{background:var(--todo-bg);color:var(--todo-fg);font-weight:600}
 .save-state .ss-time{font-variant-numeric:tabular-nums}
-.save-state .ss-shared{display:inline-flex;align-items:center;gap:.25rem;margin-left:.25rem;padding-left:.5rem;border-left:1px solid var(--border)}
-.save-state .ss-shared.is-warn{color:var(--wip-fg)}
-.save-state .ss-shared.is-ok .icon{color:var(--nn-blue)}
+.save-state .ss-short{display:none}
+/* Rapport : état du disque partagé N: (enregistré / modifications non enregistrées / ce PC seulement) */
+.save-state.is-ok{color:var(--ok-fg)}
+.save-state.is-dirty{justify-content:center;background:var(--wip-bg);color:var(--wip-fg);font-weight:600}
+/* largeur stable quel que soit l'état (pas de saut de l'en-tête à la 1re frappe) : celle de la phrase la plus longue */
+.app-header:not(.a1) .save-state[data-for="rapport"]{min-width:19.25rem}
+.app-header.a1:not(.nar) .save-state[data-for="rapport"]{min-width:10.5rem}
+.save-state.is-local .ss-main .icon{color:var(--muted)}
+.ss-dot{display:inline-block;flex:none;width:.5625rem;height:.5625rem;border-radius:50%;background:var(--wip-dot)}
+.btn-save-n{position:relative}
+.btn-save-n .icon{width:1.125rem;height:1.125rem}
+.btn-save-n.is-dirty::after{content:"";position:absolute;top:.3125rem;right:.3125rem;width:.5rem;height:.5rem;border-radius:50%;background:#FFB300;box-shadow:0 0 0 2px var(--nn-navy)}
+.btn-save-n:disabled{opacity:.7;cursor:progress}
 
 /* Compactage progressif de l'en-tête (classes posées par le script tant que la ligne déborde).
    Niveaux communs aux trois vues — le logo et les onglets ne bougent pas d'un module à l'autre :
      c1 sous-titre masqué · c2 onglets courts (« Rapport ») · c3 titre texte masqué (le logo reste, les onglets nomment les modules)
      · c4 onglet « Paramètres » réduit à l'engrenage.
    Puis niveaux propres au module affiché — les libellés d'action ne disparaissent qu'en dernier :
-     a1 mot « Enregistré » · a2 « Annuler » · a3 « Préparer le mail » · a4 « Exporter en » et « Nouveau lot ».
+     a1 libellé court de l'indicateur · a2 « Annuler » · a3 « Préparer le mail » · a4 « Exporter en » et « Nouveau lot »
+     · a5 indicateur réduit au pictogramme (+ heure) · a6 PDF en icône · a7 pictogramme de « Enregistrer sur N: » retiré.
    Enfin « nar » (petit écran) : onglets sur une 2ᵉ ligne, actions dans le menu « ⋯ ». */
 .app-header.c1 .brand__sub{display:none}
 .app-header.c2 .tab__long{display:none}
@@ -158,8 +169,15 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]) .tab__long,.app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]) .tab__short{display:none}
 .app-header.c4:not(.nar) .tab[data-route="parametres"]:not([aria-current]){padding:0 .625rem}
 .app-header.a1 .save-state:not(.is-error) .ss-word,.app-header.a1 .save-state.is-idle{display:none}
+.app-header.a1 .save-state:not(.is-error) .ss-short{display:inline}
 .app-header.a2 #btn-undo .lbl-opt,.app-header.a3 #btn-mail .lbl-opt,.app-header.a4 .hdr-actions .lbl-opt{display:none}
 .app-header.a2 #btn-undo,.app-header.a3 #btn-mail,.app-header.a4 #btn-new{width:2.5rem;padding:0}
+.app-header.a5 .save-state:not(.is-error) .ss-short,.app-header.a5 .save-state:not(.is-error) .ss-word,.app-header.a5 .save-state .ss-time{display:none}
+.app-header.a5:not(.nar) .save-state,.app-header.a5:not(.nar) .save-state[data-for="rapport"]{min-width:0;padding:0 .5rem}
+.app-header.a6 #btn-pdf .lbl{display:none}
+.app-header.a6 #btn-pdf{width:2.5rem;padding:0}
+.app-header.a7 #btn-save-n{padding:0 .75rem}
+.app-header.a7 #btn-save-n .icon{display:none}
 /* Petit écran (nar) : onglets sur une 2ᵉ ligne, actions dans le menu « ⋯ » */
 .app-header.nar .app-header__in{flex-wrap:wrap;padding:0 var(--gutter);gap:.5rem;row-gap:0}
 .app-header.nar .brand{min-height:3.5rem;gap:.625rem}
@@ -181,6 +199,7 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 .app-header.n1 .brand__sep{display:none}
 .app-header.n1 .brand__title{font-size:.9375rem}
 .app-header.n2 .save-state .ss-time{display:none}
+.app-header.n3 .save-state .ss-short{display:none}
 .app-header.n3 .brand__text{display:none}
 .app-header.tabs-stack .tab{flex-direction:column;gap:.125rem;min-height:3.25rem;padding:.25rem .125rem;font-size:clamp(.6875rem,3.4vw,.8125rem);line-height:1.1;letter-spacing:-.005em}
 .app-header.tabs-stack .tab .icon{width:1.125rem;height:1.125rem}
@@ -230,6 +249,24 @@ dialog.dlg::backdrop{background:rgba(11,21,53,.45)}
 .dlg__body p{margin:0}
 .dlg__body p b{font-weight:700}
 .dlg__foot{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.5rem;padding:.875rem 1.5rem 1rem;border-top:1px solid var(--border);background:var(--surface-2);border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+dialog.dlg.dlg-n:not(.dlg--wide){width:min(40rem,calc(100vw - 1.5rem))}
+/* Aide « Enregistrer sur N: » : schéma de la fenêtre Windows « Enregistrer sous » */
+.nsch{display:flex;flex-direction:column;margin:0;border:1px solid var(--border-strong);border-radius:8px;overflow:hidden;background:#fff;font-size:.875rem;box-shadow:0 2px 8px rgba(11,21,53,.08)}
+.nsch__bar,.nsch__foot{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;padding:.5rem .75rem;background:var(--surface-2)}
+.nsch__bar{border-bottom:1px solid var(--border)}
+.nsch__foot{border-top:1px solid var(--border)}
+.nsch__path{flex:1 1 14rem;min-width:0;padding:.25rem .5rem;border:2px solid var(--nn-blue);border-radius:4px;background:#fff;font-family:var(--mono);font-size:.8125rem;overflow-wrap:anywhere}
+.nsch__files{display:flex;flex-direction:column;gap:.125rem;padding:.375rem .75rem}
+.nsch__file{display:flex;align-items:center;gap:.5rem;padding:.25rem .5rem;border-radius:4px;color:var(--text)}
+.nsch__file.is-target{background:#E6EEFB;font-weight:600}
+.nsch__ico{flex:none;width:.8125rem;height:1rem;border:1.5px solid var(--muted);border-radius:2px 5px 2px 2px;background:#fff}
+.nsch__ico--html{border-color:var(--nn-blue)}
+.nsch__ico--js{border-color:var(--wip-dot)}
+.nsch__lbl{color:var(--muted)}
+.nsch__name{flex:1 1 9rem;min-width:0;padding:.25rem .5rem;border:1px solid var(--border-strong);border-radius:4px;background:#fff;font-family:var(--mono);font-size:.8125rem}
+.nsch__btn{padding:.25rem .875rem;border:2px solid var(--nn-blue);border-radius:4px;background:#fff;font-weight:600;color:var(--text)}
+.nsch__step{display:grid;place-items:center;flex:none;width:1.375rem;height:1.375rem;border-radius:50%;background:var(--nn-navy);color:#fff;font-size:.75rem;font-weight:700}
+.nsch figcaption{padding:.375rem .75rem .5rem;border-top:1px solid var(--border);font-size:.8125rem}
 dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.5rem);max-height:none}
 .dlg--preview .dlg__body{flex:1;gap:0;padding:0;background:#E4E8F0}
 
@@ -286,6 +323,12 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .tile__lots dd.is-num{font-family:var(--font);letter-spacing:0}
 .tile__meta{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;font-size:.875rem;color:var(--muted)}
 .tile__meta b{color:var(--text);font-weight:600}
+.tile__n{display:flex;align-items:flex-start;gap:.5rem;margin:0;font-size:.875rem;font-weight:600;line-height:1.4;color:var(--nn-navy)}
+.tile__n>.icon{flex:none;width:1.0625rem;height:1.0625rem;margin-top:.1rem;color:var(--nn-blue)}
+.tile__n>span{display:flex;flex-direction:column;gap:.25rem}
+.tile__n.is-local{font-weight:500;color:var(--muted)}
+.tile__n.is-local>.icon{color:var(--muted)}
+.tile__n-warn{display:inline-flex;align-items:center;gap:.4rem;align-self:flex-start;padding:.125rem .5rem;border-radius:999px;background:var(--wip-bg);color:var(--wip-fg);font-size:.8125rem}
 .tile__foot-note{display:flex;align-items:center;gap:.375rem;margin-top:auto;font-size:.8125rem;color:var(--muted)}
 .tile__foot-note .icon{width:.9375rem;height:.9375rem}
 .tile__foot{display:flex;align-items:center;justify-content:flex-end;gap:1rem}
@@ -1374,7 +1417,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
       <div class="hdr-actions" data-for="rapport" hidden>
         <button type="button" class="btn btn-quiet btn-collapse" id="btn-undo" title="Annuler la dernière modification (Ctrl+Z)" aria-label="Annuler la dernière modification"><span data-icon="undo"></span><span class="lbl lbl-opt">Annuler</span></button>
         <button type="button" class="btn btn-secondary btn-collapse" id="btn-mail" title="Préparer le mail au groupe formulation" aria-label="Préparer le mail"><span data-icon="mail"></span><span class="lbl lbl-opt">Préparer le mail</span></button>
-        <button type="button" class="btn btn-primary" id="btn-pdf" title="Exporter le rapport en PDF (Ctrl+P)"><span data-icon="pdf"></span><span class="lbl"><span class="lbl-opt">Exporter en </span>PDF</span></button>
+        <button type="button" class="btn btn-secondary" id="btn-pdf" title="Exporter le rapport en PDF (Ctrl+P)"><span data-icon="pdf"></span><span class="lbl"><span class="lbl-opt">Exporter en </span>PDF</span></button>
+        <button type="button" class="btn btn-primary btn-save-n" id="btn-save-n" title="Enregistrer le rapport sur le disque partagé N: pour toute l'équipe (Ctrl+S)"><span data-icon="save"></span><span class="lbl">Enregistrer sur N:</span></button>
       </div>
       <div class="hdr-actions" data-for="etiquettes" hidden>
         <button type="button" class="btn btn-secondary btn-collapse" id="btn-new" title="Vider le lot, la date et les contenants (poches, bidons), et remettre les autres échantillons à la liste par défaut (produit, visa, noms, gabarit et calibration sont conservés)" aria-label="Nouveau lot"><span data-icon="newdoc"></span><span class="lbl lbl-opt">Nouveau lot</span></button>
@@ -1423,7 +1467,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
     </div>
     <p class="home__help">
       <span><span data-icon="info"></span>Raccourcis :</span>
-      <span><kbd>Ctrl</kbd>+<kbd>S</kbd> enregistrer (automatique de toute façon)</span>
+      <span><kbd>Ctrl</kbd>+<kbd>S</kbd> enregistrer le rapport sur N:</span>
       <span><kbd>Ctrl</kbd>+<kbd>Z</kbd> annuler (rapport)</span>
       <span><kbd>Ctrl</kbd>+<kbd>P</kbd> imprimer / exporter le PDF</span>
       <span>PDF du rapport : bouton « Exporter en PDF » en haut à droite (menu ⋯ sur petit écran)</span>
@@ -1437,10 +1481,7 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 <main class="view mod-rapport" id="view-rapport" tabindex="-1" aria-labelledby="rp-h1" hidden>
   <h1 class="sr-only" id="rp-h1">Rapport de shift</h1>
   <div class="banner banner--danger" id="banner-storage" role="alert" hidden>
-    <div class="banner__in"><span data-icon="alert"></span><span class="banner__txt"><b>Enregistrement impossible sur ce PC :</b> vos saisies ne seront pas conservées à la fermeture. Exportez une sauvegarde (aussi dans le menu ⋯ › Sauvegarde &amp; partage).</span><button type="button" class="btn btn-secondary btn-sm" id="btn-banner-export"><span data-icon="download"></span>Exporter une sauvegarde</button></div>
-  </div>
-  <div class="banner banner--info" id="banner-reconnect" hidden>
-    <div class="banner__in"><span data-icon="cloud"></span><span class="banner__txt" id="banner-reconnect-txt"></span><button type="button" class="btn btn-primary btn-sm" id="btn-reconnect"><span data-icon="link"></span>Reconnecter le fichier partagé</button></div>
+    <div class="banner__in"><span data-icon="alert"></span><span class="banner__txt"><b>Enregistrement impossible sur ce PC :</b> vos saisies ne seront pas conservées à la fermeture. Enregistrez sur N: ou exportez une sauvegarde (menu ⋯ › Disque N: &amp; sauvegarde).</span><button type="button" class="btn btn-secondary btn-sm" id="btn-banner-export"><span data-icon="download"></span>Exporter une sauvegarde</button></div>
   </div>
   <div class="page" id="rp-main">
     <section class="panel meta" aria-label="Informations du rapport">
@@ -1543,6 +1584,8 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 
 <!-- Paramètres de l'équipe : fichier « parametres-outil.js » posé à côté de l'outil (facultatif ; absent = valeurs d'origine) -->
 <script src="parametres-outil.js"></script>
+<!-- Dernier rapport de shift enregistré sur le disque partagé : fichier « donnees-rapport.js » posé à côté de l'outil (facultatif ; relu toutes les 60 s) -->
+<script src="donnees-rapport.js"></script>
 <script>
 (() => {
 'use strict';
@@ -2289,7 +2332,6 @@ const SCHEMA_VERSION = 1;
 const KEYS = { data: 'nn-formu-rapport-v1', prefs: 'nn-formu-rapport-prefs-v1', author: 'nn-formu-auteur' };
 const HISTORY_MAX = 60;
 const UNDO_MAX = 50;
-const SHARED_FILENAME = 'rapport-formulation-donnees.json';
 const MAIL_URL_MAX = 1900;
 
 const { $, h, icon, ls } = Core;
@@ -2708,7 +2750,7 @@ function undo() {
 /* =========================================================================
    6. Stockage local (localStorage, toujours sous try/catch)
    ========================================================================= */
-const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false, sharedKnownSavedAt: null, sharedDirty: false };
+const prefs = { collapsed: {}, lineFilter: 'all', printHelpSeen: false, sharedKnownSavedAt: null, sharedKnownBy: '', sharedDirty: false };
 function loadPrefs() {
   try {
     const p = JSON.parse(ls.get(KEYS.prefs) || '{}');
@@ -2717,6 +2759,7 @@ function loadPrefs() {
       prefs.lineFilter = ['all', ...LINES.map(l => l.id)].includes(p.lineFilter) ? p.lineFilter : 'all';
       prefs.printHelpSeen = p.printHelpSeen === true;
       prefs.sharedKnownSavedAt = validIso(p.sharedKnownSavedAt);
+      prefs.sharedKnownBy = str(p.sharedKnownBy, 80);
       prefs.sharedDirty = p.sharedDirty === true;
     }
   } catch { /* préférences illisibles : valeurs par défaut */ }
@@ -2754,24 +2797,33 @@ function storageFailed(failed) {
   persist.failNotified = true;
   toast('Enregistrement impossible sur ce PC : exportez une sauvegarde pour ne pas perdre le rapport.', { tone: 'warn', action: 'Exporter une sauvegarde', onAction: exportJson, timeout: 15000 });
 }
-function forceSave() {
-  const already = persist.failNotified || !persist.ok;
-  const ok = saveLocalNow();
-  if (shared.handle && shared.perm === 'granted') saveShared();
-  if (ok) toast('Enregistré sur ce PC');
-  else if (already) toast('Enregistrement local impossible — exportez une sauvegarde', { tone: 'warn', action: 'Exporter', onAction: exportJson });
-}
+/* Ctrl+S et bouton « Enregistrer sur N: » : copie locale immédiate, puis enregistrement sur le disque partagé */
+function forceSave() { saveToN(); }
 
 /* =========================================================================
-   7. Fichier partagé (File System Access API + handle mémorisé dans IndexedDB)
+   7. Disque partagé N: — fichier « donnees-rapport.js » posé à côté de l'outil
+      Fonctionne comme un Excel partagé : le dernier rapport enregistré sur N: est chargé tout seul à l'ouverture
+      (balise <script> voisine, relue au retour sur l'onglet et toutes les 60 s) ; l'enregistrement sur N: est
+      explicite (bouton « Enregistrer sur N: », Ctrl+S) et écrase le fichier précédent.
+      Écriture : File System Access API (Edge / Chrome), emplacement mémorisé dans IndexedDB ;
+      sinon téléchargement du fichier, à déposer dans le dossier de l'outil.
+      L'enregistrement automatique sur ce PC (localStorage) reste le filet de sécurité.
    ========================================================================= */
+const N_FILE = 'donnees-rapport.js';
+const N_GLOBAL = '__NN_RAPPORT_DATA__';
+const N_POLL_MS = 60000;
+const N_IDB_KEY = 'nHandle';
+const N_TYPES = [{ description: 'Données du rapport partagé (donnees-rapport.js)', accept: { 'text/javascript': ['.js'] } }];
 const shared = {
-  supported: typeof window.showSaveFilePicker === 'function' && typeof window.showOpenFilePicker === 'function',
-  handle: null, name: '', perm: 'none', knownSavedAt: null, lastSync: null,
-  dirty: false, busy: false, again: false, timer: 0, error: '', conflictOpen: false, lastCheck: 0,
+  canWrite: typeof window.showSaveFilePicker === 'function',
+  handle: null, perm: 'none',
+  knownSavedAt: null, knownBy: '', /* version du disque N: sur laquelle repose ce rapport (chargée ou enregistrée ici) */
+  dirty: false,                    /* modifications pas encore enregistrées sur N: */
+  rev: 0,                          /* compteur de modifications (fichier téléchargé puis déposé à la main) */
+  disk: null,                      /* dernière version lue sur N: { savedAt, savedBy } ; null = fichier absent */
+  lastSync: null, busy: false, writing: false, conflictOpen: false, lastCheck: 0, loading: null, verify: null, pendingDownload: null,
   onchange: null,
 };
-const JSON_TYPES = [{ description: 'Données du rapport (JSON)', accept: { 'application/json': ['.json'] } }];
 
 function idbOpen() {
   return new Promise((resolve, reject) => {
@@ -2799,242 +2851,395 @@ const idbGet = k => idbDo('readonly', s => s.get(k));
 const idbSet = (k, v) => idbDo('readwrite', s => s.put(v, k));
 const idbDel = k => idbDo('readwrite', s => s.delete(k));
 
+/** Dossier de l'outil, tel que Windows l'affiche (N:\MFG\…), d'après l'adresse de la page. */
+function toolFolder() {
+  try {
+    if (location.protocol !== 'file:') return '';
+    let p = decodeURIComponent(location.pathname).replace(/\/[^/]*$/, '');
+    if (/^\/[A-Za-z]:/.test(p)) return p.slice(1).replace(/\//g, '\\');
+    if (location.host) return `\\\\${location.host}${p.replace(/\//g, '\\')}`;
+    return p || '/';
+  } catch { return ''; }
+}
+const isToday = d => fmtISODate(d) === fmtISODate(new Date());
+/** « 14:32 » aujourd'hui, sinon « 01/10 14:32 ». */
+const fmtWhenShort = d => (isToday(d) ? fmtTime(d) : fmtDM(d));
+
 function sharedChanged() {
   renderSaveState();
-  renderReconnectBanner();
+  Core.emit('data', 'rapport');
   if (shared.onchange) shared.onchange();
 }
 function setSharedDirty(v) {
   shared.dirty = v;
   if (prefs.sharedDirty !== v) { prefs.sharedDirty = v; savePrefs(); }
 }
-function setKnownSavedAt(v) {
-  shared.knownSavedAt = v;
-  prefs.sharedKnownSavedAt = v;
+function setKnown(savedAt, savedBy = '') {
+  shared.knownSavedAt = savedAt || null;
+  shared.knownBy = savedBy || '';
+  prefs.sharedKnownSavedAt = shared.knownSavedAt;
+  prefs.sharedKnownBy = shared.knownBy;
   savePrefs();
 }
+/** Toute modification du rapport (saisie, instantané PDF, paramètres du mail…) : à enregistrer sur N:. */
 function markSharedDirty() {
-  if (!shared.handle) return;
-  setSharedDirty(true);
-  if (shared.perm === 'granted') {
-    clearTimeout(shared.timer);
-    shared.timer = setTimeout(() => saveShared(), 1500);
-  }
+  shared.rev += 1;
+  if (!shared.dirty) { setSharedDirty(true); renderSaveState(); }
 }
-/** Lit le fichier partagé : { kind:'empty' } | { kind:'data', raw, data } | { kind:'invalid' } */
-async function readShared() {
-  const file = await shared.handle.getFile();
-  const txt = await file.text();
-  if (!txt.trim()) return { kind: 'empty' };
-  try {
-    const raw = JSON.parse(txt);
-    return { kind: 'data', raw, data: normalizeData(raw) };
-  } catch { return { kind: 'invalid' }; }
-}
-async function writeShared(data) {
-  const w = await shared.handle.createWritable();
-  await w.write(JSON.stringify(data));
-  await w.close();
-}
-const isRemoteNewer = d => !!d.savedAt && (!shared.knownSavedAt || d.savedAt > shared.knownSavedAt);
 
-async function saveShared({ force = false } = {}) {
-  if (!shared.handle || shared.perm !== 'granted') return;
-  if (shared.busy) { shared.again = true; return; }
-  shared.busy = true;
-  clearTimeout(shared.timer);
-  try {
-    if (!force) {
-      const res = await readShared();
-      if (res.kind === 'data' && isRemoteNewer(res.data)) {
-        shared.busy = false;
-        await onRemoteNewer(res.data);
-        return;
-      }
-    }
-    const data = currentData();
-    await writeShared(data);
-    setKnownSavedAt(validIso(data.savedAt));
-    setSharedDirty(false);
-    shared.lastSync = new Date();
-    shared.error = '';
-  } catch (e) {
-    shared.error = sharedErrorText(e);
-    if (e && e.name === 'NotAllowedError') shared.perm = 'prompt';
-  } finally {
-    shared.busy = false;
-    sharedChanged();
-    if (shared.again) { shared.again = false; if (shared.dirty) saveShared(); }
-  }
+/* ---------- Format du fichier : du JavaScript (lisible par <script src> en file://), jamais exécuté à la relecture ---------- */
+const oneLine = s => String(s || '').replace(/[\r\n]+/g, ' ').replace(/\*\//g, '* /');
+function nFileText(data) {
+  const d = new Date(data.savedAt);
+  return `/* Rapport de shift — Outil Formulation. Enregistré le ${fmtDate(d)} à ${fmtTime(d)}${data.savedBy ? ` par ${oneLine(data.savedBy)}` : ''}.\n` +
+    `   Lu automatiquement par « Outil Formulation.html » posé dans le même dossier. Ne pas modifier à la main. */\n` +
+    `window.${N_GLOBAL} = ${JSON.stringify(data)};\n`;
 }
-function sharedErrorText(e) {
-  if (!e) return 'Erreur inconnue';
-  if (e.name === 'NotAllowedError') return 'Permission à redonner';
-  if (e.name === 'NotFoundError') return 'Fichier introuvable (déplacé ou supprimé ?)';
-  return 'Écriture impossible (fichier ouvert ailleurs ?)';
+/** Contenu du fichier → données normalisées (lève une erreur si illisible). */
+function parseNText(text) {
+  let t = String(text || '').replace(/^\uFEFF/, '').trim();
+  t = t.replace(/^\/\*[\s\S]*?\*\/\s*/, '');
+  const m = /^window\.__NN_RAPPORT_DATA__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
+  if (m) t = m[1];
+  return normalizeData(JSON.parse(t));
 }
+
+/* ---------- Lecture automatique (balise <script> voisine) ---------- */
+let loadSeq = 0;
+/** Recharge donnees-rapport.js : undefined = fichier absent ; sinon l'objet déclaré par le fichier (ou null). */
+function loadDiskScript() {
+  if (shared.loading) return shared.loading;
+  shared.loading = new Promise(resolve => {
+    try { delete window[N_GLOBAL]; } catch { window[N_GLOBAL] = undefined; }
+    const s = document.createElement('script');
+    let done = false, timer = 0;
+    const fin = ok => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      s.remove();
+      let raw;
+      if (ok) { try { raw = window[N_GLOBAL] ?? null; } catch { raw = null; } }
+      shared.loading = null;
+      resolve(raw);
+    };
+    s.onload = () => fin(true);
+    s.onerror = () => fin(false);
+    timer = setTimeout(() => fin(false), 20000);
+    s.src = `${N_FILE}?t=${Date.now().toString(36)}${(++loadSeq).toString(36)}`;
+    document.head.append(s);
+  });
+  return shared.loading;
+}
+const sansStamp = r => JSON.stringify({ ...r, updatedAt: null, updatedBy: '' });
+const isNewer = d => !!d.savedAt && (!shared.knownSavedAt || d.savedAt > shared.knownSavedAt);
+const whoOf = d => d.savedBy || 'un collègue';
+const loadedMsg = d => {
+  const at = d.savedAt ? new Date(d.savedAt) : null;
+  return `Rapport du ${at ? fmtDM(at) : '?'} enregistré par ${whoOf(d)} chargé`;
+};
 function applyLoadedData(d) {
   pushUndo();
   undoMeta = { key: null, t: 0 };
   state.report = d.report;
   state.history = mergeHistory(d.history, state.history);
   if (d.settings.mailTo || d.settings.mailCc) state.settings = d.settings;
-  setKnownSavedAt(d.savedAt);
+  setKnown(d.savedAt, d.savedBy);
   setSharedDirty(false);
+  shared.disk = { savedAt: d.savedAt, savedBy: d.savedBy };
   shared.lastSync = new Date();
   saveLocalNow();
   schedulePrint();
   refresh();
 }
-async function onRemoteNewer(d) {
-  const who = d.savedBy || 'un collègue';
-  const when = d.savedAt ? fmtDM(new Date(d.savedAt)) : '?';
-  if (!shared.dirty) {
-    applyLoadedData(d);
-    toast(`Version plus récente chargée (${who}, ${when})`);
-    sharedChanged();
-    return;
+/** Données lues sur N: (automatiquement). */
+async function onDiskData(raw, { initial = false } = {}) {
+  if (raw === undefined || raw === null) { shared.disk = null; sharedChanged(); return; }
+  let d;
+  try { d = normalizeData(raw); } catch { shared.disk = null; sharedChanged(); return; }
+  shared.disk = { savedAt: d.savedAt, savedBy: d.savedBy };
+  /* fichier téléchargé (navigateur sans écriture directe) puis déposé sur N: : c'est bien notre version */
+  const pd = shared.pendingDownload;
+  if (pd && d.savedAt === pd.savedAt) {
+    shared.pendingDownload = null;
+    setKnown(d.savedAt, d.savedBy);
+    if (shared.rev === pd.rev) setSharedDirty(false);
+    shared.lastSync = new Date();
   }
+  if (isNewer(d)) {
+    if (!shared.dirty || sansStamp(d.report) === sansStamp(state.report)) {
+      applyLoadedData(d);
+      /* à l'ouverture, rien à annuler (le rapport de ce PC était déjà sur N:) */
+      toast(loadedMsg(d), initial ? { icon: 'cloud', timeout: 6000 } : { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 });
+    } else if (document.body.dataset.route === 'rapport') await conflictOnOpen(d);
+    /* sinon (étiquettes, paramètres…) : la question attend le retour sur le Rapport de shift (voir show()) */
+  }
+  sharedChanged();
+}
+async function conflictOnOpen(d) {
   if (shared.conflictOpen) return;
   shared.conflictOpen = true;
+  const at = d.savedAt ? new Date(d.savedAt) : null;
   const choice = await openDialog({
-    title: 'Version plus récente disponible', icon: 'cloud',
+    title: 'Une version plus récente est sur le disque N:', icon: 'cloud', tone: 'warn', className: 'dlg-n',
     body: [
-      h('p', {}, 'Une version plus récente a été enregistrée par ', h('b', { text: who }), ` le ${when}.`),
-      h('p', { class: 'muted', text: 'Vous avez aussi des modifications qui ne sont pas encore dans le fichier partagé.' }),
+      h('p', {}, h('b', { text: whoOf(d) }), ` a enregistré le rapport sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}.`),
+      h('p', {}, 'Vous avez aussi des modifications sur ce PC qui ', h('b', { text: 'ne sont pas enregistrées sur N:' }), '.'),
+      h('p', { class: 'muted', text: 'En général, on prend la version du disque N: pour repartir du dernier rapport de l’équipe. Vous pourrez annuler.' }),
     ],
     actions: [
-      { label: 'Garder la mienne et écraser', value: 'mine', cls: 'btn-secondary' },
-      { label: 'Charger cette version', value: 'theirs', cls: 'btn-primary', autofocus: true },
+      { label: 'Garder la mienne', value: 'mine', cls: 'btn-secondary' },
+      { label: 'Prendre la version du disque N:', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
     ],
   }).result;
   shared.conflictOpen = false;
-  if (choice === 'theirs') { applyLoadedData(d); toast('Version partagée chargée', { action: 'Annuler', onAction: undo }); }
-  else if (choice === 'mine') {
-    state.history = mergeHistory(state.history, d.history);
-    await saveShared({ force: true });
-    toast('Fichier partagé mis à jour avec votre version');
-  }
-  sharedChanged();
-}
-async function pullShared() {
-  if (!shared.handle || shared.perm !== 'granted' || shared.busy) return;
-  shared.lastCheck = Date.now();
-  try {
-    const res = await readShared();
-    if (res.kind === 'data' && isRemoteNewer(res.data)) await onRemoteNewer(res.data);
-    else if (shared.dirty) await saveShared();
-    else shared.lastSync = shared.lastSync || new Date();
-    shared.error = res.kind === 'invalid' ? 'Contenu du fichier illisible' : shared.error;
-  } catch (e) {
-    shared.error = sharedErrorText(e);
-    if (e && e.name === 'NotAllowedError') shared.perm = 'prompt';
-  }
-  sharedChanged();
-}
-function checkSharedSoon() {
-  if (Date.now() - shared.lastCheck > 3000) pullShared();
-}
-async function adoptHandle(handle, perm = 'granted') {
-  shared.handle = handle;
-  shared.name = handle.name || SHARED_FILENAME;
-  shared.perm = perm;
-  shared.error = '';
-  try { await idbSet('sharedHandle', handle); } catch { /* handle non mémorisable : il faudra relier au prochain lancement */ }
-}
-async function linkNewShared() {
-  let handle;
-  try { handle = await window.showSaveFilePicker({ suggestedName: SHARED_FILENAME, types: JSON_TYPES }); }
-  catch (e) { if (e && e.name !== 'AbortError') toast('Impossible de créer le fichier', { tone: 'warn' }); return; }
-  await adoptHandle(handle);
-  setSharedDirty(true);
-  await saveShared({ force: true });
-  toast(shared.error ? `Fichier lié, mais ${shared.error.toLowerCase()}` : 'Fichier partagé créé et lié', { tone: shared.error ? 'warn' : null });
-}
-async function askWrite(handle) {
-  try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; }
-  catch { return 'prompt'; } // p. ex. geste utilisateur expiré : on proposera « Reconnecter »
-}
-async function linkExistingShared() {
-  let handle;
-  try { [handle] = await window.showOpenFilePicker({ types: JSON_TYPES, multiple: false }); }
-  catch (e) { if (e && e.name !== 'AbortError') toast('Impossible d’ouvrir le fichier', { tone: 'warn' }); return; }
-  const perm = await askWrite(handle);
-  // Lecture du contenu avant de lier quoi que ce soit (la lecture est permise par le sélecteur)
-  const prev = { handle: shared.handle, name: shared.name, perm: shared.perm };
-  shared.handle = handle;
-  let res;
-  try { res = await readShared(); } catch { res = { kind: 'invalid' }; }
-  Object.assign(shared, prev);
-  if (res.kind === 'invalid') {
-    await messageDialog('Fichier non reconnu', 'Ce fichier n’est pas une sauvegarde du Rapport de formulation. Aucune donnée n’a été modifiée.');
-    return;
-  }
-  let choice = 'mine';
-  if (res.kind === 'data') {
-    const d = res.data;
-    choice = await openDialog({
-      title: 'Lier ce fichier partagé', icon: 'link',
-      body: [
-        h('p', {}, 'Ce fichier contient un rapport enregistré',
-          d.savedBy ? [' par ', h('b', { text: d.savedBy })] : '',
-          d.savedAt ? ` le ${fmtDM(new Date(d.savedAt))}` : '', '.'),
-        h('p', { class: 'muted', text: 'En général, on charge le fichier pour reprendre là où l’équipe précédente s’est arrêtée.' }),
-      ],
-      actions: [
-        { label: 'Garder mon rapport et écraser le fichier', value: 'mine', cls: 'btn-secondary' },
-        { label: 'Charger ce rapport', value: 'theirs', cls: 'btn-primary', autofocus: true },
-      ],
-    }).result;
-    if (!choice) { toast('Liaison annulée'); return; }
-  }
-  await adoptHandle(handle, perm);
   if (choice === 'theirs') {
-    applyLoadedData(res.data);
-    toast('Rapport partagé chargé', { action: 'Annuler', onAction: undo });
+    applyLoadedData(d);
+    toast(loadedMsg(d), { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 });
   } else {
-    setSharedDirty(true);
-    if (shared.perm !== 'granted') shared.perm = await askWrite(handle);
-    if (shared.perm === 'granted') {
-      await saveShared({ force: true });
-      toast(res.kind === 'empty' ? 'Fichier partagé lié' : 'Fichier partagé mis à jour avec votre rapport');
-    } else toast('Fichier lié. Cliquez sur « Reconnecter » pour autoriser l’écriture.', { tone: 'warn', timeout: 8000 });
+    /* la mienne : on note la version vue (pas de nouvelle question pour elle) et on garde son historique ;
+       le prochain « Enregistrer sur N: » l'écrasera */
+    state.history = mergeHistory(state.history, d.history);
+    setKnown(d.savedAt, d.savedBy);
+    saveLocalNow();
+    toast('Votre version est conservée. Cliquez sur « Enregistrer sur N: » pour la partager.', { icon: 'info', timeout: 7000 });
+  }
+}
+/** Relit le fichier de N: (démarrage, retour sur l'onglet, toutes les 60 s). */
+async function checkDisk({ force = false } = {}) {
+  if (!force && performance.now() - shared.lastCheck < 3000) return;
+  if (shared.busy || shared.conflictOpen) return;
+  shared.lastCheck = performance.now();
+  await onDiskData(await loadDiskScript());
+}
+
+/* ---------- Enregistrement explicite sur N: ---------- */
+function folderSchema() {
+  const folder = toolFolder() || 'N:\\MFG\\Formulation\\Outil formulation';
+  const row = (name, ic, cls = '') => h('div', { class: `nsch__file ${cls}`.trim() }, h('span', { class: `nsch__ico nsch__ico--${ic}`, 'aria-hidden': 'true' }), name);
+  return h('figure', { class: 'nsch', 'aria-label': 'Schéma de la fenêtre « Enregistrer sous »' },
+    h('div', { class: 'nsch__bar' }, h('span', { class: 'nsch__step', text: '1' }), h('span', { class: 'nsch__path', text: folder })),
+    h('div', { class: 'nsch__files' }, row('Outil Formulation.html', 'html'), row(N_FILE, 'js', 'is-target')),
+    h('div', { class: 'nsch__foot' },
+      h('span', { class: 'nsch__lbl', text: 'Nom du fichier :' }), h('span', { class: 'nsch__name', text: N_FILE }),
+      h('span', { class: 'nsch__step', text: '2' }), h('span', { class: 'nsch__btn', text: 'Enregistrer' }),
+      h('span', { class: 'nsch__step', text: '3' }), h('span', { class: 'nsch__btn', text: 'Oui' })),
+    h('figcaption', { class: 'muted', text: '1 : le dossier de l’outil · 2 : Enregistrer · 3 : « Oui » pour remplacer le fichier existant' }));
+}
+async function helpBeforePicker() {
+  const folder = toolFolder();
+  return openDialog({
+    title: 'Enregistrer sur le disque N:', icon: 'save', className: 'dlg-n dlg--wide',
+    body: [
+      h('p', {}, 'La fenêtre Windows « Enregistrer sous » va s’ouvrir, avec le nom ', h('b', { class: 'mono', text: N_FILE }), ' déjà rempli. ',
+        'Choisissez le dossier où se trouve ', h('b', { text: 'Outil Formulation.html' }),
+        folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et cliquez ', h('b', { text: 'Enregistrer' }), ', puis ', h('b', { text: 'Oui' }), ' pour remplacer.'),
+      folderSchema(),
+      h('p', { class: 'muted', text: 'À faire une seule fois sur ce PC : ensuite, « Enregistrer sur N: » écrit directement dans ce fichier.' }),
+    ],
+    actions: [
+      { label: 'Annuler', value: false },
+      { label: 'Choisir l’emplacement…', value: true, cls: 'btn-primary', icon: 'save', autofocus: true },
+    ],
+  }).result;
+}
+async function forgetHandle() {
+  shared.handle = null;
+  shared.perm = 'none';
+  try { await idbDel(N_IDB_KEY); } catch { /* rien à oublier */ }
+}
+/** Fenêtre « Enregistrer sous » (après l'aide) ; renvoie le handle choisi, ou null. */
+async function pickNFile() {
+  for (;;) {
+    if ((await helpBeforePicker()) !== true) return null;
+    let handle;
+    try { handle = await window.showSaveFilePicker({ id: 'outil-formulation', suggestedName: N_FILE, types: N_TYPES }); }
+    catch (e) {
+      if (!e || e.name !== 'AbortError') toast('La fenêtre « Enregistrer sous » n’a pas pu s’ouvrir.', { tone: 'warn' });
+      return null;
+    }
+    if ((handle.name || '').toLowerCase() === N_FILE) return handle;
+    const again = await openDialog({
+      title: 'Nom de fichier à corriger', icon: 'alert', tone: 'warn', className: 'dlg-n',
+      body: [
+        h('p', {}, 'Le fichier choisi s’appelle ', h('b', { class: 'mono', text: handle.name || '?' }), '. Pour que les collègues retrouvent le rapport, il doit s’appeler exactement ',
+          h('b', { class: 'mono', text: N_FILE }), ' et être dans le dossier de l’outil.'),
+        h('p', { class: 'muted', text: 'Rien n’a été écrit dans ce fichier.' }),
+      ],
+      actions: [{ label: 'Annuler', value: false }, { label: 'Choisir à nouveau…', value: true, cls: 'btn-primary', autofocus: true }],
+    }).result;
+    if (again !== true) return null;
+  }
+}
+async function ensurePerm(handle) {
+  try { if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return 'granted'; } catch { /* on demande */ }
+  try { return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'denied'; }
+  catch { return 'denied'; }
+}
+function nErrorText(e) {
+  if (e && e.name === 'NotAllowedError') return 'Windows n’a pas autorisé l’écriture sur N:.';
+  if (e && e.name === 'NotFoundError') return 'Le fichier ou le dossier N: est introuvable (déplacé, supprimé, ou disque N: déconnecté ?).';
+  return 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs.';
+}
+async function conflictOnSave(remote) {
+  const at = remote.savedAt ? new Date(remote.savedAt) : null;
+  return openDialog({
+    title: 'Quelqu’un a enregistré entre-temps', icon: 'users', tone: 'warn', className: 'dlg-n',
+    body: [
+      h('p', {}, h('b', { text: whoOf(remote) }), ` a enregistré une version plus récente sur N: ${at ? `le ${fmtDate(at)} à ${fmtTime(at)}` : ''}, après celle que vous avez ouverte.`),
+      h('p', {}, h('b', { text: 'Charger sa version' }), ' remplace votre rapport par le sien (vous pourrez annuler). ',
+        h('b', { text: 'Écraser avec la mienne' }), ' remplace le sien sur N:.'),
+    ],
+    actions: [
+      { label: 'Annuler', value: false },
+      { label: 'Écraser avec la mienne', value: 'mine', cls: 'btn-secondary' },
+      { label: 'Charger sa version', value: 'theirs', cls: 'btn-primary', icon: 'download', autofocus: true },
+    ],
+  }).result;
+}
+/** Relit puis écrit le fichier (écriture atomique : fichier temporaire remplacé à close()). */
+async function writeToHandle(handle) {
+  let remote = null;
+  try {
+    const txt = await (await handle.getFile()).text();
+    if (txt.trim()) { try { remote = parseNText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
+  } catch (e) { if (!e || e.name !== 'NotFoundError') throw e; }
+  if (remote && isNewer(remote) && sansStamp(remote.report) !== sansStamp(state.report)) {
+    const choice = await conflictOnSave(remote);
+    if (choice === 'theirs') { applyLoadedData(remote); toast(loadedMsg(remote), { icon: 'cloud', action: 'Annuler', onAction: undo, timeout: 8000 }); return false; }
+    if (choice !== 'mine') { toast('Enregistrement sur N: annulé', { icon: 'info' }); return false; }
+  }
+  if (remote) state.history = mergeHistory(state.history, remote.history);
+  const data = currentData();
+  shared.writing = true;
+  renderSaveState();
+  try {
+    const w = await handle.createWritable();
+    try { await w.write(nFileText(data)); await w.close(); }
+    catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
+  } finally { shared.writing = false; }
+  saveLocalNow();
+  setKnown(data.savedAt, data.savedBy);
+  setSharedDirty(false);
+  shared.disk = { savedAt: data.savedAt, savedBy: data.savedBy };
+  shared.lastSync = new Date();
+  shared.pendingDownload = null;
+  return data;
+}
+/** Bouton « Enregistrer sur N: » / Ctrl+S. */
+async function saveToN() {
+  saveLocalNow();
+  if (shared.busy) return;
+  if (!shared.canWrite) { downloadNFile(); return; }
+  shared.busy = true;
+  renderSaveState();
+  let fresh = false;
+  try {
+    let handle = shared.handle;
+    if (handle) {
+      shared.perm = await ensurePerm(handle);
+      if (shared.perm !== 'granted') {
+        toast('Autorisation refusée : le rapport n’a pas été enregistré sur N:.', { tone: 'warn', action: 'Réessayer', onAction: saveToN, timeout: 10000 });
+        return;
+      }
+    } else {
+      handle = await pickNFile();
+      if (!handle) return;
+      fresh = true;
+    }
+    let data;
+    try { data = await writeToHandle(handle); }
+    catch (e) {
+      if (!fresh && e && e.name === 'NotFoundError') await forgetHandle();
+      await openDialog({
+        title: 'Rapport non enregistré sur N:', icon: 'alert', tone: 'warn', className: 'dlg-n',
+        body: [h('p', { text: nErrorText(e) }), h('p', { class: 'muted', text: 'Le rapport reste enregistré sur ce PC. Réessayez dans un instant, ou choisissez de nouveau l’emplacement.' })],
+        actions: [{ label: 'Fermer', value: false, cls: 'btn-primary', autofocus: true }],
+      }).result;
+      return;
+    }
+    if (fresh) {
+      shared.handle = handle;
+      shared.perm = 'granted';
+      try { await idbSet(N_IDB_KEY, handle); } catch { /* emplacement non mémorisable : redemandé la prochaine fois */ }
+    }
+    if (!data) return;
+    toast(`Enregistré sur N: à ${fmtTime(new Date())}`, { icon: 'check' });
+    if (fresh) verifyLocation(data.savedAt);
+  } finally {
+    shared.busy = false;
+    sharedChanged();
+  }
+}
+/** 1er enregistrement : l'outil retrouve-t-il bien le fichier à côté de lui ? (sinon, mauvais dossier) */
+async function verifyLocation(savedAt) {
+  for (const wait of [300, 2000, 5000]) {
+    await new Promise(r => setTimeout(r, wait));
+    const raw = await loadDiskScript();
+    if (raw && raw.savedAt === savedAt) { shared.disk = { savedAt, savedBy: raw.savedBy || '' }; sharedChanged(); return; }
+  }
+  /* pas à côté de l'outil : ce n'est pas « sur N: » pour les collègues → emplacement oublié, rapport à enregistrer */
+  await forgetHandle();
+  setSharedDirty(true);
+  shared.disk = null;
+  sharedChanged();
+  checkDisk({ force: true });
+  const choice = await openDialog({
+    title: 'Enregistré dans un autre dossier ?', icon: 'alert', tone: 'warn', className: 'dlg-n dlg--wide',
+    body: [
+      h('p', {}, 'Le fichier a été écrit, mais l’outil ne le retrouve pas à côté de ', h('b', { text: 'Outil Formulation.html' }), '. Les collègues ne verront donc pas ce rapport.'),
+      h('p', {}, 'Choisissez le dossier où se trouve l’outil', toolFolder() ? [' : ', h('b', { class: 'mono', text: toolFolder() })] : '', '.'),
+    ],
+    actions: [{ label: 'Plus tard', value: false }, { label: 'Choisir le bon dossier…', value: true, cls: 'btn-primary', autofocus: true }],
+  }).result;
+  if (choice === true) saveToN();
+}
+/** Navigateur sans écriture directe (Firefox…) : téléchargement du fichier + consigne. */
+function downloadNFile() {
+  const data = currentData();
+  const blob = new Blob([nFileText(data)], { type: 'text/javascript' });
+  const url = URL.createObjectURL(blob);
+  const a = h('a', { href: url, download: N_FILE });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  shared.pendingDownload = { savedAt: data.savedAt, rev: shared.rev };
+  const folder = toolFolder();
+  openDialog({
+    title: 'Déposez le fichier sur N:', icon: 'download', className: 'dlg-n',
+    body: [
+      h('p', {}, 'Ce navigateur ne peut pas écrire directement sur N:. Le fichier ', h('b', { class: 'mono', text: N_FILE }), ' vient d’être ', h('b', { text: 'téléchargé' }), ' (dossier Téléchargements).'),
+      h('p', {}, 'Déplacez-le dans le dossier de l’outil', folder ? [' (', h('b', { class: 'mono', text: folder }), ')'] : '', ' et acceptez de ', h('b', { text: 'remplacer' }), ' l’ancien fichier.'),
+      h('p', { class: 'muted', text: 'Astuce : avec Microsoft Edge, l’enregistrement sur N: se fait en un clic.' }),
+    ],
+    actions: [{ label: 'Compris', value: true, cls: 'btn-primary', autofocus: true }],
+  });
+}
+/** Démarrage : version locale, emplacement mémorisé, puis lecture du fichier N: chargé par la balise <script> de la page. */
+async function initShared() {
+  shared.knownSavedAt = prefs.sharedKnownSavedAt;
+  shared.knownBy = prefs.sharedKnownBy;
+  /* rapport de ce PC jamais confronté à N: (1re ouverture de cette version) : ses saisies sont protégées */
+  shared.dirty = prefs.sharedDirty || (!shared.knownSavedAt && !!state.report.updatedAt);
+  let raw;
+  try { raw = window[N_GLOBAL]; } catch { raw = undefined; }
+  shared.lastCheck = performance.now();
+  /* après le démarrage de l'en-tête et du routage (qui referme les dialogues ouverts) */
+  await new Promise(r => setTimeout(r, 0));
+  await onDiskData(raw, { initial: true });
+  if (shared.canWrite) {
+    let handle = null;
+    try { handle = await idbGet(N_IDB_KEY); } catch { handle = null; }
+    if (handle && typeof handle.queryPermission === 'function') {
+      shared.handle = handle;
+      try { shared.perm = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; }
+      catch { shared.perm = 'prompt'; }
+    }
+    try { await idbDel('sharedHandle'); } catch { /* ancien fichier lié (.json Teams/OneDrive) : abandonné */ }
   }
   sharedChanged();
-}
-async function reconnectShared() {
-  if (!shared.handle) return;
-  try {
-    const p = await shared.handle.requestPermission({ mode: 'readwrite' });
-    if (p !== 'granted') { toast('Permission refusée', { tone: 'warn' }); return; }
-  } catch { toast('Impossible de reconnecter le fichier', { tone: 'warn' }); return; }
-  shared.perm = 'granted';
-  shared.error = '';
-  await pullShared();
-  toast('Fichier partagé reconnecté');
-}
-async function unlinkShared() {
-  clearTimeout(shared.timer);
-  try { await idbDel('sharedHandle'); } catch { /* rien à supprimer */ }
-  Object.assign(shared, { handle: null, name: '', perm: 'none', lastSync: null, error: '' });
-  setSharedDirty(false);
-  setKnownSavedAt(null);
-  sharedChanged();
-  toast('Fichier partagé délié');
-}
-async function initShared() {
-  if (!shared.supported) return;
-  shared.knownSavedAt = prefs.sharedKnownSavedAt;
-  shared.dirty = prefs.sharedDirty;
-  let handle = null;
-  try { handle = await idbGet('sharedHandle'); } catch { handle = null; }
-  if (!handle || typeof handle.queryPermission !== 'function') return;
-  shared.handle = handle;
-  shared.name = handle.name || SHARED_FILENAME;
-  try { shared.perm = (await handle.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'granted' : 'prompt'; }
-  catch { shared.perm = 'prompt'; }
-  if (shared.perm === 'granted') await pullShared();
-  sharedChanged();
+  setInterval(() => { if (document.visibilityState !== 'hidden') checkDisk({ force: true }); }, N_POLL_MS);
 }
 
 /* =========================================================================
@@ -3454,33 +3659,46 @@ function renderMeta() {
       h('button', { type: 'button', class: 'btn-link', onclick: () => change(x => { x.meta.shift = cur; }) }, `Passer en ${cur}`));
   }
 }
+/** État d'enregistrement du rapport, centré sur le disque partagé N: :
+    « ✓ Enregistré sur N: 14:32 » · « ● Modifications non enregistrées sur N: » (orange) · « Enregistré sur ce PC seulement ».
+    Le libellé court (.ss-short) remplace le long quand l'en-tête manque de place. */
+function nState() {
+  if (!persist.ok || persist.state === 'error') return 'error';
+  if (shared.writing) return 'busy';
+  if (shared.knownSavedAt && !shared.dirty) return 'ok';
+  if (shared.knownSavedAt || shared.disk) return 'dirty';
+  return 'local';
+}
 function renderSaveState() {
   const el = $('#save-state');
-  let ic, word, time = '', cls;
-  if (!persist.ok || persist.state === 'error') { ic = 'alert'; word = 'Non enregistré'; cls = 'is-error'; }
-  else if (persist.state === 'saving') { ic = 'clock'; word = 'Enregistrement…'; cls = 'is-saving'; }
-  else if (persist.at) { ic = 'check'; word = 'Enregistré'; time = fmtTime(persist.at); cls = 'is-ok'; }
-  else { ic = 'check'; word = 'Enregistrement auto.'; cls = 'is-idle'; }
-  el.className = `save-state ${cls}${time ? ' has-time' : ''}`;
-  el.title = cls === 'is-error' ? 'Le stockage local est indisponible : exportez une sauvegarde (menu ⋯ › Sauvegarde & partage).' : 'Chaque modification est enregistrée automatiquement sur ce poste.';
-  const main = h('span', { class: 'ss-main' }, icon(ic), h('span', { class: 'ss-word', text: word }), time ? h('span', { class: 'ss-time', text: time }) : null);
-  main.style.display = 'inline-flex';
-  main.style.alignItems = 'center';
-  main.style.gap = '.3rem';
-  const parts = [main];
-  if (shared.handle) {
-    const warn = shared.perm !== 'granted' || !!shared.error;
-    parts.push(h('span', {
-      class: `ss-shared ${warn ? 'is-warn' : 'is-ok'}`,
-      title: warn ? `Fichier partagé : ${shared.error || 'à reconnecter'}` : `Fichier partagé « ${shared.name} »${shared.lastSync ? ` — synchronisé à ${fmtTime(shared.lastSync)}` : ''}`,
-    }, icon(warn ? 'alert' : 'cloud'), h('span', { text: warn ? 'Partage' : 'Partagé' })));
+  if (!el) return;
+  const st = nState();
+  const known = shared.knownSavedAt ? new Date(shared.knownSavedAt) : null;
+  let ic, long, short, time = '', cls, tip;
+  if (st === 'error') { ic = 'alert'; long = short = 'Non enregistré'; cls = 'is-error'; tip = 'Le stockage local est indisponible : enregistrez sur N: ou exportez une sauvegarde (menu ⋯ › Disque N: & sauvegarde).'; }
+  else if (st === 'busy') { ic = 'clock'; long = 'Enregistrement sur N:…'; short = 'N:…'; cls = 'is-saving'; tip = 'Enregistrement sur le disque N: en cours'; }
+  else if (st === 'ok') {
+    ic = 'check'; long = 'Enregistré sur N:'; short = 'Sur N:'; time = fmtWhenShort(known); cls = 'is-ok';
+    tip = `Version du disque N: enregistrée le ${fmtDate(known)} à ${fmtTime(known)}${shared.knownBy ? ` par ${shared.knownBy}` : ''}. Une copie est aussi gardée sur ce PC.`;
+  } else if (st === 'dirty') {
+    ic = 'dot'; long = 'Modifications non enregistrées sur N:'; short = 'Non enregistré sur N:'; cls = 'is-dirty';
+    tip = 'Vos modifications sont gardées sur ce PC, mais pas encore sur le disque N: : cliquez sur « Enregistrer sur N: » (Ctrl+S).';
+  } else {
+    ic = 'pc'; long = 'Enregistré sur ce PC seulement'; short = 'Ce PC seulement'; cls = 'is-local';
+    tip = 'Le rapport est gardé sur ce PC. Pour que les collègues le retrouvent, cliquez sur « Enregistrer sur N: ».';
   }
-  el.replaceChildren(...parts);
-}
-function renderReconnectBanner() {
-  const show = !!shared.handle && shared.perm !== 'granted';
-  $('#banner-reconnect').hidden = !show;
-  if (show) $('#banner-reconnect-txt').textContent = Core.typo(`Le fichier partagé « ${shared.name} » doit être reconnecté pour retrouver et partager le rapport de l’équipe.`);
+  el.className = `save-state ${cls}${time ? ' has-time' : ''}`;
+  el.dataset.state = st;
+  el.title = tip;
+  el.setAttribute('role', 'status');
+  const main = h('span', { class: 'ss-main' }, ic === 'dot' ? h('span', { class: 'ss-dot', 'aria-hidden': 'true' }) : icon(ic),
+    h('span', { class: 'ss-word', text: long }), h('span', { class: 'ss-short', text: short }), time ? h('span', { class: 'ss-time', text: time }) : null);
+  el.replaceChildren(main);
+  const btn = $('#btn-save-n');
+  if (btn) {
+    btn.classList.toggle('is-dirty', st === 'dirty' || st === 'local');
+    btn.disabled = shared.busy;
+  }
 }
 function updateUndoUI() {
   const none = undoStack.length === 0;
@@ -3665,8 +3883,11 @@ async function exportPdf() {
   const at = new Date();
   addSnapshot(at);
   saveLocalNow();
-  if (shared.handle && shared.perm === 'granted') saveShared();
   printSheet(state.report, { at, author: state.author });
+  /* le PDF est fait : on propose d'enregistrer aussi sur N: (instantané de l'historique compris) */
+  if (shared.dirty) {
+    toast('Pensez à enregistrer aussi le rapport sur N: pour l’équipe.', { icon: 'save', action: 'Enregistrer sur N:', onAction: saveToN, timeout: 12000 });
+  }
 }
 function openPreview(entry = null) {
   const report = entry ? entry.report : state.report;
@@ -3849,40 +4070,38 @@ function openShare() {
   const body = h('div', { class: 'form-grid' });
   let dref = null;
   const render = () => {
-    const secLocal = h('section', { class: 'sect' }, h('h3', { text: 'Sur ce poste' }),
+    const st = nState();
+    const folder = toolFolder();
+    const disk = shared.disk && shared.disk.savedAt ? new Date(shared.disk.savedAt) : null;
+    const status = { ok: ['ok', 'À jour sur N:'], dirty: ['wip', 'Modifications non enregistrées sur N:'], local: ['na', 'Enregistré sur ce PC seulement'],
+      busy: ['wip', 'Enregistrement…'], error: ['todo', 'Stockage local indisponible'] }[st];
+    const secN = h('section', { class: 'sect' }, h('h3', { text: 'Disque partagé N: (toute l’équipe)' }),
+      h('p', {}, 'Comme un fichier Excel partagé : « Enregistrer sur N: » écrit le rapport dans ', h('b', { class: 'mono', text: N_FILE }),
+        ', à côté de l’outil. Sur n’importe quel PC, l’outil charge tout seul le dernier rapport enregistré.'),
+      h('dl', { class: 'kv' },
+        h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `badge tone-${status[0]}`, text: status[1] })),
+        h('dt', { text: 'Sur N:' }), h('dd', { text: disk ? `Enregistré le ${fmtDate(disk)} à ${fmtTime(disk)}${shared.disk.savedBy ? ` par ${shared.disk.savedBy}` : ''}` : 'Aucun rapport enregistré pour l’instant' }),
+        folder ? [h('dt', { text: 'Dossier' }), h('dd', { class: 'mono', text: folder })] : null,
+        shared.canWrite ? [h('dt', { text: 'Ce PC' }), h('dd', { text: shared.handle ? `Emplacement mémorisé (« ${shared.handle.name} »)` : 'Emplacement pas encore choisi : il sera demandé au 1er enregistrement' })] : null),
+      shared.canWrite ? null : h('p', { class: 'muted', text: 'Ce navigateur ne peut pas écrire sur N: : « Enregistrer sur N: » télécharge le fichier, à déposer dans le dossier de l’outil. La lecture automatique fonctionne.' }),
+      h('div', { class: 'sect__actions' },
+        h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: () => { dref?.close(); saveToN(); } }, icon('save'), 'Enregistrer sur N:'),
+        shared.canWrite && shared.handle ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { dref?.close(); await forgetHandle(); saveToN(); } }, icon('link'), 'Changer d’emplacement…') : null,
+        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: async () => { shared.lastCheck = 0; await checkDisk({ force: true }); toast(shared.disk ? 'Disque N: relu' : 'Aucun fichier sur N: pour l’instant', { icon: 'info' }); } }, icon('reset'), 'Relire N: maintenant')));
+    const secLocal = h('section', { class: 'sect' }, h('h3', { text: 'Sur ce PC (automatique)' }),
       h('p', { text: persist.ok
-        ? `Chaque modification est enregistrée automatiquement dans ce navigateur${persist.at ? ` (dernier enregistrement à ${fmtTime(persist.at)})` : ''}. Le rapport est retrouvé à la réouverture.`
-        : 'Le stockage local est indisponible dans ce navigateur : utilisez « Exporter une sauvegarde » pour ne rien perdre.' }));
-    let secShared;
-    if (!shared.supported) {
-      secShared = h('section', { class: 'sect' }, h('h3', { text: 'Fichier partagé (Teams / OneDrive)' }),
-        h('p', { class: 'muted', text: 'Le fichier partagé nécessite Microsoft Edge ou Google Chrome. Dans ce navigateur, utilisez « Exporter / Importer » ci-dessous pour transmettre le rapport.' }));
-    } else {
-      const status = !shared.handle ? ['na', 'Non lié'] : shared.perm !== 'granted' ? ['wip', 'Permission à redonner'] : shared.error ? ['todo', shared.error] : ['ok', 'Lié et synchronisé'];
-      const acts = !shared.handle
-        ? [h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: linkNewShared }, icon('plus'), 'Créer le fichier partagé…'),
-           h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: linkExistingShared }, icon('link'), 'Lier un fichier existant…')]
-        : [shared.perm !== 'granted' ? h('button', { type: 'button', class: 'btn btn-primary btn-sm', onclick: reconnectShared }, icon('link'), 'Reconnecter') : null,
-           h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: linkExistingShared }, icon('link'), 'Lier un autre fichier…'),
-           h('button', { type: 'button', class: 'btn btn-quiet btn-sm', onclick: unlinkShared }, icon('x'), 'Délier')];
-      secShared = h('section', { class: 'sect' }, h('h3', { text: 'Fichier partagé (Teams / OneDrive)' }),
-        h('p', { class: 'muted', text: 'Pour que le shift suivant retrouve le rapport sur un autre PC : liez un fichier « rapport-formulation-donnees.json » placé dans le dossier Teams/OneDrive synchronisé de l’équipe. L’outil y écrit ensuite automatiquement.' }),
-        h('dl', { class: 'kv' },
-          h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `badge tone-${status[0]}`, text: status[1] })),
-          shared.handle ? [h('dt', { text: 'Fichier' }), h('dd', { class: 'mono', text: shared.name })] : null,
-          shared.handle ? [h('dt', { text: 'Dernière synchro' }), h('dd', { text: shared.lastSync ? fmtDM(shared.lastSync) : '—' })] : null),
-        h('div', { class: 'sect__actions' }, acts));
-    }
+        ? `Chaque modification est aussi enregistrée automatiquement dans ce navigateur${persist.at ? ` (dernier enregistrement à ${fmtTime(persist.at)})` : ''} : rien n’est perdu si l’on ferme sans enregistrer sur N:.`
+        : 'Le stockage local est indisponible dans ce navigateur : enregistrez sur N: ou exportez une sauvegarde pour ne rien perdre.' }));
     const secFile = h('section', { class: 'sect' }, h('h3', { text: 'Sauvegarde manuelle (.json)' }),
-      h('p', { class: 'muted', text: 'Solution de secours universelle : exportez le rapport dans un fichier, puis importez-le sur un autre poste.' }),
+      h('p', { class: 'muted', text: 'Solution de secours : exportez le rapport dans un fichier, puis importez-le sur un autre poste.' }),
       h('div', { class: 'sect__actions' },
         h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: exportJson }, icon('download'), 'Exporter une sauvegarde'),
         h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: () => { dref?.close(); $('#file-import').click(); } }, icon('upload'), 'Importer une sauvegarde…')));
-    body.replaceChildren(secLocal, secShared, secFile);
+    body.replaceChildren(secN, secLocal, secFile);
   };
   render();
   shared.onchange = render;
-  dref = openDialog({ title: 'Sauvegarde & partage', icon: 'cloud', className: 'dlg--wide', body, actions: [{ label: 'Fermer', value: false }] });
+  dref = openDialog({ title: 'Disque N: & sauvegarde', icon: 'cloud', className: 'dlg--wide', body, actions: [{ label: 'Fermer', value: false }] });
   dref.result.then(() => { if (shared.onchange === render) shared.onchange = null; });
 }
 function openSettings() {
@@ -3928,13 +4147,14 @@ async function confirmReset() {
 /* Entrées du menu « ⋯ » (les entrées « narrow » ne s'affichent que sur petit écran) */
 function menuItems() {
   return [
+    { label: 'Enregistrer sur N:', icon: 'save', run: saveToN, narrow: true },
     { label: 'Exporter en PDF', icon: 'pdf', run: exportPdf, narrow: true },
     { label: 'Préparer le mail', icon: 'mail', run: prepareMail, narrow: true },
     { id: 'mi-undo', label: 'Annuler la dernière action', icon: 'undo', run: undo, narrow: true, disabled: undoStack.length === 0 },
     { sep: true, narrow: true },
     { label: 'Aperçu impression', icon: 'eye', run: () => openPreview() },
     { label: 'Historique', icon: 'history', run: openHistory },
-    { label: 'Sauvegarde & partage', icon: 'cloud', run: openShare },
+    { label: 'Disque N: & sauvegarde', icon: 'cloud', run: openShare },
     { label: 'Paramètres', icon: 'sliders', run: openSettings },
     { sep: true, narrow: true },
     { aa: true },
@@ -3969,7 +4189,7 @@ function bindGlobal() {
   $('#btn-undo').addEventListener('click', undo);
   $('#btn-mail').addEventListener('click', prepareMail);
   $('#btn-pdf').addEventListener('click', exportPdf);
-  $('#btn-reconnect').addEventListener('click', reconnectShared);
+  $('#btn-save-n').addEventListener('click', saveToN);
   $('#btn-banner-export').addEventListener('click', exportJson);
   $('#file-import').addEventListener('change', e => {
     const f = e.target.files && e.target.files[0];
@@ -3977,13 +4197,19 @@ function bindGlobal() {
     if (f) importJsonFile(f);
   });
   window.addEventListener('pagehide', () => { if (persist.timer) saveLocalNow(); });
+  /* retour sur l'onglet ou sur la fenêtre : relecture du disque N: */
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      if (persist.timer) saveLocalNow();
-      if (shared.dirty && shared.perm === 'granted') saveShared();
-    } else checkSharedSoon();
+    if (document.visibilityState === 'hidden') { if (persist.timer) saveLocalNow(); }
+    else checkDisk();
   });
-  window.addEventListener('focus', checkSharedSoon);
+  window.addEventListener('focus', () => checkDisk());
+  /* rappel doux (fenêtre du navigateur) si l'on quitte avec des modifications non enregistrées sur N: */
+  window.addEventListener('beforeunload', e => {
+    if (persist.timer) saveLocalNow();
+    if (!shared.dirty || !(shared.knownSavedAt || shared.disk)) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
   window.addEventListener('storage', e => {
     // Modification faite dans un autre onglet de ce poste : on la reprend si rien n'est en attente ici.
     if (e.key !== KEYS.data || !e.newValue || persist.timer) return;
@@ -3991,6 +4217,12 @@ function bindGlobal() {
       const d = normalizeData(JSON.parse(e.newValue));
       state.report = d.report; state.history = d.history; state.settings = d.settings;
       persist.at = new Date(); persist.state = 'saved';
+      try {
+        const p = JSON.parse(ls.get(KEYS.prefs) || '{}');
+        prefs.sharedKnownSavedAt = shared.knownSavedAt = validIso(p.sharedKnownSavedAt);
+        prefs.sharedKnownBy = shared.knownBy = str(p.sharedKnownBy, 80);
+        prefs.sharedDirty = shared.dirty = p.sharedDirty === true;
+      } catch { /* préférences illisibles : état N: inchangé */ }
       refresh(); schedulePrint(); renderSaveState();
       toast('Rapport mis à jour depuis un autre onglet');
     } catch { /* ignoré */ }
@@ -4018,6 +4250,7 @@ function afterPrint() { Core.Print.clear(); }
 function show() {
   refresh();
   renderSaveState();
+  checkDisk({ force: true });
   requestAnimationFrame(() => autogrowIn(document));
 }
 function hide() { /* rien à faire : l'enregistrement reste automatique */ }
@@ -4030,6 +4263,11 @@ function summary(now = new Date()) {
     frigo: frigo.length, overdue: limits.filter(l => l.tone === 'todo').length, soon: limits.filter(l => l.tone === 'wip').length,
     lots: LINES.map(l => ({ id: l.id, line: l.name, lot: r.bands.enCours[l.id].lot, produit: r.bands.enCours[l.id].produit })),
     soonHours: Params.get().rapport.soonHours,
+    n: {
+      state: nState(),
+      savedAt: shared.disk && shared.disk.savedAt ? new Date(shared.disk.savedAt) : shared.knownSavedAt ? new Date(shared.knownSavedAt) : null,
+      savedBy: shared.disk && shared.disk.savedAt ? shared.disk.savedBy : shared.knownBy,
+    },
   };
 }
 /* Paramètres modifiés (onglet Paramètres, fichier d'équipe…) : cartes reconstruites, calculs et PDF à jour */
@@ -6735,12 +6973,23 @@ const Accueil = (() => {
   }
   const pill = (tone, text, ic) => h('span', { class: `hpill hpill--${tone}${ic ? ' has-icon' : ''}` }, ic ? icon(ic) : null, text);
 
+  /* Disque partagé N: : « Dernier rapport enregistré sur N: aujourd'hui à 14:32 par NB » */
+  function nLine(n, now) {
+    if (!n) return null;
+    if (n.savedAt) {
+      return h('p', { class: `tile__n${n.state === 'dirty' ? ' is-dirty' : ''}`, id: 'tile-rapport-n' }, icon('cloud'),
+        h('span', {}, `Dernier rapport enregistré sur N: ${when(n.savedAt, now)}${n.savedBy ? ` par ${n.savedBy}` : ''}`,
+          n.state === 'dirty' ? h('span', { class: 'tile__n-warn' }, h('span', { class: 'ss-dot', 'aria-hidden': 'true' }), 'Modifications non enregistrées sur N:') : null));
+    }
+    return h('p', { class: 'tile__n is-local', id: 'tile-rapport-n' }, icon('pc'), h('span', { text: 'Enregistré sur ce PC seulement (pas encore sur N:)' }));
+  }
   function renderRapport(s, now) {
     const box = $('#tile-rapport-status');
     const hasLots = s.lots.some(l => l.lot);
     if (!s.updatedAt && !hasLots) {
       box.replaceChildren(h('p', { class: 'tile__line is-empty' }, icon('info'), 'Aucun rapport en cours'),
-        h('p', { class: 'tile__desc', text: 'Le rapport démarre vide : renseignez les lots en cours, les statuts et les points à suivre.' }));
+        h('p', { class: 'tile__desc', text: 'Le rapport démarre vide : renseignez les lots en cours, les statuts et les points à suivre.' }),
+        s.n && s.n.savedAt ? nLine(s.n, now) : null);
       return;
     }
     const upd = s.updatedAt ? `Mis à jour ${when(s.updatedAt, now)}${s.updatedBy ? ` par ${s.updatedBy}` : ''}` : 'Rapport en cours';
@@ -6753,7 +7002,8 @@ const Accueil = (() => {
       h('p', { class: 'tile__line' }, icon('clock'), upd, s.shift ? h('span', { class: 'hpill hpill--navy', text: `Shift ${s.shift}` }) : null),
       h('div', { class: 'tile__pills' }, pills),
       h('dl', { class: 'tile__lots', 'aria-label': 'Lots en cours de remplissage' },
-        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))));
+        s.lots.map(l => h('div', { 'data-line': l.id }, h('dt', {}, h('span', { class: 'line-dot', 'aria-hidden': 'true' }), l.line), h('dd', { class: l.lot ? null : 'is-empty', text: l.lot || '—', title: l.produit || null })))),
+      nLine(s.n, now));
   }
   function renderEtiquettes(s, now) {
     const box = $('#tile-etiquettes-status');
@@ -6892,10 +7142,12 @@ const Shell = (() => {
      les onglets ne bougent pas d'un module à l'autre. Niveaux d'action (a1…a4) : calculés pour la vue affichée seulement,
      une fois les niveaux communs épuisés — les libellés d'action restent visibles partout où ils tiennent. */
   let fitRaf = 0;
-  const COMMON_MAX = 4, ACTION_MAX = 4;
-  /* ordre de compactage (niveau commun, niveau d'action) : le mot « Enregistré » (a1) disparaît avant que l'onglet
-     « Paramètres » ne soit réduit à son engrenage (c4) */
-  const STEPS = [[1, 0], [2, 0], [3, 0], [3, 1], [4, 1], [4, 2], [4, 3], [4, 4]];
+  const COMMON_MAX = 4, ACTION_MAX = 7;
+  /* ordre de compactage (niveau commun, niveau d'action) : niveaux communs d'abord, puis libellé court de l'indicateur
+     (a1) et libellés d'action ; enfin (a5…a7,
+     rapport) indicateur réduit à son pictogramme, PDF en icône, pictogramme du bouton « Enregistrer sur N: » retiré
+     (son libellé reste toujours écrit en entier) */
+  const STEPS = [[1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7]];
   const setClasses = (hdr, prefix, n, max) => { for (let k = 1; k <= max; k++) hdr.classList.toggle(`${prefix}${k}`, k <= n); };
   function fitHeader() {
     const hdr = $('#app-header'), inner = $('#app-header-in');
@@ -7007,7 +7259,7 @@ const Shell = (() => {
     /* Ctrl+S hors module (accueil) : pas de « Enregistrer la page sous… » du navigateur */
     if ((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && e.key.toLowerCase() === 's') {
       e.preventDefault();
-      Core.toast('Tout est enregistré automatiquement sur ce PC.', { icon: 'check' });
+      Core.toast('Tout est gardé automatiquement sur ce PC. Pour enregistrer le rapport sur N:, ouvrez le Rapport de shift.', { icon: 'check' });
     }
   }
 
