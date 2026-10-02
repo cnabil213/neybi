@@ -311,6 +311,7 @@ dialog.dlg.dlg-faq{width:min(70rem,calc(100vw - 1.5rem));height:calc(100vh - 1.5
 .faq-go__where{font-size:.9375rem;color:var(--muted)}
 .faq-go__btn{max-width:100%;height:auto;padding-top:.375rem;padding-bottom:.375rem;white-space:normal;text-align:left;line-height:1.3}
 .faq-h{margin:.5rem 0 0;padding-top:.75rem;border-top:1px solid var(--border);font-size:1.0625rem;font-weight:700;line-height:1.3;color:var(--t--nn-navy, var(--nn-navy))}
+.faq-a>.faq-h:first-child{margin-top:0;padding-top:0;border-top:0}
 .faq-steps{display:flex;flex-direction:column;gap:.5rem;margin:0;padding:0;list-style:none;counter-reset:faq}
 .faq-steps>li{position:relative;min-height:1.75rem;padding:.125rem 0 0 2.375rem;counter-increment:faq}
 .faq-steps>li::before{content:counter(faq);position:absolute;left:0;top:0;display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--faq-red);color:var(--t-ffffff, #FFFFFF);font-size:.875rem;font-weight:700}
@@ -323,6 +324,16 @@ dialog.dlg.dlg-faq{width:min(70rem,calc(100vw - 1.5rem));height:calc(100vh - 1.5
 .faq-vars th,.faq-vars td{padding:.375rem .625rem;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
 .faq-vars th{font-size:.8125rem;font-weight:700;color:var(--muted)}
 .faq-vars td:first-child{white-space:nowrap}
+.faq-tbl-wrap{max-width:100%;overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2)}
+.faq-tbl-wrap:focus-visible{outline:none;box-shadow:var(--focus)}
+.faq-tbl{width:100%;border-collapse:collapse;font-size:.9375rem;line-height:1.45;color:var(--text)}
+.faq-tbl th,.faq-tbl td{padding:.5rem .75rem;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.faq-tbl tbody tr:last-child td{border-bottom:0}
+.faq-tbl th{font-size:.8125rem;font-weight:700;color:var(--muted);background:var(--tint)}
+.faq-tbl--2{min-width:30rem}
+.faq-tbl--2 td{width:50%}
+.faq-tbl--3{min-width:36rem}
+.faq-tbl--3 td:nth-child(2){white-space:nowrap;font-weight:600}
 .faq-shots{display:flex;flex-direction:column;gap:1rem}
 .faq-shot{display:flex;flex-direction:column;align-items:flex-start;gap:.375rem;margin:0;min-width:0}
 .faq-shot__k{font-size:.8125rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -11993,7 +12004,13 @@ const Aide = (() => {
     where ? h('span', { class: 'faq-go__where', text: where }) : null);
   const open1 = (where, run) => go('Ouvrir cette section', where, run, true);
 
-  /* ---------- Les 8 entrées (dans l'ordre demandé) ---------- */
+  /** Tableau lisible : défile dans son cadre si l'écran est trop étroit (jamais la page). */
+  const tbl = (label, head, rows, mod) => h('div', { class: 'faq-tbl-wrap', role: 'region', tabindex: '0', 'aria-label': label },
+    h('table', { class: `faq-tbl ${mod || ''}`.trim() },
+      h('thead', {}, h('tr', {}, head.map(t => h('th', { scope: 'col', text: t })))),
+      h('tbody', {}, rows.map(r => h('tr', {}, r.map(t => h('td', { text: t })))))));
+
+  /* ---------- Les 9 entrées (dans l'ordre demandé) ---------- */
   const ENTRIES = [
     { id: 'produit', q: 'Ajouter ou modifier un produit', body: () => [
       open1('Paramètres › Rapport — Produits', toParams('pm-prod', 'pm-pr-groninger-add-n')),
@@ -12246,6 +12263,49 @@ const Aide = (() => {
         shot('data-panel', 'La ligne Sur N: (7) et le bouton Relire N: maintenant (8).'),
         shot('data-dir', 'Paramètres › Dossier principal (ce PC) : chemin attendu (10) et bouton pour choisir le dossier (11).')),
       note('Si vous aviez aussi des modifications non enregistrées sur ce PC, l’outil ne les remplace jamais sans demander : la fenêtre « Une version plus récente est sur le disque N: » vous laisse choisir.'),
+    ] },
+
+    /* Destinée à IT, QA et aux managers : pas de bouton « Ouvrir cette section », pas de captures. Les noms techniques y sont voulus. */
+    { id: 'securite', q: 'Sécurité et confidentialité de l’outil', body: () => [
+      H('Résumé'),
+      P('L’Outil Formulation présente un ', B('risque de sécurité faible'), ' : c’est une page web locale qui ne communique avec aucun serveur, n’installe rien et n’exécute aucun programme sur le PC. Il remplace deux fichiers Excel (rapport de shift et étiquettes d’échantillons) de l’équipe formulation. La décision d’utilisation revient à IT et QA.'),
+      H('Ce que fait l’outil, ce qu’il ne fait pas'),
+      tbl('Ce que fait l’outil, ce qu’il ne fait pas', ['Ce que fait l’outil', 'Ce qu’il ne fait pas'], [
+        ['Afficher et remplir le rapport de shift', 'Se connecter à Internet, à un serveur ou à une base de données'],
+        ['Préparer et imprimer des planches d’étiquettes', 'Installer un programme, une extension ou un service'],
+        ['Enregistrer ses données dans sauvegarde.js, dans le dossier choisi sur N:', 'Lire ou écrire en dehors du dossier choisi par l’utilisateur'],
+        ['Créer le PDF du rapport dans ce même dossier', 'Envoyer un mail tout seul ou joindre un fichier'],
+        ['Ouvrir un onglet Outlook Web prérempli, sur clic de l’utilisateur', 'Lire les mails, les contacts ou les identifiants'],
+        ['Garder un brouillon dans le navigateur du PC', 'Utiliser des cookies, du suivi ou de la publicité'],
+      ], 'faq-tbl--2'),
+      H('Contrôles techniques'),
+      tbl('Contrôles techniques', ['Contrôle', 'Résultat'], [
+        ['Appels réseau (fetch, XMLHttpRequest, WebSocket, EventSource, sendBeacon)', '0'],
+        ['Code exécuté dynamiquement (eval, new Function, Worker, service worker)', '0'],
+        ['Bibliothèques ou polices chargées depuis Internet', '0 : tout est dans le fichier'],
+        ['iframe, cookies, presse-papiers, postMessage', '0'],
+        ['Adresses Internet présentes', 'outlook.office.com seulement (brouillon de mail)'],
+        ['Accès aux fichiers', 'uniquement le dossier que l’utilisateur choisit et autorise'],
+        ['Script externe', '1 : sauvegarde.js, le fichier de données, dans le même dossier'],
+      ], 'faq-tbl--2'),
+      P('Un audit a trouvé et corrigé 64 défauts, chacun couvert par un test automatique.'),
+      H('Données'),
+      tbl('Données', ['Donnée', 'Où'], [
+        ['Lots, produits, statuts, holding times, commentaires, prénom ou visa du rédacteur', 'sauvegarde.js sur N:'],
+        ['Rapports PDF', 'dossier du mois sur N:'],
+        ['Calibration de l’imprimante, thème, brouillon', 'navigateur du PC'],
+      ], 'faq-tbl--2'),
+      P('Aucune donnée patient, aucun résultat analytique de libération, aucun identifiant. Rien n’est envoyé à un tiers.'),
+      H('Risques résiduels'),
+      tbl('Risques résiduels', ['Risque', 'Niveau', 'Mesure'], [
+        ['Modification du fichier ou de sauvegarde.js par une personne ayant le droit d’écriture sur N:', 'Faible', 'Limiter l’écriture du dossier à l’équipe ; garder une copie de référence'],
+        ['Perte ou corruption de sauvegarde.js', 'Faible', 'L’outil détecte un fichier illisible et en garde une copie ; dossier N: sauvegardé par IT'],
+        ['Confusion avec un document GMP', 'Moyen (qualité)', 'Outil de communication, ne remplace pas le dossier de lot ; validation QA avant usage généralisé'],
+        ['Erreur d’impression d’étiquette', 'Faible', 'Relecture de chaque étiquette avant collage ; page de test et standard validé'],
+      ], 'faq-tbl--3'),
+      P('Aucun exécutable, aucune macro Office, aucun droit administrateur.'),
+      H('Conception'),
+      P('Outil conçu et spécifié par Nabil (équipe formulation) à partir des besoins de terrain. Le code a été produit avec un outil d’aide au développement, puis vérifié par plus de 600 tests automatiques et un audit en 5 volets. Le code source est lisible dans le fichier et peut être relu par IT.'),
     ] },
   ];
 
