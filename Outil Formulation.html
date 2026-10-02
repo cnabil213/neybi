@@ -384,7 +384,7 @@ dialog.dlg.dlg-faq-zoom{width:calc(100vw - 1.5rem);height:calc(100vh - 1.5rem);m
 .hero__sep{align-self:stretch;width:1px;background:var(--border);flex:none}
 .hero__text{display:flex;flex-direction:column;gap:.25rem;min-width:0}
 .hero__eyebrow{font-size:.8125rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--nn-blue)}
-.app-header:not(.c3) ~ .home .hero__eyebrow{display:none} /* le titre est déjà dans l'en-tête */
+/* « Formulation Hub » : sur-titre toujours visible (il ne répète plus le titre de l'en-tête) */
 .hero__hello{margin:0;font-size:2rem;font-weight:700;line-height:1.15;color:var(--t--nn-navy, var(--nn-navy))}
 .hero__date{font-size:1.125rem;font-weight:600;color:var(--text)}
 .hero__date .hero__time{font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600;white-space:nowrap}
@@ -928,6 +928,32 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .cs-step__extra{margin-top:.375rem}
 .mod-rapport .cs-path,.mod-rapport .cs-attach{display:inline-flex;align-items:flex-start;gap:.375rem;padding:.375rem .625rem;border-radius:8px;background:var(--surface-2);font-size:.8125rem;overflow-wrap:anywhere}
 .mod-rapport .cs-path{font-family:var(--mono);font-weight:600;color:var(--t--nn-navy, var(--nn-navy))}
+.mod-rapport .cs-step__extra:has(.cs-view){display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+/* Visualiseur « PDF enregistré » : en-tête du fichier (coche verte, nom, emplacement), lecteur PDF du navigateur en pleine largeur */
+dialog.dlg.dlg--pdfv{width:min(64rem,calc(100vw - 1.5rem)) !important;height:calc(100vh - 2rem);max-height:none}
+dialog.dlg.dlg--pdfv.is-printed{height:auto}
+.dlg--pdfv .dlg__body{flex:1;min-height:0;gap:.75rem;padding:.875rem 1.25rem 1rem}
+.mod-rapport .pdfv-file{display:flex;align-items:flex-start;gap:.75rem;min-width:0}
+.mod-rapport .pdfv-file__ok{display:grid;place-items:center;flex:none;width:2rem;height:2rem;border-radius:50%;background:var(--ok-bg);color:var(--ok-fg)}
+.mod-rapport .pdfv-file__ok .icon{width:1.125rem;height:1.125rem;stroke-width:2.6}
+.mod-rapport .pdfv-file__ok.is-printed{background:var(--b-e6eefb, #E6EEFB);color:var(--nn-blue)}
+.mod-rapport .pdfv-file__txt{display:flex;flex-direction:column;gap:.125rem;min-width:0}
+.mod-rapport .pdfv-file__name{font-size:1rem;font-weight:700;color:var(--text);overflow-wrap:anywhere}
+.mod-rapport .pdfv-file__path{display:flex;align-items:flex-start;gap:.375rem;font-family:var(--mono);font-size:.8125rem;font-weight:600;color:var(--t--nn-navy, var(--nn-navy));overflow-wrap:anywhere}
+.mod-rapport .pdfv-file__path .icon{flex:none;margin-top:.125rem}
+.mod-rapport .pdfv-file__at{font-size:.8125rem;color:var(--muted)}
+.mod-rapport .pdfv-frame{display:block;flex:1 1 75vh;width:100%;min-height:14rem;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface-2)}
+.mod-rapport .pdfv-msg{display:flex;gap:.75rem;padding:.875rem 1rem;border-radius:8px;background:var(--b-eef3fc, #EEF3FC);color:var(--text)}
+.mod-rapport .pdfv-msg>.icon{flex:none;width:1.25rem;height:1.25rem;margin-top:.125rem;color:var(--nn-blue)}
+.mod-rapport .pdfv-msg p{margin:0}
+.mod-rapport .pdfv-msg p+p{margin-top:.25rem}
+@media (max-width:599.98px){
+  .dlg--pdfv .dlg__body{padding:.75rem .875rem}
+  .mod-rapport .pdfv-frame{flex-basis:50vh;min-height:10rem}
+  .dlg--pdfv .dlg__foot{padding:.75rem .875rem}
+  .dlg--pdfv .dlg__foot .btn{flex:1 1 auto}
+  .dlg--pdfv .dlg__foot .pdfv-big{order:-1;flex-basis:100%}
+}
 .mod-rapport .cs-attach{background:var(--b-eef3fc, #EEF3FC);color:var(--t--nn-navy, var(--nn-navy))}
 .mod-rapport .cs-step.is-run{border-color:var(--l-9dbdf2, #9DBDF2);background:var(--b-f5f9ff, #F5F9FF)}
 .mod-rapport .cs-step.is-run .cs-step__n{background:var(--nn-blue);color:var(--t-ffffff, #FFFFFF);animation:cs-run 1s ease-in-out infinite}
@@ -2344,10 +2370,10 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
       <img class="hero__logo" src="data:image/png;base64,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" alt="Novo Nordisk" width="109" height="78">
       <span class="hero__sep" aria-hidden="true"></span>
       <div class="hero__text">
-        <p class="hero__eyebrow">Outil Formulation</p>
+        <p class="hero__eyebrow">Formulation Hub</p>
         <h1 class="hero__hello" id="home-hello">Bonjour</h1>
         <p class="hero__date" id="home-date"></p>
-        <p class="hero__sub">Rapport de shift et étiquettes d'échantillons — équipe formulation</p>
+        <p class="hero__sub">L'espace de travail de l'équipe formulation</p>
       </div>
       <button type="button" class="btn btn-secondary hero__help" id="btn-help" aria-haspopup="dialog" title="Aide : réglages, étiquettes, enregistrement"><span data-icon="help"></span><span>Aide</span></button>
     </section>
@@ -5415,7 +5441,7 @@ const pinMeta = (cm, now) => {
 /* =========================================================================
    5. État, modifications, annulation
    ========================================================================= */
-const state = { report: null, history: [], settings: normalizeSettings(null), author: '', versions: [], lastPdf: null };
+const state = { report: null, history: [], settings: normalizeSettings(null), author: '', versions: [], lastPdf: null, lastPdfView: null };
 const undoStack = [];
 let undoMeta = { key: null, t: 0 };
 function pushUndo() {
@@ -8031,6 +8057,7 @@ async function printFallback({ fromClose = false } = {}) {
   printSheet(state.report, { at, author: state.author, changes: plainChanges(ch), ref: refMeta(ch.ref) });
   const file = `${fileBase(state.report.meta.shift, at)}.pdf`;
   state.lastPdf = { name: file, folder: '', at };
+  keepLastPdf({ blob: null, name: file, folder: '', at }); /* aucune copie : « Voir le dernier PDF » l'explique */
   markChanged();
   if (!fromClose) {
     setTimeout(() => {
@@ -8048,7 +8075,12 @@ let exporting = false;
 async function exportPdf({ fromClose = false, noPick = false } = {}) {
   if (exporting) return { cancelled: true, why: 'Un export PDF est déjà en cours.' };
   exporting = true;
-  const fallback = async why => (await printFallback({ fromClose })) || { cancelled: true, why: why || 'Impression Edge annulée.' };
+  const fallback = async why => {
+    const r = await printFallback({ fromClose });
+    if (!r) return { cancelled: true, why: why || 'Impression Edge annulée.' };
+    if (!fromClose) setTimeout(() => openPdfViewer(), 300); /* message clair, jamais de visualiseur vide */
+    return r;
+  };
   try {
     if (!Disk.supported) return await fallback();
     const at = new Date();
@@ -8072,7 +8104,11 @@ async function exportPdf({ fromClose = false, noPick = false } = {}) {
           h('p', { class: 'muted', text: 'Vous pouvez faire le PDF avec l’impression d’Edge (« Enregistrer au format PDF »).' })],
         actions: [{ label: 'Fermer', value: false }, { label: 'Imprimer avec Edge', value: true, cls: 'btn-primary', icon: 'printer', autofocus: true }],
       }).result;
-      if (again === true) return (await printFallback({ fromClose })) || { error: true, why };
+      if (again === true) {
+        const r = await printFallback({ fromClose });
+        if (r && !fromClose) setTimeout(() => openPdfViewer(), 300);
+        return r || { error: true, why };
+      }
       return { error: true, why };
     }
     if (!res) return await fallback('Dossier principal non choisi, puis impression Edge annulée.');
@@ -8080,12 +8116,72 @@ async function exportPdf({ fromClose = false, noPick = false } = {}) {
     addSnapshot(at, ch);
     saveLocalNow();
     state.lastPdf = { name: res.file, folder: res.folder, at };
+    keepLastPdf({ blob: new Blob([bytes], { type: 'application/pdf' }), name: res.file, folder: res.folder, at });
     if (!fromClose) {
       toast(`PDF rangé dans « ${res.folder} » : ${res.file}`, { icon: 'pdf', action: 'Préparer le mail', onAction: () => prepareMail(), timeout: 12000 });
+      openPdfViewer(); /* montre tout de suite à quoi ressemble le fichier */
     }
     pdfCharsToast();
     return { ok: true, ...res };
   } finally { exporting = false; }
+}
+
+/* ---------- Visualiseur « PDF enregistré » : le PDF que l'outil vient de créer, affiché par le lecteur intégré d'Edge / Chrome ----------
+   Cadre (iframe) sur une URL blob: locale (application/pdf), créée à l'ouverture et libérée à la fermeture (délai si « Ouvrir en grand »).
+   Jamais de contenu externe. Repli sans visualiseur vide : PDF fait par l'impression d'Edge (aucune copie à afficher) ou navigateur
+   sans lecteur PDF intégré (navigator.pdfViewerEnabled === false) → message clair + « Ouvrir en grand ». */
+const PDFV_KEEP_MS = 120e3; /* l'onglet « en grand » a le temps de charger le PDF avant la libération de l'URL */
+/** Garde le dernier PDF de la session (Blob en mémoire, jamais écrit ailleurs) : relu par « Voir le dernier PDF ». */
+function keepLastPdf(view) {
+  state.lastPdfView = view;
+  const mi = $('#mi-last-pdf'); /* menu « ⋯ » déjà construit : l'entrée devient active */
+  if (mi) mi.disabled = !view;
+}
+const pdfInline = () => navigator.pdfViewerEnabled !== false;
+function openPdfViewer(view = state.lastPdfView) {
+  if (!view) return null;
+  const printed = !view.blob;
+  const url = printed ? null : URL.createObjectURL(view.blob);
+  let big = false;
+  const openBig = () => {
+    if (!url) return false;
+    big = true;
+    const w = window.open(url, '_blank');
+    if (w) { try { w.opener = null; } catch { /* autre origine */ } }
+    else h('a', { href: url, target: '_blank', rel: 'noopener' }).click();
+    return false; /* la fenêtre reste ouverte */
+  };
+  const where = view.folder ? ['Dossier principal', view.folder, view.name] : [];
+  const head = h('div', { class: 'pdfv-file' },
+    h('span', { class: `pdfv-file__ok${printed ? ' is-printed' : ''}`, 'aria-hidden': 'true' }, icon(printed ? 'printer' : 'check')),
+    h('div', { class: 'pdfv-file__txt' },
+      h('b', { class: 'pdfv-file__name', id: 'pdfv-name', text: view.name }),
+      where.length ? h('span', { class: 'pdfv-file__path', id: 'pdfv-path', title: `${Disk.info().name || 'Dossier principal'} › ${view.folder}` }, icon('folder', 'icon icon--sm'), where.join(' › '))
+        : h('span', { class: 'pdfv-file__path', id: 'pdfv-path', text: printed ? 'Fait par l’impression d’Edge' : '' }),
+      view.at ? h('span', { class: 'pdfv-file__at', text: `Créé le ${fmtDate(view.at)} à ${fmtTime(view.at)}` }) : null));
+  let main;
+  if (printed) {
+    main = h('div', { class: 'pdfv-msg', role: 'note', id: 'pdfv-msg' }, icon('info'), h('div', {},
+      h('p', {}, h('b', { text: 'Ce PDF a été fait par l’impression d’Edge' }), ' (« Enregistrer au format PDF ») : l’outil n’en garde pas de copie à afficher ici.'),
+      h('p', { class: 'muted', text: 'Ouvrez-le depuis le dossier choisi dans la fenêtre d’Edge (Téléchargements, par défaut).' })));
+  } else if (pdfInline()) {
+    main = h('iframe', { class: 'pdfv-frame', id: 'pdfv-frame', src: url, title: `Aperçu du PDF « ${view.name} »` });
+  } else {
+    main = h('div', { class: 'pdfv-msg', role: 'note', id: 'pdfv-msg' }, icon('info'), h('div', {},
+      h('p', {}, h('b', { text: 'Ce navigateur ne sait pas afficher le PDF dans la fenêtre.' }), ' Le fichier est bien enregistré.'),
+      h('p', { class: 'muted' }, 'Cliquez sur ', h('b', { text: 'Ouvrir en grand' }), ' pour le voir dans un nouvel onglet.')));
+  }
+  const d = openDialog({
+    title: printed ? 'PDF fait par Edge' : 'PDF enregistré', icon: printed ? 'printer' : 'pdf', className: `dlg--pdfv${printed ? ' is-printed' : ''}`,
+    body: [head, main],
+    actions: [
+      { label: 'Fermer', value: false },
+      { label: 'Préparer le mail', icon: 'mail', cls: 'btn-secondary pdfv-mail', run: () => { prepareMail(view.name); return false; } },
+      ...(url ? [{ label: 'Ouvrir en grand', icon: 'fit', cls: 'btn-primary pdfv-big', autofocus: true, run: openBig }] : []),
+    ],
+  });
+  d.result.then(() => { if (url) { if (big) setTimeout(() => URL.revokeObjectURL(url), PDFV_KEEP_MS); else URL.revokeObjectURL(url); } });
+  return d;
 }
 
 /* =========================================================================
@@ -8304,7 +8400,9 @@ async function closeShift() {
     if (pdf && pdf.ok && pdf.printed) { set('pdf', 'ok', `Impression Edge lancée : « ${pdf.file} »`); parts.push('PDF par impression Edge'); }
     else if (pdf && pdf.ok) {
       set('pdf', 'ok', `Rangé dans « ${pdf.folder} »${pdf.created ? ' (dossier créé)' : ''} : ${pdf.file}`);
-      rows.pdf.extra.replaceChildren(h('span', { class: 'cs-path' }, icon('folder', 'icon icon--sm'), `${Disk.info().name || 'Dossier principal'} › ${pdf.folder} › ${pdf.file}`));
+      const view = state.lastPdfView;
+      rows.pdf.extra.replaceChildren(h('span', { class: 'cs-path' }, icon('folder', 'icon icon--sm'), `${Disk.info().name || 'Dossier principal'} › ${pdf.folder} › ${pdf.file}`),
+        view && view.blob ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm cs-view', id: 'cs-view-pdf', onclick: () => openPdfViewer(view) }, icon('eye'), 'Voir le PDF') : null);
       parts.push(`PDF rangé dans ${pdf.folder}`);
     } else {
       /* fix2 (pdf-07) : la vraie cause (annulé ≠ erreur d'écriture) et le repli « Imprimer avec Edge » */
@@ -8596,6 +8694,7 @@ function menuItems() {
     { sep: true, narrow: true },
     { label: 'Ajouter un commentaire', icon: 'comment', run: () => commentDialog() },
     { label: 'Aperçu du PDF', icon: 'eye', run: () => openPreview() },
+    { id: 'mi-last-pdf', label: 'Voir le dernier PDF', icon: 'pdf', run: () => openPdfViewer(), disabled: !state.lastPdfView },
     { label: 'Imprimer avec Edge…', icon: 'printer', run: () => printFallback() },
     { label: 'Historique', icon: 'history', run: openHistory },
     { label: 'Exporter le rapport (.json)', icon: 'download', run: exportJson },
@@ -12283,7 +12382,8 @@ const Aide = (() => {
         ['Appels réseau (fetch, XMLHttpRequest, WebSocket, EventSource, sendBeacon)', '0'],
         ['Code exécuté dynamiquement (eval, new Function, Worker, service worker)', '0'],
         ['Bibliothèques ou polices chargées depuis Internet', '0 : tout est dans le fichier'],
-        ['iframe, cookies, presse-papiers, postMessage', '0'],
+        ['Cookies, presse-papiers, postMessage', '0'],
+        ['Cadre d’affichage (iframe)', '1 : uniquement pour afficher le PDF que l’outil vient de créer, jamais de contenu externe'],
         ['Adresses Internet présentes', 'outlook.office.com seulement (brouillon de mail)'],
         ['Accès aux fichiers', 'uniquement le dossier que l’utilisateur choisit et autorise'],
         ['Script externe', '1 : sauvegarde.js, le fichier de données, dans le même dossier'],
