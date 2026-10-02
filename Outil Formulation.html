@@ -78,7 +78,7 @@ kbd{display:inline-block;min-width:1.5em;padding:.0625rem .375rem;border:1px sol
 
 /* ---------- Boutons (communs aux deux modules) ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;max-width:100%;min-height:2.5rem;padding:.375rem 1rem;border:1px solid transparent;border-radius:var(--radius-sm);background:none;color:inherit;font-size:.9375rem;font-weight:600;line-height:1.15;white-space:nowrap;text-decoration:none;cursor:pointer;transition:background-color .12s,border-color .12s,color .12s,box-shadow .12s}
-.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn:disabled{opacity:.6;cursor:not-allowed} /* fix2 (ui C-15) : ≥ 3:1 */
 .btn-primary{background:var(--b--nn-navy, var(--nn-navy));color:var(--t-ffffff, #FFFFFF)}
 .btn-primary:not(:disabled):hover{background:var(--b--nn-navy-600, var(--nn-navy-600))}
 .btn-secondary{background:var(--b-ffffff, #FFFFFF);color:var(--t--nn-navy, var(--nn-navy));border-color:var(--border-strong)}
@@ -341,6 +341,9 @@ dialog.dlg--preview{width:calc(100vw - 1.5rem) !important;height:calc(100vh - 1.
 .home__link:hover{color:var(--t--nn-navy, var(--nn-navy))}
 .tile__lots dt{font-size:.6875rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .tile__lots dd{margin:0;overflow:hidden;font-family:var(--mono);font-size:.875rem;font-weight:600;letter-spacing:.03em;text-overflow:ellipsis;white-space:nowrap}
+/* fix2 (ui C-13) : écran étroit ou texte agrandi : le n° de lot passe à la ligne au lieu d'être coupé */
+@media (max-width:400px){.tile__lots dd{white-space:normal;overflow-wrap:anywhere;text-overflow:clip}}
+.text-lg .tile__lots dd{white-space:normal;overflow-wrap:anywhere;text-overflow:clip}
 .tile__lots dd.is-empty{color:var(--t-6b7489, #5B6478);font-family:var(--font);font-weight:500;letter-spacing:0}
 .tile__lots dd.is-num{font-family:var(--font);letter-spacing:0}
 .tile__meta{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;font-size:.875rem;color:var(--muted)}
@@ -808,6 +811,8 @@ dialog.dlg--cm{width:min(40rem,calc(100vw - 1.5rem))}
 .mod-rapport .cm-form__pin small{color:var(--muted)}
 .mod-rapport .cm-form .hint{display:flex;gap:.375rem;align-items:flex-start}
 .mod-rapport .cm-err{color:var(--todo-fg);font-weight:600;font-size:.875rem}
+.mod-rapport .cm-count{margin:.25rem 0 0;font-size:.8125rem;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+.mod-rapport .cm-count.is-over{color:var(--todo-fg);font-weight:600;text-align:left}
 .mod-rapport .dt-warn{display:flex;align-items:center;gap:.375rem;margin:.375rem 0 0;color:var(--wip-fg);font-size:.8125rem;font-weight:600;line-height:1.3}
 .mod-rapport .dt-warn .icon{flex:none;width:1rem;height:1rem}
 /* Dialogue « Clôturer le shift » */
@@ -959,6 +964,13 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 }
 .mod-rapport .perso{display:inline-block;padding:0 .375rem;border-radius:999px;background:var(--b-e9e3ff, #E9E3FF);color:var(--t-4a2db5, #4A2DB5);font-size:.625rem;font-weight:800;letter-spacing:.06em;vertical-align:middle;margin-left:.375rem}
 .mod-rapport .kg{position:relative}
+.mod-rapport .kg-msg{display:flex;flex-wrap:wrap;align-items:center;gap:.375rem;margin:.375rem 0 0;font-size:.8125rem;font-weight:600;line-height:1.3;color:var(--todo-fg)}
+.mod-rapport .kg-msg--ambig{color:var(--wip-fg)}
+.mod-rapport .kg-msg .icon{flex:none;width:1rem;height:1rem;margin-top:.0625rem}
+.mod-rapport .kg-msg>span:not(.kg-msg__btns){flex:1 1 0;min-width:0}
+.mod-rapport .kg-msg{align-items:flex-start}
+.mod-rapport .kg-msg__btns{display:flex;gap:.375rem;flex-wrap:wrap;flex-basis:100%;padding-left:1.375rem}
+.mod-rapport .input[aria-invalid="true"]{border-color:var(--todo-dot);box-shadow:0 0 0 3px rgba(217,48,37,.2)}
 .mod-rapport .kg .input--kg{padding-right:2.75rem;font-variant-numeric:tabular-nums}
 .mod-rapport .kg-unit{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font-size:.875rem;font-weight:700;color:var(--muted);pointer-events:none}
 /* =========================================================================
@@ -1226,7 +1238,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-params .input,.mod-params .select{display:block;width:100%;min-height:2.5rem;padding:.4375rem .75rem;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--b-ffffff, #FFFFFF);color:var(--text);font-size:1rem;line-height:1.4;min-width:0;transition:border-color .12s,box-shadow .12s}
 .mod-params .input:hover,.mod-params .select:hover{border-color:var(--l-98a3ba, #98A3BA)}
 .mod-params .input:focus,.mod-params .select:focus{outline:none;border-color:var(--nn-blue);box-shadow:var(--focus)}
-.mod-params .input:disabled,.mod-params .select:disabled{background:var(--surface-2);color:var(--t-8a93a8, #5F6880);cursor:not-allowed}
+.mod-params .input:disabled,.mod-params .select:disabled{background:var(--surface-2);color:var(--t-8a93a8, #4F5872);cursor:not-allowed}
 .mod-params .input[aria-invalid="true"]{border-color:var(--todo-dot);box-shadow:0 0 0 3px rgba(217,48,37,.2)}
 .mod-params .input::placeholder{color:var(--t-6b7489, #5B6478);opacity:1}
 .mod-params .input--mono{font-family:var(--mono);letter-spacing:.03em}
@@ -2128,7 +2140,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .fs-tog:disabled{cursor:default;color:inherit}
 .mod-rapport .fs-tog:not(:disabled):hover{background:var(--tint)}
 .mod-rapport .fs-tog:focus-visible{outline:3px solid var(--nn-blue);outline-offset:1px}
-.mod-rapport .fs-name{flex:none;max-width:100%;font-size:.875rem;font-weight:700;letter-spacing:.005em}
+.mod-rapport .fs-name{flex:0 1 auto;min-width:0;max-width:100%;overflow-wrap:anywhere;font-size:.875rem;font-weight:700;letter-spacing:.005em}
 .mod-rapport .fs-step.is-now .fs-name{font-size:1rem;color:color-mix(in srgb,var(--lk) 80%,var(--text))}
 .mod-rapport .fs-step.is-todo .fs-name{color:var(--muted)}
 .mod-rapport .fs-step.is-todo .fs-tog:disabled .fs-name{color:var(--muted)}
@@ -2565,7 +2577,11 @@ const Core = (() => {
     const target = [opener, parentOpener, document.getElementById('btn-menu')].find(focusable);
     if (target) target.focus();
   }
-  function openDialog({ title, body, actions = [], className = '', onOpen, icon: ic, tone }) {
+  /* fix2 (pdf-06, ui C-07/C-08) : fermeture par le fond seulement si pointerdown ET click ont lieu sur le fond, hors double clic,
+     au moins 300 ms après l'ouverture ; jamais pour une fenêtre à étapes (noBackdrop : Clôturer, dossier N:…) ni avec une saisie
+     modifiée ; Échap sur une saisie modifiée → « Abandonner la saisie ? ». live : champs appliqués au fil de l'eau (pas de saisie à perdre). */
+  const DIRTY_SEL = 'textarea, select, input:not([type]), input[type="text"], input[type="number"], input[type="date"], input[type="time"], input[type="datetime-local"], input[type="email"], input[type="tel"], input[type="url"]';
+  function openDialog({ title, body, actions = [], className = '', onOpen, icon: ic, tone, noBackdrop = false, live = false }) {
     const tid = `dlg-${uid()}`;
     const opener = document.activeElement;
     const parentDlg = opener && opener.closest ? opener.closest('dialog') : null;
@@ -2587,7 +2603,26 @@ const Core = (() => {
       bodyEl,
       btns.length ? h('div', { class: 'dlg__foot' }, btns) : null,
     );
-    dlg.addEventListener('click', e => { if (e.target === dlg) close(undefined); });
+    const openedAt = performance.now();
+    const stepDlg = noBackdrop || /\bdlg-n\b/.test(className);
+    let downBg = false, dirty = false, asking = false;
+    dlg.addEventListener('pointerdown', e => { downBg = e.target === dlg && performance.now() - openedAt > 300; });
+    dlg.addEventListener('click', e => {
+      const bg = e.target === dlg && downBg && e.detail <= 1;
+      downBg = false;
+      if (bg && !stepDlg && !dirty) close(undefined);
+    });
+    const markDirty = e => { if (!live && e.target && e.target.matches && e.target.matches(DIRTY_SEL) && !e.target.closest('[data-nodirty]')) dirty = true; };
+    dlg.addEventListener('input', markDirty);
+    dlg.addEventListener('change', markDirty);
+    dlg.addEventListener('cancel', e => {
+      if (!dirty || !dlg.open) return;
+      e.preventDefault();
+      if (asking) return;
+      asking = true;
+      confirmDialog({ title: 'Abandonner la saisie ?', message: 'Ce que vous avez saisi dans cette fenêtre sera perdu.', confirmLabel: 'Abandonner', danger: true })
+        .then(ok => { asking = false; if (ok) close(undefined); else { const f = dlg.querySelector(DIRTY_SEL); if (f && dlg.open) f.focus(); } });
+    });
     const promise = new Promise(resolve => dlg.addEventListener('close', () => {
       dlg.remove();
       /* un autre dialogue s'est ouvert entre-temps (confirmation…) : c'est lui qui garde le focus */
@@ -2599,7 +2634,7 @@ const Core = (() => {
     const auto = actions.findIndex(a => a.autofocus);
     if (auto >= 0) btns[auto].focus();
     if (onOpen) onOpen(dlg, bodyEl);
-    return { dlg, body: bodyEl, close, result: promise };
+    return { dlg, body: bodyEl, close, result: promise, get dirty() { return dirty; }, clean() { dirty = false; } };
   }
   function confirmDialog({ title, message, confirmLabel = 'Confirmer', danger = false, className = '' }) {
     return openDialog({
@@ -2684,7 +2719,45 @@ const Core = (() => {
   const fmtTime = d => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
   const capitalize = s => s.charAt(0).toUpperCase() + s.slice(1);
 
-  return { $, h, typo, typoTree, pad2, uid, ICONS, icon, hydrateIcons, ls, on, emit, toast, openDialog, confirmDialog, messageDialog,
+  /* fix2 (ui C-03/C-04) : annulation ciblée d'UNE action (fusion à trois : b = avant l'action, a = juste après, c = maintenant).
+     Renvoie c avec seulement cette action défaite ; lève une erreur si la même donnée a été modifiée depuis. */
+  const REVERT_KEEP = new Set(['updatedAt', 'updatedBy', 'shift', 'modifiedAt']);
+  const jclone = v => (v === undefined ? undefined : JSON.parse(JSON.stringify(v)));
+  const isPlain = v => v && typeof v === 'object' && !Array.isArray(v);
+  const sameJ = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  function revertOnly(b, a, c, key, keep = REVERT_KEEP) {
+    if (keep.has(key)) return c;
+    if (sameJ(a, c)) return b === undefined ? undefined : jclone(b);   /* rien n'a bougé depuis ici : retour à l'état d'avant */
+    if (sameJ(b, a)) return c;                                          /* l'action n'a pas touché ici : état actuel */
+    if (sameJ(b, c)) return c;                                          /* déjà revenu à l'état d'avant */
+    if (isPlain(b) && isPlain(a) && isPlain(c)) {
+      const out = {};
+      for (const k of new Set([...Object.keys(b), ...Object.keys(a), ...Object.keys(c)])) {
+        const v = revertOnly(b[k], a[k], c[k], k, keep);
+        if (v !== undefined) out[k] = v;
+      }
+      return out;
+    }
+    const ids = x => Array.isArray(x) && x.every(e => isPlain(e) && typeof e.id === 'string');
+    if (ids(b) && ids(a) && ids(c)) {
+      const B = new Map(b.map(e => [e.id, e])), A = new Map(a.map(e => [e.id, e]));
+      const out = [];
+      for (const e of c) {
+        if (A.has(e.id) && B.has(e.id)) out.push(revertOnly(B.get(e.id), A.get(e.id), e, '', keep));
+        else if (A.has(e.id)) { if (!sameJ(A.get(e.id), e)) throw new Error('conflit'); } /* ajouté par l'action : retiré */
+        else out.push(e);                                                                    /* ajouté depuis : gardé */
+      }
+      b.forEach((e, i) => {                                                                  /* retiré par l'action : remis à sa place */
+        if (!A.has(e.id) && !c.some(x => x.id === e.id)) {
+          const prevId = i > 0 ? b[i - 1].id : null, j = prevId ? out.findIndex(x => x.id === prevId) : -1;
+          out.splice(j + 1, 0, jclone(e));
+        }
+      });
+      return out;
+    }
+    throw new Error('conflit');
+  }
+  return { $, h, typo, typoTree, pad2, uid, ICONS, icon, hydrateIcons, ls, on, emit, toast, openDialog, confirmDialog, messageDialog, revertOnly,
     prefs, loadPrefs, savePrefs, applyTextSize, toggleTextSize, THEMES, applyTheme, setTheme, logoSrc, Print, LONG_DATE, fmtTime, capitalize };
 })();
 
@@ -2871,12 +2944,21 @@ const Disk = (() => {
     const dir = parent || await getRoot();
     return dir ? dir.getDirectoryHandle(name, { create: true }) : null;
   }
+  /** fix2 (pdf-11) : un fichier créé pour l'occasion puis non écrit (réseau coupé, disque plein…) est supprimé : jamais de fichier de 0 octet. */
   async function writeFile(dir, name, data) {
-    const fh = await dir.getFileHandle(name, { create: true });
-    const w = await fh.createWritable();
-    try { await w.write(data); await w.close(); }
-    catch (e) { try { await w.abort(); } catch { /* déjà fermé */ } throw e; }
-    return fh;
+    let existed = true;
+    try { await dir.getFileHandle(name); } catch (e) { if (e && e.name === 'NotFoundError') existed = false; }
+    let w = null;
+    try {
+      const fh = await dir.getFileHandle(name, { create: true });
+      w = await fh.createWritable();
+      await w.write(data); await w.close();
+      return fh;
+    } catch (e) {
+      if (w) { try { await w.abort(); } catch { /* déjà fermé */ } }
+      if (!existed && typeof dir.removeEntry === 'function') { try { await dir.removeEntry(name); } catch { /* déjà absent */ } }
+      throw e;
+    }
   }
   async function readFile(dir, name) {
     try { return await (await (await dir.getFileHandle(name)).getFile()).text(); }
@@ -3326,7 +3408,8 @@ const Sauvegarde = (() => {
   /** Bouton « Enregistrer » / Ctrl+S, depuis n'importe quel onglet. */
   /** wait : un enregistrement est déjà en cours (ex. « Clôturer le shift » juste après Ctrl+S) → on attend sa fin, puis on
       réenregistre s'il reste des modifications ; sans wait, l'appel est ignoré (Ctrl+S répété : une seule écriture). */
-  async function save({ wait = false } = {}) {
+  /** fix2 (pdf-12) : quiet → pas de toast « Enregistré sur N: » (2e enregistrement de la clôture). */
+  async function save({ wait = false, quiet = false } = {}) {
     for (const m of mods) if (m.flush) m.flush();
     recheckAll();
     if (S.busy) {
@@ -3334,16 +3417,16 @@ const Sauvegarde = (() => {
       const r = await S.current.catch(() => false);
       for (const m of mods) if (m.flush) m.flush();
       recheckAll();
-      return r === true && S.dirty.size ? save({ wait: true }) : r;
+      return r === true && S.dirty.size ? save({ wait: true, quiet }) : r;
     }
     if (!Disk.supported) { downloadFile(); return 'download'; }
     S.busy = true;
     render();
-    const run = doSave();
+    const run = doSave(quiet);
     S.current = run;
     try { return await run; } finally { if (S.current === run) S.current = null; }
   }
-  async function doSave() {
+  async function doSave(quiet = false) {
     try {
       const fresh = Disk.info().state === 'none';
       const root = await Disk.getRoot();
@@ -3365,7 +3448,7 @@ const Sauvegarde = (() => {
       const skipped = labels(data.skipped || []);
       const dirtySkipped = (data.skipped || []).filter(id => S.dirty.has(id));
       if (skipped.length && dirtySkipped.length) Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}, sauf ${labels(dirtySkipped).join(', ')} : non enregistré, car la sauvegarde de N: vient d’une version plus récente de l’outil (ouvrez la dernière version d’« Outil Formulation.html »).`, { tone: 'warn', timeout: 15000 });
-      else Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}${data.rescued ? ` (copie de l’ancien fichier illisible : ${data.rescued})` : ''}`, { icon: 'check', timeout: data.rescued ? 12000 : undefined });
+      else if (!quiet || data.rescued) Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}${data.rescued ? ` (copie de l’ancien fichier illisible : ${data.rescued})` : ''}`, { icon: 'check', timeout: data.rescued ? 12000 : undefined });
       if (fresh) verifyLocation(data.savedAt);
       return true;
     } finally {
@@ -4032,10 +4115,11 @@ const Params = (() => {
   }
   const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   function writeLocal() {
-    if (!local) return ls.remove(LOCAL_KEY);
-    return ls.set(LOCAL_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...local }));
+    const r = !local ? ls.remove(LOCAL_KEY) : ls.set(LOCAL_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...local }));
+    storedSig = rawSig();
+    return r;
   }
-  const writeTeam = () => (team ? ls.set(TEAM_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...team })) : ls.remove(TEAM_KEY));
+  const writeTeam = () => { const r = team ? ls.set(TEAM_KEY, JSON.stringify({ app: APP, schema: SCHEMA, ...team })) : ls.remove(TEAM_KEY); storedSig = rawSig(); return r; };
   function recompute() { cur = local ? local.params : team ? team.params : clone(DEFAULTS); }
   function init() {
     team = readTeam();
@@ -4044,6 +4128,27 @@ const Params = (() => {
     if (local && team && same(local.params, team.params)) { local = null; writeLocal(); }
     recompute();
     applyColors();
+    /* fix2 (ui C-05) : outil ouvert dans deux onglets : les paramètres modifiés dans l'autre onglet sont repris ici (comme le Rapport
+       et les Étiquettes), sinon la prochaine modification de cet onglet les écraserait */
+    window.addEventListener('storage', e => {
+      if (e.key !== LOCAL_KEY && e.key !== TEAM_KEY && e.key !== null) return;
+      reloadStored();
+    });
+  }
+  let storedSig = '';
+  const rawSig = () => `${Core.ls.get(LOCAL_KEY) || ''}|${Core.ls.get(TEAM_KEY) || ''}`;
+  function reloadStored() {
+    const sig = rawSig();
+    if (sig === storedSig) return false;
+    storedSig = sig;
+    team = readTeam();
+    local = readLocal();
+    const before = JSON.stringify(cur);
+    recompute();
+    if (JSON.stringify(cur) === before) return false;
+    applyColors();
+    changed({ external: true });
+    return true;
   }
   /** Toute modification des paramètres : à enregistrer sur N: (indicateur « Modifications non enregistrées »). */
   function changed(detail) { Core.emit('params', detail || {}); Sauvegarde.changed('parametres'); }
@@ -4086,7 +4191,12 @@ const Params = (() => {
     const inkDk = pick(0.62, 0.01, x => ratio(x, DK_CARD) >= 7);
     const tint = rgb2hex(hsl2rgb([hu, Math.min(Math.max(s, 0.2), 0.7), 0.915]));
     const tintDk = rgb2hex(hsl2rgb([hu, Math.min(0.55, Math.max(0.3, s * 0.8)), 0.17]));
-    return { base: hx, soft: rgb2hex(mix(c, white, 0.55)), faint: rgb2hex(mix(c, white, 0.78)), strong: rgb2hex(strong), ink: rgb2hex(mix(strong, navy, 0.55)), head, tint, headDk, tintDk, inkDk };
+    /* fix2 (ui C-14) : base / soft / faint servent de FOND sous du texte foncé : clarté bornée (couleur foncée choisie → même teinte,
+       éclaircie) ; les couleurs claires (valeurs d'origine) sont inchangées */
+    const [, , l0] = rgb2hsl(c);
+    const dark = l0 < 0.8; /* seulement les couleurs foncées : les pastels (valeurs d'origine, #FDE2C4…) restent tels quels */
+    const cb = dark ? hsl2rgb([hh, s, 0.89]) : c;
+    return { base: dark ? rgb2hex(cb) : hx, soft: rgb2hex(mix(cb, white, 0.55)), faint: rgb2hex(mix(cb, white, 0.78)), strong: rgb2hex(strong), ink: rgb2hex(mix(strong, navy, 0.55)), head, tint, headDk, tintDk, inkDk };
   }
   const DK_CARD = [23, 32, 54]; /* #172036 : cartes du thème sombre */
   function ratio(a, b) {
@@ -4128,6 +4238,7 @@ const Params = (() => {
   /** Applique une modification : mutate(copie) ; renvoie false si le stockage local est indisponible. */
   function update(mutate, detail) {
     detail = detail || {};
+    if (rawSig() !== storedSig) reloadStored(); /* fix2 (ui C-05) : relu juste avant la modification (autre onglet) */
     const next = clone(cur);
     mutate(next);
     return commit(next, detail);
@@ -4336,8 +4447,8 @@ const SHIFTS = SHIFT_DEFS.map(s => s.name);
 const KG_RE = /^(\d+(?:[.,]\d+)?)\s*(?:kg)?$/i;
 function normKg(v) {
   const t = String(v ?? '').trim();
-  const m = KG_RE.exec(t);
-  return m ? `${m[1].replace('.', ',')} kg` : t;
+  const r = parseKg(t); /* fix2 (ui C-09) : « 1.234 » (ambigu) et valeurs invalides gardés tels quels, jamais convertis en silence */
+  return r.ok ? `${r.ok} kg` : t;
 }
 const shiftDef = name => SHIFT_DEFS.find(s => s.name === name) || null;
 /** Shift en cours d'après l'horloge du PC. */
@@ -5240,6 +5351,29 @@ function touched() {
   schedulePrint();
   refresh();
 }
+/* fix2 (ui C-03) : « Annuler » d'un toast annule l'action de CE toast. Rien n'a bougé depuis → annulation normale ; sinon l'action est
+   défaite seule (fusion à trois : avant / juste après / maintenant), sans toucher aux saisies faites depuis ; si la même donnée a été
+   modifiée depuis, rien n'est changé et le toast l'explique. */
+function undoThis() {
+  const before = undoStack[undoStack.length - 1], after = JSON.stringify(state.report);
+  return () => {
+    if (!before) { toast('Rien à annuler'); return; }
+    if (JSON.stringify(state.report) === after && undoStack[undoStack.length - 1] === before) { undo(); return; }
+    let next;
+    try { next = Core.revertOnly(JSON.parse(before), JSON.parse(after), clone(state.report), ''); }
+    catch {
+      toast('Cette action ne peut plus être annulée seule : les mêmes données ont été modifiées depuis. Utilisez « Annuler la dernière action » (Ctrl+Z) pour revenir pas à pas.', { tone: 'warn', timeout: 12000 });
+      return;
+    }
+    pushUndo();
+    undoMeta = { key: null, t: 0 };
+    const sh = state.report.meta.shift;
+    state.report = next;
+    state.report.meta.shift = sh;
+    touched();
+    toast('Action annulée (les modifications faites depuis sont gardées)');
+  };
+}
 function undo() {
   const prev = undoStack.pop();
   if (!prev) { toast('Rien à annuler'); return; }
@@ -5340,6 +5474,8 @@ function displayVal(f, c) {
   if (f.type === 'datetime') { const d = parseLocal(v); return d ? fmtDM(d) : '—'; }
   return String(v ?? '').trim() || '—';
 }
+/** fix2 (pdf-10) : « N/A » n'apparaît jamais dans les changements (valeur vide : « VDL : → EN COURS »). */
+const noNA = v => (v === 'N/A' ? '' : v);
 /** Différences entre la version de référence et le rapport : liste courte + clés des champs modifiés (badges « Nouveau »). */
 function diffReports(ref, cur) {
   const items = [], keys = new Set();
@@ -5373,19 +5509,19 @@ function diffReports(ref, cur) {
       keys.add(`${b.id}.${l.id}.${f.key}`);
       items.push(f.type === 'textarea'
         ? { kind: 'text', line: l, band: b, lot: c.lot, label: 'Remarques modifiées' }
-        : { kind: 'field', line: l, band: b, lot: c.lot, label: labelOf(f, c), from: a, to: z });
+        : { kind: 'field', line: l, band: b, lot: c.lot, label: labelOf(f, c), from: noNA(a), to: noNA(z) });
     }
   }
   for (const k of S5) {
     const a = ref.verif5S[k].statut, z = cur.verif5S[k].statut;
-    if (a !== z) { keys.add(`s5.${k}`); items.push({ kind: 'annex', label: `Vérification 5S · ${k}`, from: a, to: z }); }
+    if (a !== z) { keys.add(`s5.${k}`); items.push({ kind: 'annex', label: `Vérification 5S · ${k}`, from: noNA(a), to: noNA(z) }); }
   }
   const oldSd = new Map(ref.suiviDossier.filter(x => x.lot).map(x => [x.lot, x]));
   for (const x of cur.suiviDossier.filter(y => y.lot)) {
     const o = oldSd.get(x.lot);
     if (!o) items.push({ kind: 'annex', label: `Suivi dossier · ${x.lot}`, note: 'ajouté' });
     else for (const [k, lbl] of [['scan', 'Scan + transfert'], ['check', 'Check']]) {
-      if (o[k] !== x[k]) items.push({ kind: 'annex', label: `Suivi dossier · ${x.lot} · ${lbl}`, from: o[k], to: x[k] });
+      if (o[k] !== x[k]) items.push({ kind: 'annex', label: `Suivi dossier · ${x.lot} · ${lbl}`, from: noNA(o[k]), to: noNA(x[k]) });
     }
   }
   /* v5 : échantillons à suivre ajoutés (passage au suivant) ou sortis / envoyés */
@@ -5493,7 +5629,7 @@ function pillGroup({ id, options, labelledby, label, get, set }) {
   const group = h('div', { class: 'pills', role: 'radiogroup', id, 'aria-labelledby': labelledby, 'aria-label': labelledby ? null : label });
   const btns = options.map((o, i) => h('button', {
     type: 'button', class: `pill tone-${o.tone}`, role: 'radio', 'aria-checked': 'false', tabindex: '-1', 'data-line': o.line || null,
-    onclick: () => choose(i, false),
+    onclick: () => choose(i),
   }, o.tone === 'cold' ? icon('snow', 'icon icon--sm') : h('span', { class: 'pill__dot', 'aria-hidden': 'true' }), h('span', { text: o.label || o.value })));
   group.append(...btns);
   group.addEventListener('keydown', e => {
@@ -5504,13 +5640,31 @@ function pillGroup({ id, options, labelledby, label, get, set }) {
     else if (e.key === 'Home') i = 0;
     else if (e.key === 'End') i = btns.length - 1;
     else return;
+    /* fix2 (ui C-01) : les flèches ne font que déplacer le focus (tabindex itinérant) ; Espace / Entrée (clic natif du bouton) ou
+       un clic choisit la valeur : aucune valeur intermédiaire n'est enregistrée */
     e.preventDefault();
-    choose(i, true);
+    btns.forEach((b, k) => { b.tabIndex = k === i ? 0 : -1; });
+    btns[i].focus();
   });
-  function choose(i, focus) {
+  /* en quittant le groupe, la tabulation revient sur la valeur choisie */
+  group.addEventListener('focusout', e => { if (!group.contains(e.relatedTarget)) sync(); });
+  function choose(i) {
     if (get() !== options[i].value) set(options[i].value);
     sync();
-    if (focus) btns[i].focus();
+    /* fix2 (ui C-02) : la carte peut être reconstruite (changement d'étape) : le focus revient sur la même pastille du nouveau groupe */
+    const refocus = () => {
+      const a = document.activeElement;
+      if (a && a !== document.body && a.isConnected) return;
+      const g2 = id && document.getElementById(id);
+      const b2 = g2 ? g2.querySelectorAll('.pill')[i] : null;
+      if (b2 && b2.getClientRects().length) { b2.focus(); return; }
+      /* étape refermée (faite) : le focus va sur son en-tête */
+      const tog = g2 && g2.closest('.fs-step') ? g2.closest('.fs-step').querySelector('.fs-tog') : null;
+      if (tog && tog.getClientRects().length) tog.focus();
+    };
+    if (btns[i].isConnected && btns[i].getClientRects().length) btns[i].focus(); else refocus();
+    requestAnimationFrame(refocus);
+    setTimeout(refocus, 60);
   }
   function sync() {
     const v = get();
@@ -5557,14 +5711,27 @@ function selectCtl({ id, options, placeholder, get, set }) {
     const v = get() || '';
     if (v && !options.includes(v)) {
       if (!extra) { extra = h('option', { value: v }); sel.append(extra); }
-      extra.value = v; extra.textContent = `${v} (hors liste)`;
+      extra.value = v; extra.textContent = `${v} (retiré de la liste)`; /* fix2 (ui C-06) */
     } else if (extra) { extra.remove(); extra = null; }
     if (sel.value !== v) sel.value = v;
     sel.classList.toggle('is-empty', !v);
   } };
 }
-function textCtl({ id, get, set, upper = false, mono = false, placeholder, maxlength = 200, ariaLabel }) {
-  const input = h('input', { type: 'text', class: `input${mono ? ' input--mono' : ''}`, id, placeholder, maxlength, autocomplete: 'off', spellcheck: mono ? 'false' : null, 'aria-label': ariaLabel });
+/** fix2 (ui C-22) : n° de lot : lettres, chiffres, - _ / . et espace ; sinon avertissement (la saisie est gardée). */
+function lotProblem(v) {
+  const bad = [...new Set(Array.from(String(v || '')).filter(ch => !/[\p{L}\p{N}\-_/. ]/u.test(ch)))];
+  return bad.length ? `Caractère${bad.length > 1 ? 's' : ''} inhabituel${bad.length > 1 ? 's' : ''} dans un n° de lot : ${bad.map(c => `« ${c} »`).join(' ')}. Autorisés : lettres, chiffres, - _ / . et espace.` : null;
+}
+function textCtl({ id, get, set, upper = false, mono = false, placeholder, maxlength = 200, ariaLabel, validate = null }) {
+  const input = h('input', { type: 'text', class: `input${mono ? ' input--mono' : ''}`, id, placeholder, maxlength, autocomplete: 'off', spellcheck: mono ? 'false' : null, 'aria-label': ariaLabel, 'aria-describedby': validate ? `${id}-err` : null });
+  const msg = validate ? h('div', { class: 'kg-msg field__err', id: `${id}-err`, role: 'alert', hidden: true }) : null;
+  const check = () => {
+    if (!validate) return;
+    const e = validate(input.value);
+    if (e) { input.setAttribute('aria-invalid', 'true'); msg.hidden = false; if (msg.textContent !== e) msg.replaceChildren(icon('alert', 'icon icon--sm'), h('span', { text: e })); }
+    else if (!msg.hidden) { input.removeAttribute('aria-invalid'); msg.hidden = true; msg.replaceChildren(); }
+  };
+  if (validate) input.addEventListener('blur', check);
   input.addEventListener('input', () => {
     let v = input.value;
     if (upper && v !== v.toUpperCase()) {
@@ -5574,23 +5741,74 @@ function textCtl({ id, get, set, upper = false, mono = false, placeholder, maxle
       try { input.setSelectionRange(s, e); } catch { /* sélection non prise en charge */ }
     }
     set(v);
+    if (validate && input.getAttribute('aria-invalid')) check();
   });
-  return { el: input, sync() { const v = get() ?? ''; if (input.value !== v) input.value = v; } };
+  if (!validate) return { el: input, sync() { const v = get() ?? ''; if (input.value !== v) input.value = v; } };
+  return { el: h('div', { class: 'txt-wrap' }, input, msg), sync() { const v = get() ?? ''; if (input.value !== v) input.value = v; if (document.activeElement !== input) check(); } };
 }
 /** Champ poids : nombre saisi, suffixe « kg » affiché dans le champ, valeur enregistrée « 118 kg » (normalisée à la sortie). */
+/** fix2 (ui C-09) : lecture d'un poids saisi. { ok: '1234,5' } | { ambig: ['1,234', '1 234'] } | { error } | { empty }.
+    Nombre positif, virgule ou point décimal ; espaces des milliers acceptés ; « kg » final (même répété) retiré ;
+    « 1.234 » (point + 3 chiffres) ambigu ; « 1.234,5 » = 1 234,5. */
+function parseKg(raw) {
+  let t = String(raw ?? '').replace(/[\u00A0\u202F]/g, ' ').trim();
+  if (!t) return { empty: true };
+  t = t.replace(/(\s*kg\.?)+$/i, '').trim();
+  const err = { error: 'Poids attendu en kg : un nombre positif (ex. 118 ou 12,45).' };
+  if (/^\d{1,3}( \d{3})+([.,]\d+)?$/.test(t)) t = t.replace(/ /g, '');
+  if (/^\d{1,3}(\.\d{3})+,\d+$/.test(t)) t = t.replace(/\./g, '');
+  if (/^\d{1,3}\.\d{3}$/.test(t)) { const [i, d] = t.split('.'); return { ambig: [`${i},${d}`, `${i} ${d}`.replace(' ', '')] }; }
+  if (!/^\d+([.,]\d+)?$/.test(t)) return err;
+  const v = t.replace('.', ',');
+  if (!(Number(v.replace(',', '.')) > 0)) return { error: 'Le poids doit être supérieur à 0 kg.' };
+  return { ok: v };
+}
+const fmtKgNum = v => { const [i, d] = String(v).split(','); return `${i.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F')}${d ? `,${d}` : ''}`; };
 function kgCtl({ id, get, set, placeholder }) {
-  const input = h('input', { type: 'text', class: 'input input--kg', id, placeholder, maxlength: 60, autocomplete: 'off', inputmode: 'decimal' });
+  const input = h('input', { type: 'text', class: 'input input--kg', id, placeholder, maxlength: 60, autocomplete: 'off', inputmode: 'decimal', 'aria-describedby': `${id}-err` });
   const unit = h('span', { class: 'kg-unit', 'aria-hidden': 'true', text: 'kg' });
+  const msg = h('div', { class: 'kg-msg', id: `${id}-err`, role: 'alert', hidden: true });
   const view = v => { const m = KG_RE.exec(String(v || '').trim()); return m ? m[1].replace('.', ',') : String(v || ''); };
-  input.addEventListener('input', () => { const raw = input.value; set(KG_RE.test(raw.trim()) ? normKg(raw) : raw); });
-  input.addEventListener('blur', () => { const n = normKg(get()); if (n !== (get() || '')) set(n); sync(); });
+  let ambig = null;
+  const showErr = text => {
+    input.setAttribute('aria-invalid', 'true');
+    msg.className = 'kg-msg field__err'; msg.hidden = false;
+    msg.replaceChildren(icon('alert', 'icon icon--sm'), h('span', { text }));
+  };
+  const showAmbig = (raw, opts) => {
+    input.setAttribute('aria-invalid', 'true');
+    msg.className = 'kg-msg kg-msg--ambig'; msg.hidden = false;
+    const pick = v => { ambig = null; set(`${v} kg`); clear(); sync(); input.focus(); };
+    msg.replaceChildren(icon('alert', 'icon icon--sm'), h('span', { text: `« ${raw} » : ${opts[0]} kg ou ${fmtKgNum(opts[1])} kg ?` }),
+      h('span', { class: 'kg-msg__btns' },
+        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: () => pick(opts[0]) }, `${opts[0]} kg`),
+        h('button', { type: 'button', class: 'btn btn-secondary btn-sm', onclick: () => pick(opts[1]) }, `${fmtKgNum(opts[1])} kg`)));
+  };
+  const clear = () => { input.removeAttribute('aria-invalid'); msg.hidden = true; msg.replaceChildren(); };
+  /* pendant la frappe : enregistré tel quel (jamais transformé), le contrôle se fait à la sortie du champ */
+  input.addEventListener('input', () => { ambig = null; set(input.value); if (input.getAttribute('aria-invalid')) clear(); });
+  input.addEventListener('blur', () => {
+    const raw = input.value, r = parseKg(raw);
+    if (r.empty) { if ((get() || '') !== '') set(''); clear(); }
+    else if (r.ok) { const n = `${r.ok} kg`; if (n !== (get() || '')) set(n); clear(); }
+    else if (r.ambig) { ambig = { raw, opts: r.ambig }; if ((get() || '') !== raw.trim()) set(raw.trim()); showAmbig(raw.trim(), r.ambig); }
+    else { if ((get() || '') !== raw.trim()) set(raw.trim()); showErr(r.error); }
+    sync();
+  });
   function sync() {
     const v = get() || '';
     const numeric = !v || KG_RE.test(v.trim());
     unit.hidden = !numeric;
     if (document.activeElement !== input && input.value !== view(v)) input.value = view(v);
+    /* valeur enregistrée invalide (ancienne saisie, autre PC) : signalée, gardée */
+    if (document.activeElement !== input && !ambig) {
+      const r = parseKg(v);
+      if (r.error) showErr(r.error);
+      else if (r.ambig) { ambig = { raw: v, opts: r.ambig }; showAmbig(v, r.ambig); }
+      else if (input.getAttribute('aria-invalid')) clear();
+    }
   }
-  return { el: h('div', { class: 'kg' }, input, unit), sync };
+  return { el: h('div', { class: 'kg-wrap' }, h('div', { class: 'kg' }, input, unit), msg), sync };
 }
 const FIELD_SIZING = typeof CSS !== 'undefined' && CSS.supports && CSS.supports('field-sizing', 'content');
 function autogrow(ta) {
@@ -5604,10 +5822,11 @@ function textareaCtl({ id, get, set, placeholder, rows = 3, maxlength = 5000, ar
   ta.addEventListener('input', () => { set(ta.value); autogrow(ta); });
   return { el: ta, sync() { const v = get() ?? ''; if (ta.value !== v) { ta.value = v; autogrow(ta); } } };
 }
-function dateTimeCtl({ id, get, set }) {
+function dateTimeCtl({ id, get, set, label = '' }) {
   const input = h('input', { type: 'datetime-local', class: 'input', id, step: 60 });
-  const nowBtn = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', title: 'Mettre la date et l’heure actuelles' }, icon('clock'), 'Maintenant');
-  const clrBtn = h('button', { type: 'button', class: 'btn btn-quiet btn-icon', title: 'Effacer', 'aria-label': 'Effacer la date' }, icon('x'));
+  const nowBtn = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', title: 'Mettre la date et l’heure actuelles', 'aria-label': label ? `Maintenant : ${label}` : null }, icon('clock'), 'Maintenant');
+  /* fix2 (ui C-19) : nom accessible précis (« Effacer la date Début HT (72 h) — Groninger, lot suivant ») */
+  const clrBtn = h('button', { type: 'button', class: 'btn btn-quiet btn-icon', title: 'Effacer', 'aria-label': label ? `Effacer la date ${label}` : 'Effacer la date' }, icon('x'));
   /* Pendant la frappe au clavier, Chromium publie des valeurs intermédiaires (année 0002, 0020, 0202…) :
      elles sont ignorées, et le champ n'est jamais réécrit tant que l'utilisateur tape dedans (resynchronisé à la sortie). */
   let typing = false;
@@ -5653,12 +5872,12 @@ function buildCardField(f, line, get, set, id, band) {
   const val = () => get()[f.key];
   let ctl;
   switch (f.type) {
-    case 'lot': ctl = textCtl({ id, get: val, set: v => set(f.key, v, true), upper: true, mono: true, maxlength: 40, placeholder: 'N° de lot' }); break;
+    case 'lot': ctl = textCtl({ id, get: val, set: v => set(f.key, v, true), upper: true, mono: true, maxlength: 40, placeholder: 'N° de lot', validate: lotProblem }); break;
     case 'product': ctl = selectCtl({ id, options: PRODUCTS[line.id], placeholder: '— Choisir —', get: val, set: v => set(f.key, v) }); break;
     case 'status': ctl = pills
       ? pillGroup({ id, options: LISTS[f.list], labelledby: lbl.id, get: val, set: v => set(f.key, v) })
       : toneSelect({ id, list: f.list, steps: SEQUENCES.has(f.list), get: val, set: v => set(f.key, v) }); break;
-    case 'datetime': ctl = dateTimeCtl({ id, get: val, set: v => set(f.key, v) }); break;
+    case 'datetime': ctl = dateTimeCtl({ id, get: val, set: v => set(f.key, v), label: `${f.label || f.key} — ${line.name}${band ? `, ${band.short || band.label || ''}` : ''}`.replace(/, $/, '') }); break;
     case 'textarea': ctl = textareaCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: 'Remarques, consignes pour l’équipe suivante…', rows: 2 }); break;
     default: ctl = f.unit === 'kg' ? kgCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: f.placeholder })
       : textCtl({ id, get: val, set: v => set(f.key, v, true), placeholder: f.placeholder, maxlength: 120 });
@@ -5794,7 +6013,8 @@ function buildCard(b, l) {
       const li = h('li', { class: 'fs-step', 'data-step': sp.id }, h('i', { class: 'fs-dot', 'aria-hidden': 'true' }), h('div', { class: 'fs-head' }, tog, here), flds);
       tog.addEventListener('click', () => {
         const k = `${b.id}.${l.id}.${sp.id}.${li.dataset.state}`;
-        stepOpen.set(k, li.classList.contains('is-closed'));
+        /* fix2 (ui C-20) : en mode « Ouvrir toutes les étapes », le clic replie / rouvre quand même cette étape */
+        stepOpen.set(prefs.allSteps ? `all.${k}` : k, li.classList.contains('is-closed'));
         sync();
         if (li.classList.contains('is-closed')) return;
         autogrowIn(li);
@@ -5818,7 +6038,7 @@ function buildCard(b, l) {
       /* fix1 : une étape faite qui contient un holding time encore en cours (ou à confirmer) reste ouverte ; repliée à la main, son
          résumé en donne l'état */
       const running = s === 'ok' ? x.fields.flatMap(f => limitsOfField(f, b, l.id, c, now)).filter(y => !y.stopped || y.pending) : [];
-      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? (s !== 'ok' || (st.allDone && i === st.cur) || running.length > 0));
+      const open = all ? stepOpen.get(`all.${b.id}.${l.id}.${x.sp.id}.${s}`) ?? true : (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? (s !== 'ok' || (st.allDone && i === st.cur) || running.length > 0));
       x.li.dataset.state = s;
       x.li.className = `fs-step is-${s}${x.has && !open ? ' is-closed' : ''}${i === st.cur && st.manual ? ' is-manual' : ''}`;
       if (x.has) x.tog.setAttribute('aria-expanded', String(open));
@@ -5892,6 +6112,7 @@ function buildLineFilter() {
   const allBtn = h('button', { type: 'button', class: 'btn btn-secondary btn-sm linefilter__all', id: 'btn-all-steps', 'aria-pressed': String(!!prefs.allSteps) }, icon('list'), 'Ouvrir toutes les étapes');
   allBtn.addEventListener('click', () => {
     prefs.allSteps = !prefs.allSteps; savePrefs();
+    for (const k of [...stepOpen.keys()]) if (k.startsWith('all.')) stepOpen.delete(k);
     allBtn.setAttribute('aria-pressed', String(prefs.allSteps));
     for (const v of views) if (v.card) v.sync();
     autogrowIn($('#bands'));
@@ -5955,7 +6176,7 @@ function buildFilling() {
       });
       const del = deleteRowBtn(`Supprimer l’entrée ${i + 1}`, () => {
         change(r => { r.fillingBreakdown = r.fillingBreakdown.filter(x => x.id !== rid); });
-        toast('Entrée supprimée', { action: 'Annuler', onAction: undo });
+        toast('Entrée supprimée', { action: 'Annuler', onAction: undoThis() });
       });
       return {
         el: h('div', { class: 'row-card' }, h('div', { class: 'row-card__head' }, h('span', { class: 'row-card__num', text: `Entrée ${i + 1}` }), del), h('div', { class: 'row-card__grid' }, ctls.map(x => x.el))),
@@ -6003,7 +6224,7 @@ function buildSuivi() {
       const scan = mk('scan', 'Scan + transfert'), check = mk('check', 'Check');
       const del = deleteRowBtn(`Supprimer la ligne ${i + 1}`, () => {
         change(r => { r.suiviDossier = r.suiviDossier.filter(x => x.id !== rid); });
-        toast('Ligne supprimée', { action: 'Annuler', onAction: undo });
+        toast('Ligne supprimée', { action: 'Annuler', onAction: undoThis() });
       });
       return {
         el: h('div', { class: 'row-card sd-row' },
@@ -6103,6 +6324,8 @@ function renderTop() {
 }
 
 /* ---------- Commentaires : rendu commun (bandeau des épinglés et liste) ---------- */
+/** fix2 (ui C-19) : cible des boutons-icônes : « « Audit interne jeudi… » (Karim, 30/09 20:00) » */
+const cmRef = cm => `« ${cutCP(String(cm.text || '').replace(/\s+/g, ' ').trim(), 40)} » (${cm.author || '—'}, ${fmtDM(new Date(cm.at))})`;
 function cmMeta(cm, now) {
   const until = parseLocal(cm.until);
   return [`${cm.author || '—'} · ${fmtDM(new Date(cm.at))}`, until ? ` · ${cmExpired(cm, now) ? 'expiré le' : 'valable jusqu’au'} ${fmtDM(until)}` : ''].join('');
@@ -6122,9 +6345,9 @@ function cmView(cm, now, pinnedBand) {
       h('p', { class: 'cm__meta', text: cmMeta(cm, now) })),
     h('div', { class: 'cm__act' },
       h('button', { type: 'button', class: `btn btn-quiet btn-icon cm__pin${pinned ? ' is-on' : ''}`, 'aria-pressed': String(pinned),
-        title: pinned ? 'Désépingler' : 'Épingler en haut du rapport', 'aria-label': pinned ? 'Désépingler le commentaire' : 'Épingler le commentaire', onclick: () => togglePin(cm.id) }, icon('pin')),
-      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__edit', title: 'Modifier', 'aria-label': 'Modifier le commentaire', onclick: () => commentDialog(cm.id) }, icon('edit')),
-      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__del', title: 'Supprimer', 'aria-label': 'Supprimer le commentaire', onclick: () => deleteComment(cm.id) }, icon('trash'))));
+        title: pinned ? 'Désépingler' : 'Épingler en haut du rapport', 'aria-label': `${pinned ? 'Désépingler' : 'Épingler'} le commentaire ${cmRef(cm)}${''}`, onclick: () => togglePin(cm.id) }, icon('pin')),
+      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__edit', title: 'Modifier', 'aria-label': `Modifier le commentaire ${cmRef(cm)}${''}`, onclick: () => commentDialog(cm.id) }, icon('edit')),
+      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__del', title: 'Supprimer', 'aria-label': `Supprimer le commentaire ${cmRef(cm)}${''}`, onclick: () => deleteComment(cm.id) }, icon('trash'))));
 }
 function togglePin(id) {
   const now = new Date();
@@ -6132,11 +6355,11 @@ function togglePin(id) {
   if (!cm) return;
   const on = !cmPinned(cm, now);
   change(r => { const x = r.comments.find(y => y.id === id); if (!x) return; x.pinned = on; if (on && cmExpired(x, now)) x.until = ''; });
-  toast(on ? 'Commentaire épinglé en haut du rapport' : 'Commentaire désépinglé', { action: 'Annuler', onAction: undo });
+  toast(on ? 'Commentaire épinglé en haut du rapport' : 'Commentaire désépinglé', { action: 'Annuler', onAction: undoThis() });
 }
 function deleteComment(id) {
   change(r => { r.comments = r.comments.filter(x => x.id !== id); });
-  toast('Commentaire supprimé', { action: 'Annuler', onAction: undo });
+  toast('Commentaire supprimé', { action: 'Annuler', onAction: undoThis() });
 }
 /** Bandeaux pleine largeur en tête : épinglés Critique puis Attention (les Info épinglés restent dans « Commentaires »). */
 function renderPins(now, bm) {
@@ -6151,8 +6374,19 @@ function commentDialog(id = null) {
   const ex = id ? state.report.comments.find(x => x.id === id) : null;
   const x = ex ? clone(ex) : { text: '', level: 'info', line: '', until: '', pinned: false };
   let pinTouched = !!ex;
-  const ta = h('textarea', { class: 'input', id: 'cm-text', rows: 3, maxlength: CM_TEXT_MAX, placeholder: 'ex. Paltronic non fonctionnel — ne pas utiliser' });
+  /* fix2 (ui C-23) : pas de coupe silencieuse à 1 000 caractères : compteur visible, au-delà message et ajout refusé */
+  const ta = h('textarea', { class: 'input', id: 'cm-text', rows: 3, placeholder: 'ex. Paltronic non fonctionnel — ne pas utiliser', 'aria-describedby': 'cm-count' });
   ta.value = x.text;
+  const count = h('p', { class: 'cm-count', id: 'cm-count', 'aria-live': 'polite' });
+  const nbsp = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
+  const upCount = () => {
+    const n = Array.from(ta.value).length, over = n > CM_TEXT_MAX;
+    count.textContent = over ? `${nbsp(n)} / ${nbsp(CM_TEXT_MAX)} caractères : trop long, raccourcissez de ${nbsp(n - CM_TEXT_MAX)} caractère${n - CM_TEXT_MAX > 1 ? 's' : ''}.` : `${nbsp(n)} / ${nbsp(CM_TEXT_MAX)} caractères`;
+    count.classList.toggle('is-over', over);
+    if (over) ta.setAttribute('aria-invalid', 'true'); else ta.removeAttribute('aria-invalid');
+  };
+  ta.addEventListener('input', upCount);
+  upCount();
   const pin = h('input', { type: 'checkbox', id: 'cm-pin' });
   pin.checked = x.pinned;
   pin.addEventListener('change', () => { pinTouched = true; });
@@ -6171,7 +6405,7 @@ function commentDialog(id = null) {
   return openDialog({
     title: ex ? 'Modifier le commentaire' : 'Ajouter un commentaire', icon: 'comment', className: 'dlg--cm',
     body: h('div', { class: 'cm-form' },
-      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'cm-text', text: 'Message' }), ta),
+      h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'cm-text', text: 'Message' }), ta, count),
       h('div', { class: 'field' }, h('span', { class: 'field__label', id: 'cm-lvl-lbl', text: 'Niveau' }), lv),
       h('div', { class: 'cm-form__row' },
         h('div', { class: 'field' }, h('label', { class: 'field__label', for: 'cm-line', text: 'Ligne concernée' }), line),
@@ -6183,7 +6417,7 @@ function commentDialog(id = null) {
       const text = ta.value.replace(/\s+$/g, '').trim();
       const u = normDateTime(until.value);
       const level = (lv.querySelector('input:checked') || {}).value || 'info';
-      const msg = !text ? 'Écrivez le message du commentaire.' : until.value && !u ? 'La date « valable jusqu’au » est incomplète.'
+      const msg = !text ? 'Écrivez le message du commentaire.' : Array.from(text).length > CM_TEXT_MAX ? `Le message dépasse ${CM_TEXT_MAX} caractères (${Array.from(text).length}) : raccourcissez-le avant de l’enregistrer.` : until.value && !u ? 'La date « valable jusqu’au » est incomplète.'
         : u && parseLocal(u) <= new Date() && pin.checked ? 'La date « valable jusqu’au » est déjà passée.' : null;
       if (msg) { err.textContent = Core.typo(msg); err.hidden = false; return false; }
       const item = { id: ex ? ex.id : uid(), text: text.slice(0, CM_TEXT_MAX), level, line: line.value, author: ex ? ex.author : state.author,
@@ -6192,7 +6426,7 @@ function commentDialog(id = null) {
         if (ex) r.comments = r.comments.map(c => (c.id === ex.id ? item : c));
         else { if (r.comments.length >= CM_MAX) r.comments.shift(); r.comments.push(item); }
       });
-      toast(ex ? 'Commentaire modifié' : item.pinned ? 'Commentaire ajouté et épinglé en haut du rapport' : 'Commentaire ajouté', { action: 'Annuler', onAction: undo });
+      toast(ex ? 'Commentaire modifié' : item.pinned ? 'Commentaire ajouté et épinglé en haut du rapport' : 'Commentaire ajouté', { action: 'Annuler', onAction: undoThis() });
       return true;
     } }],
     onOpen: () => ta.focus(),
@@ -6229,9 +6463,9 @@ function pinBandEl(cm, now, { actions = true } = {}) {
     h('span', { class: 'cm__meta', text: pinMeta(cm, now) }),
     actions ? h('div', { class: 'cm__act' },
       h('button', { type: 'button', class: `btn btn-quiet btn-icon cm__pin${pinned ? ' is-on' : ''}`, 'aria-pressed': String(pinned),
-        title: pinned ? 'Désépingler' : 'Épingler en haut du rapport', 'aria-label': pinned ? 'Désépingler le commentaire' : 'Épingler le commentaire', onclick: () => togglePin(cm.id) }, icon('pin')),
-      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__edit', title: 'Modifier', 'aria-label': 'Modifier le commentaire', onclick: () => commentDialog(cm.id) }, icon('edit')),
-      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__del', title: 'Supprimer', 'aria-label': 'Supprimer le commentaire', onclick: () => deleteComment(cm.id) }, icon('trash'))) : null);
+        title: pinned ? 'Désépingler' : 'Épingler en haut du rapport', 'aria-label': `${pinned ? 'Désépingler' : 'Épingler'} le commentaire ${cmRef(cm)}${' (bandeau des épinglés)'}`, onclick: () => togglePin(cm.id) }, icon('pin')),
+      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__edit', title: 'Modifier', 'aria-label': `Modifier le commentaire ${cmRef(cm)}${' (bandeau des épinglés)'}`, onclick: () => commentDialog(cm.id) }, icon('edit')),
+      h('button', { type: 'button', class: 'btn btn-quiet btn-icon cm__del', title: 'Supprimer', 'aria-label': `Supprimer le commentaire ${cmRef(cm)}${' (bandeau des épinglés)'}`, onclick: () => deleteComment(cm.id) }, icon('trash'))) : null);
 }
 function rsRowEl(x) {
   return h('li', { class: `rs-row is-${x.tone}`, 'data-line': x.line.id },
@@ -6371,7 +6605,7 @@ function chgView(it) {
     h('span', { class: 'chg__txt' },
       where ? h('span', { class: 'chg__where', text: where }) : null, where ? ' — ' : '',
       h('span', { class: 'chg__what', text: it.label }),
-      it.from != null ? [' : ', h('span', { class: 'chg__from', text: it.from }), ' → ', h('b', { class: 'chg__to', text: it.to })]
+      it.from != null ? [' :', it.from ? [' ', h('span', { class: 'chg__from', text: it.from })] : null, ' →', it.to ? [' ', h('b', { class: 'chg__to', text: it.to })] : null]
         : it.note ? [it.kind === 'comment' ? ' : ' : ' ', h('span', { class: 'chg__note', text: it.kind === 'comment' ? `« ${it.note} »` : it.note })] : null),
     it.band && it.kind !== 'lot' ? h('span', { class: 'chg__band', text: it.band.short }) : null);
 }
@@ -6392,7 +6626,8 @@ function renderChanges(now) {
       ? h('ul', { class: 'chg-list' }, shown.map(chgView))
       : h('p', { class: 'chg-empty', text: ref ? 'Aucun changement pour l’instant : les modifications de ce shift apparaîtront ici (badge « Nouveau » sur les champs).'
         : 'Pas encore de version enregistrée sur N: à comparer. Les changements apparaîtront après le premier enregistrement (Ctrl+S).' }),
-    more > 0 || chgAll ? h('button', { type: 'button', class: 'btn-link chg-more', onclick: () => { chgAll = !chgAll; renderChanges(new Date()); } }, chgAll ? 'Réduire la liste' : more > 1 ? `Afficher les ${more} autres changements` : 'Afficher l’autre changement') : null);
+    /* fix2 (ui C-12) : jamais de « null » affiché */
+    more > 0 || (chgAll && ch.items.length > CHG_SHOW) ? h('button', { type: 'button', class: 'btn-link chg-more', onclick: () => { chgAll = !chgAll; renderChanges(new Date()); } }, chgAll ? 'Réduire la liste' : more > 1 ? `Afficher les ${more} autres changements` : 'Afficher l’autre changement') : '');
 }
 
 /* =========================================================================
@@ -6416,11 +6651,20 @@ function toPlain(it) {
     label: it.label, from: it.from ?? null, to: it.to ?? null, note: it.note || '', band: it.band && it.kind !== 'lot' ? it.band.short : '',
   };
 }
+/** fix2 (pdf-02) : raccourcit par points de code (jamais au milieu d'un emoji / d'une paire de substitution UTF-16) ; « … » final. */
+function cutCP(t, n) {
+  t = String(t ?? '');
+  if (t.length <= n) return t;
+  const a = Array.from(t);
+  let out = '';
+  for (const ch of a) { if (out.length + ch.length > Math.max(0, n - 1)) break; out += ch; }
+  return out.length >= t.length ? t : `${out.trimEnd()}…`;
+}
 /** « Inova 5 · CT0932 — Connexion : EN COURS → FAIT » */
 function plainText(p, max = 90) {
-  const cut = t => (t.length > max ? `${t.slice(0, max - 1).trimEnd()}…` : t);
+  const cut = t => cutCP(t, max);
   const head = p.where ? `${p.where} — ${p.label}` : p.label;
-  if (p.from != null) return `${head} : ${p.from} → ${p.to}`;
+  if (p.from != null) return `${head} :${p.from ? ` ${p.from}` : ''} →${p.to ? ` ${p.to}` : ''}`;
   if (p.kind === 'comment') return `${head} : « ${cut(p.note)} »`;
   return p.note ? `${head} ${p.note}` : head;
 }
@@ -6662,20 +6906,52 @@ const PdfGen = (() => {
   const WIN = { 0x20AC: 0x80, 0x201A: 0x82, 0x0192: 0x83, 0x201E: 0x84, 0x2026: 0x85, 0x2020: 0x86, 0x2021: 0x87, 0x02C6: 0x88, 0x2030: 0x89, 0x0160: 0x8A,
     0x2039: 0x8B, 0x0152: 0x8C, 0x017D: 0x8E, 0x2018: 0x91, 0x2019: 0x92, 0x201C: 0x93, 0x201D: 0x94, 0x2022: 0x95, 0x2013: 0x96, 0x2014: 0x97, 0x02DC: 0x98,
     0x2122: 0x99, 0x0161: 0x9A, 0x203A: 0x9B, 0x0153: 0x9C, 0x017E: 0x9E, 0x0178: 0x9F, 0x202F: 0xA0, 0x2009: 0x20, 0x2007: 0x20, 0x2011: 0x2D, 0x2212: 0x2D };
-  const SUB = { '≥': '>=', '≤': '<=', '✓': 'v' };
+  const SUB = { '≥': '>=', '≤': '<=', '✓': 'OK', '✔': 'OK', '☑': 'OK', '✅': 'OK', '✗': 'x', '✘': 'x', '❌': 'x', '←': '<-', '⇐': '<=', '⇒': '=>', '↑': '^', '↓': 'v',
+    '⚠': '(!)', '❗': '(!)', '❕': '(!)', '‼': '!!', '≠': '<>', '≈': '~', '∞': 'infini', '★': '*', '☆': '*', '✱': '*', '▶': '>', '►': '>', '◀': '<', '◄': '<' };
   const ARROW = -1;
-  /** Texte → codes WinAnsi ; caractère hors WinAnsi : sans accent, sinon « ? » ; « → » : police Symbol. */
+  /* fix2 (pdf-09) : caractères hors WinAnsi. Équivalents lisibles (SUB) ; sélecteurs de variante / liants d'emoji ignorés ;
+     emoji supprimés (espace propre) ; autres caractères : un seul « ? » par suite. `clean.replaced` signale un remplacement. */
+  const EMOJI = /\p{Extended_Pictographic}|\p{Regional_Indicator}|[\u{1F3FB}-\u{1F3FF}]/u;
+  const IGNORE = /[\uFE00-\uFE0F\u200B-\u200D\u20E3\u2060\uFEFF]|[\u{E0020}-\u{E007F}]/u;
+  const winOk = u => (u >= 32 && u < 127) || (u >= 160 && u <= 255) || u === 9 || u === 10 || u === 13 || u === 0x2192 || !!WIN[u];
+  const cleanMemo = new Map();
+  function clean(s) {
+    s = String(s ?? '').normalize('NFC');
+    let all = true;
+    for (const ch of s) if (!winOk(ch.codePointAt(0))) { all = false; break; }
+    if (all) return s;
+    if (cleanMemo.has(s)) { clean.replaced = true; return cleanMemo.get(s); }
+    let out = '', q = false, emo = false;
+    for (const ch of s) {
+      const u = ch.codePointAt(0);
+      if (winOk(u)) { if (emo && ch !== ' ' && out && !out.endsWith(' ')) out += ' '; out += ch; q = false; emo = false; continue; }
+      if (IGNORE.test(ch)) continue;
+      if (SUB[ch]) { out += SUB[ch]; q = false; emo = false; continue; }
+      if (EMOJI.test(ch)) { emo = true; continue; }
+      const b = ch.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      if (b && [...b].every(c => winOk(c.codePointAt(0)))) { out += b; q = false; emo = false; continue; }
+      if (!q) out += '?';
+      q = true; emo = false;
+    }
+    out = out.replace(/ {2,}/g, ' ');
+    if (/^\s/.test(out) && !/^\s/.test(s)) out = out.trimStart();
+    if (/\s$/.test(out) && !/\s$/.test(s)) out = out.trimEnd();
+    if (cleanMemo.size > 2000) cleanMemo.clear();
+    cleanMemo.set(s, out);
+    clean.replaced = true;
+    return out;
+  }
+  clean.replaced = false;
+  /** Texte → codes WinAnsi ; caractère hors WinAnsi : voir clean() ; « → » : police Symbol. */
   function codes(s) {
     const out = [];
-    for (const ch of String(s ?? '').normalize('NFC')) {
+    for (const ch of clean(s)) {
       const u = ch.codePointAt(0);
       if (u === 0x2192) { out.push(ARROW); continue; }
       if (u === 9 || u === 10 || u === 13) { out.push(32); continue; }
       if ((u >= 32 && u < 127) || (u >= 160 && u <= 255)) { out.push(u); continue; }
       if (WIN[u]) { out.push(WIN[u]); continue; }
-      if (SUB[ch]) { for (const c of SUB[ch]) out.push(c.charCodeAt(0)); continue; }
-      const b = ch.normalize('NFD').replace(/[̀-ͯ]/g, '').codePointAt(0);
-      out.push(b && ((b >= 32 && b < 127) || (b >= 160 && b <= 255)) ? b : 63);
+      out.push(63);
     }
     return out;
   }
@@ -6855,7 +7131,7 @@ const PdfGen = (() => {
     for (let i = 0, j = 0, k = 0; i < d.length; i += 4) { px[j++] = d[i]; px[j++] = d[i + 1]; px[j++] = d[i + 2]; alpha[k++] = d[i + 3]; }
     return { w, h: hh, rgb: px, alpha, ratio: w / hh };
   }
-  return { Doc, width, wrap, fit, clamp, logoPixels, PW, PH };
+  return { Doc, width, wrap, fit, clamp, logoPixels, PW, PH, clean };
 })();
 
 /* ---------- Rendu du rapport en PDF (même design que la vue d'impression) ---------- */
@@ -6935,26 +7211,44 @@ const rsPillW = (label, value, size, ic, bold) => (label ? PdfGen.width(label, s
 function rsLotLayout(m, col, w, maxH = 999) {
   const P = PdfGen, iw = w - 5.6;
   /* titre : EN COURS  CT0932  SB4  (· Remplissage) — « (suite) » sur une page suivante */
-  const lhUnit = cont => ({ h: 5.6, draw: (doc, ix, oy) => {
-    let tx = ix;
-    tx += doc.text(tx, oy + 4, m.k.toUpperCase(), { size: 6.6, font: 'B', color: col.sh.head }) + 2;
+  /* fix2 (pdf-05) : le n° de lot n'est jamais coupé : police réduite (jusqu'à 7 pt), puis produit / lot sur les lignes suivantes */
+  const lhUnit = cont => {
+    const kw = P.width(m.k.toUpperCase(), 6.6, 'B') + 2;
     const prodW = !cont && col.over && m.band.id === 'enCours' && m.lot ? rsPillW('', col.prodWord, 6.6, null) + 1.4 : 0;
-    const lot = P.fit(m.lot || 'Aucun lot', iw - (tx - ix) - prodW - (m.produit ? 10 : 0) - (cont ? 12 : 0), 11, 'B');
-    tx += doc.text(tx, oy + 4.3, lot, { size: 11, font: 'B', color: m.lot ? RS.ink : RS.mut }) + 1.8;
-    if (m.produit) tx += doc.text(tx, oy + 4.1, P.fit(m.produit, Math.max(6, iw - (tx - ix) - prodW - (cont ? 12 : 0)), 7.8), { size: 7.8, color: RS.mut }) + 1.6;
-    if (cont) doc.text(tx, oy + 4.1, '(suite)', { size: 7.4, color: RS.mut });
-    if (prodW) {
-      const [bg, fg] = { g: RS.pill.ok, o: RS.pill.wip, r: RS.pill.todo, n: RS.pill.na }[col.prodTone];
-      const pw = prodW - 1.4, px = ix + iw - pw;
-      doc.rect(px, oy + 0.6, pw, 4.4, { fill: bg, r: 2.2 });
-      doc.circle(px + 2.2, oy + 2.8, 0.7, { fill: fg });
-      doc.text(px + 3.4, oy + 3.7, col.prodWord, { size: 6.6, font: 'B', color: fg });
+    const lotT = m.lot || 'Aucun lot', avail = iw - kw - prodW - (cont ? 12 : 0);
+    const pdW = m.produit ? P.width(m.produit, 7.8) + 1.6 : 0;
+    let lsz = 11, lotLines = [lotT], prodLines = [], inline = true;
+    while (lsz > 9 && P.width(lotT, lsz, 'B') + 1.8 + pdW > avail) lsz -= 0.5;
+    if (P.width(lotT, lsz, 'B') + 1.8 + pdW > avail) {
+      inline = false;
+      lsz = 11;
+      while (lsz > 7 && P.width(lotT, lsz, 'B') > avail) lsz -= 0.5;
+      if (P.width(lotT, lsz, 'B') > avail) lotLines = P.wrap(lotT, avail, lsz, 'B');
+      if (m.produit) prodLines = P.wrap(m.produit, iw, 7.8);
     }
-  } });
+    const LL = lsz + 0.5 > 9 ? 4.2 : 3.3;
+    const extra = (lotLines.length - 1) * LL + prodLines.length * 3.4;
+    return { h: 5.6 + extra, extra, draw: (doc, ix, oy) => {
+      let tx = ix + kw;
+      doc.text(ix, oy + 4, m.k.toUpperCase(), { size: 6.6, font: 'B', color: col.sh.head });
+      lotLines.forEach((t, k) => { const lw = doc.text(ix + kw, oy + 4.3 + k * LL, t, { size: lsz, font: 'B', color: m.lot ? RS.ink : RS.mut }); if (!k) tx += lw + 1.8; });
+      if (m.produit && inline) tx += doc.text(tx, oy + 4.1, m.produit, { size: 7.8, color: RS.mut }) + 1.6;
+      if (cont) doc.text(tx, oy + 4.1, '(suite)', { size: 7.4, color: RS.mut });
+      prodLines.forEach((t, k) => doc.text(ix + kw, oy + 4.1 + (lotLines.length - 1) * LL + (k + 1) * 3.4, t, { size: 7.8, color: RS.mut }));
+      if (prodW) {
+        const [bg, fg] = { g: RS.pill.ok, o: RS.pill.wip, r: RS.pill.todo, n: RS.pill.na }[col.prodTone];
+        const pw = prodW - 1.4, px = ix + iw - pw;
+        doc.rect(px, oy + 0.6, pw, 4.4, { fill: bg, r: 2.2 });
+        doc.circle(px + 2.2, oy + 2.8, 0.7, { fill: fg });
+        doc.text(px + 3.4, oy + 3.7, col.prodWord, { size: 6.6, font: 'B', color: fg });
+      }
+    } };
+  };
   /* en-tête de carte : titre + parcours vertical (étapes faites en vert, actuelle à la couleur de la machine avec ses statuts, à venir en gris) */
   const TAG_H = 3.7, TAG_S = 6.5, IND = 4.6;
   const rows = [];
-  let y = m.empty ? 5.6 : 6.1;
+  const lh0 = lhUnit(false);
+  let y = (m.empty ? 5.6 : 6.1) + lh0.extra;
   /* compact : étapes voisines faites (ou à venir) sans rien à montrer regroupées sur une ligne « Cuves › Pesée › Formulation » */
   const vsRows = [];
   for (const st of m.empty ? [] : m.vs) {
@@ -6970,26 +7264,33 @@ function rsLotLayout(m, col, w, maxH = 999) {
     const now = st.state === 'now', ok = st.state === 'ok';
     const nsz0 = now ? 8.6 : 7.4;
     st.lines = P.wrap(st.nom, iw - IND, nsz0, now ? 'B' : 'R');
-    const rowH = (now ? 4.1 : 3.25) * st.lines.length;
+    const rowH0 = (now ? 4.1 : 3.25) * st.lines.length;
     const em = ok ? [st.when, ...st.items.filter(x => x.kind !== 'status').map(x => `${x.label} ${x.value}`)].filter(Boolean).join(' · ') : '';
+    /* fix2 (pdf-05) : le résumé d'une étape faite suit le nom s'il tient, sinon il passe sur les lignes suivantes (jamais coupé) */
+    const lastW = P.width(st.lines[st.lines.length - 1], nsz0, now ? 'B' : 'R');
+    const emLines = em && !(iw - IND - lastW > 8 && P.width(` · ${em}`, 6.8) <= iw - IND - lastW) ? P.wrap(em, iw - IND, 6.8) : null;
+    const rowH = rowH0 + (emLines ? emLines.length * 2.9 + 0.2 : 0);
     const tagItems = ok ? st.items.filter(x => x.kind === 'status') : st.items;
     const tags = [];
     /* les étiquettes commencent sur la ligne du nom quand la place le permet (compact), puis passent à la ligne */
-    const lh1 = rowH / st.lines.length;
-    const nameW = P.width(st.lines[st.lines.length - 1], nsz0, now ? 'B' : 'R') + (em ? P.width(` · ${em}`, 6.8) : 0);
-    let tx = em ? iw : nameW + 1.8, ty = rowH - lh1 + (lh1 - TAG_H) / 2 - 0.15, inline = true;
+    const lh1 = rowH0 / st.lines.length;
+    const nameW = lastW + (em ? P.width(` · ${em}`, 6.8) : 0);
+    let tx = em ? iw : nameW + 1.8, ty = rowH - lh1 + (lh1 - TAG_H) / 2 - 0.15, inline = true, curH = TAG_H;
     for (const it of tagItems) {
-      const tw = Math.min(iw - IND, rsPillW(`${it.label}`, it.value, TAG_S, it.cold ? 'snow' : null));
-      if (tx && tx + tw > iw - IND) { tx = 0; ty = inline ? rowH + 0.3 : ty + TAG_H + 0.55; inline = false; }
-      tags.push({ x: tx, y: ty, w: tw, it });
-      tx += tw + 1;
+      /* fix2 (pdf-05) : étiquette plus large que la carte → texte complet sur plusieurs lignes (au lieu de « … ») */
+      const pw = rsPillW(`${it.label}`, it.value, TAG_S, it.cold ? 'snow' : null), long = pw > iw - IND;
+      const lines = long ? P.wrap(`${it.label} ${it.value}`, iw - IND - 4.2 - (it.cold ? 3.4 : 0), TAG_S, 'B') : null;
+      const tw = long ? iw - IND : pw, th = long ? lines.length * 2.7 + 1.2 : TAG_H;
+      if (tx && (long || tx + tw > iw - IND)) { tx = 0; ty = inline ? rowH + 0.3 : ty + curH + 0.55; inline = false; curH = TAG_H; }
+      tags.push({ x: tx, y: ty, w: tw, h: th, lines, it });
+      curH = Math.max(curH, th);
+      tx = long ? iw : tx + tw + 1;
     }
-    const h0 = rowH + (tags.length && !inline ? ty - rowH + TAG_H + 0.6 : 0.15);
-    rows.push({ st, y, rowH, lh: rowH / st.lines.length, h: h0, em, tags, now, ok });
+    const h0 = rowH + (tags.length && !inline ? ty - rowH + curH + 0.6 : 0.15);
+    rows.push({ st, y, rowH, lh: lh1, h: h0, em, emLines, tags, now, ok });
     y += h0;
   }
   if (!m.empty) y += 1.1;
-  const lh0 = lhUnit(false);
   const head = { h: y, draw: (doc, ix, oy) => {
     lh0.draw(doc, ix, oy);
     const dx = ix + 1.6;
@@ -7011,15 +7312,22 @@ function rsLotLayout(m, col, w, maxH = 999) {
       const nsz = r.now ? 8.6 : 7.4, nfont = r.now ? 'B' : 'R';
       let nw = 0;
       r.st.lines.forEach((t, j) => { nw = doc.text(nx0, base + j * r.lh, t, { size: nsz, font: nfont, color: r.now ? col.sh.head : r.ok ? RS.ink : RS.soft }); });
-      if (r.em && iw - IND - nw > 8) doc.text(nx0 + nw, base + (r.st.lines.length - 1) * r.lh, P.fit(` · ${r.em}`, iw - IND - nw, 6.8), { size: 6.8, color: RS.mut });
+      if (r.em && !r.emLines) doc.text(nx0 + nw, base + (r.st.lines.length - 1) * r.lh, ` · ${r.em}`, { size: 6.8, color: RS.mut });
+      if (r.emLines) r.emLines.forEach((t, j) => doc.text(nx0, base + (r.st.lines.length - 1) * r.lh + (j + 1) * 2.9, t, { size: 6.8, color: RS.mut }));
       for (const t of r.tags) {
         const py = oy + r.y + t.y, px = nx0 + t.x, it = t.it;
         const [bg, fg] = it.cold ? RS.pill.cold : it.kind === 'status' ? RS.pill[it.tone] || RS.pill.neutral : RS.pill.neutral;
+        if (t.lines) {
+          doc.rect(px, py, t.w, t.h, { fill: bg, r: 1.6 });
+          if (it.cold) pdfIcon(doc, 'snow', px + 3.4, py + 1.9, 2.6, fg);
+          t.lines.forEach((ln, j) => doc.text(px + 2.1 + (it.cold ? 3.4 : 0), py + 2.62 + j * 2.7, ln, { size: TAG_S, font: 'B', color: fg }));
+          continue;
+        }
         doc.rect(px, py, t.w, TAG_H, { fill: bg, r: TAG_H / 2 });
         let ttx = px + 2.1;
         if (it.cold) { pdfIcon(doc, 'snow', ttx + 1.3, py + TAG_H / 2, 2.6, fg); ttx += 3.4; }
         ttx += doc.text(ttx, py + 2.62, it.label, { size: TAG_S, color: fg }) + 1.1;
-        doc.text(ttx, py + 2.62, P.fit(it.value, Math.max(3, t.w - (ttx - px) - 1.6), TAG_S, 'B'), { size: TAG_S, font: 'B', color: fg });
+        doc.text(ttx, py + 2.62, it.value, { size: TAG_S, font: 'B', color: fg });
       }
     });
   } };
@@ -7032,19 +7340,20 @@ function rsLotLayout(m, col, w, maxH = 999) {
       const nm0 = htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : '');
       const restW = P.width(ht.rest, 6.6, 'B'), nmW = P.width(nm0, 7.6, 'B');
       const one = nmW + restW + 6 <= iw; /* une seule ligne quand la place le permet (compact) */
-      const name = P.fit(nm0, one ? nmW + 1 : iw - rw - 6, 7.6, 'B');
-      const bh = one ? 5 : 7.8;
+      /* fix2 (pdf-05) : nom et détail jamais coupés (lignes supplémentaires si besoin) */
+      const names = one ? [nm0] : P.wrap(nm0, iw - rw - 6, 7.6, 'B'), rests = one ? [ht.rest] : P.wrap(ht.rest, iw - rw - 6, 6.6);
+      const bh = one ? 5 : 7.8 + (names.length - 1) * 3.2 + (rests.length - 1) * 2.9;
       units.push({ h: bh + 1, draw: (doc, ix, oy) => {
         doc.rect(ix, oy + 0.5, iw, bh, { fill: okH ? RS.grnT : RS.redT, r: 1.6 });
-        doc.text(ix + 1.8, oy + 3.85, name, { size: 7.6, font: 'B', color: RS.ink });
+        names.forEach((t, k) => doc.text(ix + 1.8, oy + 3.85 + k * 3.2, t, { size: 7.6, font: 'B', color: RS.ink }));
         if (one) { doc.text(ix + iw - 1.8, oy + 3.8, ht.rest, { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' }); return; }
-        doc.text(ix + 1.8, oy + 7, P.fit(ht.rest, iw - 4, 6.6), { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX });
-        doc.text(ix + iw - 1.8, oy + 5.2, rt, { size: 8.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' });
+        rests.forEach((t, k) => doc.text(ix + 1.8, oy + 7 + (names.length - 1) * 3.2 + k * 2.9, t, { size: 6.6, font: 'B', color: okH ? RS.grn : RS.redX }));
+        doc.text(ix + iw - 1.8, oy + 5.2 + (bh - 7.8) / 2, rt, { size: 8.6, font: 'B', color: okH ? RS.grn : RS.redX, align: 'right' });
       } });
       continue;
     }
     const rt = htLeft(ht), rw = P.width(rt, 11, 'B');
-    const name = P.clamp(htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : ''), iw - rw - 3, 7.8, 'B', 2);
+    const name = P.wrap(htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : ''), iw - rw - 3, 7.8, 'B');
     units.push({ h: name.length * 3.3 + 3.1 + 2.6 + 1, draw: (doc, ix, oy) => {
       name.forEach((t, k) => doc.text(ix, oy + 3 + k * 3.3, t, { size: 7.8, font: 'B', color: RS.ink }));
       const ly = oy + 3 + name.length * 3.3 - 0.4;
@@ -7055,18 +7364,21 @@ function rsLotLayout(m, col, w, maxH = 999) {
       if (ht.pct > 0) doc.rect(ix, by, Math.max(1.25, iw * Math.min(1, ht.pct)), 1.25, { fill: RS_BAR[ht.level], r: 0.62 });
     } });
   }
-  /* remarques : note jaune (raccourcie seulement si elle dépasse une page) */
+  /* remarques : note jaune. fix2 (pdf-05) : jamais raccourcie — découpée en tranches de lignes ; la carte se coupe entre deux
+     tranches et la suite continue sur la page suivante (titre « (suite) ») */
   if (m.notes) {
-    let lines = P.wrap(m.notes, iw - 8.6, 7.8, 'B');
-    const keep = Math.max(1, Math.floor((maxH - 5.6 - 3.4 - 2.8 - 1.6) / 3.35));
-    if (lines.length > keep) { lines = lines.slice(0, keep); lines[keep - 1] = P.fit(`${lines[keep - 1]} … (suite dans l’outil)`, iw - 8.6, 7.8, 'B'); }
-    const nh = lines.length * 3.35 + 2.8;
-    units.push({ h: nh + 1.6, draw: (doc, ix, oy) => {
-      const ny = oy + 0.4;
-      doc.clip(ix, ny, iw, nh, 1.6, () => { doc.rect(ix, ny, iw, nh, { fill: RS.note.bg }); doc.rect(ix, ny, 1.1, nh, { fill: RS.note.bd }); });
-      pdfIcon(doc, 'comment', ix + 4, ny + 2.9, 3, RS.note.ink);
-      lines.forEach((t, k) => doc.text(ix + 6.6, ny + 3.6 + k * 3.35, t, { size: 7.8, font: 'B', color: RS.note.ink }));
-    } });
+    const lines = P.wrap(m.notes, iw - 8.6, 7.8, 'B');
+    const CH = 6;
+    for (let i0 = 0; i0 < lines.length; i0 += CH) {
+      const part = lines.slice(i0, i0 + CH), first = i0 === 0, last = i0 + CH >= lines.length;
+      const tp = first ? 0.4 : 0, bh = part.length * 3.35 + (first ? 1.4 : 0) + (last ? 1.4 : 0);
+      units.push({ h: tp + bh + (last ? 1.2 : 0), note: true, draw: (doc, ix, oy) => {
+        const ny = oy + tp;
+        doc.clip(ix, ny - (first ? 0 : 3), iw, bh + (first ? 0 : 3) + (last ? 0 : 3), 1.6, () => { doc.rect(ix, ny, iw, bh, { fill: RS.note.bg }); doc.rect(ix, ny, 1.1, bh, { fill: RS.note.bd }); });
+        if (first) pdfIcon(doc, 'comment', ix + 4, ny + 2.9, 3, RS.note.ink);
+        part.forEach((t, k) => doc.text(ix + 6.6, ny + (first ? 3.6 : 2.2) + k * 3.35, t, { size: 7.8, font: 'B', color: RS.note.ink }));
+      } });
+    }
   }
   if (m.empty) units.push({ h: 4.4, draw: (doc, ix, oy) => doc.text(ix, oy + 3, m.lot ? 'Rien de renseigné' : 'Aucun lot en cours', { size: 7.6, color: RS.mut }) });
   const card = (us, cont) => {
@@ -7125,7 +7437,14 @@ function pdfSynth(doc, m) {
     const lv = levelOf(cm.level).label.toUpperCase();
     const meta = pinMeta(cm, m.at), metaW = Math.min(78, P.width(meta, 7.4) + 1);
     const tx0 = X0 + 13.4 + P.width(lv, 7.8, 'B') + 4;
-    const lines = P.clamp(cm.text, X1 - 4 - metaW - 4 - tx0, 11.4, 'B', 3);
+    /* fix2 (pdf-05) : bandeau limité à 3 lignes, avec mention explicite ; le texte complet est dans « Commentaires » (page Détail) */
+    const bW = X1 - 4 - metaW - 4 - tx0;
+    let lines = P.wrap(cm.text, bW, 11.4, 'B');
+    if (lines.length > 3) {
+      const tail = ' … (suite p. Détail)';
+      lines = lines.slice(0, 3);
+      lines[2] = P.fit(lines[2], bW - P.width(tail, 11.4, 'B'), 11.4, 'B').replace(/…$/, '').trimEnd() + tail;
+    }
     const hh = Math.max(11.6, 6 + lines.length * 4.7);
     if (y + hh > YMAX) y = rsContHead(doc, m);
     doc.rect(X0, y, W, hh, { fill: bg, r: 2.8 });
@@ -7257,6 +7576,17 @@ function pdfSynth(doc, m) {
         const parts = room > 12 ? c.blocks[0].split(room) : null;
         if (parts) { c.blocks.shift(); take.push(parts[0]); c.blocks.unshift(parts[1]); }
       }
+      /* fix2 (pdf-13) : ne reste que « Suivant +1 · … », sans place sur cette page : la dernière carte est recoupée plus haut pour
+         que sa suite l'accompagne (jamais de page de suite avec cette seule ligne) */
+      if (c.blocks.length && c.blocks.every(b => b.kind === 'more') && heightOf([...take, ...c.blocks]) > avail + 0.01) {
+        const li = take.length - 1, lastCard = take[li];
+        if (lastCard && lastCard.kind === 'card' && lastCard.split) {
+          const before = take.slice(0, li);
+          const room = avail - heightOf(before) - (before.length ? GAP : 0) - heightOf(c.blocks) - GAP;
+          const parts = room > 12 ? lastCard.split(room) : null;
+          if (parts) { take.splice(li, 1, parts[0]); c.blocks.unshift(parts[1]); }
+        }
+      }
       if (!take.length && c.blocks.length && y <= RS_CONT + 0.01) take.push(c.blocks.shift()); /* bloc plus haut qu'une page : déjà raccourci */
       return take;
     });
@@ -7312,7 +7642,7 @@ function pdfDetail(doc, report, m) {
   head(false);
   /* changements depuis le dernier shift (peuvent continuer sur la page suivante) */
   {
-    const items = m.changes.map(p => ({ p, lines: P.clamp(plainText(p, 200), W - 10, 7.6, 'R', 2) }));
+    const items = m.changes.map(p => ({ p, lines: P.wrap(plainText(p, 100000), W - 10, 7.6, 'R') })); /* fix2 (pdf-05) : texte complet */
     const sub = m.ref ? `Par rapport à la version enregistrée sur N: le ${fmtDM(new Date(m.ref.savedAt))}${m.ref.savedBy ? ` par ${m.ref.savedBy}` : ''}` : 'Pas de version de référence sur N: : rien à comparer';
     let i = 0, firstBox = true;
     do {
@@ -7336,19 +7666,13 @@ function pdfDetail(doc, report, m) {
       if (i < items.length) head(true);
     } while (i < items.length);
   }
-  /* annexes en pastilles */
+  /* annexes en pastilles. fix2 (pdf-03/05) : les trois cadres continuent sur les pages suivantes (« (SUITE) ») ; rien n'est coupé
+     (filling breakdown et notes 5S sur plusieurs lignes) */
   const fb = report.fillingBreakdown.filter(x => x.lotConcerne || x.poids || x.lotSuivant || x.holdingTime);
   const sd = report.suiviDossier.filter(x => x.lot || x.scan !== 'N/A' || x.check !== 'N/A');
   const t3 = v => toneOf('AFAIRE3', v);
-  const RH = 5.6;
-  const ah = 7 + Math.max(fb.length || 1, 1, sd.length || 1) * RH + 1.2;
-  if (y + ah > YMAX) head(true);
+  const RH = 5.6, TOP = 6.4, BOT = 1.8;
   const aw = [1.15, 1, 1.25].map(f => (W - 8) * f / 3.4);
-  let ax = X0;
-  const box = (bw, title) => {
-    doc.rect(ax, y, bw, ah, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
-    doc.text(ax + 2.4, y + 4.2, title.toUpperCase(), { size: 6.8, font: 'B', color: C.navy });
-  };
   const chip = (cx, cy, label, value, tone) => {
     const tn = C.tone[tone] || C.tone.neutral;
     const w = P.width(label, 5.8) + P.width(value, 7, 'B') + 5;
@@ -7357,53 +7681,121 @@ function pdfDetail(doc, report, m) {
     doc.text(cx + 2.2 + lw2 + 0.8, cy + 3.3, value, { size: 7, font: 'B', color: tn.fg });
     return w;
   };
-  box(aw[0], 'Filling breakdown');
-  if (!fb.length) doc.text(ax + 2.4, y + 10, 'Aucun arrêt signalé', { size: 7, color: C.muted });
-  fb.forEach((x, k) => {
-    const lw2 = doc.text(ax + 2.4, y + 10 + k * RH, x.lotConcerne || '—', { size: 7.2, font: 'M', color: C.text });
-    doc.text(ax + 4 + lw2, y + 10 + k * RH, P.fit([x.poids && `Poids ${x.poids}`, x.lotSuivant && `→ ${x.lotSuivant}`, x.holdingTime && `HT ${x.holdingTime}`].filter(Boolean).join(' · ') || '—', aw[0] - lw2 - 7, 6.8), { size: 6.8, color: C.text });
-  });
-  ax += aw[0] + 4;
-  box(aw[1], 'Vérification 5S');
-  let cx = ax + 2.4;
+  const chipW = (label, value) => P.width(label, 5.8) + P.width(value, 7, 'B') + 5;
+  /* chaque cadre = liste de rangées { h, draw(x, y) } (y = haut de la rangée) */
+  const colFb = !fb.length ? [{ h: RH, draw: (x, ry) => doc.text(x, ry + 3.6, 'Aucun arrêt signalé', { size: 7, color: C.muted }) }]
+    : fb.map(r => {
+      const lot = r.lotConcerne || '—', lw2 = P.width(lot, 7.2, 'M');
+      const det = [r.poids && `Poids ${r.poids}`, r.lotSuivant && `→ ${r.lotSuivant}`, r.holdingTime && `HT ${r.holdingTime}`].filter(Boolean).join(' · ') || '—';
+      const lotLines = lw2 > aw[0] - 4.8 - 20 ? P.wrap(lot, aw[0] - 4.8, 7.2, 'M') : [lot];
+      const dx = lotLines.length > 1 ? 0 : lw2 + 1.6;
+      const detLines = P.wrap(det, aw[0] - 4.8 - dx, 6.8);
+      const hh = RH + (lotLines.length - 1) * 3.2 + (lotLines.length > 1 ? detLines.length : detLines.length - 1) * 3;
+      return { h: hh, draw: (x, ry) => {
+        lotLines.forEach((t, k) => doc.text(x, ry + 3.6 + k * 3.2, t, { size: 7.2, font: 'M', color: C.text }));
+        const by = ry + 3.6 + (lotLines.length > 1 ? lotLines.length * 3.2 : 0);
+        detLines.forEach((t, k) => doc.text(x + dx, by + k * 3, t, { size: 6.8, color: C.text }));
+      } };
+    });
   const s5 = S5.filter(k => report.verif5S[k].statut !== 'N/A');
-  if (!s5.length && !S5.some(k => report.verif5S[k].note)) doc.text(ax + 2.4, y + 10, 'Rien de renseigné', { size: 7, color: C.muted });
-  for (const k of s5) cx += chip(cx, y + 6.6, k, report.verif5S[k].statut, t3(report.verif5S[k].statut)) + 1.2;
-  const notes = S5.filter(k => report.verif5S[k].note).map(k => `${k} : ${report.verif5S[k].note}`).join(' · ');
-  if (notes) doc.text(ax + 2.4, y + 15, P.fit(notes, aw[1] - 4.8, 6.4), { size: 6.4, color: C.muted });
-  ax += aw[1] + 4;
-  box(aw[2], 'Suivi dossier');
-  if (!sd.length) doc.text(ax + 2.4, y + 10, 'Aucun dossier à suivre', { size: 7, color: C.muted });
-  sd.forEach((x, k) => {
-    const ry = y + 6.4 + k * RH;
-    let sx = ax + 2.4 + Math.max(16, P.width(x.lot || '—', 7.2, 'M') + 2);
-    doc.text(ax + 2.4, ry + 3.3, x.lot || '—', { size: 7.2, font: 'M', color: C.text });
-    if (x.scan !== 'N/A') sx += chip(sx, ry, 'Scan + transfert', x.scan, t3(x.scan)) + 1.2;
-    if (x.check !== 'N/A') chip(sx, ry, 'Check', x.check, t3(x.check));
-  });
-  y += ah + 4;
-  /* commentaires */
+  const col5 = [];
+  if (!s5.length && !S5.some(k => report.verif5S[k].note)) col5.push({ h: RH, draw: (x, ry) => doc.text(x, ry + 3.6, 'Rien de renseigné', { size: 7, color: C.muted }) });
+  if (s5.length) {
+    /* pastilles sur une ou plusieurs rangées */
+    const chipRows = [[]];
+    let rwid = 0;
+    for (const k of s5) {
+      const cw0 = chipW(k, report.verif5S[k].statut) + 1.2;
+      if (rwid && rwid + cw0 > aw[1] - 4.8) { chipRows.push([]); rwid = 0; }
+      chipRows[chipRows.length - 1].push(k); rwid += cw0;
+    }
+    for (const row of chipRows) col5.push({ h: RH, draw: (x, ry) => { let cx = x; for (const k of row) cx += chip(cx, ry + 0.2, k, report.verif5S[k].statut, t3(report.verif5S[k].statut)) + 1.2; } });
+  }
+  for (const k of S5.filter(q => report.verif5S[q].note)) {
+    const nl = P.wrap(`${k} : ${report.verif5S[k].note}`, aw[1] - 4.8, 6.4);
+    nl.forEach((t, j) => col5.push({ h: 2.9 + (j === nl.length - 1 ? 0.6 : 0), draw: (x, ry) => doc.text(x, ry + 2.6, t, { size: 6.4, color: C.muted }) }));
+  }
+  const colSd = !sd.length ? [{ h: RH, draw: (x, ry) => doc.text(x, ry + 3.6, 'Aucun dossier à suivre', { size: 7, color: C.muted }) }]
+    : sd.map(r => ({ h: RH, draw: (x, ry) => {
+      let sx = x + Math.max(16, P.width(r.lot || '—', 7.2, 'M') + 2);
+      doc.text(x, ry + 3.3, r.lot || '—', { size: 7.2, font: 'M', color: C.text });
+      if (r.scan !== 'N/A') sx += chip(sx, ry, 'Scan + transfert', r.scan, t3(r.scan)) + 1.2;
+      if (r.check !== 'N/A') chip(sx, ry, 'Check', r.check, t3(r.check));
+    } }));
+  const annex = [['Filling breakdown', colFb], ['Vérification 5S', col5], ['Suivi dossier', colSd]];
+  const pos = [0, 0, 0];
+  let firstAnnex = true;
+  if (y + TOP + RH + BOT > YMAX) head(true);
+  while (annex.some((c, i) => pos[i] < c[1].length)) {
+    /* rangées qui tiennent sur cette page, pour chaque cadre */
+    const room = YMAX - y - TOP - BOT;
+    const take = annex.map((c, i) => {
+      const out = [];
+      let hh = 0;
+      for (let k = pos[i]; k < c[1].length && hh + c[1][k].h <= room + 0.01; k++) { out.push(c[1][k]); hh += c[1][k].h; }
+      if (!out.length && pos[i] < c[1].length && y <= 23.01) out.push(c[1][pos[i]]); /* rangée plus haute qu'une page (impossible en pratique) */
+      return out;
+    });
+    if (take.every(t => !t.length)) { head(true); continue; }
+    const ah = TOP + Math.max(...take.map(t => t.reduce((a, r) => a + r.h, 0))) + BOT;
+    let ax = X0;
+    annex.forEach(([title, rowsA], i) => {
+      const bw = aw[i];
+      if (firstAnnex || take[i].length) {
+        doc.rect(ax, y, bw, ah, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
+        doc.text(ax + 2.4, y + 4.2, `${title.toUpperCase()}${firstAnnex ? '' : ' (SUITE)'}`, { size: 6.8, font: 'B', color: C.navy });
+        let ry = y + TOP;
+        for (const r of take[i]) { r.draw(ax + 2.4, ry); ry += r.h; }
+        pos[i] += take[i].length;
+      }
+      ax += bw + 4;
+    });
+    y += ah + 4;
+    firstAnnex = false;
+    if (annex.some((c, i) => pos[i] < c[1].length)) head(true);
+  }
+  /* commentaires. fix2 (pdf-04/05) : tous, en entier ; la section continue sur les pages suivantes (« COMMENTAIRES (SUITE) ») */
   const cms = [...pinnedComments(report, m.at), ...otherComments(report, m.at)];
   if (cms.length) {
-    const items = cms.map(cm => ({ cm, lines: P.clamp(cm.text, W - 92, 7.2, 'R', 3) }));
-    const chH = 7 + items.reduce((s, it) => s + it.lines.length * 3.2 + 1.8, 0);
-    if (y + Math.min(chH, 30) > YMAX) head(true);
-    const hgt = Math.min(chH, YMAX - y);
-    doc.rect(X0, y, W, hgt, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
-    doc.text(X0 + 2.4, y + 4.2, 'COMMENTAIRES', { size: 6.8, font: 'B', color: C.navy });
-    let cy = y + 6.4;
+    const CL = 3.2;
+    const items = cms.map(cm => {
+      const lines = P.wrap(cm.text, W - 92, 7.2, 'R');
+      const meta = P.wrap(`${cm.line ? lineName(cm.line) : 'Général'} · ${cmMeta(cm, m.at)}`, 52, 6.2);
+      return { cm, lines, meta };
+    });
+    /* un commentaire très long est découpé en morceaux de lignes (le 1er porte l'étiquette et la ligne / l'auteur) */
+    const pieces = [];
     for (const it of items) {
-      const need = it.lines.length * 3.2 + 1.8;
-      if (cy + need > y + hgt) break;
-      const lv = levelOf(it.cm.level), c = C.pin[lv.id];
-      const tag = `${lv.label.toUpperCase()}${cmPinned(it.cm, m.at) ? ' · ÉPINGLÉ' : ''}`;
-      doc.rect(X0 + 2.4, cy, 30, 3.8, { fill: lv.id === 'attention' ? '#B45309' : c.ico, r: 1.9 });
-      doc.text(X0 + 2.4 + 15, cy + 2.7, tag, { size: 5.8, font: 'B', color: C.white, align: 'center' });
-      it.lines.forEach((t, k) => doc.text(X0 + 35, cy + 2.8 + k * 3.2, t, { size: 7.2, font: k ? 'R' : 'R', color: C.text }));
-      doc.text(X1 - 2.4, cy + 2.8, P.fit(`${it.cm.line ? lineName(it.cm.line) : 'Général'} · ${cmMeta(it.cm, m.at)}`, 52, 6.2), { size: 6.2, color: C.muted, align: 'right' });
-      cy += need;
+      const n = Math.max(it.lines.length, it.meta.length);
+      for (let k = 0; k < n; k += 40) pieces.push({ it, from: k, to: Math.min(n, k + 40), first: k === 0 });
     }
-    y += hgt + 4;
+    const pieceH = pc => (pc.to - pc.from) * CL + 1.8;
+    let pi = 0, firstCm = true;
+    while (pi < pieces.length) {
+      if (y + 6.4 + pieceH(pieces[pi]) + 1 > YMAX) head(true);
+      let hh = 6.4, k = pi;
+      while (k < pieces.length && y + hh + pieceH(pieces[k]) + 1 <= YMAX) { hh += pieceH(pieces[k]); k++; }
+      if (k === pi) { hh += pieceH(pieces[k]); k++; }
+      hh += 1;
+      doc.rect(X0, y, W, hh, { fill: '#F6F8FB', stroke: C.border, lw: 0.2, r: 2 });
+      doc.text(X0 + 2.4, y + 4.2, firstCm ? 'COMMENTAIRES' : 'COMMENTAIRES (SUITE)', { size: 6.8, font: 'B', color: C.navy });
+      let cy = y + 6.4;
+      for (; pi < k; pi++) {
+        const pc = pieces[pi], it = pc.it;
+        if (pc.first) {
+          const lv = levelOf(it.cm.level), c = C.pin[lv.id];
+          const tag = `${lv.label.toUpperCase()}${cmPinned(it.cm, m.at) ? ' · ÉPINGLÉ' : ''}`;
+          doc.rect(X0 + 2.4, cy, 30, 3.8, { fill: lv.id === 'attention' ? '#B45309' : c.ico, r: 1.9 });
+          doc.text(X0 + 2.4 + 15, cy + 2.7, tag, { size: 5.8, font: 'B', color: C.white, align: 'center' });
+        }
+        it.lines.slice(pc.from, pc.to).forEach((t, j) => doc.text(X0 + 35, cy + 2.8 + j * CL, t, { size: 7.2, color: C.text }));
+        it.meta.slice(pc.from, pc.to).forEach((t, j) => doc.text(X1 - 2.4, cy + 2.8 + j * CL, t, { size: 6.2, color: C.muted, align: 'right' }));
+        cy += pieceH(pc);
+      }
+      y += hh + 4;
+      firstCm = false;
+      if (pi < pieces.length) head(true);
+    }
   }
   /* points à suivre (peut continuer sur la page suivante) */
   let lines = P.wrap(report.pointsASuivre.trim() || '—', W - 8, 7.6);
@@ -7426,14 +7818,20 @@ function pdfDetail(doc, report, m) {
 async function renderPdf(report, opts) {
   const m = synthModel(report, opts);
   const doc = new PdfGen.Doc();
+  PdfGen.clean.replaced = false;
   try { doc.logo = await PdfGen.logoPixels(LOGO_SRC()); } catch { doc.logo = null; }
   pdfSynth(doc, m);
   const nSynth = doc.pages.length;
   pdfDetail(doc, report, m);
   const total = doc.pages.length;
   doc.pages.forEach((p, i) => { doc.cur = p; pdfFooter(doc, `${m.base} — ${i < nSynth ? 'Synthèse' : 'Détail'}`, i + 1, total, m.at); });
-  return doc.build({ title: m.base, author: opts.author || '', subject: 'Rapport de shift — formulation', at: m.at });
+  const replaced = PdfGen.clean.replaced;
+  const out = await doc.build({ title: m.base, author: opts.author || '', subject: 'Rapport de shift — formulation', at: m.at });
+  renderPdf.replaced = replaced;
+  return out;
 }
+/** fix2 (pdf-09) : après l'export, signale les caractères spéciaux remplacés dans le PDF. */
+const pdfCharsToast = () => { if (renderPdf.replaced) toast('Certains caractères spéciaux ont été remplacés dans le PDF.', { tone: 'warn', icon: 'info', timeout: 8000 }); };
 
 /* ---------- Rangement du PDF sur N: : <dossier principal>/<Mois AA>/Rapport formulation JJ-MM-AAAA <Shift>.pdf ---------- */
 /** Dossier du mois (« Octobre 26 ») : réutilise une variante existante (« octobre 26 », « Octobre 2026 », « oct 26 », « Aout 26 »…),
@@ -7540,12 +7938,15 @@ async function printFallback({ fromClose = false } = {}) {
   return { ok: true, printed: true, file, folder: '' };
 }
 let exporting = false;
-/** « Exporter en PDF » : PDF généré par l'outil (synthèse + détail), rangé dans le dossier du mois sur N:. */
-async function exportPdf({ fromClose = false } = {}) {
-  if (exporting) return null;
+/** « Exporter en PDF » : PDF généré par l'outil (synthèse + détail), rangé dans le dossier du mois sur N:.
+    fix2 (pdf-07) : renvoie { ok, folder, file… } ; { ok, printed } (impression Edge) ; { cancelled, why } si l'utilisateur annule ;
+    { error, why } si l'écriture a échoué (message réel, jamais présenté comme « annulé »). noPick : ne redemande pas le dossier. */
+async function exportPdf({ fromClose = false, noPick = false } = {}) {
+  if (exporting) return { cancelled: true, why: 'Un export PDF est déjà en cours.' };
   exporting = true;
+  const fallback = async why => (await printFallback({ fromClose })) || { cancelled: true, why: why || 'Impression Edge annulée.' };
   try {
-    if (!Disk.supported) return await printFallback({ fromClose });
+    if (!Disk.supported) return await fallback();
     const at = new Date();
     const shift = state.report.meta.shift;
     const ch = currentChanges(at);
@@ -7553,27 +7954,32 @@ async function exportPdf({ fromClose = false } = {}) {
     try { bytes = await renderPdf(state.report, { at, author: state.author, changes: plainChanges(ch), ref: refMeta(ch.ref) }); }
     catch {
       toast('Le PDF n’a pas pu être généré : impression par Edge.', { tone: 'warn', timeout: 8000 });
-      return await printFallback({ fromClose });
+      return await fallback();
     }
     let res;
-    try { res = await savePdfToN(bytes, fileBase(shift, at), reportDate(shift, at)); }
-    catch (e) {
+    try {
+      if (noPick && !(await Disk.getRoot({ ask: false }))) return { cancelled: true, why: 'Dossier principal sur N: non choisi.' };
+      res = await savePdfToN(bytes, fileBase(shift, at), reportDate(shift, at));
+    } catch (e) {
+      const why = e && e.name === 'NotAllowedError' ? 'Windows n’a pas autorisé l’écriture dans le dossier principal.' : e && e.name === 'QuotaExceededError' ? 'Disque N: plein : il n’y a plus de place pour écrire le PDF. Libérez de la place sur N: (ou contactez l’IT), puis réessayez.' : 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs (PDF ouvert dans un lecteur ?).';
       const again = await openDialog({
         title: 'PDF non enregistré sur N:', icon: 'alert', tone: 'warn',
-        body: [h('p', { text: e && e.name === 'NotAllowedError' ? 'Windows n’a pas autorisé l’écriture dans le dossier principal.' : e && e.name === 'QuotaExceededError' ? 'Disque N: plein : il n’y a plus de place pour écrire le PDF. Libérez de la place sur N: (ou contactez l’IT), puis réessayez.' : 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs (PDF ouvert dans un lecteur ?).' }),
+        body: [h('p', { text: why }),
           h('p', { class: 'muted', text: 'Vous pouvez faire le PDF avec l’impression d’Edge (« Enregistrer au format PDF »).' })],
         actions: [{ label: 'Fermer', value: false }, { label: 'Imprimer avec Edge', value: true, cls: 'btn-primary', icon: 'printer', autofocus: true }],
       }).result;
-      return again === true ? await printFallback({ fromClose }) : null;
+      if (again === true) return (await printFallback({ fromClose })) || { error: true, why };
+      return { error: true, why };
     }
-    if (!res) return await printFallback({ fromClose });
-    if (res.cancelled) return null;
+    if (!res) return await fallback('Dossier principal non choisi, puis impression Edge annulée.');
+    if (res.cancelled) return { cancelled: true, why: 'Annulé : un PDF de ce nom existe déjà, rien n’a été remplacé.' };
     addSnapshot(at, ch);
     saveLocalNow();
     state.lastPdf = { name: res.file, folder: res.folder, at };
     if (!fromClose) {
       toast(`PDF rangé dans « ${res.folder} » : ${res.file}`, { icon: 'pdf', action: 'Préparer le mail', onAction: () => prepareMail(), timeout: 12000 });
     }
+    pdfCharsToast();
     return { ok: true, ...res };
   } finally { exporting = false; }
 }
@@ -7589,7 +7995,9 @@ function mailMode() { const m = Params.get().rapport.mail; return { open: m.open
 function buildMail(report, author, now, pdfName) {
   const shift = report.meta.shift;
   const subject = fileBase(shift, now);
-  const pdf = pdfName || `${subject}.pdf`;
+  /* fix2 (pdf-07) : pdfName = nom → PDF créé (« PDF joint ») ; null → aucun PDF (jamais « PDF joint ») ; absent → nom attendu, à joindre */
+  const pdf = pdfName === null ? null : pdfName || `${subject}.pdf`;
+  const pdfSaid = pdfName === null ? ' — PDF non créé : il sera envoyé séparément.' : pdfName ? ` — PDF joint : « ${pdf} ».` : ` — PDF à joindre : « ${pdf} ».`;
   const alerts = computeAlerts(report, now);
   const pins = pinnedComments(report, now);
   const lines = lineStatuses(report, now, alerts);
@@ -7598,30 +8006,36 @@ function buildMail(report, author, now, pdfName) {
   const syn = shiftSynth(report, now, alerts);
   const feuLines = syn.lines.map(s => `- ${s.line.name}${s.lot ? ` (${s.lot})` : ''} : ${s.word.toUpperCase()} · ${s.prod.word.toLowerCase()}${s.reason ? ` — ${s.reason.text.replace(/\s+/g, ' ')}` : ''}`);
   const verdictLine = `${syn.vword.toUpperCase()} — ${sentenceText(syn.sentence).replace(/\s+/g, ' ').trim()}`;
-  const alertLines = [];
-  if (alerts.frigo.length) alertLines.push(`- FRIGO : ${plural(alerts.frigo.length, 'échantillon')} au frigo (${alerts.frigo.map(x => `${whereOf(x)}, ${x.band.short}`).join(' ; ')})`);
+  /* alertes : urgentes (frigo, HT dépassés) d'abord, puis HT proches (les moins importantes, raccourcies en premier) */
+  const alertHot = [], alertSoon = [];
+  if (alerts.frigo.length) alertHot.push(`- FRIGO : ${plural(alerts.frigo.length, 'échantillon')} au frigo (${alerts.frigo.map(x => `${whereOf(x)}, ${x.band.short}`).join(' ; ')})`);
   for (const l of alerts.limits.filter(x => x.tone !== 'neutral')) {
-    alertLines.push(`- Holding time ${l.tone === 'todo' ? 'DÉPASSÉ' : 'proche'} : ${whereOf(l)} — ${l.label} ${fmtDM(l.due)} (${l.rest})`);
+    (l.tone === 'todo' ? alertHot : alertSoon).push(`- Holding time ${l.tone === 'todo' ? 'DÉPASSÉ' : 'proche'} : ${whereOf(l)} — ${l.label} ${fmtDM(l.due)} (${l.rest})`);
   }
   const mode = mailMode();
   const nl = mode.open === 'mailto' ? '\r\n' : '\n';
-  const cut = (t, n) => (t.length > n ? `${t.slice(0, Math.max(0, n - 1)).trimEnd()}…` : t);
-  const compose = ({ pts: ptsMax, al, ch, pin, w }) => {
-    let pts = report.pointsASuivre.trim().replace(/\r\n?/g, '\n');
-    if (pts.length > ptsMax) pts = ptsMax > 0 ? `${pts.slice(0, ptsMax).trimEnd()}… (suite dans le PDF)` : '';
-    const more = (arr, n, what) => (arr.length > n ? [`- … et ${arr.length - n} autre(s) ${what}, voir le PDF`] : []);
+  const cut = cutCP;
+  const ptsAll = report.pointsASuivre.trim().replace(/\r\n?/g, '\n');
+  /* fix2 (pdf-01/02) : épinglés et points à suivre prioritaires, jamais retirés en silence ; on raccourcit d'abord les changements,
+     puis les HT proches, puis la largeur des autres lignes ; en dernier recours épinglés / points raccourcis (« … ») avec renvoi au PDF */
+  const compose = ({ pts: ptsMax, hot, soon, ch, pin, pw, w }) => {
+    let pts = ptsAll, short = false;
+    if (Array.from(pts).length > ptsMax) { pts = `${cut(pts, ptsMax)} (suite dans le PDF)`; short = true; }
+    const more = (arr, n, what) => (arr.length > n ? (short = true, [`- … et ${arr.length - n} autre(s) ${what}, voir le PDF`]) : []);
+    const cl = (t, n) => { const c = cut(t, n); if (c !== t) short = true; return c; };
+    const alertPart = [...alertHot.slice(0, hot).map(t => cl(t, w + 40)), ...more(alertHot, hot, 'alerte(s)'), ...alertSoon.slice(0, soon).map(t => cl(t, w + 40)), ...more(alertSoon, soon, 'holding time(s) proche(s)')];
     const out = [
       'Bonjour à tous,', '',
-      `Rapport de formulation du ${fmtDate(reportDate(shift, now))}${shift ? ` (shift ${shift})` : ''} — PDF joint : « ${pdf} ».`, '',
-      cut(verdictLine, w * 3), '',
-      ...(pins.length ? ['À retenir :', ...pinLines.slice(0, pin).map(t => cut(t, w)), ...more(pinLines, pin, 'commentaire(s)'), ''] : []),
-      'État des lignes :', ...feuLines.map(t => cut(t, w)), '',
-      ...(alertLines.length ? ['Points de vigilance :', ...alertLines.slice(0, al).map(t => cut(t, w + 40)), ...more(alertLines, al, 'alerte(s)'), ''] : ['Aucune alerte frigo ni holding time proche.', '']),
-      ...(chg.length && ch > 0 ? ['Changements depuis le dernier shift :', ...chg.slice(0, ch).map(t => `- ${t}`), ...more(chg, ch, 'changement(s)'), ''] : []),
+      `Rapport de formulation du ${fmtDate(reportDate(shift, now))}${shift ? ` (shift ${shift})` : ''}${pdfSaid}`, '',
+      cl(verdictLine, w * 3), '',
+      ...(pins.length ? ['À retenir :', ...pinLines.slice(0, pin).map(t => cl(t, pw)), ...more(pinLines, pin, 'commentaire(s) épinglé(s)'), ''] : []),
+      'État des lignes :', ...feuLines.map(t => cl(t, w)), '',
+      ...(alertHot.length || alertSoon.length ? ['Points de vigilance :', ...alertPart, ''] : ['Aucune alerte frigo ni holding time proche.', '']),
+      ...(chg.length ? (ch > 0 ? ['Changements depuis le dernier shift :', ...chg.slice(0, ch).map(t => `- ${t}`), ...more(chg, ch, 'changement(s)'), ''] : (short = true, ['Changements depuis le dernier shift : voir le PDF.', ''])) : []),
       ...(pts ? ['Points à suivre :', pts, ''] : []),
-      'Cordialement,',
-      author ? `Rédigé par : ${author}` : 'Rédigé par : —',
     ];
+    if (short) out.push('… (voir le PDF)', '');
+    out.push('Cordialement,', author ? `Rédigé par : ${author}` : 'Rédigé par : —');
     return out.join('\n').replace(/\n/g, nl);
   };
   const ms = mailSettings();
@@ -7629,46 +8043,63 @@ function buildMail(report, author, now, pdfName) {
   const urlFor = body => (mode.open === 'web'
     ? `${mode.web}/mail/deeplink/compose?to=${encodeURIComponent(to)}${cc ? `&cc=${encodeURIComponent(cc)}` : ''}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
     : `mailto:${encAddr(to)}?${cc ? `cc=${encAddr(cc)}&` : ''}subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-  /* le corps est raccourci (points à suivre, changements, alertes, commentaires) jusqu'à tenir dans 1 500 caractères */
-  const lim = { pts: 500, al: 6, ch: 5, pin: 4, w: 130 };
+  /* le corps est raccourci jusqu'à tenir dans 1 500 caractères (et dans la limite d'URL de mailto) */
+  const ptsLen = Array.from(ptsAll).length;
+  const lim = { pts: Math.max(ptsLen, 1), hot: 6, soon: 6, ch: 5, pin: 10, pw: 400, w: 130 };
   let body = compose(lim);
   const tooLong = b => b.length > 1500 || (mode.open === 'mailto' && urlFor(b).length > MAIL_URL_MAX);
-  for (let guard = 0; tooLong(body) && guard < 80; guard++) {
-    if (lim.pts > 0) lim.pts = Math.max(0, lim.pts - 100);
-    else if (lim.ch > 0) lim.ch -= 1;
-    else if (lim.al > 1) lim.al -= 1;
+  for (let guard = 0; tooLong(body) && guard < 400; guard++) {
+    if (lim.ch > 0) lim.ch -= 1;
+    else if (lim.soon > 0) lim.soon -= 1;
     else if (lim.w > 60) lim.w -= 10;
-    else if (lim.pin > 1) lim.pin -= 1;
+    else if (lim.hot > 2) lim.hot -= 1;
+    else if (lim.pts > 300) lim.pts = Math.max(300, Math.min(lim.pts, ptsLen) - 100);
+    else if (lim.pw > 140) lim.pw -= 20;
+    else if (lim.pts > 120) lim.pts = Math.max(120, lim.pts - 60);
+    else if (lim.hot > 1) lim.hot -= 1;
+    else if (lim.pw > 70) lim.pw -= 10;
+    else if (lim.pin > 1) lim.pin -= 1; /* « … et N autre(s) commentaire(s) épinglé(s), voir le PDF » : jamais en silence */
     else break;
     body = compose(lim);
   }
   return { subject, body, url: urlFor(body), mode: mode.open, pdf, hasRecipients: !!(to || cc), to, cc };
 }
-/** Ouvre le mail prérempli ; renvoie vrai si la fenêtre a pu s'ouvrir. */
+/** Ouvre le mail prérempli ; renvoie vrai si la fenêtre a pu s'ouvrir (false : onglet bloqué ou échec — message affiché).
+    pdfName : nom du PDF créé ; null : aucun PDF (clôture sans PDF) ; absent : dernier PDF de ce shift s'il existe. */
 function prepareMail(pdfName, { quiet = false } = {}) {
-  const now = new Date();
-  const base = fileBase(state.report.meta.shift, now);
-  const name = pdfName || (state.lastPdf && state.lastPdf.name.startsWith(base) ? state.lastPdf.name : `${base}.pdf`);
-  const m = buildMail(state.report, state.author, now, name);
-  let opened = true;
-  if (m.mode === 'web') {
-    const w = window.open(m.url, '_blank');
-    opened = !!w;
-    if (w) { try { w.opener = null; } catch { /* autre origine */ } }
-    else {
-      openDialog({
-        title: 'Ouvrir le mail dans Outlook Web', icon: 'mail',
-        body: [h('p', { text: 'Le navigateur a bloqué l’ouverture automatique du nouvel onglet. Cliquez ci-dessous pour ouvrir le mail prérempli.' }),
-          h('a', { class: 'btn btn-primary', href: m.url, target: '_blank', rel: 'noopener', onclick: () => setTimeout(() => document.querySelector('dialog.dlg[open] .dlg__head .btn-icon')?.click(), 50) }, icon('send'), 'Ouvrir Outlook Web')],
-        actions: [{ label: 'Fermer', value: false }],
-      });
+  try {
+    const now = new Date();
+    const base = fileBase(state.report.meta.shift, now);
+    const known = state.lastPdf && state.lastPdf.name.startsWith(base) ? state.lastPdf.name : undefined;
+    const name = pdfName === null ? null : pdfName || known;
+    const m = buildMail(state.report, state.author, now, name);
+    let opened = true;
+    if (m.mode === 'web') {
+      const w = window.open(m.url, '_blank');
+      opened = !!w;
+      if (w) { try { w.opener = null; } catch { /* autre origine */ } }
+      else {
+        /* fix2 (pdf-08) : le bouton ferme SA fenêtre (pas la 1re fenêtre ouverte, ex. « Clôturer le shift ») */
+        const fb = openDialog({
+          title: 'Ouvrir le mail dans Outlook Web', icon: 'mail',
+          body: [h('p', { text: 'Le navigateur a bloqué l’ouverture automatique du nouvel onglet. Cliquez ci-dessous pour ouvrir le mail prérempli.' }),
+            h('a', { class: 'btn btn-primary', href: m.url, target: '_blank', rel: 'noopener', onclick: () => setTimeout(() => fb.close(true), 50) }, icon('send'), 'Ouvrir Outlook Web')],
+          actions: [{ label: 'Fermer', value: false }],
+        });
+      }
+    } else h('a', { href: m.url }).click();
+    if (!quiet) {
+      const what = name ? `« ${name} »` : `« ${m.pdf} » (exportez-le d’abord s’il n’existe pas encore)`;
+      toast(name === null ? 'Aucun PDF n’a été créé : le mail l’annonce envoyé séparément.' : `Joignez le PDF au mail : dans Outlook, cliquez Joindre › Parcourir cet ordinateur et choisissez ${what} (ou glissez-le depuis la barre de téléchargements d’Edge).`,
+        m.hasRecipients ? { icon: 'mail', timeout: 16000 } : { icon: 'mail', tone: 'warn', timeout: 16000, action: 'Destinataires', onAction: openSettings });
     }
-  } else h('a', { href: m.url }).click();
-  if (!quiet) {
-    toast(`Joignez le PDF au mail : dans Outlook, cliquez Joindre › Parcourir cet ordinateur et choisissez « ${name} » (ou glissez-le depuis la barre de téléchargements d’Edge).`,
-      m.hasRecipients ? { icon: 'mail', timeout: 16000 } : { icon: 'mail', tone: 'warn', timeout: 16000, action: 'Destinataires', onAction: openSettings });
+    return opened;
+  } catch (e) {
+    /* fix2 (pdf-02) : jamais d'échec muet */
+    toast('Le mail n’a pas pu être préparé (texte du rapport illisible pour Outlook). Exportez le PDF et écrivez le mail à la main.', { tone: 'warn', timeout: 12000 });
+    if (quiet) throw e;
+    return false;
   }
-  return opened;
 }
 
 /* ---------- « Clôturer le shift » : 1) Enregistrer sur N: 2) PDF rangé dans le dossier du mois 3) Outlook Web prérempli ---------- */
@@ -7726,43 +8157,82 @@ async function closeShift() {
     return li;
   }));
   const summary = h('p', { class: 'cs-sum', role: 'status' });
+  /* fix2 (pdf-06, ui C-21) : jamais fermée par un clic sur le fond ; Échap / Fermer pendant les étapes → les étapes restantes
+     ne sont pas lancées (le mail ne s'ouvre pas) */
+  let running = true, aborted = false;
   const d = openDialog({
-    title: 'Clôturer le shift', icon: 'flag', className: 'dlg--close',
+    title: 'Clôturer le shift', icon: 'flag', className: 'dlg--close', noBackdrop: true,
     body: [h('p', { class: 'cs-lead' }, 'Fin de shift en une fois : enregistrement, PDF rangé par mois, mail prérempli. ', h('b', { class: 'cs-file', text: `${base}.pdf` })), list, summary],
     actions: [{ label: 'Fermer', value: false, cls: 'btn-primary' }],
   });
+  d.result.then(() => { if (running) aborted = true; });
   const set = (id, st, text) => { rows[id].li.className = `cs-step is-${st}`; rows[id].msg.textContent = Core.typo(text); };
   const parts = [];
+  const why = e => (e && e.message ? e.message : String(e || 'erreur inconnue'));
+  /** Arrêt de la clôture : les étapes suivantes ne sont pas lancées. */
+  const interrupt = (from, reason) => {
+    for (const s of STEPS.slice(STEPS.findIndex(x => x.id === from))) set(s.id, 'wait', 'Non lancée (clôture interrompue)');
+    const msg = `Clôture interrompue : ${reason}`;
+    summary.textContent = Core.typo([...parts, msg].join(' · '));
+    toast([...parts, msg].join(' · '), { tone: 'warn', timeout: 12000 });
+    return d;
+  };
   try {
-    set('save', 'run', 'Enregistrement de tout l’outil (sauvegarde.js)…');
-    const saved = await Sauvegarde.save({ wait: true }); /* enregistrement déjà en cours (Ctrl+S) : on attend sa fin */
-    if (saved === true) { set('save', 'ok', `Enregistré sur N: à ${fmtTime(new Date())}`); parts.push('Enregistré'); }
-    else if (saved === 'download') { set('save', 'ok', 'sauvegarde.js téléchargé : à déposer dans le dossier de l’outil sur N:'); parts.push('Sauvegarde téléchargée'); }
-    else { set('save', 'fail', 'Non enregistré sur N: (refusé ou annulé) — tout reste gardé sur ce PC.'); parts.push('Non enregistré sur N:'); }
-    set('pdf', 'run', 'Génération du PDF (synthèse + détail)…');
-    const pdf = await exportPdf({ fromClose: true });
-    if (pdf && pdf.printed) { set('pdf', 'ok', `Impression Edge lancée : « ${pdf.file} »`); parts.push('PDF par impression Edge'); }
-    else if (pdf) {
+    /* 1. enregistrement */
+    let saved = false;
+    try {
+      set('save', 'run', 'Enregistrement de tout l’outil (sauvegarde.js)…');
+      saved = await Sauvegarde.save({ wait: true }); /* enregistrement déjà en cours (Ctrl+S) : on attend sa fin */
+      if (saved === true) { set('save', 'ok', `Enregistré sur N: à ${fmtTime(new Date())}`); parts.push('Enregistré'); }
+      else if (saved === 'download') { set('save', 'ok', 'sauvegarde.js téléchargé : à déposer dans le dossier de l’outil sur N:'); parts.push('Sauvegarde téléchargée'); }
+      else if (Disk.supported && Disk.info().state !== 'granted') {
+        set('save', 'fail', 'Dossier principal sur N: non choisi (annulé) — tout reste gardé sur ce PC.'); parts.push('Non enregistré sur N:');
+        return interrupt('pdf', 'dossier principal sur N: non choisi.');
+      } else { set('save', 'fail', 'Non enregistré sur N: (écriture refusée) — tout reste gardé sur ce PC.'); parts.push('Non enregistré sur N:'); }
+    } catch (e) { saved = false; set('save', 'fail', `Échec de l’enregistrement : ${why(e)}`); parts.push('Non enregistré sur N:'); }
+    if (aborted) return interrupt('pdf', 'fenêtre fermée.');
+    /* 2. PDF */
+    let pdf;
+    try {
+      set('pdf', 'run', 'Génération du PDF (synthèse + détail)…');
+      pdf = await exportPdf({ fromClose: true, noPick: true });
+    } catch (e) { pdf = { error: true, why: `Échec de la génération du PDF : ${why(e)}` }; }
+    if (pdf && pdf.ok && pdf.printed) { set('pdf', 'ok', `Impression Edge lancée : « ${pdf.file} »`); parts.push('PDF par impression Edge'); }
+    else if (pdf && pdf.ok) {
       set('pdf', 'ok', `Rangé dans « ${pdf.folder} »${pdf.created ? ' (dossier créé)' : ''} : ${pdf.file}`);
       rows.pdf.extra.replaceChildren(h('span', { class: 'cs-path' }, icon('folder', 'icon icon--sm'), `${Disk.info().name || 'Dossier principal'} › ${pdf.folder} › ${pdf.file}`));
       parts.push(`PDF rangé dans ${pdf.folder}`);
-    } else { set('pdf', 'fail', 'PDF non créé (annulé).'); parts.push('PDF non créé'); }
-    /* l'instantané du PDF (historique) est ajouté après l'enregistrement : il part aussi sur N: */
-    if (pdf && saved === true) await Sauvegarde.save({ wait: true });
-    set('mail', 'run', 'Ouverture du mail…');
-    const name = pdf ? pdf.file : `${base}.pdf`;
-    const opened = prepareMail(name, { quiet: true });
-    const m = buildMail(state.report, state.author, new Date(), name);
-    if (opened) {
-      set('mail', 'ok', `Mail prêt pour ${m.to || 'aucun destinataire'} — objet « ${m.subject} »`);
-      parts.push('Mail ouvert');
-    } else { set('mail', 'fail', 'Onglet bloqué par le navigateur : utilisez le bouton « Ouvrir Outlook Web ».'); parts.push('Mail à ouvrir'); }
-    rows.mail.extra.replaceChildren(h('span', { class: 'cs-attach' }, icon('info', 'icon icon--sm'),
-      h('span', {}, 'Dans Outlook : ', h('b', { text: 'Joindre › Parcourir cet ordinateur' }), ' et choisissez ', h('b', { text: `« ${name} »` }),
-        pdf && pdf.folder ? ` (dans ${Disk.info().name || 'le dossier principal'} › ${pdf.folder})` : ' (ou glissez-le depuis la barre de téléchargements d’Edge)', '.')));
+    } else {
+      /* fix2 (pdf-07) : la vraie cause (annulé ≠ erreur d'écriture) et le repli « Imprimer avec Edge » */
+      set('pdf', 'fail', pdf && pdf.cancelled ? `PDF non créé (annulé) : ${pdf.why}` : `PDF non créé — ${pdf && pdf.why ? pdf.why : 'erreur inconnue'}`);
+      rows.pdf.extra.replaceChildren(h('button', { type: 'button', class: 'btn btn-secondary', onclick: () => printFallback({ fromClose: true }) }, icon('printer'), 'Imprimer avec Edge'));
+      parts.push('PDF non créé');
+      pdf = null;
+    }
+    /* l'instantané du PDF (historique) est ajouté après l'enregistrement : il part aussi sur N: (sans 2e toast) */
+    if (pdf && saved === true) { try { await Sauvegarde.save({ wait: true, quiet: true }); } catch { /* signalé par l'indicateur */ } }
+    if (aborted) return interrupt('mail', 'fenêtre fermée.');
+    /* 3. mail */
+    const name = pdf ? pdf.file : null;
+    try {
+      set('mail', 'run', 'Ouverture du mail…');
+      const opened = prepareMail(name, { quiet: true });
+      const m = buildMail(state.report, state.author, new Date(), name);
+      if (opened) {
+        set('mail', 'ok', `Mail prêt pour ${m.to || 'aucun destinataire'} — objet « ${m.subject} »`);
+        parts.push('Mail ouvert');
+      } else { set('mail', 'fail', 'Onglet bloqué par le navigateur : utilisez le bouton « Ouvrir Outlook Web ».'); parts.push('Mail à ouvrir'); }
+      rows.mail.extra.replaceChildren(name ? h('span', { class: 'cs-attach' }, icon('info', 'icon icon--sm'),
+        h('span', {}, 'Dans Outlook : ', h('b', { text: 'Joindre › Parcourir cet ordinateur' }), ' et choisissez ', h('b', { text: `« ${name} »` }),
+          pdf && pdf.folder ? ` (dans ${Disk.info().name || 'le dossier principal'} › ${pdf.folder})` : ' (ou glissez-le depuis la barre de téléchargements d’Edge)', '.'))
+        : h('span', { class: 'cs-attach' }, icon('info', 'icon icon--sm'), h('span', { text: 'Aucun PDF n’a été créé : le mail l’annonce envoyé séparément. Faites le PDF (« Imprimer avec Edge ») puis envoyez-le.' })));
+    } catch (e) { set('mail', 'fail', `Le mail n’a pas pu être préparé : ${why(e)}. Écrivez-le à la main.`); parts.push('Mail non préparé'); }
     summary.textContent = Core.typo(parts.join(' · '));
     toast(parts.join(' · '), { icon: 'check', timeout: 10000 });
-  } finally { closing = false; restoreShift(); }
+  } catch (e) {
+    summary.textContent = Core.typo(`Clôture interrompue par une erreur : ${why(e)}`);
+    toast(`Clôture interrompue par une erreur : ${why(e)}`, { tone: 'warn', timeout: 12000 });
+  } finally { running = false; closing = false; restoreShift(); }
   return d;
 }
 
@@ -7818,7 +8288,7 @@ async function confirmAdvance(l) {
   });
   if (!ok) return;
   advanceLot(l);
-  toast(`Lot avancé — ${l.name}${ech ? ' · échantillon ajouté aux échantillons à suivre' : ''}`, { action: 'Annuler', onAction: undo });
+  toast(`Lot avancé — ${l.name}${ech ? ' · échantillon ajouté aux échantillons à suivre' : ''}`, { action: 'Annuler', onAction: undoThis() });
 }
 function advanceLot(l) {
   change(rep => {
@@ -7829,7 +8299,7 @@ function advanceLot(l) {
     const st = parcoursState(bandById('suivant1'), l, s1);
     const nc = defaultCard(bandById('enCours'), l.id);
     nc.lot = s1.lot;
-    nc.produit = PRODUCTS[l.id].includes(s1.produit) ? s1.produit : '';
+    nc.produit = s1.produit || ''; /* fix2 (ui C-06) : produit retiré de la liste gardé (affiché « (retiré de la liste) »), jamais vidé */
     nc.remarques = s1.remarques;
     /* le parcours reprend là où il en était */
     nc.acquis = st.steps[Math.min(st.allDone ? st.steps.length - 1 : st.cur, st.steps.length - 1)].id;
@@ -7874,7 +8344,7 @@ function htDoneDialog(b, l, lim) {
         else c.htFin = { ...(c.htFin || {}), [lim.id]: { at: v, par: lim.pending ? 'statut' : 'manuel' } };
       });
       const d = parseLocal(v), ok = d <= lim.due;
-      toast(`${lim.nom} : ${ok ? `respecté (fait à ${fmtTime(d)})` : `dépassé de ${fmtDur(lim.due - d)}`}`, { action: 'Annuler', onAction: undo });
+      toast(`${lim.nom} : ${ok ? `respecté (fait à ${fmtTime(d)})` : `dépassé de ${fmtDur(lim.due - d)}`}`, { action: 'Annuler', onAction: undoThis() });
       return true;
     } }],
     onOpen: () => inp.focus(),
@@ -7894,14 +8364,14 @@ function htReopen(b, l, id) {
   const why = !still ? '' : fin.type === 'date'
     ? ` La date « ${lbl} » reste saisie mais n’arrête plus ce holding time ; il s’arrêtera si vous la modifiez, ou avec « ✓ Fait ».`
     : ` ${lbl} reste à ${c0[fin.k]} mais n’arrête plus ce holding time ; il s’arrêtera au prochain passage à ${fin.v.join(' ou ')}, ou avec « ✓ Fait ».`;
-  toast(`Holding time rouvert.${why}`, { action: 'Annuler', onAction: undo, timeout: still ? 12000 : undefined });
+  toast(`Holding time rouvert.${why}`, { action: 'Annuler', onAction: undoThis(), timeout: still ? 12000 : undefined });
 }
 /** v5 : échantillon de la liste « à suivre » sorti du frigo / envoyé. */
 function echDone(id) {
   const x = state.report.echantillons.find(e => e.id === id);
   if (!x) return;
   change(r => { r.echantillons = r.echantillons.filter(e => e.id !== id); });
-  toast(`Échantillon ${x.lot} sorti / envoyé`, { action: 'Annuler', onAction: undo });
+  toast(`Échantillon ${x.lot} sorti / envoyé`, { action: 'Annuler', onAction: undoThis() });
 }
 function addSnapshot(at, ch = currentChanges(at)) {
   state.history.unshift({ id: uid(), at: at.toISOString(), shift: state.report.meta.shift, author: state.author, report: clone(state.report),
@@ -7937,7 +8407,7 @@ function openHistory() {
             message: `Le rapport actuel sera remplacé par celui du ${HIST_DATE.format(at)}. Vous pourrez annuler.` });
           if (!ok) return;
           replaceReport(normalizeReport(clone(e.report)));
-          toast('Rapport restauré', { action: 'Annuler', onAction: undo });
+          toast('Rapport restauré', { action: 'Annuler', onAction: undoThis() });
         } }, icon('reset'), 'Restaurer'))));
   }
 }
@@ -7971,7 +8441,7 @@ async function importJsonFile(file) {
   state.history = mergeHistory(state.history, d.history);
   if (!state.settings.mailTo && !state.settings.mailCc) state.settings = d.settings;
   replaceReport(d.report);
-  toast('Sauvegarde importée', { action: 'Annuler', onAction: undo });
+  toast('Sauvegarde importée', { action: 'Annuler', onAction: undoThis() });
 }
 function openSettings() {
   let dref = null;
@@ -8008,7 +8478,7 @@ async function confirmReset() {
   if (!ok) return;
   const r = defaultReport();
   replaceReport(r);
-  toast('Rapport réinitialisé', { action: 'Annuler', onAction: undo });
+  toast('Rapport réinitialisé', { action: 'Annuler', onAction: undoThis() });
 }
 
 
@@ -8180,7 +8650,7 @@ function init() {
 }
 /* Accès pour le dépannage et les tests (fonctions pures : shifts, dates, noms de fichiers, dossiers mensuels, mail, PDF) */
 const test = Object.freeze({ htList: (o) => htList(state.report, new Date(), o), autoShift, shiftStart, reportDate, fileBase, monthFolder, parseMonthFolder, monthDir, buildMail: (pdf) => buildMail(state.report, state.author, new Date(), pdf),
-  renderPdf: () => renderPdf(state.report, liveOpts()), lineStatuses: () => lineStatuses(state.report, new Date()), changes: () => currentChanges().items.map(changeText),
+  renderPdf: async () => { const u = await renderPdf(state.report, liveOpts()); pdfCharsToast(); return u; }, lineStatuses: () => lineStatuses(state.report, new Date()), changes: () => currentChanges().items.map(changeText),
   /* v5 : parcours d'une carte, rapport courant */
   parcours: (bandId, lineId) => { const st = parcoursState(bandById(bandId), LINES.find(l => l.id === lineId), state.report.bands[bandId][lineId]); return { steps: st.steps.map(x => x.nom), ids: st.steps.map(x => x.id), cur: st.cur, now: st.allDone ? null : st.steps[st.cur].nom, allDone: st.allDone, manual: st.manual, key: st.key }; },
   report: () => clone(state.report), alerts: () => { const a = computeAlerts(state.report, new Date()); return { limits: a.limits.map(x => [x.id, x.line.id, x.band.id]), done: a.done.map(x => ({ id: x.id, line: x.line.id, band: x.band.id, respected: x.respected, rest: x.rest })) }; } });
@@ -8331,6 +8801,7 @@ const BLANK_DATE_MM = 15;   /* blanc laissé pour écrire la date à la main (su
 const BLANK_VISA_MM = 10;   /* blanc FIXE laissé pour signer (visa vide) : jamais réduit */
 const BLANK_HEURE_MM = 8;   /* blanc FIXE toujours réservé après « Heure: » pour écrire l'heure : jamais réduit */
 const MIN_PT = 5.5;
+const EXTREME_PT = 2.5; /* fix2 : seulement pour une ligne qui ne tiendrait pas même à MIN_PT (lot de 40 caractères…) */
 const PREVIEW_MAX_PAGES = 40;
 const BIG_BATCH = 200;
 const PT_MM = 25.4 / 72, PX_MM = 25.4 / 96, MM_PX = 96 / 25.4;
@@ -8791,15 +9262,21 @@ function fitDoc(doc) {
       if (w0[i] <= j.avail) j.res = { pt: j.base, trunc: false };
       else { j.res = { pt: Math.max(MIN_PT, Math.floor((j.base * j.avail / w0[i]) * 4) / 4), trunc: false }; verify.push(j); }
     });
-    for (let pass = 0; pass < 12 && verify.length; pass++) {
+    for (let pass = 0; pass < 20 && verify.length; pass++) {
       const w = measureWidths(verify.map(j => ({ segs: j.segs, pt: j.res.pt, base: j.base })));
       const next = [];
       verify.forEach((j, i) => {
         if (w[i] <= j.avail) return;
-        if (j.res.pt > MIN_PT) { j.res.pt = Math.max(MIN_PT, round(j.res.pt - 0.25, 2)); next.push(j); }
+        if (j.res.pt > MIN_PT) { j.res.pt = Math.max(MIN_PT, round(j.res.pt - 0.25, 2)); next.push(j); return; }
+        /* fix2 (t-extremes) : un n° de lot (40 caractères au plus) n'est jamais tronqué : sous le minimum habituel, la police de
+           CETTE ligne seule continue de diminuer (jusqu'à EXTREME_PT) ; la place des lignes et des étiquettes ne change pas */
+        if (w[i] <= j.avail + 0.2 + 1e-6) { j.res.trunc = false; return; } /* tient dans la largeur rendue : rendu inchangé */
+        const np = Math.floor((j.res.pt * j.avail / w[i]) * 20) / 20;
+        if (np >= EXTREME_PT && np < j.res.pt) { j.res.pt = round(np, 2); next.push(j); return; }
+        if (j.res.pt > EXTREME_PT && np < EXTREME_PT) { j.res.pt = EXTREME_PT; next.push(j); return; }
         /* fix1 : au minimum, « raccourcie » seulement si la ligne dépasse vraiment la largeur rendue (sans la garde de 0,2 mm) ;
            le rendu, lui, ne change pas (même taille de police) */
-        else j.res.trunc = w[i] > j.avail + 0.2 + 1e-6;
+        j.res.trunc = w[i] > j.avail + 0.2 + 1e-6;
       });
       verify = next;
     }
@@ -9228,7 +9705,7 @@ function renderRangeField() {
 function renderFirstLineField(key, id, tab) {
   const rows = geo().rows;
   const setLine = v => { state[key] = clamp(v, 1, rows); commit({ rerender: true, tab, focus: id }); };
-  const input = NumberInput({ id, get: () => state[key], set: v => { state[key] = v; commit({ tab }); }, min: 1, max: rows, stepper: true, ariaLabel: 'Première ligne libre sur la planche' });
+  const input = NumberInput({ id, get: () => state[key], set: v => { state[key] = v; commit({ tab }); }, min: 1, max: rows, stepper: true, ariaLabel: `Première ligne libre sur la planche (${tab === 'autres' ? 'autres étiquettes' : 'poches'})` }); /* fix2 (ui C-19) */
   const pickerSlot = h('div');
   function renderPickerOnly() { pickerSlot.replaceChildren(RowPicker({ rows, value: Math.min(state[key], rows), onPick: setLine })); }
   renderPickerOnly();
@@ -9610,8 +10087,10 @@ function focusField(sel) {
 
 /* Point d'entrée de toute modification d'état. */
 let undoToast = null; /* toast « Annuler » en cours : retiré à la modification suivante (il restaurerait aussi celle-ci) */
+let lastUndo = null; /* fix2 (ui C-16) : dernière action annulable (Ctrl+Z), oubliée à la modification suivante comme le toast */
 function commit({ rerender = false, tab = null, focus = null } = {}) {
   if (undoToast) { undoToast.dismiss(); undoToast = null; }
+  lastUndo = null;
   if (rerender) renderForm(focus); else updateDerived();
   if (tab && state.ui.apercu !== tab) { state.ui.apercu = tab; updateTabs(); }
   schedulePreview();
@@ -9623,8 +10102,20 @@ function withUndo(message, mutate, opts = {}) {
   const snapshot = clone(state);
   mutate();
   commit({ rerender: true, ...copts });
-  const t = toast(message, { icon: 'check', action: 'Annuler', onAction: () => { undoToast = null; state = snapshot; if (onUndo) onUndo(); commit({ rerender: true }); toast('Modification annulée.', { icon: 'reset' }); } });
+  const run = () => { undoToast = null; state = snapshot; if (onUndo) onUndo(); commit({ rerender: true }); toast('Modification annulée.', { icon: 'reset' }); };
+  const t = toast(message, { icon: 'check', action: 'Annuler', onAction: run });
   undoToast = t;
+  lastUndo = run;
+}
+/** fix2 (ui C-16) : Ctrl+Z hors champ de saisie : annule la dernière suppression / remise à zéro (comme « Annuler » du toast). */
+function onKey(e) {
+  if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey || e.key.toLowerCase() !== 'z') return;
+  const t = e.target;
+  if (t && (t.isContentEditable || (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) && !['checkbox', 'radio', 'button'].includes(t.type)))) return;
+  if (document.querySelector('dialog[open]')) return;
+  e.preventDefault(); /* jamais l'annulation native, invisible, d'un champ qui n'a plus le focus */
+  if (lastUndo) { const r = lastUndo; lastUndo = null; r(); }
+  else toast('Rien à annuler : Ctrl+Z annule la dernière suppression ou remise à zéro des étiquettes.', { icon: 'info' });
 }
 
 /* =====================================================================
@@ -10098,7 +10589,7 @@ function previewLabels(def, kind, opts = {}) {
   return { row: mk(labels), one: first ? mk([first]) : null, texts: labels.map(l => (l ? l.lines.map(ln => ln.segs.map(sg => (sg.b != null ? '_'.repeat(Math.round(sg.b / 2)) : sg.t)).join('')) : null)) };
 }
 
-return { init, show, hide, print, beforePrint, afterPrint, menuItems, summary, previewLabels, contWords, nameLabels, get visa() { return state.visa.trim().toUpperCase(); } };
+return { init, show, hide, onKey, print, beforePrint, afterPrint, menuItems, summary, previewLabels, contWords, nameLabels, get visa() { return state.visa.trim().toUpperCase(); } };
 })();
 
 /* #########################################################################
@@ -10124,16 +10615,16 @@ const ParamsView = (() => {
   function parseHours(v) {
     const t = String(v ?? '').trim().replace(/\s+/g, '').replace(',', '.').replace(/h$/i, '');
     if (!/^\d+(\.\d+)?$/.test(t)) return { error: 'Saisissez une durée en heures (ex. 24 ou 1,5).' };
-    const n = Number(t);
-    if (!(n > 0)) return { error: 'La durée doit être supérieure à 0 h.' };
+    const n = Math.round(Number(t) * 100) / 100; /* fix2 (ui C-11) : arrondi d'abord, puis contrôle (minimum 0,01 h) */
+    if (!(n > 0)) return { error: 'La durée doit être supérieure à 0 h (minimum 0,01 h).' };
     if (n > Params.HOURS_MAX) return { error: `La durée ne peut pas dépasser ${Params.HOURS_MAX} h.` };
-    return { value: Math.round(n * 100) / 100 };
+    return { value: n };
   }
   /** Champ texte validé à la sortie (Entrée ou Tab) : valeur refusée → message, valeur précédente rétablie. */
   function textInput({ id, value, label, onCommit, placeholder, maxLength = 40, cls = '', upper = false, mono = false }) {
     const el = h('input', { type: 'text', class: `input${mono ? ' input--mono' : ''} ${cls}`.trim(), id, value, placeholder, maxlength: maxLength, autocomplete: 'off', spellcheck: 'false', 'aria-label': label });
     el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.dispatchEvent(new Event('change')); } });
-    let committed = value;
+    let committed = value, lastGood = value;
     el.addEventListener('change', () => {
       if (rendering || !el.isConnected) return;
       let v = el.value.replace(/\s+/g, ' ').trim();
@@ -10141,12 +10632,14 @@ const ParamsView = (() => {
       if (v === committed) { el.value = committed; return; }
       committed = v;
       const err = onCommit(v);
-      if (err) { committed = value; warn(err); el.value = value; el.setAttribute('aria-invalid', 'true'); setTimeout(() => el.removeAttribute('aria-invalid'), 2500); }
+      /* fix2 (ui C-10) : valeur refusée → message et retour à la dernière valeur valide (celle qui s'applique) */
+      if (typeof err === 'string' && err) { committed = lastGood; warn(err); el.value = lastGood; el.setAttribute('aria-invalid', 'true'); setTimeout(() => el.removeAttribute('aria-invalid'), 2500); }
+      else lastGood = v;
     });
     return el;
   }
   function hoursInput({ id, value, label, onCommit, disabled }) {
-    const el = textInput({ id, value: fmtH(value), label, cls: 'input--num', maxLength: 7, onCommit: v => { const r = parseHours(v); if (r.error) return r.error; onCommit(r.value); return null; } });
+    const el = textInput({ id, value: fmtH(value), label, cls: 'input--num', maxLength: 7, onCommit: v => { const r = parseHours(v); if (r.error) return r.error; const e = onCommit(r.value); return typeof e === 'string' ? e : null; } });
     el.setAttribute('inputmode', 'decimal');
     if (disabled) el.disabled = true;
     return h('span', { class: 'unit-input' }, el, h('span', { class: 'unit-input__u', 'aria-hidden': 'true' }, 'h'));
@@ -10182,11 +10675,50 @@ const ParamsView = (() => {
   const lineDot = id => h('span', { class: 'pm-dot', 'data-line': id, 'aria-hidden': 'true' });
   /** Modification avec « Annuler » (suppressions). */
   function withUndo(message, mutate, detail) {
-    const snap = Params.snapshot();
+    const snap = Params.snapshot(), before = pj();
     Params.update(mutate, detail);
-    toast(message, { action: 'Annuler', onAction: () => { Params.restore(snap); toast('Modification annulée', { icon: 'reset' }); } });
+    pushUndoP(snap, before);
+    const u = undoLater(snap, before);
+    toast(message, { action: 'Annuler', onAction: () => { if (u()) toast('Modification annulée', { icon: 'reset' }); } });
   }
-  function update(mutate, detail, focusId) { if (focusId) focusAfter = focusId; if (!Params.update(mutate, detail)) warn('Mémoire locale indisponible : la modification s’applique, mais ne sera pas conservée à la fermeture.'); }
+  /* fix2 (ui C-04) : « Annuler » d'un toast des Paramètres défait CETTE action seulement : si d'autres réglages ont été faits depuis,
+     ils sont gardés (fusion à trois) ; si les mêmes réglages ont été modifiés depuis, rien n'est changé et un message l'explique. */
+  const pj = () => JSON.parse(JSON.stringify(Params.get()));
+  function undoLater(snap, before) {
+    const after = pj();
+    return () => {
+      const now = pj();
+      if (JSON.stringify(now) === JSON.stringify(after)) { Params.restore(snap); return true; }
+      let next;
+      try { next = Core.revertOnly(before, after, now, ''); }
+      catch { warn('Cette action ne peut plus être annulée seule : les mêmes réglages ont été modifiés depuis.'); return false; }
+      Params.update(p => { for (const k of Object.keys(p)) delete p[k]; Object.assign(p, next); });
+      return true;
+    };
+  }
+  function update(mutate, detail, focusId) {
+    if (focusId) focusAfter = focusId;
+    const snap = Params.snapshot(), before = pj();
+    if (!Params.update(mutate, detail)) warn('Mémoire locale indisponible : la modification s’applique, mais ne sera pas conservée à la fermeture.');
+    pushUndoP(snap, before);
+  }
+  /* fix2 (ui C-16) : Ctrl+Z dans les Paramètres (hors champ de saisie) : annule la dernière modification faite ici, pas à pas */
+  const undoP = [];
+  function pushUndoP(snap, before) {
+    if (JSON.stringify(before) === JSON.stringify(Params.get())) return;
+    undoP.push(undoLater(snap, before));
+    if (undoP.length > 30) undoP.shift();
+  }
+  function onKey(e) {
+    if (!(e.ctrlKey || e.metaKey) || e.altKey || e.shiftKey || e.key.toLowerCase() !== 'z') return;
+    const t = e.target;
+    if (t && (t.isContentEditable || (/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName) && !['checkbox', 'radio', 'button'].includes(t.type)))) return;
+    if (document.querySelector('dialog[open]')) return;
+    e.preventDefault();
+    const u = undoP.pop();
+    if (!u) { toast('Rien à annuler dans les Paramètres.', { icon: 'info' }); return; }
+    if (u()) toast('Modification annulée', { icon: 'reset' });
+  }
 
   /* ---------- Produits : renommage propagé partout (règles, holding times, cartes du rapport) ---------- */
   function renameProduct(p, lineId, from, to) {
@@ -10255,7 +10787,7 @@ const ParamsView = (() => {
           h('span', { class: 'pm-row__name' }, sel),
           hoursInput({ id: `${rid}-h`, value: r.h, label: `${t.title} — durée pour ${r.p}`, disabled: r.none, onCommit: v => update(p => { p.rapport.ht[t.id].rows[i].h = v; }, null, `${rid}-h`) }),
           check({ id: `${rid}-none`, checked: r.none, label: 'aucune limite', onChange: v => update(p => { p.rapport.ht[t.id].rows[i].none = v; }, null, `${rid}-none`) }),
-          h('span', { class: 'pm-row__act' }, iconBtn('trash', `Supprimer la règle ${r.p}`, () => withUndo(`Règle « ${r.p} » supprimée (${t.title})`, p => { p.rapport.ht[t.id].rows.splice(i, 1); }), { id: `${rid}-del`, danger: true })));
+          h('span', { class: 'pm-row__act' }, iconBtn('trash', `Supprimer la règle ${r.p} (${t.title})`, () => withUndo(`Règle « ${r.p} » supprimée (${t.title})`, p => { p.rapport.ht[t.id].rows.splice(i, 1); }), { id: `${rid}-del`, danger: true })));
       }));
     const add = h('button', { type: 'button', class: 'btn btn-secondary btn-sm', id: `${pre}-add`, disabled: !free.length, title: free.length ? null : 'Tous les produits de la ligne ont déjà une règle' },
       icon('plus'), 'Ajouter un produit');
@@ -10392,7 +10924,7 @@ const ParamsView = (() => {
         h('p', { class: 'pm-hint', text: 'Une échéance de plus : départ sur un champ date existant (ex. Sortie frigo) ou sur un nouveau champ, durée jusqu’à 1000 h, seuil d’alerte propre, lignes, bandes et produits.' })),
       h('div', { class: 'pm-inline' },
         h('label', { class: 'pm-inline__l', for: 'pm-soon' }, 'Alerte « bientôt » (orange) quand il reste moins de'),
-        hoursInput({ id: 'pm-soon', value: soon, label: 'Seuil d’alerte bientôt', onCommit: v => { if (v > 72) return warn('Le seuil d’alerte ne peut pas dépasser 72 h.'); update(p => { p.rapport.soonHours = v; }, null, 'pm-soon'); } })),
+        hoursInput({ id: 'pm-soon', value: soon, label: 'Seuil d’alerte bientôt', onCommit: v => { if (v > 72) return 'Le seuil d’alerte ne peut pas dépasser 72 h.'; update(p => { p.rapport.soonHours = v; }, null, 'pm-soon'); } })),
       h('div', { class: 'pm-grid pm-grid--ht' }, Params.HT_TABLES.map(htTable)),
       customList(),
     ];
@@ -10406,16 +10938,21 @@ const ParamsView = (() => {
   function pcDefault(lineId, k) { const d = Params.DEFAULTS.rapport.parcours[lineId]; return k ? d.variants[k] || null : d.def; }
   function stepCard(lineId, steps, i, cat, last) {
     const sp = steps[i], pre = `pm-pc-${lineId}-${i}`;
+    /* fix2 (ui C-19) : ligne et variante dans le nom des boutons-icônes */
+    const ctxS = ` (${LINE[lineId].name}${pcSel[lineId] ? `, variante ${pcSel[lineId]}` : ''})`;
     const upd = (fn, fid, detail) => update(p => fn(pcSteps(p, lineId), p), detail, fid);
     const name = textInput({ id: `${pre}-n`, value: sp.nom, label: `Nom de l’étape ${i + 1} (${LINE[lineId].name})`, maxLength: 40, onCommit: v => {
       if (!v) return 'Le nom de l’étape ne peut pas être vide.';
+      /* fix2 (ui C-17) : deux étapes d'une même ligne ne portent jamais le même nom */
+      const cn = x => String(x || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
+      if (steps.some((y, j) => j !== i && cn(y.nom) === cn(v))) return `Une autre étape de ${LINE[lineId].name} s’appelle déjà « ${v} ». Choisissez un autre nom.`;
       upd(st => { st[i].nom = v; }, `${pre}-n`); return null;
     } });
     const fieldOf = k => cat.find(x => x.key === k);
     const where = k => { const j = steps.findIndex(x => x.champs.includes(k)); return j < 0 ? 'hors parcours' : steps[j].nom; };
     /* champs rangés sous l'étape (un champ n'est que sous une étape : l'ajouter ici le retire de l'autre) */
     const tokens = sp.champs.filter(fieldOf).map((k, j) => h('span', { class: 'pm-tok' }, fieldOf(k).label,
-      h('button', { type: 'button', class: 'pm-tok__x', id: `${pre}-f${j}-del`, 'aria-label': `Retirer ${fieldOf(k).label} de l’étape ${sp.nom}`, title: 'Retirer (hors parcours)', onclick: () => upd(st => { st[i].champs = st[i].champs.filter(x => x !== k); }, `${pre}-fadd`) }, icon('x'))));
+      h('button', { type: 'button', class: 'pm-tok__x', id: `${pre}-f${j}-del`, 'aria-label': `Retirer ${fieldOf(k).label} de l’étape ${sp.nom}${ctxS}`, title: 'Retirer (hors parcours)', onclick: () => upd(st => { st[i].champs = st[i].champs.filter(x => x !== k); }, `${pre}-fadd`) }, icon('x'))));
     const addF = h('select', { class: 'select select--sm pm-addsel', id: `${pre}-fadd`, 'aria-label': `Ajouter un champ à l’étape ${sp.nom}` },
       h('option', { value: '', text: '+ Ajouter un champ…' }), cat.filter(x => !sp.champs.includes(x.key)).map(x => h('option', { value: x.key, text: `${x.label} (${where(x.key)})` })));
     addF.addEventListener('change', () => { const k = addF.value; if (!k) return; upd(st => { for (const x of st) x.champs = x.champs.filter(y => y !== k); st[i].champs.push(k); }, `${pre}-fadd`); });
@@ -10433,7 +10970,7 @@ const ParamsView = (() => {
         f ? chips({ id: `${cid}-v`, label: `${f.label} — valeurs`, items: f.values.map(v => ({ value: v, label: v })), selected: c.v,
           onToggle: (v, on, chid) => { const vs = on ? [...new Set([...c.v, v])] : c.v.filter(x => x !== v); if (!vs.length) { warn('Gardez au moins une valeur, ou supprimez la condition.'); render(); return; } upd(st => { st[i][e][j].v = vs; }, chid); } })
           : h('span', { class: 'pm-hint', text: `Statut inconnu : ${c.k}` }),
-        iconBtn('trash', `Supprimer la condition ${f ? f.label : c.k}`, () => upd(st => { st[i][e].splice(j, 1); }, `${pre}-cadd`), { id: `${cid}-del`, danger: true }));
+        iconBtn('trash', `Supprimer la condition ${f ? f.label : c.k} (${e === 'atteinte' ? 'atteinte' : 'franchie'}) de l’étape ${sp.nom}${ctxS}`, () => upd(st => { st[i][e].splice(j, 1); }, `${pre}-cadd`), { id: `${cid}-del`, danger: true }));
     });
     const addC = h('button', { type: 'button', class: 'btn btn-quiet btn-sm', id: `${pre}-cadd`, disabled: !stCat.length }, icon('plus'), 'Condition');
     addC.addEventListener('click', () => { const f = stCat.find(x => sp.champs.includes(x.key)) || stCat[0]; upd(st => { st[i].franchie.push({ k: f.key, v: [f.values.includes('FAIT') ? 'FAIT' : f.values[0]] }); }, `${pre}-c${conds.length}-k`); pcOpen.add(`${lineId}.${pcSel[lineId] || ''}.${sp.id}`); });
@@ -10447,9 +10984,9 @@ const ParamsView = (() => {
     if (pcOpen.has(key)) det.open = true;
     det.addEventListener('toggle', () => { if (det.open) pcOpen.add(key); else pcOpen.delete(key); });
     const moves = h('span', { class: 'pm-prod__act' },
-      iconBtn('up', `Monter ${sp.nom}`, () => upd(st => { [st[i - 1], st[i]] = [st[i], st[i - 1]]; }, i - 1 > 0 ? `pm-pc-${lineId}-${i - 1}-up` : `pm-pc-${lineId}-${i - 1}-down`), { id: `${pre}-up`, disabled: i === 0 || last }),
-      iconBtn('down', `Descendre ${sp.nom}`, () => upd(st => { [st[i + 1], st[i]] = [st[i], st[i + 1]]; }, `pm-pc-${lineId}-${i + 1}-up`), { id: `${pre}-down`, disabled: last || i >= steps.length - 2 }),
-      iconBtn('trash', `Supprimer l’étape ${sp.nom}`, () => withUndo(`Étape « ${sp.nom} » supprimée (${LINE[lineId].name}) : ses champs passent hors parcours`, p => { pcSteps(p, lineId).splice(i, 1); }), { id: `${pre}-del`, danger: true, disabled: last || steps.length <= 2 }));
+      iconBtn('up', `Monter ${sp.nom}${ctxS}`, () => upd(st => { [st[i - 1], st[i]] = [st[i], st[i - 1]]; }, i - 1 > 0 ? `pm-pc-${lineId}-${i - 1}-up` : `pm-pc-${lineId}-${i - 1}-down`), { id: `${pre}-up`, disabled: i === 0 || last }),
+      iconBtn('down', `Descendre ${sp.nom}${ctxS}`, () => upd(st => { [st[i + 1], st[i]] = [st[i], st[i + 1]]; }, `pm-pc-${lineId}-${i + 1}-up`), { id: `${pre}-down`, disabled: last || i >= steps.length - 2 }),
+      iconBtn('trash', `Supprimer l’étape ${sp.nom}${ctxS}`, () => withUndo(`Étape « ${sp.nom} » supprimée (${LINE[lineId].name}) : ses champs passent hors parcours`, p => { pcSteps(p, lineId).splice(i, 1); }), { id: `${pre}-del`, danger: true, disabled: last || steps.length <= 2 }));
     return h('li', { class: `pm-ps${last ? ' is-last' : ''}`, id: pre, 'data-step': sp.id },
       h('span', { class: 'pm-ps__dot', 'aria-hidden': 'true' }),
       h('div', { class: 'pm-ps__row' }, name, last ? h('span', { class: 'pm-ps__lock', title: 'Le parcours se termine toujours par le vide de ligne' }, 'toujours en dernier') : null, moves),
@@ -10543,9 +11080,9 @@ const ParamsView = (() => {
         name,
         h('span', { class: 'pm-prod__like' }, h('span', { class: 'pm-prod__lbl', text: 'comme' }), like),
         h('span', { class: 'pm-prod__act' },
-          iconBtn('up', `Monter ${x.name}`, () => update(p => { const a = p.rapport.products[lineId]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, i - 1 > 0 ? `${pre}-${i - 1}-up` : `${pre}-${i - 1}-down`), { id: `${rid}-up`, disabled: i === 0 }),
-          iconBtn('down', `Descendre ${x.name}`, () => update(p => { const a = p.rapport.products[lineId]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, i + 1 < list.length - 1 ? `${pre}-${i + 1}-down` : `${pre}-${i + 1}-up`), { id: `${rid}-down`, disabled: i === list.length - 1 }),
-          iconBtn('trash', `Supprimer ${x.name}`, () => {
+          iconBtn('up', `Monter ${x.name} (${LINE[lineId].name})`, () => update(p => { const a = p.rapport.products[lineId]; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, i - 1 > 0 ? `${pre}-${i - 1}-up` : `${pre}-${i - 1}-down`), { id: `${rid}-up`, disabled: i === 0 }),
+          iconBtn('down', `Descendre ${x.name} (${LINE[lineId].name})`, () => update(p => { const a = p.rapport.products[lineId]; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, i + 1 < list.length - 1 ? `${pre}-${i + 1}-down` : `${pre}-${i + 1}-up`), { id: `${rid}-down`, disabled: i === list.length - 1 }),
+          iconBtn('trash', `Supprimer ${x.name} (${LINE[lineId].name})`, () => {
             if (list.length <= 1) return warn('Chaque ligne garde au moins un produit.');
             const used = usedBy(lineId, x.name);
             withUndo(`Produit « ${x.name} » supprimé de ${LINE[lineId].name}${used.length ? ` (retiré aussi de : ${used.join(', ')})` : ''}`, p => {
@@ -10757,7 +11294,7 @@ const ParamsView = (() => {
       return h('li', { class: 'pm-tpl__row' },
         h('span', { class: 'pm-tpl__n', text: String(L + 1) }), inp,
         check({ id: `${pre}${L}-sm`, checked: M.petites.includes(L), label: 'Petit', cls: 'pm-tpl__sm', onChange: on => setLines(m => { m.petites = on ? [...m.petites, L] : m.petites.filter(n => n !== L); }, `${pre}${L}-sm`) }),
-        iconBtn('trash', `Supprimer la ligne ${L + 1}`, () => setLines(m => { m.lignes.splice(L, 1); m.petites = m.petites.filter(n => n !== L).map(n => (n > L ? n - 1 : n)); }, `${pre}${Math.max(0, L - 1)}`), { id: `${pre}${L}-del`, disabled: M.lignes.length <= 3, danger: true }));
+        iconBtn('trash', `Supprimer la ligne ${L + 1} du modèle ${key === 'modele' ? 'principal' : 'autres étiquettes'} (${x.name})`, () => setLines(m => { m.lignes.splice(L, 1); m.petites = m.petites.filter(n => n !== L).map(n => (n > L ? n - 1 : n)); }, `${pre}${Math.max(0, L - 1)}`), { id: `${pre}${L}-del`, disabled: M.lignes.length <= 3, danger: true }));
     });
     return h('div', { class: 'pm-tpl' },
       toolbar,
@@ -10787,9 +11324,9 @@ const ParamsView = (() => {
         h('button', { type: 'button', class: 'pm-etp__info', id: `${rid}-edit`, title: `Régler le contenu des étiquettes ${x.name}`, onclick: () => { listeProduit = x.name; focusAfter = `pm-li-prod-${idOf(x.name)}`; render(); } },
           h('span', { class: 'pm-etp__cont', text: w.S }), h('span', { text: `${nLab} étiquette${nLab > 1 ? 's' : ''} par ${w.s} · ${x.ech.map(e => fmtVol(e.vol)).filter(Boolean).join(' / ') || 'sans volume'}` })),
         h('span', { class: 'pm-prod__act' },
-          iconBtn('up', `Monter ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `pm-et-p${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${rid}-up`, disabled: i === 0 }),
-          iconBtn('down', `Descendre ${x.name}`, () => update(p => { const a = p.etiquettes.produits; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `pm-et-p${i + 1}-${i + 1 < prods.length - 1 ? 'down' : 'up'}`), { id: `${rid}-down`, disabled: i === prods.length - 1 }),
-          iconBtn('trash', `Supprimer ${x.name}`, () => {
+          iconBtn('up', `Monter ${x.name} (étiquettes)`, () => update(p => { const a = p.etiquettes.produits; [a[i - 1], a[i]] = [a[i], a[i - 1]]; }, null, `pm-et-p${i - 1}-${i - 1 ? 'up' : 'down'}`), { id: `${rid}-up`, disabled: i === 0 }),
+          iconBtn('down', `Descendre ${x.name} (étiquettes)`, () => update(p => { const a = p.etiquettes.produits; [a[i + 1], a[i]] = [a[i], a[i + 1]]; }, null, `pm-et-p${i + 1}-${i + 1 < prods.length - 1 ? 'down' : 'up'}`), { id: `${rid}-down`, disabled: i === prods.length - 1 }),
+          iconBtn('trash', `Supprimer ${x.name} (étiquettes)`, () => {
             if (prods.length <= 1) return warn('Gardez au moins un produit.');
             withUndo(`Produit étiquettes « ${x.name} » supprimé`, p => { p.etiquettes.produits.splice(i, 1); delete p.etiquettes.listes[x.name]; });
           }, { id: `${rid}-del`, danger: true })));
@@ -10901,9 +11438,9 @@ const ParamsView = (() => {
       textInput({ id: `${lpre}-${j}-nom`, value: nom, label: `Échantillon ${j + 1}`, maxLength: 60, onCommit: v => (v ? (update(p => { p.etiquettes.listes[listeProduit][j][0] = v; }, null, `${lpre}-${j}-nom`), null) : 'Le nom de l’échantillon ne peut pas être vide.') }),
       textInput({ id: `${lpre}-${j}-q`, value: q, label: `Quantité ${j + 1}`, maxLength: 20, cls: 'pm-li__q', onCommit: v => (update(p => { p.etiquettes.listes[listeProduit][j][1] = v; }, null, `${lpre}-${j}-q`), null) }),
       h('span', { class: 'pm-prod__act' },
-        iconBtn('up', `Monter ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j - 1], a[j]] = [a[j], a[j - 1]]; }, null, `${lpre}-${j - 1}-${j - 1 ? 'up' : 'down'}`), { id: `${lpre}-${j}-up`, disabled: j === 0 }),
-        iconBtn('down', `Descendre ${nom}`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j + 1], a[j]] = [a[j], a[j + 1]]; }, null, `${lpre}-${j + 1}-${j + 1 < L.length - 1 ? 'down' : 'up'}`), { id: `${lpre}-${j}-down`, disabled: j === L.length - 1 }),
-        iconBtn('trash', `Supprimer ${nom}`, () => withUndo(`« ${nom} » retiré de la liste ${listeProduit}`, p => { p.etiquettes.listes[listeProduit].splice(j, 1); }), { id: `${lpre}-${j}-del`, danger: true }))));
+        iconBtn('up', `Monter ${nom} (liste ${listeProduit})`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j - 1], a[j]] = [a[j], a[j - 1]]; }, null, `${lpre}-${j - 1}-${j - 1 ? 'up' : 'down'}`), { id: `${lpre}-${j}-up`, disabled: j === 0 }),
+        iconBtn('down', `Descendre ${nom} (liste ${listeProduit})`, () => update(p => { const a = p.etiquettes.listes[listeProduit]; [a[j + 1], a[j]] = [a[j], a[j + 1]]; }, null, `${lpre}-${j + 1}-${j + 1 < L.length - 1 ? 'down' : 'up'}`), { id: `${lpre}-${j}-down`, disabled: j === L.length - 1 }),
+        iconBtn('trash', `Supprimer ${nom} (liste ${listeProduit})`, () => withUndo(`« ${nom} » retiré de la liste ${listeProduit}`, p => { p.etiquettes.listes[listeProduit].splice(j, 1); }), { id: `${lpre}-${j}-del`, danger: true }))));
     const newN = h('input', { type: 'text', class: 'input', id: `${lpre}-add-n`, maxlength: 60, placeholder: 'Nom de l’échantillon', autocomplete: 'off', 'aria-label': 'Nouvel échantillon' });
     const newQ = h('input', { type: 'text', class: 'input pm-li__q', id: `${lpre}-add-q`, maxlength: 20, placeholder: 'ex. 50mL', autocomplete: 'off', 'aria-label': 'Quantité du nouvel échantillon' });
     const addL = () => {
@@ -10971,17 +11508,19 @@ const ParamsView = (() => {
     const ok = await Core.confirmDialog({ title: 'Revenir aux paramètres de l’équipe ?', className: 'mod-params', confirmLabel: 'Revenir aux paramètres de l’équipe',
       message: 'Les modifications faites sur ce PC seront remplacées par les paramètres de l’équipe enregistrés sur N:. Vous pourrez annuler.' });
     if (!ok) return;
-    const snap = Params.snapshot();
+    const snap = Params.snapshot(), before = pj();
     Params.revertToTeam();
-    toast('Paramètres de l’équipe rétablis', { action: 'Annuler', onAction: () => Params.restore(snap) });
+    const u = undoLater(snap, before);
+    toast('Paramètres de l’équipe rétablis', { action: 'Annuler', onAction: () => u() });
   }
   async function resetDefaults() {
     const ok = await Core.confirmDialog({ title: 'Rétablir les valeurs d’origine ?', className: 'mod-params', confirmLabel: 'Rétablir', danger: true,
       message: 'Holding times, produits, règles, couleurs et réglages des étiquettes reviennent aux valeurs d’origine de l’outil sur ce PC. Vous pourrez annuler.' });
     if (!ok) return;
-    const snap = Params.snapshot();
+    const snap = Params.snapshot(), before = pj();
     Params.resetDefaults();
-    toast('Valeurs d’origine rétablies', { action: 'Annuler', onAction: () => Params.restore(snap) });
+    const u = undoLater(snap, before);
+    toast('Valeurs d’origine rétablies', { action: 'Annuler', onAction: () => u() });
   }
   /** Téléchargement d'un fichier (sans réseau : lien vers un Blob local). */
   function download(name, text, type) {
@@ -11027,10 +11566,11 @@ const ParamsView = (() => {
           parsed.future ? 'Attention : ce fichier vient d’une version plus récente de l’outil ; les réglages que cette version ne connaît pas seront ignorés. ' : '',
           'Les paramètres de ce PC seront remplacés par ceux du fichier. Vous pourrez annuler.'].join('') });
       if (!ok) return;
-      const snap = Params.snapshot();
+      const snap = Params.snapshot(), before = pj();
       Params.commit(parsed.params, { imported: true });
+      const u = undoLater(snap, before);
       if (parsed.mail && (parsed.mail.to || parsed.mail.cc) && !Rapport.mailSettings().mailTo) Rapport.setMailSettings(parsed.mail.to || '', parsed.mail.cc || '');
-      toast('Paramètres importés', { action: 'Annuler', onAction: () => Params.restore(snap) });
+      toast('Paramètres importés', { action: 'Annuler', onAction: () => u() });
     };
     fr.onerror = () => Core.messageDialog('Import impossible', 'Le fichier n’a pas pu être lu.', 'mod-params');
     fr.readAsText(file);
@@ -11042,7 +11582,7 @@ const ParamsView = (() => {
   const SEC_RESET = {
     'pm-ht': { keys: ['soonHours', 'ht', 'htNames', 'htFin', 'custom'], what: 'Durées, noms affichés, fins, seuil d’alerte ; les holding times personnalisés sont supprimés.' },
     'pm-parcours': { keys: ['parcours', 'vdlReset'], what: 'Étapes, champs rangés, statuts reliés, variantes par produit et champs remis à N/A au vide de ligne.' },
-    'pm-prod': { keys: ['products'], what: 'Listes de produits et règles « comme ». Les produits retirés restent dans les cartes (« hors liste »).' },
+    'pm-prod': { keys: ['products'], what: 'Listes de produits et règles « comme ». Les produits retirés restent dans les cartes (« retiré de la liste »).' },
     'pm-rules': { keys: ['rules'], what: 'Cases cochées des règles d’applicabilité.' },
     'pm-colors': { keys: ['colors'], what: 'Couleurs des trois lignes.' },
     'pm-mail': { keys: ['mail'], mail: true, what: 'Destinataires (ceux de l’équipe), ouverture dans Outlook Web et adresse.' },
@@ -11066,14 +11606,15 @@ const ParamsView = (() => {
     const ok = await Core.confirmDialog({ title: `Rétablir « ${sec.title} » par défaut ?`, className: 'mod-params', confirmLabel: 'Rétablir', danger: true,
       message: `${r.what} Les autres sections ne changent pas. Vous pourrez annuler.` });
     if (!ok) return;
-    const snap = Params.snapshot(), mail = Rapport.mailSettings(), d = ndef();
+    const snap = Params.snapshot(), before = pj(), mail = Rapport.mailSettings(), d = ndef();
     focusAfter = `${sec.id}-reset`;
     Params.update(p => {
       if (r.et) p.etiquettes = JSON.parse(JSON.stringify(d.etiquettes));
       else for (const k of r.keys) p.rapport[k] = JSON.parse(JSON.stringify(d.rapport[k]));
     });
     if (r.mail) Rapport.setMailSettings('', '');
-    toast(`« ${sec.title} » rétabli par défaut`, { action: 'Annuler', onAction: () => { Params.restore(snap); if (r.mail) Rapport.setMailSettings(mail.mailTo, mail.mailCc); Core.emit('params-mail'); toast('Modification annulée', { icon: 'reset' }); } });
+    const u = undoLater(snap, before);
+    toast(`« ${sec.title} » rétabli par défaut`, { action: 'Annuler', onAction: () => { if (!u()) return; if (r.mail) Rapport.setMailSettings(mail.mailTo, mail.mailCc); Core.emit('params-mail'); toast('Modification annulée', { icon: 'reset' }); } });
   }
 
   /* ---------- Rendu ---------- */
@@ -11097,6 +11638,9 @@ const ParamsView = (() => {
   function renderNow() {
     dirty = false;
     const active = document.activeElement;
+    /* fix2 (ui C-05) : saisie en cours (non validée) dans le champ actif : gardée telle quelle après le nouveau rendu */
+    const typing = extRender && active && active.id && active.dataset && active.dataset.typing === '1' && active.closest('#view-parametres')
+      ? { id: active.id, v: active.value, a: active.selectionStart, b: active.selectionEnd } : null;
     const keep = focusAfter || (active && active.id && active.closest('#view-parametres') ? active.id : null);
     focusAfter = null;
     const y = window.scrollY;
@@ -11121,9 +11665,14 @@ const ParamsView = (() => {
       if (el && el.getClientRects().length) el.focus({ preventScroll: true });
       else if (active && !active.isConnected) { const s = document.getElementById(keep.split('-').slice(0, 2).join('-')); if (s) s.focus({ preventScroll: true }); }
     }
+    if (typing) {
+      const el = document.getElementById(typing.id);
+      if (el && el !== active && 'value' in el) { el.value = typing.v; el.dataset.typing = '1'; try { el.setSelectionRange(typing.a, typing.b); } catch { /* type sans sélection */ } }
+    }
     window.scrollTo(0, y);
   }
-  Core.on('params', () => { if (visible) render(); else dirty = true; });
+  let extRender = false; /* fix2 (ui C-05) : rendu provoqué par un autre onglet */
+  Core.on('params', d => { if (visible) { extRender = !!(d && d.external); try { render(); } finally { extRender = false; } } else dirty = true; });
   Core.on('params-mail', () => { if (visible) render(); else dirty = true; });
   Core.on('params-source', () => { if (visible) renderSource(); });
   Core.on('theme', () => { if (visible) renderSource(); });
@@ -11131,6 +11680,9 @@ const ParamsView = (() => {
   return {
     init() {
       $('#pm-file').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; e.target.value = ''; if (f) importFile(f); });
+      /* fix2 (ui C-05) : champ en cours de saisie (pas encore validé par Entrée / sortie) */
+      $('#view-parametres').addEventListener('input', e => { if (e.target && e.target.dataset) e.target.dataset.typing = '1'; });
+      $('#view-parametres').addEventListener('change', e => { if (e.target && e.target.dataset) delete e.target.dataset.typing; }, true);
       /* aperçus des étiquettes : remis à l'échelle quand la fenêtre change (y compris dans une partie repliée) */
       const refit = () => document.querySelectorAll('#view-parametres .pm-pv__fit').forEach(fitPv);
       window.addEventListener('resize', refit);
@@ -11139,6 +11691,7 @@ const ParamsView = (() => {
     },
     show() { visible = true; if (dirty) render(); else renderSource(); Disk.refresh(); },
     hide() { visible = false; },
+    onKey,
     menuItems: () => [
       { label: 'Exporter les paramètres (JSON)', icon: 'download', run: exportJson },
       { label: 'Importer des paramètres…', icon: 'upload', run: () => $('#pm-file').click() },
