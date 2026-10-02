@@ -5131,6 +5131,8 @@ const whereOf = x => `${x.line.name} · ${x.lot || 'lot non renseigné'}`;
 /* ---------- Synthèse du shift (écran, impression, PDF, mail, accueil) : verdict, phrase, chiffres clés, état de chaque ligne ---------- */
 const PROD = {
   prod: { word: 'En production', tone: 'ok', icon: 'done' },
+  vdl: { word: 'Vide de ligne en cours', tone: 'wip', icon: 'clock' },
+  vdlok: { word: 'Vide de ligne fait', tone: 'ok', icon: 'done' },
   conn: { word: 'Connexion en cours', tone: 'wip', icon: 'clock' },
   waitc: { word: 'En attente de connexion', tone: 'wip', icon: 'clock' },
   wait: { word: 'En attente', tone: 'wip', icon: 'clock' },
@@ -5145,6 +5147,8 @@ function prodState(report, l) {
   const c = report.bands.enCours[l.id];
   if (!c.lot) return { k: 'free', why: 'Aucun lot en cours' };
   if (c.statutLocal === 'À NETTOYER') return { k: 'clean', why: 'Local à nettoyer' };
+  if (c.vdl === 'FAIT') return { k: 'vdlok', why: 'vide de ligne fait, prêt pour le lot suivant' };
+  if (c.vdl === 'EN COURS') return { k: 'vdl', why: 'vide de ligne en cours' };
   if (c.connexion === 'FAIT') return { k: 'prod', why: 'remplissage en cours' };
   if (c.connexion === 'EN COURS') return { k: 'conn', why: 'connexion en train de se faire' };
   if (c.connexion === 'EN ATTENTE') return { k: 'waitc', why: 'formulation prête, attend le remplissage pour connecter' };
@@ -5215,7 +5219,7 @@ const sentenceText = S => S.map(x => x.t).join('');
 
 /* ---------- Tableau du shift (écran, vue d'impression, PDF) : épinglés en bandeaux, « À traiter » / « Bientôt »,
    chiffres clés, frigo, puis une colonne par machine (lot en cours, suivant, suivant +1) ---------- */
-const PROD_SHORT = { prod: 'Remplissage', conn: 'Connexion en cours', waitc: 'Attente connexion', wait: 'En attente', clean: 'Nettoyage', free: 'Libre' };
+const PROD_SHORT = { vdl: 'Vide de ligne', vdlok: 'Vide de ligne fait', prod: 'Remplissage', conn: 'Connexion en cours', waitc: 'Attente connexion', wait: 'En attente', clean: 'Nettoyage', free: 'Libre' };
 const sameDayAs = (a, b) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 /** Heure seule si l'échéance tombe aujourd'hui, sinon « JJ/MM HH:MM ». */
 const dueTxt = (d, now) => (sameDayAs(d, now) ? fmtTime(d) : fmtDM(d));

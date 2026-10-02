@@ -1,111 +1,101 @@
 # Outil Formulation
 
 Un seul fichier, `Outil Formulation.html`, remplace les deux Excel de l'équipe formulation
-(`RAPPORT.FORMU.LIVE.xlsx` et `étiquette_SB_NEW.xlsx`). Il s'ouvre sur un **accueil** avec deux
-tuiles, et des onglets en haut permettent de passer d'un module à l'autre à tout moment :
+(`RAPPORT.FORMU.LIVE.xlsx` et `étiquette_SB_NEW.xlsx`). Rien à installer et pas d'internet : on
+l'ouvre dans **Microsoft Edge** ou **Google Chrome**. Firefox l'ouvre aussi, mais il ne peut pas
+enregistrer directement dans le dossier : la sauvegarde y passe par un téléchargement.
 
-- **Rapport de shift** : état des lots sur Groninger, Inova 5 et Inova 4, export PDF et mail au groupe formulation ;
-- **Étiquettes** : planches d'étiquettes pour les échantillons SB4, SB5, SB5B et SB16.
+Quatre onglets, sans rechargement de page :
 
-Rien à installer, pas besoin d'internet : on double-clique sur le fichier, il s'ouvre dans
-**Microsoft Edge** ou **Google Chrome**.
+- **Accueil** : la date, la dernière sauvegarde, le verdict du shift et le dernier lot d'étiquettes.
+- **Rapport de shift** : la synthèse en haut, la saisie en dessous, le PDF et le mail.
+- **Étiquettes** : les planches Fiducial 115294 pour SB4, SB5, SB5B, SB16 et CT-P17.
+- **Paramètres** : tout ce qui se règle sans toucher au code.
 
 ---
 
 ## Mise en place
 
-1. Copiez `Outil Formulation.html` dans le dossier partagé de l'équipe, par exemple
-   `N:\MFG\Formulation\Outil formulation`.
-2. Ouvrez-le avec Edge (clic droit → *Ouvrir avec* → *Microsoft Edge*).
-3. Ajoutez un raccourci sur le bureau pour y revenir facilement.
+Le **dossier principal** sur N: contient :
 
----
+```
+Outil Formulation.html   ← l'outil
+sauvegarde.js            ← les données de l'équipe (créé au premier Ctrl+S)
+Octobre 26/              ← un dossier par mois, avec les PDF des rapports (créé tout seul)
+```
+
+1. Copiez `Outil Formulation.html` dans ce dossier.
+2. Ouvrez-le avec Edge (clic droit › Ouvrir avec › Microsoft Edge), puis épinglez un raccourci.
+3. Au premier **Ctrl+S** sur un PC, Edge demande d'autoriser le dossier : choisissez le dossier
+   principal, puis cliquez sur **Autoriser**. Edge peut le redemander à chaque nouvelle session ;
+   c'est une sécurité du navigateur.
+
+## Sauvegarde
+
+- **Ctrl+S** (ou **Enregistrer**), depuis n'importe quel onglet, écrit tout dans `sauvegarde.js` :
+  le rapport, les étiquettes et les paramètres.
+- À l'ouverture, sur n'importe quel PC, l'outil relit `sauvegarde.js` tout seul.
+- Un point orange sur Enregistrer signale ce qui n'est pas encore écrit sur N:. Tout reste aussi
+  gardé dans le navigateur du PC.
+- Si un collègue a enregistré entre-temps, l'outil le signale et ne remplace jamais une saisie
+  non enregistrée sans demander.
+- Si `sauvegarde.js` est abîmé, l'outil prévient et en garde une copie avant de le remplacer.
+- Restent propres à chaque PC : la calibration de l'imprimante d'étiquettes, la taille du texte
+  (Aa) et le thème clair ou sombre.
 
 ## Rapport de shift
 
-- **Saisie** : cliquez directement sur les statuts (N/A, EN COURS, FAIT…). Les couleurs sont les
-  mêmes que dans l'Excel : vert = fait / prêt, jaune = en cours, rouge = à faire / en attente,
-  bleu ❄ = au frigo.
-- **Champs grisés** : un champ qui ne concerne pas le produit choisi s'affiche en grisé avec la
-  mention « Non applicable ». Par exemple, le monitoring n'apparaît que pour SB16, CT-P17 et SB5B,
-  et le check shift que pour TAKEDA.
-- **Holding times** : quand vous saisissez une date de début, la limite se calcule toute seule
-  (150 h Groninger ; 20 / 24 / 34 h Inova 5 ; 24 / 32 / 34 / 144 h Inova 4 ; 72 h et 24 h pour le
-  lot suivant). Le bandeau du haut affiche les échéances et passe en jaune quand il reste moins de
-  4 h, puis en rouge une fois la limite dépassée.
-- **Alerte FRIGO** : dès qu'un échantillon est « AU FRIGO », le bandeau le signale.
-- **Lot terminé → passer au suivant** : en un clic, le lot suivant passe en cours et le lot
-  suivant +1 devient le lot suivant. Plus besoin de tout recopier.
-- **Annuler** : le bouton Annuler (ou Ctrl+Z) revient en arrière si vous vous trompez.
+- **Le shift se choisit tout seul** selon l'heure : Matin 6–14, Après-midi 14–22, Nuit 22–6 ;
+  Week-end AM 10–22 et Week-end PM 22–10, du vendredi 22 h au dimanche 22 h. La date du rapport
+  est celle du début du shift.
+- **Synthèse**, calculée toute seule (personne ne la remplit) :
+  - les commentaires épinglés (Critique en rouge, Attention en jaune) ;
+  - « À traiter » et « Bientôt » ;
+  - les échantillons au frigo ;
+  - une colonne par machine avec ses lots, leur parcours, leurs holding times et leurs remarques.
 
-### Enregistrement et passation entre shifts
-
-- Tout s'**enregistre automatiquement** sur le PC à chaque modification (voir « ✓ Enregistré »
-  en haut). En rouvrant le fichier, on retrouve le rapport tel qu'on l'a laissé.
-- **Partage entre PC** (à finaliser selon le test du disque N:) : si l'équipe utilise plusieurs PC, ouvrez *⋯ → Sauvegarde & partage → Lier un fichier* et
-  créez `rapport-formulation-donnees.json` **dans le dossier Teams synchronisé**. Le rapport y est
-  alors écrit automatiquement, et le shift suivant, sur un autre PC, retrouve le même état en liant
-  le même fichier. Si quelqu'un a enregistré une version plus récente, l'outil le signale.
-  Cette fonction marche dans Edge et Chrome (pas dans Firefox).
-- **Sauvegarde de secours** : *⋯ → Exporter / Importer* un fichier `.json`.
-
-### Envoyer le rapport
-
-1. **Exporter en PDF**. Dans la fenêtre d'impression, choisissez « Enregistrer au format PDF »
-   et l'orientation Paysage. Le nom du fichier est proposé automatiquement (date + shift). Chaque
-   export est aussi gardé dans l'**Historique**, qu'on peut revoir et réimprimer.
-2. **Préparer le mail**. Outlook s'ouvre avec l'objet, un résumé (alertes, points à suivre) et les
-   destinataires. Il ne reste qu'à **joindre le PDF**. Les adresses du groupe formulation se
-   règlent une fois pour toutes dans *⋯ → Paramètres*.
-
----
+  Aucun N/A n'est affiché.
+- **Saisie** : une carte par machine et par lot, rangée dans l'ordre du procédé. Les étapes
+  faites se replient et l'étape en cours est ouverte. W3 et poids formulé sont toujours en kg.
+- **Holding times** : chacun a un nom, un départ et une fin. Il s'arrête tout seul (par exemple
+  quand Connexion passe à FAIT) ou avec le bouton **✓ Fait**. Il reste ensuite affiché
+  « Respecté » ou « Dépassé ».
+- **Vide de ligne** : remet à N/A les champs de production du lot (sauf l'échantillon), puis
+  propose **Passer au lot suivant**. Le lot suivant devient le lot en cours, et les holding times
+  encore en cours le suivent. L'échantillon de l'ancien lot va dans « Échantillons à suivre ».
+- **Clôturer le shift** : enregistre, crée le PDF et le range dans `<Mois AA>/Rapport formulation
+  JJ-MM-AAAA <Shift>.pdf`, puis ouvre Outlook Web prérempli (destinataire du groupe formulation,
+  objet = nom du PDF). Il reste à joindre le PDF : son nom exact est rappelé. Si Edge ne peut pas
+  écrire, l'outil propose l'impression Edge (Imprimante : « Enregistrer au format PDF »).
 
 ## Étiquettes
 
-1. **Produit & lot** : choisissez SB4, SB5, SB5B ou SB16, puis saisissez le lot. La date et le visa
-   sont facultatifs : sans eux, un blanc est laissé pour écrire à la main. La date est écrite comme
-   dans l'Excel, par exemple `29Sep26`.
-2. **Poches** : ajoutez autant de lots de poches que nécessaire, avec leur nombre de poches et,
-   si besoin, le N° client de la 1ʳᵉ poche. Il n'y a plus de limite de 8 lots ni de 52 poches, et
-   il n'y a plus de page « 1 à 13 / 14 à 26 » à choisir : toutes les pages sont générées.
-3. **Autres échantillons** : la liste du produit est préremplie. On peut cocher ou décocher des
-   lignes, en ajouter (sans limite) et enregistrer sa propre liste par défaut.
-4. **Imprimer** : l'aperçu à droite montre exactement ce qui sortira.
+- Planche **Fiducial 115294** (A4, 65 étiquettes de 38,1 × 21,2 mm), standard mesuré et validé :
+  marges 10,7 / 9,75 mm, décalage Y +1 mm, échelle 100 %.
+- À l'impression : papier **A4** (pas Lettre), échelle **100 %**, imprimante **copieur** (pas
+  « Enregistrer au format PDF »).
+- **Réinitialiser les paramètres** revient exactement au standard.
+- Visa de 3 à 6 lettres, ou vide pour l'écrire à la main.
 
-### Réglages d'impression
+## Paramètres
 
-- Planche par défaut : **Fiducial 115294** (A4, 65 étiquettes 38,1 × 21,2 mm). Chaque poche occupe
-  une rangée de 4 étiquettes. Aussi : papier normal avec traits de coupe, ou gabarit personnalisé.
-- Dans la fenêtre d'impression, **laissez les réglages par défaut** (surtout pas « Ajuster à la page »).
-- La première fois, imprimez une **page de test** sur papier normal, posez-la sur une planche
-  d'étiquettes à contre-jour, puis corrigez si besoin le **décalage X/Y** (en mm) ou l'**échelle** (si le décalage grandit vers le bas). Le réglage est
-  mémorisé sur le PC.
-- **Première ligne libre** : pour réutiliser une planche déjà entamée.
-- **Poches de … à …** : pour réimprimer seulement quelques poches.
+Ce qui se règle :
 
----
+- les holding times : durées, nom, départ, fin, seuil d'alerte, et des holding times personnalisés ;
+- le parcours (étapes) par machine et par produit ;
+- les produits ;
+- les champs concernés par produit ;
+- les couleurs des lignes ;
+- le mail ;
+- les modèles d'étiquettes ;
+- le dossier principal.
 
-## Onglet Paramètres
-
-Holding times (durées par produit, échéances personnalisées), produits par ligne, champs grisés,
-couleurs des lignes, mail et réglages des étiquettes se modifient dans l'onglet **Paramètres**, sans
-toucher au code. **Enregistrer les paramètres pour toute l'équipe** crée `parametres-outil.js` : posez-le
-à côté de `Outil Formulation.html` sur N:, l'outil le lit automatiquement sur tous les PC.
-
-## Corrections par rapport aux Excel
-
-- *Rapport* : certaines mises en forme conditionnelles pointaient vers de mauvaises cellules (le
-  grisage de Pesée, Tampon et Sortie frigo sur le lot suivant, et l'indicateur FRIGO pour le lot
-  suivant), si bien qu'elles ne fonctionnaient pas. C'est corrigé. La « Limite HT (150 h) »
-  Groninger est maintenant calculée automatiquement.
-- *Étiquettes* : pour SB16, les quantités des « autres étiquettes » étaient décalées d'une ligne à
-  partir de `Step2_BB_Val (2/6)`. Par exemple, `Step2_Endo_Val` sortait en 250 mL au lieu de 3 mL.
-  C'est corrigé.
+Chaque section a son bouton **Rétablir cette section par défaut**, et chaque holding time ou
+parcours modifié a un **Rétablir** individuel.
 
 ## À savoir
 
-- Ces outils servent à la communication d'équipe et à préparer les étiquettes. Ils ne remplacent
-  pas le dossier de lot ni les documents GMP officiels. Relisez toujours les étiquettes avant de
-  les coller. Avant de généraliser leur utilisation, vérifiez avec QA / IT s'ils doivent être
-  déclarés, comme tout outil bureautique utilisé en production.
-- Les données restent sur vos PC et dans votre dossier Teams. Rien n'est envoyé sur internet.
+Cet outil sert à la communication d'équipe et à préparer les étiquettes. Il ne remplace ni le
+dossier de lot ni les documents GMP officiels. Relisez toujours les étiquettes avant de les coller.
+Avant de généraliser son utilisation, faites valider l'outil par QA et IT, comme tout outil
+bureautique utilisé en production.
