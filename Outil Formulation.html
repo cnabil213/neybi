@@ -808,6 +808,8 @@ dialog.dlg--cm{width:min(40rem,calc(100vw - 1.5rem))}
 .mod-rapport .cm-form__pin small{color:var(--muted)}
 .mod-rapport .cm-form .hint{display:flex;gap:.375rem;align-items:flex-start}
 .mod-rapport .cm-err{color:var(--todo-fg);font-weight:600;font-size:.875rem}
+.mod-rapport .dt-warn{display:flex;align-items:center;gap:.375rem;margin:.375rem 0 0;color:var(--wip-fg);font-size:.8125rem;font-weight:600;line-height:1.3}
+.mod-rapport .dt-warn .icon{flex:none;width:1rem;height:1rem}
 /* Dialogue « Clôturer le shift » */
 dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 .mod-rapport .cs-lead{color:var(--muted)}
@@ -2395,7 +2397,7 @@ dialog.dlg--close{width:min(42rem,calc(100vw - 1.5rem))}
 
 <!-- Sauvegarde de tout l'outil (rapport, étiquettes, paramètres) : fichier « sauvegarde.js » posé à côté de l'outil sur N:
      (facultatif ; lu ici avant l'affichage, puis relu toutes les 60 s et au retour sur l'onglet) -->
-<script src="sauvegarde.js"></script>
+<script src="sauvegarde.js" onload="window.__NN_SAUVEGARDE_LUE__ = true"></script>
 <script>
 (() => {
 'use strict';
@@ -2933,7 +2935,7 @@ const Sauvegarde = (() => {
 
   const mods = [];                          /* modules enregistrés, dans l'ordre d'application (paramètres d'abord) */
   const S = {
-    known: null,       /* version du fichier sur laquelle repose ce PC { savedAt, savedBy } */
+    known: null,       /* version du fichier sur laquelle repose ce PC { savedAt, savedBy, rev, key } (key = empreinte du contenu : jamais l'horloge du PC) */
     base: {},          /* id → empreinte du module dans cette version (ou de son dernier état « propre ») */
     dirty: new Set(),  /* modules modifiés depuis (pas encore enregistrés sur N:) */
     disk: null,        /* dernière lecture du fichier { savedAt, savedBy, legacy } ; null = absent */
@@ -2941,6 +2943,8 @@ const Sauvegarde = (() => {
     frozen: new Set(), /* modules écrits par une version plus récente de l'outil : jamais écrasés */
     lastSync: null, busy: false, writing: false, conflictOpen: false, lastCheck: 0, loading: {}, pending: null,
     started: false, timers: {}, onchange: null, warnedNewer: false,
+    provisional: new Set(), /* modules marqués « modifiés » dès la frappe, en attente de la vérification (anti-rebond) */
+    warnedUnreadable: false, current: null,
   };
   let authorOf = () => '';
 
@@ -2965,11 +2969,11 @@ const Sauvegarde = (() => {
     const p = ls.json(PREFS_KEY);
     if (!isObj(p)) return false;
     const at = validIso(p.knownSavedAt);
-    S.known = at ? { savedAt: at, savedBy: str(p.knownBy, 80) } : null;
+    S.known = at ? { savedAt: at, savedBy: str(p.knownBy, 80), rev: Number.isInteger(p.knownRev) ? p.knownRev : 0, key: typeof p.knownKey === 'string' ? p.knownKey : null } : null;
     S.base = isObj(p.base) ? Object.fromEntries(Object.entries(p.base).filter(([, v]) => typeof v === 'string' || v === null)) : {};
     return true;
   }
-  const savePrefs = () => ls.set(PREFS_KEY, JSON.stringify({ knownSavedAt: S.known ? S.known.savedAt : null, knownBy: S.known ? S.known.savedBy : '', base: S.base }));
+  const savePrefs = () => ls.set(PREFS_KEY, JSON.stringify({ knownSavedAt: S.known ? S.known.savedAt : null, knownBy: S.known ? S.known.savedBy : '', knownRev: S.known ? S.known.rev : 0, knownKey: S.known ? S.known.key : null, base: S.base }));
 
   /* ---------- Registre ---------- */
   function register(def) {
@@ -2978,9 +2982,11 @@ const Sauvegarde = (() => {
     mods.sort((a, b) => a.order - b.order);
     if (S.started) { if (!(def.id in S.base)) S.base[def.id] = def.pristine && !def.pristine() ? null : localSig(modById(def.id)); recheck(def.id); }
   }
-  /** Un module a changé : l'état « modifications non enregistrées » est recalculé (anti-rebond). */
+  /** Un module a changé : il est marqué « modifié » TOUT DE SUITE (une relecture de N: ou un enregistrement qui arrive
+      pendant l'anti-rebond le voit donc), puis l'état exact est recalculé (anti-rebond de 150 ms : l'empreinte coûte). */
   function changed(id) {
     if (!S.started) return;
+    if (!S.dirty.has(id)) { S.dirty.add(id); S.provisional.add(id); }
     clearTimeout(S.timers[id]);
     S.timers[id] = setTimeout(() => recheck(id), 150);
   }
@@ -2988,13 +2994,15 @@ const Sauvegarde = (() => {
     const m = modById(id);
     if (!m) return;
     clearTimeout(S.timers[id]);
-    const was = S.dirty.has(id);
+    const was = S.dirty.has(id) && !S.provisional.has(id);
+    const shownDirty = S.dirty.has(id);
+    S.provisional.delete(id);
     const now = localSig(m) !== S.base[id];
     if (now) S.dirty.add(id); else S.dirty.delete(id);
-    if (was !== now) render();
+    if (was !== now || shownDirty !== now) render();
   }
   const recheckAll = () => mods.forEach(m => recheck(m.id));
-  function setBase(m, sig) { S.base[m.id] = sig; S.dirty.delete(m.id); }
+  function setBase(m, sig) { S.base[m.id] = sig; S.dirty.delete(m.id); S.provisional.delete(m.id); clearTimeout(S.timers[m.id]); }
 
   /* ---------- Format du fichier : du JavaScript (lisible par <script src> en file://), jamais exécuté à la relecture ---------- */
   const oneLine = s => String(s || '').replace(/[\r\n]+/g, ' ').replace(/\*\//g, '* /');
@@ -3007,8 +3015,11 @@ const Sauvegarde = (() => {
   /** Objet déclaré par le fichier → { savedAt, savedBy, modules } ; null si ce n'est pas une sauvegarde de l'outil. */
   function readFile(raw) {
     if (!isObj(raw) || raw.app !== APP || !isObj(raw.modules)) return null;
-    return { savedAt: validIso(raw.savedAt), savedBy: str(raw.savedBy, 80), modules: raw.modules, legacy: false };
+    return { savedAt: validIso(raw.savedAt), savedBy: str(raw.savedBy, 80), modules: raw.modules, legacy: false, rev: Number.isInteger(raw.rev) ? raw.rev : 0, key: verKey(raw) };
   }
+  /** Identité d'une version du fichier : empreinte de son contenu (révision, auteur, date écrite, modules), telle qu'elle est lue.
+      Deux PC dont les horloges diffèrent ne se trompent donc jamais de version (savedAt ne sert qu'à l'affichage). */
+  const verKey = raw => hash(JSON.stringify([Number.isInteger(raw.rev) ? raw.rev : 0, raw.savedAt ?? null, raw.savedBy ?? '', raw.modules ?? null]));
   function parseText(text) {
     let t = String(text || '').replace(/^\uFEFF/, '').trim().replace(/^\/\*[\s\S]*?\*\/\s*/, '');
     const m = /^window\.__NN_OUTIL_SAUVEGARDE__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
@@ -3029,7 +3040,7 @@ const Sauvegarde = (() => {
       const at = validIso(raw.savedAt);
       if (at && (!savedAt || at > savedAt)) { savedAt = at; savedBy = str(raw.savedBy, 80); }
     }
-    return Object.keys(modules).length ? { savedAt, savedBy, modules, legacy: true } : null;
+    return Object.keys(modules).length ? { savedAt, savedBy, modules, legacy: true, rev: 0, key: verKey({ savedAt, savedBy, modules }) } : null;
   }
 
   /* ---------- Lecture automatique (balise <script> voisine, « ?t=… » pour ne jamais lire une copie en cache) ---------- */
@@ -3062,13 +3073,19 @@ const Sauvegarde = (() => {
   async function readLegacy() {
     return fromLegacy(await Promise.all(LEGACY.map(async L => ({ L, raw: await loadScript(L.file, L.global) }))));
   }
+  /** Version lue sur N: ; null = pas de sauvegarde ; { unreadable } = sauvegarde.js présent mais illisible (abîmé, tronqué, étranger). */
   async function readDisk() {
     const raw = await loadScript(FILE, GLOBAL);
-    return raw === undefined ? readLegacy() : readFile(raw);
+    if (raw === undefined) return readLegacy();
+    return readFile(raw) || UNREADABLE;
   }
+  const UNREADABLE = Object.freeze({ unreadable: true });
 
   /* ---------- Application d'une version du fichier ---------- */
-  const isNewer = d => !!d.savedAt && (!S.known || d.savedAt > S.known.savedAt);
+  /** La version lue est-elle celle sur laquelle repose ce PC ? (anciennes préférences sans empreinte : comparaison des dates) */
+  const isKnown = d => !!S.known && (S.known.key ? d.key === S.known.key : d.savedAt === S.known.savedAt);
+  /** Autre version que celle de ce PC (quelqu'un a enregistré depuis) : comparaison des empreintes, jamais des horloges. */
+  const isNewer = d => (S.known ? !isKnown(d) : !!d.savedAt);
   const whoOf = d => d.savedBy || 'un collègue';
   const loadedMsg = d => `Sauvegarde du ${d.savedAt ? fmtDM(new Date(d.savedAt)) : '?'} enregistrée par ${whoOf(d)} chargée`;
   /** Données d'un module lues dans le fichier → forme canonique ; null si illisible ou écrite par une version plus récente. */
@@ -3097,12 +3114,16 @@ const Sauvegarde = (() => {
     recheckAll();
     Core.toast('Chargement annulé : vos données sont rétablies (non enregistrées sur N:).', { icon: 'reset' });
   }
-  function setKnown(d) { S.known = { savedAt: d.savedAt, savedBy: d.savedBy }; savePrefs(); }
+  function setKnown(d) { S.known = { savedAt: d.savedAt, savedBy: d.savedBy, rev: d.rev || 0, key: d.key || null }; savePrefs(); }
   /** Version lue sur N: (démarrage, retour sur l'onglet, toutes les 60 s) : modules non modifiés ici → appliqués ;
       modules modifiés ici ET dans une version plus récente → question. */
   async function onDisk(d, { initial = false } = {}) {
+    if (d && d.unreadable) { S.disk = { unreadable: true }; warnUnreadable(); recheckAll(); render(); return; }
+    S.warnedUnreadable = false;
     S.disk = d ? { savedAt: d.savedAt, savedBy: d.savedBy, legacy: !!d.legacy } : null;
     if (!d) { render(); return; }
+    /* saisie en cours (anti-rebond pas encore écoulé) : son état exact est établi AVANT de décider quoi appliquer */
+    recheckAll();
     if (!d.legacy) S.extra = Object.fromEntries(Object.entries(d.modules).filter(([id]) => !modById(id)));
     /* fichier téléchargé (navigateur sans écriture directe) puis déposé sur N: : c'est bien notre version */
     if (S.pending && d.savedAt === S.pending.savedAt) {
@@ -3113,7 +3134,7 @@ const Sauvegarde = (() => {
       recheckAll();
     }
     const newer = isNewer(d);
-    const takeable = newer || !S.known || d.savedAt === S.known.savedAt;
+    const takeable = newer || !S.known || isKnown(d);
     const wasDirty = new Set(S.dirty);
     const snaps = [], conflicts = [];
     for (const m of mods) {
@@ -3122,9 +3143,9 @@ const Sauvegarde = (() => {
       if (!data) continue;
       const rs = sigOf(m, data);
       if (rs === localSig(m)) { setBase(m, rs); if (m.adopt) m.adopt(data, metaOf(d)); continue; }
+      /* une saisie locale non enregistrée n'est JAMAIS remplacée en silence : autre version → question ; même version → ce sont nos modifications */
       if (!wasDirty.has(m.id)) { if (takeable) apply(m, data, d, snaps); }
       else if (newer) conflicts.push(m);
-      /* modifié ici, fichier non plus récent : ce sont nos modifications pas encore enregistrées */
     }
     /* un module resté inchangé ici peut avoir été recalculé par le chargement (ex. nouveaux paramètres) : il reste « propre » */
     if (snaps.length) for (const m of mods) if (!wasDirty.has(m.id)) setBase(m, localSig(m));
@@ -3141,13 +3162,19 @@ const Sauvegarde = (() => {
         Core.toast('Votre version est conservée. Cliquez sur « Enregistrer » (Ctrl+S) pour la partager.', { icon: 'info', timeout: 7000 });
       }
     }
-    if (newer || !S.known) setKnown(d); else savePrefs();
+    if (newer || !S.known || !S.known.key) setKnown(d); else savePrefs();
     if (snaps.length) {
       S.lastSync = new Date();
       Core.toast(loadedMsg(d), initial ? { icon: 'cloud', timeout: 6000 } : { icon: 'cloud', action: 'Annuler', onAction: () => undoLoad(snaps), timeout: 8000 });
     }
     recheckAll();
     render();
+  }
+  /** sauvegarde.js présent sur N: mais illisible : avertissement visible (une fois tant que le fichier reste illisible). */
+  function warnUnreadable() {
+    if (S.warnedUnreadable) return;
+    S.warnedUnreadable = true;
+    Core.toast(`La sauvegarde du disque N: (${FILE}) est illisible : fichier abîmé ou incomplet. Rien n’en a été chargé ; vos données restent sur ce PC. Au prochain enregistrement, l’outil en gardera une copie avant de la remplacer.`, { tone: 'warn', timeout: 30000 });
   }
   function conflictOnOpen(d, conflicts) {
     const at = d.savedAt ? new Date(d.savedAt) : null;
@@ -3175,6 +3202,7 @@ const Sauvegarde = (() => {
   /* ---------- Enregistrement (Ctrl+S, bouton « Enregistrer ») : sauvegarde.js dans le dossier principal ---------- */
   const toolFolder = Disk.toolFolder;
   function errorText(e) {
+    if (e && e.name === 'QuotaExceededError') return 'Disque N: plein : il n’y a plus de place pour écrire la sauvegarde. Libérez de la place sur N: (ou contactez l’IT), puis réessayez.';
     if (e && e.name === 'NotAllowedError') return 'Windows n’a pas autorisé l’écriture sur N:.';
     if (e && e.name === 'NotFoundError') return 'Le dossier principal est introuvable sur N: (déplacé, supprimé, ou disque N: déconnecté ?).';
     return 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs.';
@@ -3206,13 +3234,38 @@ const Sauvegarde = (() => {
       if (S.frozen.has(m.id) && keep && isObj(keep[m.id])) { modules[m.id] = keep[m.id]; continue; }
       modules[m.id] = { schema: m.schema, ...m.exportState() };
     }
-    return { app: APP, schema: SCHEMA, savedAt: new Date().toISOString(), savedBy: str(authorOf(), 60), modules };
+    return { app: APP, schema: SCHEMA, rev: ((remote && remote.rev) || (S.known && S.known.rev) || 0) + 1, savedAt: new Date().toISOString(), savedBy: str(authorOf(), 60), modules };
+  }
+  /** sauvegarde.js illisible : copie de secours « sauvegarde.illisible-AAAAMMJJ-HHMM.js » puis remplacement, après confirmation. */
+  async function confirmReplaceUnreadable(root, txt) {
+    const d = new Date();
+    const copy = `sauvegarde.illisible-${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}-${pad2(d.getHours())}${pad2(d.getMinutes())}.js`;
+    const ok = await Core.openDialog({
+      title: 'Sauvegarde de N: illisible', icon: 'alert', tone: 'warn', className: 'dlg-n',
+      body: [
+        h('p', {}, 'Le fichier ', h('b', { class: 'mono', text: FILE }), ' du disque N: est illisible (fichier abîmé ou incomplet) : l’outil ne peut pas le relire.'),
+        h('p', {}, 'Avant de le remplacer par la version de ce PC, une copie en sera gardée dans le même dossier : ', h('b', { class: 'mono', text: copy }), '.'),
+        h('p', { class: 'muted', text: 'En cas de doute (fichier en cours de copie, ouvert ailleurs), annulez et réessayez dans un instant.' }),
+      ],
+      actions: [{ label: 'Annuler', value: false }, { label: 'Garder une copie et remplacer', value: true, cls: 'btn-primary', icon: 'save', autofocus: true }],
+    }).result;
+    if (ok !== true) return false;
+    await Disk.writeFile(root, copy, txt);
+    return copy;
   }
   /** Relit sauvegarde.js dans le dossier principal, fusionne, puis l'écrit (écriture atomique : fichier temporaire remplacé à close()). */
   async function writeTo(root) {
-    let remote = null;
+    let remote = null, rescued = '';
     const txt = await Disk.readFile(root, FILE);
-    if (txt && txt.trim()) { try { remote = parseText(txt); } catch { remote = null; /* contenu étranger : remplacé */ } }
+    if (txt && txt.trim()) {
+      try { remote = parseText(txt); }
+      catch {
+        /* contenu illisible (tronqué, abîmé, étranger) : jamais remplacé sans copie de secours ni confirmation */
+        rescued = await confirmReplaceUnreadable(root, txt);
+        if (!rescued) { Core.toast('Enregistrement sur N: annulé : la sauvegarde illisible n’a pas été touchée.', { icon: 'info' }); return false; }
+        remote = null;
+      }
+    }
     if (remote && isNewer(remote)) {
       /* quelqu'un a enregistré depuis la version de ce PC : ses modules non modifiés ici sont repris, les autres → question */
       const takes = [], conflicts = [];
@@ -3242,27 +3295,55 @@ const Sauvegarde = (() => {
     if (remote) for (const m of mods) if (m.mergeOnSave && m.id in remote.modules) { const data = prepare(m, remote.modules[m.id]); if (data) m.mergeOnSave(data); }
     for (const m of mods) if (m.flush) m.flush();
     const data = build(remote);
+    /* ce qui est RÉELLEMENT écrit (copie figée avant l'écriture) : la saisie faite pendant l'écriture reste « modifiée » */
+    const text = fileText(data);
+    const written = JSON.parse(JSON.stringify(data));
+    const sigs = {};
+    const keptFrozen = id => S.frozen.has(id) && !!remote && !remote.legacy && isObj(remote.modules[id]);
+    for (const m of mods) if (!keptFrozen(m.id)) { const { schema, ...st } = written.modules[m.id]; sigs[m.id] = sigOf(m, st); }
     S.writing = true;
     render();
-    try { await Disk.writeFile(root, FILE, fileText(data)); }
+    try { await Disk.writeFile(root, FILE, text); }
     finally { S.writing = false; }
-    for (const m of mods) { if (m.adopt) m.adopt(m.exportState(), metaOf(data)); setBase(m, localSig(m)); }
-    setKnown(data);
+    written.key = verKey(written);
+    for (const m of mods) {
+      if (!(m.id in sigs)) continue; /* module d'une version plus récente de l'outil : non écrit, la saisie d'ici reste « non enregistrée » */
+      const { schema, ...st } = written.modules[m.id];
+      if (localSig(m) === sigs[m.id] && m.adopt) m.adopt(st, metaOf(written));
+      setBase(m, sigs[m.id]);
+    }
+    setKnown(written);
     S.disk = { savedAt: data.savedAt, savedBy: data.savedBy, legacy: false };
+    S.warnedUnreadable = false;
     S.extra = Object.fromEntries(Object.entries(data.modules).filter(([id]) => !modById(id)));
     S.lastSync = new Date();
     S.pending = null;
     recheckAll();
-    return data;
+    written.skipped = mods.filter(m => !(m.id in sigs)).map(m => m.id);
+    written.rescued = rescued;
+    return written;
   }
   /** Bouton « Enregistrer » / Ctrl+S, depuis n'importe quel onglet. */
-  async function save() {
+  /** wait : un enregistrement est déjà en cours (ex. « Clôturer le shift » juste après Ctrl+S) → on attend sa fin, puis on
+      réenregistre s'il reste des modifications ; sans wait, l'appel est ignoré (Ctrl+S répété : une seule écriture). */
+  async function save({ wait = false } = {}) {
     for (const m of mods) if (m.flush) m.flush();
     recheckAll();
-    if (S.busy) return false;
+    if (S.busy) {
+      if (!wait || !S.current) return false;
+      const r = await S.current.catch(() => false);
+      for (const m of mods) if (m.flush) m.flush();
+      recheckAll();
+      return r === true && S.dirty.size ? save({ wait: true }) : r;
+    }
     if (!Disk.supported) { downloadFile(); return 'download'; }
     S.busy = true;
     render();
+    const run = doSave();
+    S.current = run;
+    try { return await run; } finally { if (S.current === run) S.current = null; }
+  }
+  async function doSave() {
     try {
       const fresh = Disk.info().state === 'none';
       const root = await Disk.getRoot();
@@ -3281,7 +3362,10 @@ const Sauvegarde = (() => {
         return false;
       }
       if (!data) return false;
-      Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}`, { icon: 'check' });
+      const skipped = labels(data.skipped || []);
+      const dirtySkipped = (data.skipped || []).filter(id => S.dirty.has(id));
+      if (skipped.length && dirtySkipped.length) Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}, sauf ${labels(dirtySkipped).join(', ')} : non enregistré, car la sauvegarde de N: vient d’une version plus récente de l’outil (ouvrez la dernière version d’« Outil Formulation.html »).`, { tone: 'warn', timeout: 15000 });
+      else Core.toast(`Enregistré sur N: à ${fmtTime(new Date())}${data.rescued ? ` (copie de l’ancien fichier illisible : ${data.rescued})` : ''}`, { icon: 'check', timeout: data.rescued ? 12000 : undefined });
       if (fresh) verifyLocation(data.savedAt);
       return true;
     } finally {
@@ -3344,6 +3428,7 @@ const Sauvegarde = (() => {
     if (!ls.probe()) return 'error';
     if (S.writing) return 'busy';
     if (S.disk && S.disk.legacy) return 'dirty'; /* anciens fichiers sur N: : à regrouper dans sauvegarde.js */
+    if (S.disk && S.disk.unreadable) return 'dirty'; /* sauvegarde.js illisible : rien n'est à jour sur N: */
     if (S.known && !S.dirty.size) return 'ok';
     if (S.known || S.disk) return 'dirty';
     return 'local';
@@ -3363,7 +3448,9 @@ const Sauvegarde = (() => {
         tip = `Tout est enregistré sur le disque N: (le ${fmtDate(known)} à ${fmtTime(known)}${S.known.savedBy ? ` par ${S.known.savedBy}` : ''}).`;
       } else if (st === 'dirty') {
         ic = 'dot'; long = 'Modifications non enregistrées'; short = 'Non enregistré'; cls = 'is-dirty';
-        tip = S.disk && S.disk.legacy && !dirtyList
+        tip = S.disk && S.disk.unreadable
+          ? `La sauvegarde du disque N: (${FILE}) est illisible (fichier abîmé ou incomplet) : rien n’en a été chargé. Tout est gardé sur ce PC ; « Enregistrer » (Ctrl+S) en garde une copie puis la remplace, après confirmation.`
+          : S.disk && S.disk.legacy && !dirtyList
           ? `Le disque N: contient encore les anciens fichiers (donnees-rapport.js, parametres-outil.js) : cliquez sur « Enregistrer » (Ctrl+S) pour tout regrouper dans ${FILE}.`
           : `Modifications gardées sur ce PC, mais pas encore sur le disque N:${dirtyList ? ` (${dirtyList})` : ''} : cliquez sur « Enregistrer » (Ctrl+S).`;
       } else {
@@ -3384,7 +3471,7 @@ const Sauvegarde = (() => {
   /** Résumé pour l'accueil et le panneau : état, dernière sauvegarde sur N:, modules non enregistrés. */
   function info() {
     const v = S.disk && S.disk.savedAt ? S.disk : S.known;
-    return { state: status(), savedAt: v && v.savedAt ? new Date(v.savedAt) : null, savedBy: v ? v.savedBy : '', dirty: labels([...S.dirty]), legacy: !!(S.disk && S.disk.legacy) };
+    return { state: status(), savedAt: v && v.savedAt ? new Date(v.savedAt) : null, savedBy: v ? v.savedBy : '', dirty: labels([...S.dirty]), legacy: !!(S.disk && S.disk.legacy), unreadable: !!(S.disk && S.disk.unreadable) };
   }
 
   /* ---------- Panneau « Sauvegarde sur le disque N: » (menu ⋯, tous les onglets) ---------- */
@@ -3404,7 +3491,7 @@ const Sauvegarde = (() => {
             ', à côté de l’outil. Sur n’importe quel PC, l’outil le rouvre tout seul.'),
           h('dl', { class: 'kv' },
             h('dt', { text: 'État' }), h('dd', {}, h('span', { class: `badge tone-${badge[0]}`, text: badge[1] })),
-            h('dt', { text: 'Sur N:' }), h('dd', { text: disk ? `${S.disk.legacy ? 'Anciens fichiers (donnees-rapport.js, parametres-outil.js) du' : 'Sauvegarde du'} ${fmtDate(disk)} à ${fmtTime(disk)}${S.disk.savedBy ? ` par ${S.disk.savedBy}` : ''}` : 'Aucune sauvegarde pour l’instant' }),
+            h('dt', { text: 'Sur N:' }), h('dd', { text: S.disk && S.disk.unreadable ? `${FILE} illisible (fichier abîmé ou incomplet) : rien n’en a été chargé` : disk ? `${S.disk.legacy ? 'Anciens fichiers (donnees-rapport.js, parametres-outil.js) du' : 'Sauvegarde du'} ${fmtDate(disk)} à ${fmtTime(disk)}${S.disk.savedBy ? ` par ${S.disk.savedBy}` : ''}` : 'Aucune sauvegarde pour l’instant' }),
             h('dt', { text: 'Contenu' }), h('dd', {}, modsList),
             folder ? [h('dt', { text: 'Dossier' }), h('dd', { class: 'mono', text: folder })] : null,
             dk.supported ? [h('dt', { text: 'Dossier principal' }), h('dd', { text: dk.state === 'none' ? 'Pas encore choisi sur ce PC : il sera demandé au 1er enregistrement' : `« ${dk.name} » (${dk.state === 'granted' ? 'autorisé' : 'à réautoriser'})` })] : null),
@@ -3438,7 +3525,9 @@ const Sauvegarde = (() => {
     S.lastCheck = performance.now();
     let raw;
     try { raw = window[GLOBAL]; } catch { raw = undefined; }
-    if (raw !== undefined) onDisk(readFile(raw), { initial: true });
+    /* fichier présent (chargé) mais qui ne déclare pas de sauvegarde valable : tronqué, vide, étranger → illisible */
+    if (raw !== undefined) onDisk(readFile(raw) || UNREADABLE, { initial: true });
+    else if (window.__NN_SAUVEGARDE_LUE__) onDisk(UNREADABLE, { initial: true });
     else readLegacy().then(d => onDisk(d, { initial: true }));
     savePrefs();
     render();
@@ -3480,7 +3569,8 @@ const Params = (() => {
   const LOCAL_KEY = 'nn-formu-parametres-v1';          /* modifications de ce PC, pas encore enregistrées sur N: */
   const TEAM_KEY = 'nn-formu-parametres-equipe-v1';    /* copie des paramètres de la dernière sauvegarde lue ou écrite */
   const APP = 'outil-formulation-parametres';
-  const SCHEMA = 2; /* v2 (outil v5) : parcours par machine et par produit, fin des holding times, vide de ligne */
+  const SCHEMA = 3; /* v2 (outil v5) : parcours par machine et par produit, fin des holding times, vide de ligne ; v3 (fix1) : Pesée NACL (Inova 4) */
+  const RAPPORT_V = 3; /* version des paramètres du rapport, gardée DANS les paramètres (rapport.v) : migrations faites une seule fois */
   const HOURS_MAX = 1000;
   const clone = o => JSON.parse(JSON.stringify(o));
   const isObj = x => !!x && typeof x === 'object' && !Array.isArray(x);
@@ -3644,6 +3734,7 @@ const Params = (() => {
   const CTP17_V2 = { noms: ['Ech ID', 'Ech REF'] };
   const DEFAULTS = {
     rapport: {
+      v: RAPPORT_V,
       soonHours: 4,
       ht: {
         gronEnCours: { def: 150, defNone: false, rows: [] },
@@ -3678,7 +3769,7 @@ const Params = (() => {
       },
       rules: {
         monitoring: ['SB16', 'CT-P17', 'SB5B'], checkShift: ['TAKEDA'], htNaInova5: ['MFT'], htNaInova4: ['MFT'], debutInova4: ['TAKEDA', 'SWFI'],
-        peseeInova5: ['MFT', 'SB16'], tampon: ['SB16'], peseeInova4: ['MFT', 'TAKEDA'],
+        peseeInova5: ['MFT', 'SB16'], tampon: ['SB16'], peseeInova4: ['MFT', 'TAKEDA', 'NACL'],
       },
       /* couleurs des lignes (celles de l'Excel ; Inova 4 un peu plus marqué que le gris d'origine, trop proche du blanc) */
       colors: { groninger: '#D6EAF8', inova5: '#E8DAEF', inova4: '#E3E7EC' },
@@ -3879,6 +3970,14 @@ const Params = (() => {
         web: /^https:\/\/[a-z0-9.-]+(:\d+)?(\/[^\s?#]*)?$/i.test(web) ? web : DEFAULTS.rapport.mail.web,
       };
     }
+    /* v3 (fix1) : le parcours NACL (Inova 4) a une étape Pesée : NACL est ajouté UNE fois à la règle « Pesée Inova 4 » des paramètres
+       enregistrés avant la v3 ; s'il est retiré ensuite (paramètres v3), ce retrait est respecté */
+    const rv = Number.isInteger(R.v) ? R.v : 2;
+    if (rv < 3 && isObj(R.rules) && names('inova4').includes('NACL') && !d.rapport.rules.peseeInova4.includes('NACL')) {
+      const pc = d.rapport.parcours.inova4, steps = pc.variants.NACL || pc.def;
+      if (steps.some(x => (x.champs || []).includes('pesee'))) d.rapport.rules.peseeInova4 = [...d.rapport.rules.peseeInova4, 'NACL'];
+    }
+    d.rapport.v = RAPPORT_V;
     const E = isObj(raw.etiquettes) ? raw.etiquettes : {};
     const ev = Number.isInteger(E.v) ? E.v : 1;
     if (ET_PRESETS.includes(E.preset)) d.etiquettes.preset = E.preset;
@@ -4085,15 +4184,25 @@ const Params = (() => {
   function parseText(text) {
     let t = String(text || '').replace(/^﻿/, '').trim();
     t = t.replace(/^\/\*[\s\S]*?\*\/\s*/, '');
-    const m = /^window\.__NN_OUTIL_PARAMS__\s*=\s*([\s\S]*?);?\s*$/.exec(t);
-    if (m) t = m[1];
+    const m = /^window\.(__NN_OUTIL_PARAMS__|__NN_OUTIL_SAUVEGARDE__)\s*=\s*([\s\S]*?);?\s*$/.exec(t);
+    if (m) t = m[2];
     let raw;
     try { raw = JSON.parse(t); } catch { throw new Error('illisible'); }
     if (!isObj(raw)) throw new Error('illisible');
+    /* sauvegarde complète de l'outil (sauvegarde.js, ou une copie) : on en prend le module « paramètres » */
+    let fromBackup = false;
+    if (raw.app === Sauvegarde.APP && isObj(raw.modules)) {
+      if (!isObj(raw.modules.parametres)) throw new Error('backup-sans-params');
+      const { schema, ...rest } = raw.modules.parametres;
+      raw = { app: APP, schema, params: rest };
+      fromBackup = true;
+    }
     if (raw.app != null && raw.app !== APP) throw new Error('app');
     const p = isObj(raw.params) ? raw.params : raw;
     if (!isObj(p.rapport) && !isObj(p.etiquettes)) throw new Error('app');
-    return { params: normalize(p), mail: isObj(p.rapport) && isObj(p.rapport.mail) ? p.rapport.mail : null };
+    /* fichier écrit par une version plus récente de l'outil : signalé avant l'import (les réglages inconnus ici sont ignorés) */
+    const future = Number(raw.schema) > SCHEMA;
+    return { params: normalize(p), mail: isObj(p.rapport) && isObj(p.rapport.mail) ? p.rapport.mail : null, future, fromBackup };
   }
   function importText(text) {
     const r = parseText(text);
@@ -4167,7 +4276,17 @@ const plural = (n, word) => `${n} ${word}${n > 1 ? 's' : ''}`;
 
 /* Dates (valeurs stockées au format local « AAAA-MM-JJTHH:MM ») */
 const fmtTime = Core.fmtTime; /* horloge commune */
-const fmtDM = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)} ${fmtTime(d)}`;
+/* fix1 : l'année est affichée quand elle n'est pas l'année en cours (limite lointaine, faute de frappe sur l'année) */
+const fmtDM = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}${d.getFullYear() !== new Date().getFullYear() ? `/${d.getFullYear()}` : ''} ${fmtTime(d)}`;
+/** fix1 : date saisie invraisemblable (≥ 24 h dans le futur, > 60 jours dans le passé) → avertissement non bloquant, sinon ''. */
+function dateDoubt(v, now = new Date()) {
+  const d = parseLocal(v);
+  if (!d) return '';
+  const full = `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()} ${fmtTime(d)}`;
+  if (d - now >= 24 * 3600e3) return `Date dans le futur (${full}) : vérifiez l’année et le jour.`;
+  if (now - d > 60 * 24 * 3600e3) return `Date de plus de 60 jours (${full}) : vérifiez l’année.`;
+  return '';
+}
 const fmtDate = d => `${pad2(d.getDate())}/${pad2(d.getMonth() + 1)}/${d.getFullYear()}`;
 const fmtISODate = d => `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 const LONG_DATE = Core.LONG_DATE;
@@ -4460,8 +4579,8 @@ function defaultCard(band, lineId) {
 /** v5 : suivi du parcours et des holding times d'un lot (hors champs saisis) :
     acquis = étape déjà atteinte (lot passé au suivant, données anciennes) ; etapeChoisie = clic de l'opérateur { id, sig : statuts au moment du clic } ;
     etapesAt = heure à laquelle chaque étape est devenue faite ; htFin = arrêt de chaque holding time { at, par : statut | manuel }. */
-const cardMeta = () => ({ acquis: '', etapeChoisie: null, etapesAt: {}, htFin: {} });
-const STEP_ID_RE = /^[a-z0-9_-]{1,24}$/i, HT_ID_RE = /^[a-z0-9]{1,16}$/i;
+const cardMeta = () => ({ acquis: '', etapeChoisie: null, etapesAt: {}, htFin: {}, htSuivis: [] });
+const STEP_ID_RE = /^[a-z0-9_-]{1,24}$/i, HT_ID_RE = /^(s-)?[a-z0-9]{1,16}$/i; /* « s-… » : holding time suivi (venu du lot suivant) */
 function normCardMeta(src, d) {
   d.acquis = typeof src.acquis === 'string' && STEP_ID_RE.test(src.acquis) ? src.acquis : '';
   const ch = src.etapeChoisie;
@@ -4470,9 +4589,17 @@ function normCardMeta(src, d) {
   if (isObj(src.etapesAt)) for (const [k, v] of Object.entries(src.etapesAt)) { const t = normDateTime(v); if (STEP_ID_RE.test(k) && t) d.etapesAt[k] = t; }
   d.htFin = {};
   if (isObj(src.htFin)) for (const [k, v] of Object.entries(src.htFin)) {
-    const t = isObj(v) ? normDateTime(v.at) : '';
-    if (HT_ID_RE.test(k) && t) d.htFin[k] = { at: t, par: v.par === 'statut' ? 'statut' : 'manuel' };
+    if (!HT_ID_RE.test(k) || !isObj(v)) continue;
+    if (v.rouvert === true) { d.htFin[k] = { rouvert: true, cond: str(v.cond, 40) }; continue; }
+    const t = normDateTime(v.at);
+    if (t) d.htFin[k] = { at: t, par: v.par === 'statut' ? 'statut' : 'manuel' };
   }
+  /* fix1 : holding times du lot suivant qui continuent après son passage en cours (départ, durée, fin, nom) */
+  d.htSuivis = Array.isArray(src.htSuivis) ? src.htSuivis.filter(x => isObj(x) && HT_ID_RE.test(x.id) && normDateTime(x.start) && Number(x.hours) > 0).slice(0, 30).map(x => ({
+    id: x.id, nom: str(x.nom, 80) || 'Holding time', depart: str(x.depart, 80) || 'départ', start: normDateTime(x.start), hours: Math.min(1000, Number(x.hours)),
+    soon: Number(x.soon) > 0 ? Number(x.soon) : null, perso: x.perso === true,
+    fin: isObj(x.fin) && ['statut', 'date', 'manuel'].includes(x.fin.type) ? { type: x.fin.type, k: str(x.fin.k, 40), v: Array.isArray(x.fin.v) ? x.fin.v.map(v => str(v, 40)) : [] } : { type: 'manuel', k: '', v: [] },
+  })) : [];
 }
 const newFB = () => ({ id: uid(), lotConcerne: '', poids: '', lotSuivant: '', holdingTime: '' });
 const newSD = () => ({ id: uid(), lot: '', scan: 'N/A', check: 'N/A' });
@@ -4619,12 +4746,22 @@ const htTitle = (nom, hours) => (new RegExp(`(^|\\D)${String(fmtH(hours)).replac
     neutral) et niveau de la barre (over dépassé · soon sous le seuil d'alerte · mid ≥ 50 % · ok < 50 %). */
 function makeLimit(start, hours, now, soonH, { id, nom, depart, perso, stop }) {
   const due = new Date(start.getTime() + hours * 3600e3);
+  if (stop && !stop.at) {
+    /* fix1 : fin déjà atteinte quand le départ a été saisi (saisie tardive) : ni en cours ni « dépassé » ; heure à confirmer (« ✓ Fait ») */
+    const label = htTitle(nom, hours);
+    return {
+      id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining: 0, pct: 1, soonH,
+      stopped: true, pending: true, stopAt: null, stopPar: stop.par, respected: true,
+      full: `${nom} · ${fmtH(hours)} h — depuis ${depart.charAt(0).toLowerCase()}${depart.slice(1)} ${fmtDM(start)} — limite ${fmtDM(due)} — fin atteinte, heure à confirmer`,
+      tone: 'wip', level: 'done', etat: 'à confirmer', rest: 'Fin atteinte · heure à confirmer', short: 'À confirmer', when: '',
+    };
+  }
   if (stop) {
     /* v5 : holding time arrêté (fin atteinte) : hors alertes et compteurs, gardé pour la traçabilité */
     const marge = due - stop.at, ok = marge >= 0, label = htTitle(nom, hours);
     const when = sameDayAs(stop.at, now) ? fmtTime(stop.at) : fmtDM(stop.at);
     return {
-      id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining: marge, pct: Math.min(1, Math.max(0, (stop.at - start) / (hours * 3600e3))),
+      id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining: marge, pct: Math.min(1, Math.max(0, (stop.at - start) / (hours * 3600e3))), soonH,
       stopped: true, stopAt: stop.at, stopPar: stop.par, respected: ok,
       full: `${nom} · ${fmtH(hours)} h — depuis ${depart.charAt(0).toLowerCase()}${depart.slice(1)} ${fmtDM(start)} — limite ${fmtDM(due)} — fait le ${fmtDM(stop.at)}`,
       tone: ok ? 'ok' : 'todo', level: ok ? 'done' : 'late', etat: ok ? 'respecté' : 'dépassé',
@@ -4637,7 +4774,7 @@ function makeLimit(start, hours, now, soonH, { id, nom, depart, perso, stop }) {
   const soon = remaining < soonH * 3600e3;
   const label = htTitle(nom, hours);
   return {
-    id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining, pct,
+    id, nom, perso: !!perso, depart, label, printLabel: label, hours, start, due, remaining, pct, soonH,
     full: `${nom} · ${fmtH(hours)} h — depuis ${depart.charAt(0).toLowerCase()}${depart.slice(1)} ${fmtDM(start)} — limite ${fmtDM(due)}`,
     tone: remaining < 0 ? 'todo' : soon ? 'wip' : 'neutral',
     level: remaining < 0 ? 'over' : soon ? 'soon' : pct >= 0.5 ? 'mid' : 'ok',
@@ -4655,8 +4792,8 @@ function limitOf(f, c, now) {
   const id = f.custom ? f.htId : f.limit.table;
   const fin = f.custom ? (Params.get().rapport.custom.find(x => x.id === f.htId) || {}).fin : Params.htFinOf(f.limit.table);
   return makeLimit(start, hours, now, f.limit.soon ?? soonHours(), f.custom
-    ? { id, nom: f.htName, depart: 'départ saisi', perso: true, stop: htStopOf(id, fin, c) }
-    : { id, nom: Params.htName(f.limit.table), depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), stop: htStopOf(id, fin, c) });
+    ? { id, nom: f.htName, depart: 'départ saisi', perso: true, stop: htStopOf(id, fin, c, start) }
+    : { id, nom: Params.htName(f.limit.table), depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), stop: htStopOf(id, fin, c, start) });
 }
 /** Holding times personnalisés qui partent d'un champ date EXISTANT (onglet Paramètres › « Départ ») : pas de nouveau champ,
     une échéance de plus sous ce champ. */
@@ -4669,7 +4806,7 @@ function customLimitsOf(f, b, lineId, c, now) {
   if (!start) return [];
   return startCustoms(b, lineId).filter(x => x.start === f.key
       && (!x.produits.length || x.produits.includes(c.produit) || x.produits.includes(Params.baseOf(lineId, c.produit))))
-    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), perso: true, stop: htStopOf(x.id, x.fin, c) }), custom: x }));
+    .map(x => ({ ...makeLimit(start, x.h, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: labelOf(f, c).replace(/\s*\(.*\)$/, ''), perso: true, stop: htStopOf(x.id, x.fin, c, start) }), custom: x }));
 }
 /** Toutes les limites d'un champ : la sienne (schéma ou champ personnalisé) + celles qui partent de lui. */
 function limitsOfField(f, b, lineId, c, now) {
@@ -4684,6 +4821,7 @@ function computeAlerts(report, now) {
       if (f.key === 'echantillon' && c.echantillon === 'AU FRIGO' && !naReason(f, c)) frigo.push({ band: b, line: l, lot: c.lot });
       for (const lim of limitsOfField(f, b, l.id, c, now)) (lim.stopped ? done : limits).push({ ...lim, band: b, line: l, lot: c.lot, field: f.key });
     }
+    for (const lim of suiviLimits(b, l, c, now)) (lim.stopped ? done : limits).push({ ...lim, band: b, line: l, lot: c.lot, field: '' });
   }
   limits.sort((a, b) => a.due - b.due);
   return { frigo, limits, done };
@@ -4741,8 +4879,8 @@ function stepFields(st) {
 }
 /* ---------- v5 : holding times avec une fin ---------- */
 /** Holding times possibles d'une carte : { id, nom, key (champ de départ), fin }. */
-function htDefsOf(b, lineId) {
-  const out = [];
+function htDefsOf(b, lineId, c = null) {
+  const out = c ? suiviDefs(c) : [];
   for (const f of fieldsFor(b, lineId)) {
     if (f.limit && f.custom) out.push({ id: f.htId, key: f.key, fin: (Params.get().rapport.custom.find(x => x.id === f.htId) || {}).fin || { type: 'manuel' } });
     else if (f.limit && f.limit.table) out.push({ id: f.limit.table, key: f.key, fin: Params.htFinOf(f.limit.table) });
@@ -4750,6 +4888,17 @@ function htDefsOf(b, lineId) {
   for (const x of startCustoms(b, lineId)) out.push({ id: x.id, key: x.start, fin: x.fin || { type: 'manuel' } });
   return out;
 }
+/** fix1 : holding times « suivis » d'une carte en cours (démarrés sur le lot suivant, toujours en cours à son passage en cours). */
+const suiviDefs = c => (c.htSuivis || []).map(x => ({ id: x.id, key: null, start: x.start, fin: x.fin, suivi: x }));
+function suiviLimits(b, l, c, now) {
+  if (b.kind !== 'enCours' || !c.htSuivis || !c.htSuivis.length) return [];
+  return c.htSuivis.map(x => {
+    const start = parseLocal(x.start);
+    return start ? { ...makeLimit(start, x.hours, now, x.soon ?? soonHours(), { id: x.id, nom: x.nom, depart: x.depart, perso: x.perso, stop: htStopOf(x.id, x.fin, c, start) }), suivi: true } : null;
+  }).filter(Boolean);
+}
+/** Seuil « bientôt » commun à ces holding times (celui de l'outil), ou null si l'un d'eux a son propre seuil (libellés neutres). */
+const commonSoon = lims => { const g = soonHours(); return lims.every(x => x.soonH == null || x.soonH === g) ? g : null; };
 const finLabel = (fin, b, lineId) => {
   if (!fin || fin.type === 'manuel') return 'manuel (bouton « ✓ Fait »)';
   const f = fieldsFor(b, lineId).find(x => x.key === fin.k);
@@ -4757,11 +4906,24 @@ const finLabel = (fin, b, lineId) => {
   return fin.type === 'date' ? `date « ${lbl} » saisie` : `${lbl} = ${fin.v.join(' ou ')}`;
 };
 /** Arrêt d'un holding time : { at: Date, par } ou null (champ date de fin, statut relevé à son passage, « ✓ Fait »). */
-function htStopOf(id, fin, c) {
-  if (fin && fin.type === 'date') { const d = parseLocal(c[fin.k]); if (d) return { at: d, par: 'date' }; }
+/* fix1 : un arrêt « statut » n'est valable que tant que le statut est dans les valeurs de fin (statut remis en arrière → HT de nouveau
+   en cours) ; un arrêt antérieur au départ est ignoré (nouvelle date de départ) ; statut de fin déjà atteint sans heure relevée (départ
+   saisi après coup) → { at: null, par: 'aConfirmer' } ; « Rouvrir » sur une fin date/statut : { rouvert, cond } ignore la condition tant
+   qu'elle n'a pas changé. */
+const finCond = (fin, c) => (fin && (fin.type === 'date' || fin.type === 'statut') ? String(c[fin.k] || '') : '');
+function htStopOf(id, fin, c, start = null) {
   const x = c.htFin && c.htFin[id];
-  const d = x ? parseLocal(x.at) : null;
-  return d ? { at: d, par: x.par } : null;
+  if (x && x.rouvert && x.cond === finCond(fin, c)) return null;
+  const ok = st => (st && (!start || !st.at || st.at >= start) ? st : null);
+  let stop = null;
+  if (fin && fin.type === 'date') { const d = parseLocal(c[fin.k]); if (d) stop = ok({ at: d, par: 'date' }); }
+  if (!stop && x && !x.rouvert) {
+    const d = parseLocal(x.at);
+    const statutOff = x.par === 'statut' && fin && fin.type === 'statut' && !fin.v.includes(c[fin.k]);
+    if (d && !statutOff) stop = ok({ at: d, par: x.par });
+  }
+  if (!stop && fin && fin.type === 'statut' && fin.v.includes(c[fin.k])) stop = { at: null, par: 'aConfirmer' };
+  return stop;
 }
 /** Suivi automatique après chaque modification : heure des étapes faites, arrêt des holding times par statut,
     vide de ligne (VDL EN COURS / FAIT → champs listés remis à N/A). Renvoie les remises à N/A (pour le toast « Annuler »). */
@@ -4780,10 +4942,17 @@ function trackReport(r, prev, now) {
     }
     /* clic sur une étape : signature des statuts prise APRÈS les effets du clic (vide de ligne) */
     if (c.etapeChoisie && c.etapeChoisie.fresh) c.etapeChoisie = { id: c.etapeChoisie.id, sig: statusSig(b, l.id, c) };
-    /* holding times arrêtés par un statut : heure relevée au passage à la valeur */
-    for (const d of htDefsOf(b, l.id)) {
-      if (!d.fin || d.fin.type !== 'statut' || !parseLocal(c[d.key]) || (c.htFin && c.htFin[d.id])) continue;
-      if (d.fin.v.includes(c[d.fin.k]) && !d.fin.v.includes(p[d.fin.k])) c.htFin = { ...(c.htFin || {}), [d.id]: { at, par: 'statut' } };
+    /* holding times arrêtés par un statut : heure relevée au passage à la valeur ; statut remis en arrière → arrêt retiré (HT de
+       nouveau en cours) ; nouvelle date de départ → un arrêt antérieur à ce départ est retiré (fix1) */
+    for (const d of [...htDefsOf(b, l.id), ...suiviDefs(c)]) {
+      const startC = d.key ? c[d.key] : d.start, startP = d.key ? p[d.key] : d.start;
+      const x = c.htFin && c.htFin[d.id];
+      const drop = () => { const y = { ...c.htFin }; delete y[d.id]; c.htFin = y; };
+      if (x && !x.rouvert && startC !== startP) { const s0 = parseLocal(startC), s1 = parseLocal(x.at); if (!s0 || (s1 && s1 < s0)) { drop(); continue; } }
+      if (!d.fin || d.fin.type !== 'statut' || !parseLocal(startC)) continue;
+      const inC = d.fin.v.includes(c[d.fin.k]), inP = d.fin.v.includes(p[d.fin.k]);
+      if (x && !x.rouvert && x.par === 'statut' && !inC) { drop(); continue; }
+      if (inC && !inP && (!x || x.rouvert)) c.htFin = { ...(c.htFin || {}), [d.id]: { at, par: 'statut' } };
     }
     /* heure des étapes devenues faites */
     const was = parcoursState(b, l, p), st = parcoursState(b, l, c);
@@ -4791,7 +4960,7 @@ function trackReport(r, prev, now) {
       const done = st.state(i) === 'ok';
       const wasDone = was.steps.some((x, j) => x.id === s.id && was.state(j) === 'ok');
       if (done && !wasDone && !c.etapesAt[s.id]) c.etapesAt = { ...c.etapesAt, [s.id]: at };
-      if (!done && i > st.cur && c.etapesAt[s.id]) { const e = { ...c.etapesAt }; delete e[s.id]; c.etapesAt = e; }
+      if (!done && i >= st.cur && c.etapesAt[s.id]) { const e = { ...c.etapesAt }; delete e[s.id]; c.etapesAt = e; }
     });
   }
   return resets;
@@ -4925,7 +5094,7 @@ function shiftSynth(report, now, alerts = computeAlerts(report, now)) {
   else N('Aucun point critique.');
   const kpis = [
     { k: 'prod', n: `${nProd}`, of: '/ 3', label: 'Lignes en production', sub: notProd.length ? notProd.map(x => `${x.line.name} ${x.prod.word.toLowerCase()}`).join(' · ') : 'les 3 lignes tournent', tone: nProd ? 'green' : 'grey' },
-    { k: 'over', n: `${over.length}`, label: 'Holding times dépassés', sub: soon.length ? `${soon.length} ${p(soon.length, 'proche', 'proches')} (< ${Params.fmtHours(soonHours())} h)` : `${alerts.limits.length} en cours`, tone: over.length ? 'red' : 'grey', subTone: soon.length ? 'orange' : '' },
+    { k: 'over', n: `${over.length}`, label: 'Holding times dépassés', sub: soon.length ? `${soon.length} ${p(soon.length, 'proche', 'proches')}${commonSoon(soon) != null ? ` (< ${Params.fmtHours(soonHours())} h)` : ' de l’échéance'}` : `${alerts.limits.length} en cours`, tone: over.length ? 'red' : 'grey', subTone: soon.length ? 'orange' : '' },
     { k: 'frigo', n: `${alerts.frigo.length}`, label: 'Au frigo', sub: alerts.frigo.length ? alerts.frigo.map(x => x.line.name).join(', ') : 'rien en attente', tone: alerts.frigo.length ? 'blue' : 'grey' },
     { k: 'crit', n: `${crit.length}`, label: 'Points critiques', sub: crit.length ? 'épinglés en haut' : pins.length ? `${pins.length} épinglé${pins.length > 1 ? 's' : ''} (attention / info)` : 'aucun épinglé', tone: crit.length ? 'red' : 'grey' },
   ];
@@ -4964,7 +5133,7 @@ const stepWhen = (d, now) => (d ? (sameDayAs(d, now) ? fmtTime(d) : fmtDM(d)) : 
 function lotModel(b, l, c, at) {
   const d = detailModel(b, l, c, at, true);
   const pm = parcoursModel(b, l, c, at);
-  const hts = d.dates.flatMap(x => x.lims).sort((x, y) => (x.stopped ? 1 : 0) - (y.stopped ? 1 : 0) || x.remaining - y.remaining);
+  const hts = [...d.dates.flatMap(x => x.lims), ...suiviLimits(b, l, c, at).filter(x => !x.stopped || x.pending).map(limView)].sort((x, y) => (x.stopped ? 1 : 0) - (y.stopped ? 1 : 0) || x.remaining - y.remaining);
   const any = pm.steps.some(s => s.items.length) || pm.rest.length;
   const progressed = pm.st.auto > 0 || pm.manual;
   const vs = pm.steps.map((s, i) => {
@@ -4994,10 +5163,11 @@ function boardModel(report, now, alerts = computeAlerts(report, now)) {
   }
   for (const x of syn.soon) soon.push({ tone: 'o', icon: 'clock', what: `${x.nom} : reste ${fmtDur(x.remaining)}`, sub: `${fmtH(x.hours)} h, limite ${dueTxt(x.due, now)}`, line: x.line, lot: x.lot });
   const nProd = syn.lines.filter(x => x.prod.k === 'prod').length;
-  const soonH = Params.fmtHours(soonHours());
+  /* fix1 : seuil commun affiché seulement si aucun HT « bientôt » n'a son propre seuil ; sinon libellé neutre */
+  const soonCommon = commonSoon(syn.soon);
   const kpis = [
     { k: 'over', n: String(syn.over.length), label: `HT ${syn.over.length > 1 ? 'dépassés' : 'dépassé'}`, tone: syn.over.length ? 'red' : 'grey' },
-    { k: 'soon', n: String(syn.soon.length), label: `HT < ${soonH} h`, tone: syn.soon.length ? 'amber' : 'grey' },
+    { k: 'soon', n: String(syn.soon.length), label: soonCommon != null ? `HT < ${Params.fmtHours(soonCommon)} h` : 'HT bientôt', tone: syn.soon.length ? 'amber' : 'grey' },
     { k: 'prod', n: `${nProd}/3`, label: 'en remplissage', tone: nProd ? 'green' : 'grey' },
   ];
   const frigo = syn.frigo.map(x => ({ line: x.line, lot: x.lot, band: x.band, text: `${x.line.name} · ${x.lot || 'lot non renseigné'} · ${x.band.short}` }));
@@ -5074,7 +5244,10 @@ function undo() {
   const prev = undoStack.pop();
   if (!prev) { toast('Rien à annuler'); return; }
   undoMeta = { key: null, t: 0 };
+  /* fix1 : le shift n'est pas une donnée à annuler (choix de ce PC, changé automatiquement à l'heure) : il est gardé */
+  const sh = state.report.meta.shift;
   state.report = JSON.parse(prev);
+  state.report.meta.shift = sh;
   schedulePersist();
   schedulePrint();
   refresh();
@@ -5141,18 +5314,26 @@ function recordVersion(report, meta) {
   const at = meta && validIso(meta.savedAt);
   if (!at || !isObj(report)) return;
   if (state.versions.some(v => v.savedAt === at)) return;
-  state.versions = [...state.versions, { savedAt: at, savedBy: str(meta.savedBy, 80), report: clone(report) }]
-    .sort((a, b) => a.savedAt.localeCompare(b.savedAt)).slice(-VERSIONS_MAX);
+  const all = [...state.versions, { savedAt: at, savedBy: str(meta.savedBy, 80), report: clone(report) }].sort((a, b) => a.savedAt.localeCompare(b.savedAt));
+  /* fix1 : la référence des « changements depuis le dernier shift » (dernière version d'avant le début du shift) est gardée à part,
+     jamais évincée par les enregistrements faits pendant le shift */
+  const ref = refBefore(all, new Date());
+  const kept = all.slice(-VERSIONS_MAX);
+  state.versions = ref && !kept.includes(ref) ? [ref, ...kept] : kept;
   ls.set(KEYS.versions, JSON.stringify(state.versions));
   changesSig = '';
+}
+/** Dernière version enregistrée avant le début du shift courant (et dans les 24 h qui le précèdent), ou null. */
+function refBefore(vs, now) {
+  const start = shiftStart((state.report && state.report.meta.shift) || autoShift(now), now).getTime();
+  const before = vs.filter(v => { const t = Date.parse(v.savedAt); return t < start && t >= start - 24 * 3600e3; });
+  return before.length ? before[before.length - 1] : null;
 }
 function refVersion(now = new Date()) {
   const vs = state.versions;
   if (!vs.length) return null;
   const start = shiftStart(state.report.meta.shift || autoShift(now), now).getTime();
-  const before = vs.filter(v => { const t = Date.parse(v.savedAt); return t < start && t >= start - 24 * 3600e3; });
-  if (before.length) return before[before.length - 1];
-  return vs.find(v => Date.parse(v.savedAt) >= start) || vs[vs.length - 1];
+  return refBefore(vs, now) || vs.find(v => Date.parse(v.savedAt) >= start) || vs[vs.length - 1];
 }
 function displayVal(f, c) {
   const v = c[f.key];
@@ -5179,7 +5360,7 @@ function diffReports(ref, cur) {
       /* v5 : holding times arrêtés depuis la version de référence */
       const now = new Date();
       for (const f of fieldsFor(b, l.id)) for (const lim of limitsOfField(f, b, l.id, c, now)) {
-        if (!lim.stopped) continue;
+        if (!lim.stopped || lim.pending) continue;
         const d = htDefsOf(b, l.id).find(x => x.id === lim.id);
         if (d && htStopOf(d.id, d.fin, o)) continue;
         items.push({ kind: 'field', line: l, band: b, lot: c.lot, label: lim.nom, from: 'en cours', to: lim.respected ? `fait à ${fmtDM(lim.stopAt)} (respecté)` : `fait à ${fmtDM(lim.stopAt)} (dépassé de ${fmtDur(lim.remaining)})` });
@@ -5277,8 +5458,10 @@ function exportShared() { return clone({ report: state.report, history: state.hi
 function importShared(d, meta) {
   pushUndo();
   undoMeta = { key: null, t: 0 };
+  const sh = state.report.meta.shift;
   state.report = clone(d.report);
   if (meta) { recordVersion(d.report, meta); enforceShift(); }
+  else state.report.meta.shift = sh; /* « Annuler » un chargement : le shift courant reste */
   /* chargement depuis N: : l'historique est fusionné (rien ne se perd) ; « Annuler » : rétabli tel quel */
   state.history = meta ? mergeHistory(d.history, state.history) : clone(d.history);
   if (!meta || d.settings.mailTo || d.settings.mailCc) state.settings = clone(d.settings);
@@ -5483,27 +5666,14 @@ function buildCardField(f, line, get, set, id, band) {
   const note = h('div', { class: 'na-note', hidden: true });
   const box = h('div', { class: 'field__box' }, ctl.el, note);
   const derived = f.limit ? h('div', { class: 'derived', hidden: true }) : null;
+  const doubt = f.type === 'datetime' && band ? h('p', { class: 'dt-warn', role: 'status', hidden: true }) : null;
   /* échéances des holding times personnalisés qui partent de ce champ (onglet Paramètres › « Départ ») */
   const more = f.type === 'datetime' && !f.custom ? h('div', { class: 'derived-more', hidden: true }) : null;
   const badge = h('span', { class: 'new-badge', hidden: true, title: 'Modifié depuis la dernière version enregistrée sur N: (shift précédent)' }, icon('spark', 'icon'), 'Nouveau');
-  const el = h('div', { class: `field field--${f.type}${f.type === 'textarea' ? ' field--wide' : ''}`, 'data-key': f.key }, lbl, badge, box, derived, more);
+  const el = h('div', { class: `field field--${f.type}${f.type === 'textarea' ? ' field--wide' : ''}`, 'data-key': f.key }, lbl, badge, box, doubt, derived, more);
   const newKey = band ? `${band.id}.${line.id}.${f.key}` : null;
   let derivedSig = '', moreSig = '';
-  const derivedRow = (lim, cls = '') => {
-    const pct = Math.min(100, Math.round(lim.pct * 100));
-    /* v5 : holding time arrêté : « Respecté · fait à 08:40, 2 h 14 avant la limite » (vert) ou « Dépassé de … » (rouge), bouton « Rouvrir » */
-    if (lim.stopped) {
-      return [icon(lim.respected ? 'done' : 'alert'),
-        h('span', { class: 'derived__lbl', text: lim.label }),
-        h('span', { class: 'derived__val' }, h('b', { text: lim.rest }), ` · limite ${fmtDM(lim.due)}`),
-        band ? h('button', { type: 'button', class: 'btn-link derived__act', onclick: () => htReopen(band, line, lim.id), 'aria-label': `Rouvrir ${lim.nom}` }, 'Rouvrir') : null];
-    }
-    return [icon(lim.tone === 'todo' ? 'alert' : 'clock'),
-      h('span', { class: 'derived__lbl', text: lim.label }),
-      h('span', { class: 'derived__val' }, h('b', { text: fmtDM(lim.due) }), ` · ${lim.rest}`),
-      band ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm derived__done', onclick: () => htDoneDialog(band, line, lim), 'aria-label': `${lim.nom} : fait` }, icon('check'), 'Fait') : null,
-      h('span', { class: `derived__bar ht--${lim.level}${cls}`, 'aria-hidden': 'true' }, h('i', { style: `width:${pct}%` }))];
-  };
+  const derivedRow = (lim, cls = '') => htDerivedRow(lim, band, line, cls);
   function sync() {
     const c = get();
     const text = labelOf(f, c);
@@ -5515,6 +5685,11 @@ function buildCardField(f, line, get, set, id, band) {
     box.querySelectorAll('input,select,textarea,button').forEach(x => { x.disabled = !!na; });
     ctl.sync();
     const now = new Date();
+    if (doubt) {
+      const t = na ? '' : dateDoubt(c[f.key], now);
+      doubt.hidden = !t;
+      if (t && doubt.textContent !== t) doubt.replaceChildren(icon('alert', 'icon icon--sm'), h('span', { text: t }));
+    }
     if (derived) {
       const lim = limitOf(f, c, now);
       const sig = lim ? `${lim.label}|${+lim.due}|${lim.rest}|${lim.tone}|${Math.round(lim.pct * 100)}|${lim.stopped}` : '';
@@ -5522,7 +5697,7 @@ function buildCardField(f, line, get, set, id, band) {
         derivedSig = sig;
         derived.hidden = !lim;
         if (lim) {
-          derived.className = `derived tone-${lim.tone}${lim.stopped ? ` is-stopped is-${lim.respected ? 'kept' : 'late'}` : ''}`;
+          derived.className = `derived tone-${lim.tone}${lim.stopped && !lim.pending ? ` is-stopped is-${lim.respected ? 'kept' : 'late'}` : ''}`;
           derived.replaceChildren(...derivedRow(lim));
         }
       }
@@ -5533,7 +5708,7 @@ function buildCardField(f, line, get, set, id, band) {
       if (sig !== moreSig) {
         moreSig = sig;
         more.hidden = !lims.length;
-        more.replaceChildren(...lims.map(l => h('div', { class: `derived tone-${l.tone}${l.stopped ? ` is-stopped is-${l.respected ? 'kept' : 'late'}` : ''}` }, ...derivedRow(l))));
+        more.replaceChildren(...lims.map(l => h('div', { class: `derived tone-${l.tone}${l.stopped && !l.pending ? ` is-stopped is-${l.respected ? 'kept' : 'late'}` : ''}` }, ...derivedRow(l))));
       }
     }
     if (newKey) {
@@ -5544,6 +5719,30 @@ function buildCardField(f, line, get, set, id, band) {
     }
   }
   return { el, sync };
+}
+
+/** Ligne d'un holding time sous son champ (ou dans « Holding times qui continuent ») : en cours, à confirmer, ou arrêté. */
+function htDerivedRow(lim, band, line, cls = '') {
+  const pct = Math.min(100, Math.round(lim.pct * 100));
+  /* v5 : holding time arrêté : « Respecté · fait à 08:40, 2 h 14 avant la limite » (vert) ou « Dépassé de … » (rouge), bouton « Rouvrir » */
+  if (lim.pending) {
+    /* fix1 : fin déjà atteinte quand le départ a été saisi : heure à confirmer */
+    return [icon('clock'),
+      h('span', { class: 'derived__lbl', text: lim.label }),
+      h('span', { class: 'derived__val' }, h('b', { text: lim.rest }), ` · limite ${fmtDM(lim.due)}`),
+      band ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm derived__done', onclick: () => htDoneDialog(band, line, lim), 'aria-label': `${lim.nom} : indiquer l’heure de fin` }, icon('check'), 'Fait') : null];
+  }
+  if (lim.stopped) {
+    return [icon(lim.respected ? 'done' : 'alert'),
+      h('span', { class: 'derived__lbl', text: lim.label }),
+      h('span', { class: 'derived__val' }, h('b', { text: lim.rest }), ` · limite ${fmtDM(lim.due)}`),
+      band ? h('button', { type: 'button', class: 'btn-link derived__act', onclick: () => htReopen(band, line, lim.id), 'aria-label': `Rouvrir ${lim.nom}` }, 'Rouvrir') : null];
+  }
+  return [icon(lim.tone === 'todo' ? 'alert' : 'clock'),
+    h('span', { class: 'derived__lbl', text: lim.label }),
+    h('span', { class: 'derived__val' }, h('b', { text: fmtDM(lim.due) }), ` · ${lim.rest}`),
+    band ? h('button', { type: 'button', class: 'btn btn-secondary btn-sm derived__done', onclick: () => htDoneDialog(band, line, lim), 'aria-label': `${lim.nom} : fait` }, icon('check'), 'Fait') : null,
+    h('span', { class: `derived__bar ht--${lim.level}${cls}`, 'aria-hidden': 'true' }, h('i', { style: `width:${pct}%` }))];
 }
 
 /* v5 : saisie rangée par étape : chaque champ sous son étape (Paramètres › Parcours), étapes faites repliées en une ligne résumé
@@ -5562,9 +5761,12 @@ function buildCard(b, l) {
   const steps = h('ol', { class: 'fs-steps', 'aria-label': `Étapes du lot (${l.name}, ${b.short})` });
   const rest = h('section', { class: 'fs-rest', hidden: true }, h('h4', { class: 'fs-rest__t', text: 'Hors parcours' }), h('div', { class: 'fs-flds' }));
   const manualNote = h('p', { class: 'fs-manual', hidden: true });
+  /* fix1 : holding times démarrés sur le lot suivant et toujours en cours (affichés jusqu'à leur arrêt) */
+  const suivis = b.kind === 'enCours' ? h('section', { class: 'fs-rest fs-suivis', hidden: true }, h('h4', { class: 'fs-rest__t', text: 'Holding times qui continuent' }), h('div', { class: 'fs-flds' })) : null;
+  let suivisSig = '';
   const notes = fv.get('remarques');
   const body = h('div', { class: 'card__body card__body--steps' },
-    h('div', { class: 'field-pair' }, fv.get('lot').el, fv.get('produit').el), manualNote, steps, rest, notes ? h('div', { class: 'fs-notes' }, notes.el) : null);
+    h('div', { class: 'field-pair' }, fv.get('lot').el, fv.get('produit').el), manualNote, steps, rest, suivis, notes ? h('div', { class: 'fs-notes' }, notes.el) : null);
   const advance = () => confirmAdvance(l);
   const foot = b.kind === 'enCours'
     ? h('div', { class: 'card__foot' }, h('button', { type: 'button', class: 'btn btn-quiet btn-sm', onclick: advance }, icon('done'), 'Lot terminé', icon('arrow', 'icon icon--sm'), 'passer au suivant'))
@@ -5597,7 +5799,7 @@ function buildCard(b, l) {
         if (li.classList.contains('is-closed')) return;
         autogrowIn(li);
       });
-      return { sp, li, tog, sum, here, flds, has };
+      return { sp, li, tog, sum, here, flds, has, fields: groups[i] };
     });
     steps.replaceChildren(...items.map(x => x.li));
     const rf = rest.querySelector('.fs-flds');
@@ -5608,23 +5810,37 @@ function buildCard(b, l) {
     const c = get();
     const st = parcoursState(b, l, c);
     layout(st);
-    const pm = parcoursModel(b, l, c, new Date());
+    const now = new Date();
+    const pm = parcoursModel(b, l, c, now);
     const all = !!prefs.allSteps;
     items.forEach((x, i) => {
       const s = st.state(i);
-      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? (s !== 'ok' || (st.allDone && i === st.cur)));
+      /* fix1 : une étape faite qui contient un holding time encore en cours (ou à confirmer) reste ouverte ; repliée à la main, son
+         résumé en donne l'état */
+      const running = s === 'ok' ? x.fields.flatMap(f => limitsOfField(f, b, l.id, c, now)).filter(y => !y.stopped || y.pending) : [];
+      const open = all || (stepOpen.get(`${b.id}.${l.id}.${x.sp.id}.${s}`) ?? (s !== 'ok' || (st.allDone && i === st.cur) || running.length > 0));
       x.li.dataset.state = s;
       x.li.className = `fs-step is-${s}${x.has && !open ? ' is-closed' : ''}${i === st.cur && st.manual ? ' is-manual' : ''}`;
       if (x.has) x.tog.setAttribute('aria-expanded', String(open));
       x.flds.hidden = !open || !x.has;
       x.tog.querySelector('.fs-state').textContent = s === 'ok' ? ', faite' : s === 'now' ? ', étape actuelle' : ', à venir';
       const ms = pm.steps[i];
-      const parts = s === 'ok' ? [stepWhen(ms.at, new Date()), ...ms.items.filter(y => y.kind !== 'status' || y.tone !== 'ok').map(y => `${y.label} ${y.value}`)] : [];
+      const parts = s === 'ok' ? [stepWhen(ms.at, now), ...ms.items.filter(y => y.kind !== 'status' || y.tone !== 'ok').map(y => `${y.label} ${y.value}`),
+        ...running.map(y => `${y.nom} : ${y.pending ? 'heure de fin à confirmer' : y.rest}`)] : [];
       const sumTxt = parts.filter(Boolean).join(' · ');
       if (x.sum.textContent !== sumTxt) x.sum.textContent = sumTxt;
       x.here.hidden = i === st.cur && !st.allDone;
     });
     if (vdlGo) vdlGo.hidden = !(st.steps[st.cur] && st.steps[st.cur].id === 'vdl') || !c.lot;
+    if (suivis) {
+      const lims = suiviLimits(b, l, c, now).filter(y => !y.stopped || y.pending);
+      const sig = lims.map(y => `${y.id}|${+y.due}|${y.rest}|${y.tone}|${Math.round(y.pct * 100)}|${y.pending}`).join('#');
+      if (sig !== suivisSig) {
+        suivisSig = sig;
+        suivis.hidden = !lims.length;
+        suivis.querySelector('.fs-flds').replaceChildren(...lims.map(y => h('div', { class: `derived tone-${y.tone}`, 'data-ht': y.id }, ...htDerivedRow(y, b, l))));
+      }
+    }
     manualNote.hidden = !st.manual;
     if (st.manual) {
       manualNote.replaceChildren(icon('edit', 'icon icon--sm'), h('span', { text: `Étape « ${st.steps[st.cur].nom} » choisie à la main (jusqu’au prochain changement de statut). ` }),
@@ -6065,9 +6281,9 @@ function rsVsEl(m) {
 function rsHtEl(x) {
   const pct = Math.min(100, Math.round(x.pct * 100));
   if (x.stopped) {
-    return h('div', { class: `rs-ht ht--${x.respected ? 'done' : 'late'}`, title: x.full },
+    return h('div', { class: `rs-ht ht--${x.pending ? 'soon' : x.respected ? 'done' : 'late'}`, title: x.full },
       h('div', { class: 'rs-ht__nm' }, h('b', {}, htNameH(x.nom, x.hours), x.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('span', { class: 'rs-ht__st', text: x.rest })),
-      h('b', { class: 'rs-ht__rt' }, x.respected ? [icon('check'), 'Respecté'] : `+${fmtDur(x.remaining)}`));
+      h('b', { class: 'rs-ht__rt' }, x.pending ? 'À confirmer' : x.respected ? [icon('check'), 'Respecté'] : `+${fmtDur(x.remaining)}`));
   }
   return h('div', { class: `rs-ht ht--${x.level}`, title: x.full },
     h('div', { class: 'rs-ht__nm' }, h('b', {}, htNameH(x.nom, x.hours), x.perso ? h('span', { class: 'perso', text: 'PERSO' }) : null), h('span', { text: `limite ${fmtDM(x.dueAt)}` })),
@@ -6273,6 +6489,8 @@ const PROCESS_ORDER = {
 };
 /** Détail d'une carte : TOUTES les valeurs renseignées, dans l'ordre du procédé (statuts avec leur ton, textes, dates),
     puis les holding times (date de départ + échéances) et les remarques. Un champ à N/A, vide ou non applicable n'apparaît pas. */
+/** Holding time vu par les cartes (écran, impression, PDF). */
+const limView = x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone, nom: x.nom, hours: x.hours, remaining: x.remaining, dueAt: x.due, perso: x.perso, full: x.full, id: x.id, start: x.start, due0: x.due, stopped: !!x.stopped, pending: !!x.pending, respected: x.respected, stopAt: x.stopAt, short: x.short, when: x.when, suivi: !!x.suivi });
 function detailModel(b, l, c, at, full = false) {
   const steps = [], dates = [];
   const order = PROCESS_ORDER[b.kind] || [];
@@ -6287,7 +6505,7 @@ function detailModel(b, l, c, at, full = false) {
     if (f.type === 'datetime') {
       const d = parseLocal(v);
       if (!d) return;
-      const lims = limitsOfField(f, b, l.id, c, at).map(x => ({ label: x.printLabel, due: fmtDM(x.due), rest: x.rest, level: x.level, pct: x.pct, tone: x.tone, nom: x.nom, hours: x.hours, remaining: x.remaining, dueAt: x.due, perso: x.perso, full: x.full, id: x.id, start: x.start, due0: x.due, stopped: !!x.stopped, respected: x.respected, stopAt: x.stopAt, short: x.short, when: x.when }));
+      const lims = limitsOfField(f, b, l.id, c, at).map(limView);
       if (lims.length) dates.push({ label, value: fmtDM(d), lims });
       else steps.push({ kind: 'date', r: rank(f.key, i), label, value: fmtDM(d), tone: 'neutral' });
       return;
@@ -6810,7 +7028,7 @@ function rsLotLayout(m, col, w, maxH = 999) {
   for (const ht of m.hts) {
     if (ht.stopped) {
       /* v5 : holding time arrêté : bandeau vert « Respecté · fait à … » ou rouge « Dépassé de … » */
-      const okH = ht.respected, rt = okH ? 'Respecté' : `+${fmtDur(ht.remaining)}`, rw = P.width(rt, 8.6, 'B');
+      const okH = ht.respected, rt = ht.pending ? 'À confirmer' : okH ? 'Respecté' : `+${fmtDur(ht.remaining)}`, rw = P.width(rt, 8.6, 'B');
       const nm0 = htNameH(ht.nom, ht.hours) + (ht.perso ? ' · PERSO' : '');
       const restW = P.width(ht.rest, 6.6, 'B'), nmW = P.width(nm0, 7.6, 'B');
       const one = nmW + restW + 6 <= iw; /* une seule ligne quand la place le permet (compact) */
@@ -7342,7 +7560,7 @@ async function exportPdf({ fromClose = false } = {}) {
     catch (e) {
       const again = await openDialog({
         title: 'PDF non enregistré sur N:', icon: 'alert', tone: 'warn',
-        body: [h('p', { text: e && e.name === 'NotAllowedError' ? 'Windows n’a pas autorisé l’écriture dans le dossier principal.' : 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs (PDF ouvert dans un lecteur ?).' }),
+        body: [h('p', { text: e && e.name === 'NotAllowedError' ? 'Windows n’a pas autorisé l’écriture dans le dossier principal.' : e && e.name === 'QuotaExceededError' ? 'Disque N: plein : il n’y a plus de place pour écrire le PDF. Libérez de la place sur N: (ou contactez l’IT), puis réessayez.' : 'Écriture impossible : disque N: inaccessible, ou fichier ouvert ailleurs (PDF ouvert dans un lecteur ?).' }),
           h('p', { class: 'muted', text: 'Vous pouvez faire le PDF avec l’impression d’Edge (« Enregistrer au format PDF »).' })],
         actions: [{ label: 'Fermer', value: false }, { label: 'Imprimer avec Edge', value: true, cls: 'btn-primary', icon: 'printer', autofocus: true }],
       }).result;
@@ -7455,10 +7673,41 @@ function prepareMail(pdfName, { quiet = false } = {}) {
 
 /* ---------- « Clôturer le shift » : 1) Enregistrer sur N: 2) PDF rangé dans le dossier du mois 3) Outlook Web prérempli ---------- */
 let closing = false;
+/** fix1 : shift qui vient de finir (borne passée depuis moins de 90 min) → { name, start, cur, curStart }, sinon null. */
+function justEndedShift(now) {
+  const cur = autoShift(now), curStart = shiftStart(cur, now);
+  if (now - curStart >= 90 * 60e3 || now < curStart) return null;
+  const before = new Date(curStart.getTime() - 60e3), name = autoShift(before);
+  return { name, start: shiftStart(name, before), cur, curStart };
+}
+const ddmm = d => `${pad2(d.getDate())}-${pad2(d.getMonth() + 1)}`;
+/** fix1 : clôture lancée juste après une passation : quel shift clôturer ? (celui qui vient de finir, par défaut) */
+function askCloseShift(je, current, now) {
+  const curName = current || je.cur;
+  const curStart = shiftStart(curName, now);
+  return openDialog({
+    title: 'Quel shift clôturer ?', icon: 'flag', className: 'dlg--close-which',
+    body: [h('p', {}, 'Le shift ', h('b', { text: `${je.name} du ${ddmm(je.start)}` }), ` s’est terminé à ${fmtTime(je.curStart)}. Le PDF, le mail et l’historique porteront le nom du shift choisi.`)],
+    actions: [
+      { label: 'Annuler', value: false },
+      { label: `Le shift en cours (${curName} du ${ddmm(curStart)})`, value: 'cur', cls: 'btn-secondary' },
+      { label: `Clôturer le shift ${je.name} du ${ddmm(je.start)} (qui vient de finir)`, value: 'prev', cls: 'btn-primary', icon: 'flag', autofocus: true },
+    ],
+  }).result;
+}
 async function closeShift() {
   if (closing) return;
   closing = true;
   const now = new Date();
+  /* fix1 : dans les 90 min qui suivent une borne de shift, choix du shift à clôturer (le shift affiché revient ensuite tel quel) */
+  const sh0 = state.report.meta.shift;
+  const je = justEndedShift(now);
+  if (je && sh0 !== je.name) {
+    const choice = await askCloseShift(je, sh0, now);
+    if (!choice) { closing = false; return; }
+    if (choice === 'prev') { state.report.meta.shift = je.name; refresh(); }
+  }
+  const restoreShift = () => { if (state.report.meta.shift !== sh0) { state.report.meta.shift = sh0; schedulePersist(); schedulePrint(); refresh(); } };
   const base = fileBase(state.report.meta.shift, now);
   const STEPS = [
     { id: 'save', label: 'Enregistrer sur N:', ic: 'save' },
@@ -7486,7 +7735,7 @@ async function closeShift() {
   const parts = [];
   try {
     set('save', 'run', 'Enregistrement de tout l’outil (sauvegarde.js)…');
-    const saved = await Sauvegarde.save();
+    const saved = await Sauvegarde.save({ wait: true }); /* enregistrement déjà en cours (Ctrl+S) : on attend sa fin */
     if (saved === true) { set('save', 'ok', `Enregistré sur N: à ${fmtTime(new Date())}`); parts.push('Enregistré'); }
     else if (saved === 'download') { set('save', 'ok', 'sauvegarde.js téléchargé : à déposer dans le dossier de l’outil sur N:'); parts.push('Sauvegarde téléchargée'); }
     else { set('save', 'fail', 'Non enregistré sur N: (refusé ou annulé) — tout reste gardé sur ce PC.'); parts.push('Non enregistré sur N:'); }
@@ -7499,7 +7748,7 @@ async function closeShift() {
       parts.push(`PDF rangé dans ${pdf.folder}`);
     } else { set('pdf', 'fail', 'PDF non créé (annulé).'); parts.push('PDF non créé'); }
     /* l'instantané du PDF (historique) est ajouté après l'enregistrement : il part aussi sur N: */
-    if (pdf && saved === true) await Sauvegarde.save();
+    if (pdf && saved === true) await Sauvegarde.save({ wait: true });
     set('mail', 'run', 'Ouverture du mail…');
     const name = pdf ? pdf.file : `${base}.pdf`;
     const opened = prepareMail(name, { quiet: true });
@@ -7513,7 +7762,7 @@ async function closeShift() {
         pdf && pdf.folder ? ` (dans ${Disk.info().name || 'le dossier principal'} › ${pdf.folder})` : ' (ou glissez-le depuis la barre de téléchargements d’Edge)', '.')));
     summary.textContent = Core.typo(parts.join(' · '));
     toast(parts.join(' · '), { icon: 'check', timeout: 10000 });
-  } finally { closing = false; }
+  } finally { closing = false; restoreShift(); }
   return d;
 }
 
@@ -7527,9 +7776,28 @@ function openPoints(b, lineId, c) {
 }
 /** Passer au lot suivant : le lot suivant devient le lot en cours (lot, produit, remarques et étape atteinte repris ; ses données propres
     — dossier, cuves, D.S.… — ne suivent pas), le suivant +1 devient le suivant ; l'échantillon de l'ancien lot part dans « Échantillons à suivre ». */
+/** fix1 : holding times EN COURS du lot suivant (départ saisi, non arrêtés) : ils continuent sur le lot en cours après le passage.
+    Fin « statut » / « date » sur un champ absent de la carte en cours → arrêt manuel (« ✓ Fait »). */
+function htToCarry(l, s1, now = new Date()) {
+  const b1 = bandById('suivant1'), b0 = bandById('enCours');
+  const keys0 = new Set(fieldsFor(b0, l.id).map(f => f.key));
+  const out = [];
+  for (const f of fieldsFor(b1, l.id)) {
+    for (const lim of limitsOfField(f, b1, l.id, s1, now)) {
+      if (lim.stopped) continue; /* arrêté, ou fin déjà atteinte (« à confirmer ») : ne continue pas */
+      const def = htDefsOf(b1, l.id).find(x => x.id === lim.id);
+      let fin = def && def.fin ? clone(def.fin) : { type: 'manuel', k: '', v: [] };
+      if (fin.type !== 'manuel' && !keys0.has(fin.k)) fin = { type: 'manuel', k: '', v: [] };
+      out.push({ id: `s-${lim.id}`.slice(0, 18), nom: lim.nom, depart: lim.depart, start: toLocalInput(lim.start), hours: lim.hours, soon: lim.soonH === soonHours() ? null : lim.soonH, perso: !!lim.perso, fin, lim });
+    }
+  }
+  /* un HT déjà suivi (lot passé deux fois de suite sans arrêt) n'est pas repris en double */
+  return out.filter((x, i) => out.findIndex(y => y.id === x.id) === i);
+}
 async function confirmAdvance(l) {
   const r = state.report;
   const cur = r.bands.enCours[l.id], next = r.bands.suivant1[l.id];
+  const carry = htToCarry(l, next);
   const open = openPoints(bandById('suivant1'), l.id, next);
   const ech = ECH_SUIVRE.has(cur.echantillon) && cur.lot ? cur.echantillon : '';
   const nst = parcoursState(bandById('suivant1'), l, next);
@@ -7543,7 +7811,9 @@ async function confirmAdvance(l) {
         h('p', { class: 'adv-open__t' }, icon('alert'), `Encore ouvert sur le lot suivant ${next.lot || ''} :`),
         h('ul', {}, open.map(x => h('li', {}, `${x.label} `, h('b', { text: x.value }))))) : null,
       ech ? h('p', { class: 'adv-ech' }, icon('flask'), 'Échantillon de ', h('b', { class: 'mono', text: cur.lot }), ` (${ech.toLowerCase()}) : ajouté à « Échantillons à suivre ».`) : null,
-      h('p', { class: 'muted', text: 'Seuls le lot, le produit, les remarques et l’étape atteinte suivent : dossier, cuves, D.S. et autres données propres au lot suivant repartent à vide. Vous pourrez annuler.' }),
+      carry.length ? h('p', { class: 'adv-ech' }, icon('clock'), h('b', { text: `${carry.length} holding time${carry.length > 1 ? 's continuent' : ' continue'}` }),
+        ` : ${carry.map(x => `${htNameH(x.nom, x.hours)} (limite ${fmtDM(x.lim.due)})`).join(', ')}. ${carry.length > 1 ? 'Ils restent suivis' : 'Il reste suivi'} sur le lot en cours jusqu’à leur arrêt (« ✓ Fait »).`) : null,
+      h('p', { class: 'muted', text: `Seuls le lot, le produit, les remarques, l’étape atteinte${carry.length ? ' et les holding times en cours' : ''} suivent : dossier, cuves, D.S. et autres données propres au lot suivant repartent à vide. Vous pourrez annuler.` }),
     ],
   });
   if (!ok) return;
@@ -7564,6 +7834,8 @@ function advanceLot(l) {
     /* le parcours reprend là où il en était */
     nc.acquis = st.steps[Math.min(st.allDone ? st.steps.length - 1 : st.cur, st.steps.length - 1)].id;
     nc.etapesAt = { ...s1.etapesAt };
+    /* fix1 : holding times en cours du lot suivant → suivis sur le lot en cours (départ, durée, fin, nom) */
+    nc.htSuivis = htToCarry(l, s1).map(({ lim, ...x }) => x);
     rep.bands.enCours[l.id] = nc;
     const n1 = clone(s2);
     rep.bands.suivant1[l.id] = n1;
@@ -7583,7 +7855,7 @@ function autoStep(b, l) { change(r => { r.bands[b.id][l.id].etapeChoisie = null;
 function htDoneDialog(b, l, lim) {
   const inp = h('input', { type: 'datetime-local', class: 'input', id: 'ht-done-at', step: 60, value: toLocalInput(new Date()) });
   const err = h('p', { class: 'cm-err', role: 'alert', hidden: true });
-  const def = htDefsOf(b, l.id).find(x => x.id === lim.id);
+  const def = htDefsOf(b, l.id, state.report.bands[b.id][l.id]).find(x => x.id === lim.id);
   return openDialog({
     title: 'Holding time terminé', icon: 'check', className: 'dlg--htdone',
     body: h('div', { class: 'cm-form' },
@@ -7594,10 +7866,12 @@ function htDoneDialog(b, l, lim) {
       const v = normDateTime(inp.value);
       if (!v) { err.textContent = 'Date et heure incomplètes.'; err.hidden = false; return false; }
       if (parseLocal(v) < lim.start) { err.textContent = Core.typo('L’heure de fin est avant le départ du holding time.'); err.hidden = false; return false; }
+      if (parseLocal(v) > Date.now() + 5 * 60e3) { err.textContent = Core.typo('L’heure de fin est dans le futur : indiquez l’heure réelle de fin.'); err.hidden = false; return false; }
       change(r => {
         const c = r.bands[b.id][l.id];
-        if (def && def.fin && def.fin.type === 'date' && fieldsFor(b, l.id).some(f => f.key === def.fin.k)) c[def.fin.k] = v;
-        else c.htFin = { ...(c.htFin || {}), [lim.id]: { at: v, par: 'manuel' } };
+        if (def && def.fin && def.fin.type === 'date' && !def.suivi && fieldsFor(b, l.id).some(f => f.key === def.fin.k)) c[def.fin.k] = v;
+        /* fin « à confirmer » (statut déjà atteint) : l'heure confirmée reste liée au statut (statut remis en arrière → de nouveau en cours) */
+        else c.htFin = { ...(c.htFin || {}), [lim.id]: { at: v, par: lim.pending ? 'statut' : 'manuel' } };
       });
       const d = parseLocal(v), ok = d <= lim.due;
       toast(`${lim.nom} : ${ok ? `respecté (fait à ${fmtTime(d)})` : `dépassé de ${fmtDur(lim.due - d)}`}`, { action: 'Annuler', onAction: undo });
@@ -7606,9 +7880,21 @@ function htDoneDialog(b, l, lim) {
     onOpen: () => inp.focus(),
   });
 }
+/** « Rouvrir » fonctionne toujours : arrêt manuel annulé ; si la condition de fin (date saisie, statut de fin) est encore vraie, elle
+    n'arrête plus ce holding time tant qu'elle ne change pas — et le toast l'explique. */
 function htReopen(b, l, id) {
-  change(r => { const c = r.bands[b.id][l.id]; const x = { ...(c.htFin || {}) }; delete x[id]; c.htFin = x; });
-  toast('Holding time rouvert', { action: 'Annuler', onAction: undo });
+  const c0 = state.report.bands[b.id][l.id];
+  const def = htDefsOf(b, l.id, c0).find(x => x.id === id);
+  const fin = def && def.fin;
+  const fl = fin && fin.k ? fieldsFor(b, l.id).find(f => f.key === fin.k) : null;
+  const still = !!fl && ((fin.type === 'date' && !!parseLocal(c0[fin.k])) || (fin.type === 'statut' && fin.v.includes(c0[fin.k])));
+  const cond = finCond(fin, c0);
+  change(r => { const c = r.bands[b.id][l.id]; const x = { ...(c.htFin || {}) }; if (still) x[id] = { rouvert: true, cond }; else delete x[id]; c.htFin = x; });
+  const lbl = fl ? labelOf(fl, c0).replace(/\s*\(.*\)$/, '') : '';
+  const why = !still ? '' : fin.type === 'date'
+    ? ` La date « ${lbl} » reste saisie mais n’arrête plus ce holding time ; il s’arrêtera si vous la modifiez, ou avec « ✓ Fait ».`
+    : ` ${lbl} reste à ${c0[fin.k]} mais n’arrête plus ce holding time ; il s’arrêtera au prochain passage à ${fin.v.join(' ou ')}, ou avec « ✓ Fait ».`;
+  toast(`Holding time rouvert.${why}`, { action: 'Annuler', onAction: undo, timeout: still ? 12000 : undefined });
 }
 /** v5 : échantillon de la liste « à suivre » sorti du frigo / envoyé. */
 function echDone(id) {
@@ -7668,17 +7954,19 @@ function exportJson() {
   toast('Sauvegarde exportée');
 }
 async function importJsonFile(file) {
-  let d;
+  let d, future = false;
   try {
     if (file.size > 20e6) throw new Error('size');
-    d = normalizeData(JSON.parse(await file.text()));
+    const raw = JSON.parse(await file.text());
+    d = normalizeData(raw);
+    future = Number(raw.schema) > SCHEMA_VERSION;
   } catch {
     await messageDialog('Fichier non reconnu', 'Ce fichier n’est pas une sauvegarde valide du Rapport de formulation. Aucune donnée n’a été modifiée.');
     return;
   }
   const from = [d.savedBy ? `de ${d.savedBy}` : '', d.savedAt ? `du ${fmtDM(new Date(d.savedAt))}` : ''].filter(Boolean).join(' ');
-  const ok = await confirmDialog({ title: 'Importer cette sauvegarde ?', confirmLabel: 'Importer',
-    message: `Le rapport actuel sera remplacé par la sauvegarde${from ? ` ${from}` : ''}. L’historique est fusionné. Vous pourrez annuler.` });
+  const ok = await confirmDialog({ title: future ? 'Fichier d’une version plus récente de l’outil' : 'Importer cette sauvegarde ?', confirmLabel: future ? 'Importer quand même' : 'Importer',
+    message: `${future ? 'Cette sauvegarde vient d’une version plus récente de l’outil : les données que cette version ne connaît pas seront ignorées. ' : ''}Le rapport actuel sera remplacé par la sauvegarde${from ? ` ${from}` : ''}. L’historique est fusionné. Vous pourrez annuler.` });
   if (!ok) return;
   state.history = mergeHistory(state.history, d.history);
   if (!state.settings.mailTo && !state.settings.mailCc) state.settings = d.settings;
@@ -7825,6 +8113,7 @@ function summary(now = new Date()) {
   return {
     updatedAt: r.updatedAt ? new Date(r.updatedAt) : null, updatedBy: r.updatedBy, shift: r.meta.shift,
     frigo: frigo.length, overdue: limits.filter(l => l.tone === 'todo').length, soon: limits.filter(l => l.tone === 'wip').length,
+    soonCommon: commonSoon(limits.filter(l => l.tone === 'wip')),
     lots: LINES.map(l => ({ id: l.id, line: l.name, lot: r.bands.enCours[l.id].lot, produit: r.bands.enCours[l.id].produit })),
     soonHours: Params.get().rapport.soonHours,
     verdict: (() => { const sy = shiftSynth(r, now); return { k: sy.verdict, word: sy.vword, icon: sy.vicon, sentence: sy.sentence }; })(),
@@ -7969,7 +8258,8 @@ const defaultPreset = () => (PRESETS[etp().preset] ? etp().preset : 'FIDUCIAL');
 const GABARIT_VERSION = 5;
 /* STANDARD USINE (validé sur la planche Fiducial 115294 et le copieur de l'atelier) : valeurs rétablies par
    « Réinitialiser les paramètres ». Pour changer le standard, modifier uniquement cet objet. */
-const STANDARD_ETIQ = { preset: 'FIDUCIAL', decalX: 0, decalY: 1, echelle: 100, policePt: 8, margeInt: 2, texteEnHaut: false };
+/* fix1 : le standard validé sur papier inclut aussi « sans cadre » et le texte « Renforcé » (réglage d'équipe) */
+const STANDARD_ETIQ = { preset: 'FIDUCIAL', decalX: 0, decalY: 1, echelle: 100, policePt: 8, margeInt: 2, texteEnHaut: false, cadres: false, epaisseur: 'renforce' };
 const GEO_FIELDS = [
   { key: 'pageW', label: 'Largeur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
   { key: 'pageH', label: 'Hauteur page', unit: 'mm', min: 50, max: 600, decimals: 1 },
@@ -8507,7 +8797,9 @@ function fitDoc(doc) {
       verify.forEach((j, i) => {
         if (w[i] <= j.avail) return;
         if (j.res.pt > MIN_PT) { j.res.pt = Math.max(MIN_PT, round(j.res.pt - 0.25, 2)); next.push(j); }
-        else j.res.trunc = true;
+        /* fix1 : au minimum, « raccourcie » seulement si la ligne dépasse vraiment la largeur rendue (sans la garde de 0,2 mm) ;
+           le rendu, lui, ne change pas (même taille de police) */
+        else j.res.trunc = w[i] > j.avail + 0.2 + 1e-6;
       });
       verify = next;
     }
@@ -9064,14 +9356,18 @@ function sheetThumb(g, framed) {
 }
 const calibIsDefault = () => state.reglages.decalX === STANDARD_ETIQ.decalX && state.reglages.decalY === STANDARD_ETIQ.decalY && state.reglages.echelle === STANDARD_ETIQ.echelle;
 const isStandard = () => calibIsDefault() && state.gabarit.preset === STANDARD_ETIQ.preset
-  && state.reglages.policePt === STANDARD_ETIQ.policePt && state.reglages.margeInt === STANDARD_ETIQ.margeInt && state.reglages.texteEnHaut === STANDARD_ETIQ.texteEnHaut;
+  && state.reglages.policePt === STANDARD_ETIQ.policePt && state.reglages.margeInt === STANDARD_ETIQ.margeInt && state.reglages.texteEnHaut === STANDARD_ETIQ.texteEnHaut
+  && !!state.reglages.cadres === STANDARD_ETIQ.cadres && etp().epaisseur === STANDARD_ETIQ.epaisseur;
+const EP_LABEL = { normal: 'Normal', renforce: 'Renforcé', gras: 'Gras' };
 function resetStandard() {
-  withUndo('Paramètres d\'impression réinitialisés (standard Fiducial)', () => {
+  const ep0 = etp().epaisseur, ep = ep0 !== STANDARD_ETIQ.epaisseur;
+  withUndo(`Paramètres d'impression réinitialisés (standard Fiducial)${ep ? ` ; épaisseur du texte remise à « Renforcé » (réglage d'équipe : à enregistrer sur N:)` : ''}`, () => {
     state.gabarit.preset = STANDARD_ETIQ.preset;
     state.gabarit.geo = clone(PRESETS[STANDARD_ETIQ.preset].geo);
     Object.assign(state.reglages, { decalX: STANDARD_ETIQ.decalX, decalY: STANDARD_ETIQ.decalY, echelle: STANDARD_ETIQ.echelle,
-      policePt: STANDARD_ETIQ.policePt, margeInt: STANDARD_ETIQ.margeInt, texteEnHaut: STANDARD_ETIQ.texteEnHaut });
-  });
+      policePt: STANDARD_ETIQ.policePt, margeInt: STANDARD_ETIQ.margeInt, texteEnHaut: STANDARD_ETIQ.texteEnHaut, cadres: STANDARD_ETIQ.cadres });
+    if (ep) Params.update(p => { p.etiquettes.epaisseur = STANDARD_ETIQ.epaisseur; });
+  }, { onUndo: ep ? () => Params.update(p => { p.etiquettes.epaisseur = ep0; }) : null });
 }
 function calibText() {
   const r = state.reglages, parts = [];
@@ -9117,7 +9413,9 @@ function renderStep4() {
   onDerived(() => {
     const ok = isStandard();
     resetStd.disabled = ok;
-    stdNote.textContent = (ok ? '✓ Paramètres standard en place' : 'Paramètres modifiés')
+    /* fix1 : écarts qui ne se voient pas dans les champs ci-dessus (cadres, épaisseur d'équipe) nommés dans la note */
+    const gaps = [state.reglages.cadres ? 'cadres imprimés' : '', etp().epaisseur !== STANDARD_ETIQ.epaisseur ? `épaisseur ${EP_LABEL[etp().epaisseur] || etp().epaisseur} (standard : Renforcé)` : ''].filter(Boolean);
+    stdNote.textContent = (ok ? '✓ Paramètres standard en place' : `Paramètres modifiés${gaps.length ? ` (${gaps.join(', ')})` : ''}`)
       + ` — standard : Fiducial 115294 · décalage X ${fmtSig(STANDARD_ETIQ.decalX)} / Y ${fmtSig(STANDARD_ETIQ.decalY)} mm · échelle ${fmtNum(STANDARD_ETIQ.echelle, 1)} % · police ${fmtNum(STANDARD_ETIQ.policePt, 1)} pt.`;
   });
   onDerived(() => { resetCalib.hidden = calibIsDefault(); });
@@ -9321,10 +9619,11 @@ function commit({ rerender = false, tab = null, focus = null } = {}) {
   Core.emit('data', 'etiquettes');
 }
 function withUndo(message, mutate, opts = {}) {
+  const { onUndo, ...copts } = opts;
   const snapshot = clone(state);
   mutate();
-  commit({ rerender: true, ...opts });
-  const t = toast(message, { icon: 'check', action: 'Annuler', onAction: () => { undoToast = null; state = snapshot; commit({ rerender: true }); toast('Modification annulée.', { icon: 'reset' }); } });
+  commit({ rerender: true, ...copts });
+  const t = toast(message, { icon: 'check', action: 'Annuler', onAction: () => { undoToast = null; state = snapshot; if (onUndo) onUndo(); commit({ rerender: true }); toast('Modification annulée.', { icon: 'reset' }); } });
   undoToast = t;
 }
 
@@ -9612,6 +9911,17 @@ async function requestPrint(kind) {
       body: h('p', null, `Vous allez imprimer ${p.count} ${CW().p}, soit ${plural(p.pages.length, 'planche')}. Continuer ?`),
       actions: [{ label: 'Annuler', value: 'cancel' }, { label: 'Continuer', value: 'ok', primary: true }] });
     if (r.value !== 'ok') return;
+  }
+  if (kind !== 'test') {
+    /* fix1 : une étiquette au texte raccourci « … » (lot incomplet…) n'est jamais imprimée sans que l'opérateur l'ait accepté */
+    const tr = (kind === 'all' ? ['poches', 'autres'] : [kind]).reduce((n, k) => n + (fitDoc(buildDoc(k)).truncated || 0), 0);
+    if (tr) {
+      const r = await openDialog({ title: 'Texte raccourci sur les étiquettes', icon: 'alert', tone: 'warn',
+        body: h('p', null, `${plural(tr, 'ligne')} de texte ${tr > 1 ? 'sont trop longues' : 'est trop longue'} pour l'étiquette, même à la plus petite police (${fmtNum(MIN_PT, 1)} pt) : ${tr > 1 ? 'elles seront raccourcies' : 'elle sera raccourcie'} « … » (lot ou nom incomplet sur l'étiquette). Raccourcissez le texte ou réduisez la marge intérieure.`),
+        actions: [{ label: 'Corriger', value: 'fix' }, { label: 'Imprimer quand même', value: 'ok', primary: true }] }); /* même modèle que « lot non renseigné » */
+      if (r.value === 'fix' && state.lot.length > 20) focusField('#f-lot');
+      if (r.value !== 'ok') return;
+    }
   }
   if (!state.ui.masquerAideImpression && !(await showPrintHelp(true))) return;
   preparePrint(kind);
@@ -10708,11 +11018,14 @@ const ParamsView = (() => {
     fr.onload = async () => {
       let parsed;
       try { parsed = Params.parseText(fr.result); } catch (e) {
-        Core.messageDialog('Import impossible', e.message === 'app' ? 'Ce fichier n’est pas un fichier de paramètres de l’Outil Formulation.' : 'Le fichier est illisible (JSON invalide).', 'mod-params');
+        Core.messageDialog('Import impossible', e.message === 'app' ? 'Ce fichier n’est pas un fichier de paramètres de l’Outil Formulation.'
+          : e.message === 'backup-sans-params' ? 'Cette sauvegarde de l’outil (sauvegarde.js) ne contient pas de paramètres.' : 'Le fichier est illisible (JSON invalide).', 'mod-params');
         return;
       }
-      const ok = await Core.confirmDialog({ title: 'Importer ces paramètres ?', className: 'mod-params', confirmLabel: 'Importer',
-        message: 'Les paramètres de ce PC seront remplacés par ceux du fichier. Vous pourrez annuler.' });
+      const ok = await Core.confirmDialog({ title: 'Importer ces paramètres ?', className: 'mod-params', confirmLabel: parsed.future ? 'Importer quand même' : 'Importer',
+        message: [parsed.fromBackup ? 'Ce fichier est une sauvegarde complète de l’outil (sauvegarde.js) : seuls ses paramètres sont importés. ' : '',
+          parsed.future ? 'Attention : ce fichier vient d’une version plus récente de l’outil ; les réglages que cette version ne connaît pas seront ignorés. ' : '',
+          'Les paramètres de ce PC seront remplacés par ceux du fichier. Vous pourrez annuler.'].join('') });
       if (!ok) return;
       const snap = Params.snapshot();
       Params.commit(parsed.params, { imported: true });
@@ -10893,7 +11206,7 @@ const Accueil = (() => {
     const pills = [];
     if (s.frigo) pills.push(pill('cold', `${plural(s.frigo, 'échantillon')} au frigo`, 'snow'));
     if (s.overdue) pills.push(pill('todo', `${plural(s.overdue, 'échéance dépassée', 'échéances dépassées')}`));
-    if (s.soon) pills.push(pill('wip', `${plural(s.soon, 'échéance')} dans moins de ${Params.fmtHours(s.soonHours)} h`));
+    if (s.soon) pills.push(pill('wip', s.soonCommon != null ? `${plural(s.soon, 'échéance')} dans moins de ${Params.fmtHours(s.soonCommon)} h` : `${plural(s.soon, 'échéance')} ${s.soon > 1 ? 'proches' : 'proche'}`));
     if (!pills.length) pills.push(pill('ok', 'Aucune alerte frigo ni holding time'));
     box.replaceChildren(
       h('p', { class: 'tile__line' }, icon('clock'), upd, s.shift ? h('span', { class: 'hpill hpill--navy', text: `Shift ${s.shift}` }) : null),
